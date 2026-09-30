@@ -1,0 +1,195 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  BookOpen,
+  ChartNoAxesCombined,
+  ChevronDown,
+  Clock3,
+  GraduationCap,
+  House,
+  Menu,
+  NotebookPen,
+  Play,
+  RotateCcw,
+  Settings2,
+  Sparkles,
+  X,
+} from "lucide-react";
+import { useStudy } from "@/components/study-provider";
+import { courseProgress } from "@/domain/study/progress";
+import { cx } from "@/lib/utils";
+import { TutorDrawer } from "@/components/tutor/tutor-drawer";
+import { featureFlags } from "@/lib/feature-flags";
+
+const navigation = (courseSlug: string) => [
+  { href: "/dashboard", label: "Visão geral", icon: House },
+  { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
+  { href: "/study", label: "Aula de hoje", icon: Play },
+  { href: "/review", label: "Revisar", icon: RotateCcw },
+  { href: "/vocabulary", label: "Vocabulário", icon: GraduationCap },
+  { href: "/mistakes", label: "Meus erros", icon: NotebookPen },
+  { href: "/history", label: "Histórico", icon: Clock3 },
+  { href: "/progress", label: "Estatísticas", icon: ChartNoAxesCombined },
+];
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { course, state, ready, authUserId } = useStudy();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [tutorOpen, setTutorOpen] = useState(false);
+  const requiresAuth = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  );
+  useEffect(() => {
+    if (ready && requiresAuth && !authUserId && pathname !== "/login") router.replace("/login");
+  }, [ready, requiresAuth, authUserId, pathname, router]);
+  if (pathname === "/login") return <>{children}</>;
+  if (!ready || (requiresAuth && !authUserId))
+    return <div className="page-loading">Preparando seu espaço de estudo…</div>;
+  const progress = courseProgress(course, state);
+  const navItems = navigation(course.slug);
+  const activeNav = navItems.find(
+    (item) =>
+      pathname.startsWith(item.href) && (item.href !== "/dashboard" || pathname === item.href),
+  );
+
+  return (
+    <div className="app-frame">
+      {menuOpen && (
+        <button
+          className="mobile-backdrop"
+          aria-label="Fechar menu"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+      <aside className={cx("sidebar", menuOpen && "sidebar-open")}>
+        <div className="sidebar-top">
+          <Link href="/dashboard" className="brand" onClick={() => setMenuOpen(false)}>
+            <span className="brand-mark">
+              F<span>.</span>
+            </span>
+            <span>
+              <strong>frecuencias</strong>
+              <small>espanhol em movimento</small>
+            </span>
+          </Link>
+          <button
+            className="icon-button mobile-close"
+            aria-label="Fechar menu"
+            onClick={() => setMenuOpen(false)}
+          >
+            <X size={20} />
+          </button>
+        </div>
+        <div className="sidebar-course">
+          <div className="sidebar-course-head">
+            <span className="sidebar-course-icon">
+              <BookOpen size={18} />
+            </span>
+            <span>
+              <small>CURSO ATUAL</small>
+              <strong>{course.title}</strong>
+            </span>
+            <ChevronDown size={15} />
+          </div>
+          <div className="sidebar-course-progress">
+            <span>Seu progresso</span>
+            <strong>{progress}%</strong>
+          </div>
+          <div className="progress-track">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+        </div>
+        <nav className="sidebar-nav" aria-label="Navegação principal">
+          <div className="nav-caption">ESTUDAR</div>
+          {navItems.slice(0, 4).map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={cx(
+                "nav-link",
+                pathname.startsWith(href) && (href !== "/study" || pathname === href) && "active",
+              )}
+              onClick={() => setMenuOpen(false)}
+            >
+              <Icon size={18} strokeWidth={1.8} />
+              <span>{label}</span>
+              {href === "/review" && Object.values(state.mistakes).length > 0 && (
+                <span className="nav-count">{Object.values(state.mistakes).length}</span>
+              )}
+            </Link>
+          ))}
+          <div className="nav-caption nav-caption-second">ACOMPANHAR</div>
+          {navItems.slice(4).map(({ href, label, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className={cx("nav-link", pathname.startsWith(href) && "active")}
+              onClick={() => setMenuOpen(false)}
+            >
+              <Icon size={18} strokeWidth={1.8} />
+              <span>{label}</span>
+            </Link>
+          ))}
+        </nav>
+        <div className="sidebar-bottom">
+          {featureFlags.AI_TUTOR && (
+            <button className="sidebar-tutor" onClick={() => setTutorOpen(true)}>
+              <span className="sidebar-tutor-icon">
+                <Sparkles size={18} />
+              </span>
+              <span>
+                <strong>Professor IA</strong>
+                <small>Tire uma dúvida agora</small>
+              </span>
+            </button>
+          )}
+          <Link
+            href="/settings"
+            className="nav-link settings-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Settings2 size={18} strokeWidth={1.8} />
+            <span>Configurações</span>
+          </Link>
+        </div>
+      </aside>
+      <div className="app-main">
+        <header className="topbar">
+          <div className="topbar-left">
+            <button
+              className="icon-button menu-toggle"
+              aria-label="Abrir menu"
+              onClick={() => setMenuOpen(true)}
+            >
+              <Menu size={21} />
+            </button>
+            <span className="breadcrumb-parent">Meu espaço</span>
+            <span className="breadcrumb-sep">/</span>
+            <strong>{activeNav?.label ?? "Meu curso"}</strong>
+          </div>
+          <div className="topbar-right">
+            <span className="level-pill">NÍVEL A1</span>
+            {featureFlags.AI_TUTOR && (
+              <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
+                <Sparkles size={16} /> Perguntar ao professor
+              </button>
+            )}
+            <Link href="/settings" className="avatar" aria-label="Configurações">
+              N
+            </Link>
+          </div>
+        </header>
+        <main className="main-content">{children}</main>
+      </div>
+      {featureFlags.AI_TUTOR && (
+        <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
+      )}
+    </div>
+  );
+}

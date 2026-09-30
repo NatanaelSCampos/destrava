@@ -1,0 +1,10 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.tsbuildinfo
+*.pdf
+*-smoke.png
+supabase/.temp/
+supabase/.branches/
