@@ -50,6 +50,53 @@ select:focus-visible {
   outline: 3px solid #91d6bc;
   outline-offset: 2px;
 }
+.speak-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid #cfe3d5;
+  border-radius: 8px;
+  background: #f1f8f3;
+  color: #28734d;
+  font-size: 11px;
+  font-weight: 750;
+}
+.speak-button:hover:not(:disabled) {
+  background: #e0f1e5;
+  border-color: #a9cfb5;
+}
+.speak-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.speak-error {
+  color: var(--danger);
+  font-size: 11px;
+}
+.selection-audio {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 85;
+  padding: 5px;
+  border-radius: 11px;
+  background: white;
+  box-shadow: 0 7px 24px #10251b35;
+}
+.text-audio-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+.text-audio-row > p {
+  flex: 1;
+  min-width: 0;
+}
 .app-frame {
   display: flex;
   min-height: 100vh;

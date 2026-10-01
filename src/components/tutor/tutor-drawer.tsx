@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Send, Sparkles, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { nextActivity } from "@/domain/study/study-planner";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 type TutorFeedback = { answer: string; example: string; quickCheck: string };
 
@@ -85,7 +86,10 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
               <p>{feedback.answer}</p>
               <div>
                 <strong>Exemplo</strong>
-                <p>{feedback.example}</p>
+                <div className="text-audio-row">
+                  <p lang="es">{feedback.example}</p>
+                  <SpeakButton text={feedback.example} label="Ouvir exemplo em espanhol" />
+                </div>
               </div>
               <div>
                 <strong>Para conferir</strong>

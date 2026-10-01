@@ -2,9 +2,10 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Check, Search, Star, Volume2 } from "lucide-react";
+import { ArrowRight, BookOpen, Check, Search, Star } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { formatDate } from "@/lib/utils";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 export default function VocabularyPage() {
   const { vocabularyItems, state, markVocabulary } = useStudy();
@@ -92,25 +93,20 @@ export default function VocabularyPage() {
             <article className="vocab-card panel" key={item.id}>
               <div className="vocab-card-top">
                 <span className="pill gray">UNIDADE 01</span>
-                <button
+                <SpeakButton
+                  text={item.spanish}
+                  label={`Ouvir ${item.spanish}`}
                   className="vocab-sound"
-                  aria-label={`Ouvir ${item.spanish}`}
-                  onClick={() => {
-                    if ("speechSynthesis" in window) {
-                      const utterance = new SpeechSynthesisUtterance(
-                        item.spanish.replace(" / ", ", "),
-                      );
-                      utterance.lang = "es-ES";
-                      window.speechSynthesis.speak(utterance);
-                    }
-                  }}
-                >
-                  <Volume2 size={17} />
-                </button>
+                />
               </div>
-              <h3>{item.spanish}</h3>
+              <h3 lang="es">{item.spanish}</h3>
               <p className="vocab-translation">{item.translation}</p>
-              <p className="vocab-example">“{item.example}”</p>
+              <div className="text-audio-row vocab-example-row">
+                <p className="vocab-example" lang="es">
+                  “{item.example}”
+                </p>
+                <SpeakButton text={item.example} label="Ouvir frase de exemplo" />
+              </div>
               <div className="vocab-card-footer">
                 <span className={`vocab-status ${status}`}>
                   {status === "new"

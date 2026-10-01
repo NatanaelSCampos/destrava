@@ -24,6 +24,7 @@ import { courseProgress } from "@/domain/study/progress";
 import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
 import { featureFlags } from "@/lib/feature-flags";
+import { SelectionAudio } from "@/components/audio/selection-audio";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -190,6 +191,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       {featureFlags.AI_TUTOR && (
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}
+      <SelectionAudio />
     </div>
   );
 }

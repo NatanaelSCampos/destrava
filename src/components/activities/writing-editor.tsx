@@ -5,6 +5,7 @@ import { Check, Sparkles } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";
 import { featureFlags } from "@/lib/feature-flags";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 type Writing = Extract<PublicActivity, { type: "writing" }>;
 type WritingFeedback = {
@@ -77,6 +78,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
           maxLength={3000}
         />
       </div>
+      {text.trim() && <SpeakButton text={text} label="Ouvir seu texto em espanhol" withLabel />}
       <div className="writing-footer">
         <span className={wordCount < activity.minWords ? "muted" : "word-count-ok"}>
           {wordCount} palavras · mínimo {activity.minWords}
@@ -116,7 +118,12 @@ export function WritingEditor({ activity }: { activity: Writing }) {
             </div>
             <span className="pill">Gramática {feedback.score.grammar}/100</span>
           </div>
-          <p className="corrected-text">{feedback.correctedText}</p>
+          <div className="text-audio-row">
+            <p className="corrected-text" lang="es">
+              {feedback.correctedText}
+            </p>
+            <SpeakButton text={feedback.correctedText} label="Ouvir texto revisado" withLabel />
+          </div>
           <div className="feedback-columns">
             <div>
               <h4>Erros reais</h4>
@@ -126,6 +133,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
                     <strong>
                       {item.excerpt} → {item.correction}
                     </strong>
+                    <SpeakButton text={item.correction} label="Ouvir correção" />
                     <br />
                     {item.explanation}
                   </p>

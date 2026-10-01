@@ -5,6 +5,7 @@ import { ArrowRight, Check, NotebookPen, RotateCcw } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { formatDate } from "@/lib/utils";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 const skillNames: Record<string, string> = {
   grammar: "Gramática",
@@ -82,6 +83,7 @@ export default function MistakesPage() {
                     <span>FORMA ESPERADA</span>
                     <p>
                       <Check size={16} /> {item.correctAnswer}
+                      <SpeakButton text={item.correctAnswer} label="Ouvir forma esperada" />
                     </p>
                   </div>
                 </div>

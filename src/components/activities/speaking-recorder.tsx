@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Mic, Square, Check } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 type Speaking = Extract<PublicActivity, { type: "speaking" }>;
 
@@ -107,6 +108,9 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
           rows={3}
         />
       </div>
+      {transcription.trim() && (
+        <SpeakButton text={transcription} label="Ouvir a transcrição em espanhol" withLabel />
+      )}
       <p className="helper-note">
         Nesta versão, a transcrição é digitada por você. A nota de pronúncia só aparecerá quando
         houver uma avaliação real de áudio.

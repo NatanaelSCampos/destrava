@@ -63,7 +63,8 @@ O renderizador de atividades, o planejador, a revisão e as tabelas usam os regi
 - Exercícios objetivos são corrigidos pela API local; o gabarito não é enviado com o conteúdo público da página.
 - O professor e a correção de escrita usam a API da OpenAI no servidor, com respostas estruturadas, limite de requisições por hora e contexto curto. O custo estimado só é calculado quando as tarifas por milhão de tokens são configuradas em `OPENAI_INPUT_USD_PER_MILLION` e `OPENAI_OUTPUT_USD_PER_MILLION`.
 - Sem Supabase, as rotas de IA aceitam chamadas somente em desenvolvimento local. Uma publicação exige autenticação configurada.
-- Listening usa a síntese de voz do navegador como áudio provisório. Speaking grava até 20 segundos e pede que o aluno digite sua própria transcrição; ainda não há avaliação automática de pronúncia.
+- Palavras, frases de exemplo, opções em espanhol, flashcards, transcrições e textos escritos têm botão de escuta. Também é possível selecionar qualquer trecho visível para ouvir em espanhol. A voz vem da síntese do navegador e pode variar conforme o dispositivo.
+- Speaking grava até 20 segundos e pede que o aluno digite sua própria transcrição; ainda não há avaliação automática de pronúncia.
 - As flags `NEXT_PUBLIC_FEATURE_AI_TUTOR`, `NEXT_PUBLIC_FEATURE_AI_WRITING`, `NEXT_PUBLIC_FEATURE_SPEAKING`, `NEXT_PUBLIC_FEATURE_LISTENING` e `NEXT_PUBLIC_FEATURE_SPACED_REPETITION` aceitam `false` para ocultar ou desativar os recursos correspondentes. Todas vêm ativas por padrão.
 
 ## Verificação

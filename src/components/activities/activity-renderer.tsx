@@ -7,6 +7,7 @@ import { featureFlags } from "@/lib/feature-flags";
 import { ExerciseCard } from "./exercise-card";
 import { WritingEditor } from "./writing-editor";
 import { SpeakingRecorder } from "./speaking-recorder";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
   const { state, completeActivity } = useStudy();
@@ -20,6 +21,7 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
           </span>
           <h2>{activity.title}</h2>
           <p>{activity.prompt}</p>
+          <small className="audio-selection-hint">Selecione uma palavra ou frase para ouvir.</small>
         </div>
         <span className="activity-time">
           <Clock3 size={14} /> {activity.minutes} min
@@ -36,7 +38,10 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
             {activity.type === "lesson_content" && activity.highlights.length > 0 && (
               <div className="phrase-strip">
                 {activity.highlights.map((phrase) => (
-                  <span key={phrase}>{phrase}</span>
+                  <span className="phrase-audio-item" key={phrase}>
+                    <span lang="es">{phrase}</span>
+                    <SpeakButton text={phrase} label={`Ouvir ${phrase}`} />
+                  </span>
                 ))}
               </div>
             )}
@@ -78,10 +83,16 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
         {activity.type === "flashcard" && (
           <div className="lesson-body">
             <div className="phrase-strip">
-              <span>{activity.front}</span>
+              <span className="phrase-audio-item">
+                <span lang="es">{activity.front}</span>
+                <SpeakButton text={activity.front} label={`Ouvir ${activity.front}`} />
+              </span>
               <span>{activity.back}</span>
             </div>
-            <p>{activity.example}</p>
+            <div className="text-audio-row">
+              <p lang="es">{activity.example}</p>
+              <SpeakButton text={activity.example} label="Ouvir frase de exemplo" />
+            </div>
             <button className="primary-button" onClick={() => completeActivity(activity.id)}>
               Concluir flashcard
             </button>

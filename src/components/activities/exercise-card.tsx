@@ -6,6 +6,7 @@ import type { PublicActivity } from "@/content/public";
 import type { GradeResult } from "@/domain/activities/grader";
 import { useStudy } from "@/components/study-provider";
 import { AudioPlayer } from "./audio-player";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 type Exercise = Extract<
   PublicActivity,
@@ -69,19 +70,23 @@ export function ExerciseCard({ activity }: { activity: Exercise }) {
               ]
             : activity.options.map((option) => ({ value: option, label: option }))
           ).map(({ value, label }, index) => (
-            <button
-              type="button"
-              key={value}
-              className={`option ${answer === value ? "selected" : ""}`}
-              role="radio"
-              aria-checked={answer === value}
-              disabled={!!result}
-              onClick={() => setAnswer(value)}
-            >
-              <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-              <span>{label}</span>
-              {answer === value && <Check size={17} />}
-            </button>
+            <div className="option-row" key={value}>
+              <button
+                type="button"
+                className={`option ${answer === value ? "selected" : ""}`}
+                role="radio"
+                aria-checked={answer === value}
+                disabled={!!result}
+                onClick={() => setAnswer(value)}
+              >
+                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
+                <span lang={activity.type === "true_false" ? undefined : "es"}>{label}</span>
+                {answer === value && <Check size={17} />}
+              </button>
+              {activity.type !== "true_false" && (
+                <SpeakButton text={label} label={`Ouvir ${label}`} />
+              )}
+            </div>
           ))}
         </div>
       )}
@@ -124,17 +129,22 @@ export function ExerciseCard({ activity }: { activity: Exercise }) {
               <span>Toque nas palavras para montar a frase</span>
             )}
           </div>
+          {ordered.length > 0 && (
+            <SpeakButton text={ordered.join(" ")} label="Ouvir frase montada" withLabel />
+          )}
           <div className="ordering-words">
             {activity.words.map((word, index) => (
-              <button
-                key={`${word}-${index}`}
-                className="word-chip"
-                type="button"
-                disabled={!!result || ordered.includes(word)}
-                onClick={() => setOrdered((current) => [...current, word])}
-              >
-                {word}
-              </button>
+              <span className="ordering-word-audio" key={`${word}-${index}`}>
+                <button
+                  className="word-chip"
+                  type="button"
+                  disabled={!!result || ordered.includes(word)}
+                  onClick={() => setOrdered((current) => [...current, word])}
+                >
+                  {word}
+                </button>
+                <SpeakButton text={word} label={`Ouvir ${word}`} />
+              </span>
             ))}
           </div>
         </div>
@@ -167,12 +177,16 @@ export function ExerciseCard({ activity }: { activity: Exercise }) {
             {!result.correct && (
               <p className="correct-answer">
                 Resposta esperada: <strong>{result.correctAnswer}</strong>
+                <SpeakButton text={result.correctAnswer} label="Ouvir resposta esperada" />
               </p>
             )}
             {activity.type === "listening" && result.transcript && (
               <div className="transcript">
                 <span>TRANSCRIÇÃO</span>
-                <p>{result.transcript}</p>
+                <div className="text-audio-row">
+                  <p lang="es">{result.transcript}</p>
+                  <SpeakButton text={result.transcript} label="Ouvir transcrição" />
+                </div>
               </div>
             )}
           </div>

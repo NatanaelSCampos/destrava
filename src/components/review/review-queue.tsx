@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 type ReviewItem = {
   kind: "word" | "mistake";
@@ -113,6 +114,16 @@ export function ReviewQueue({
           <RotateCcw size={14} /> Virar cartão
         </span>
       </button>
+      <div className="flashcard-audio">
+        <SpeakButton
+          text={item.kind === "word" ? item.front : flipped ? item.back : item.front}
+          label="Ouvir palavra ou frase em espanhol"
+          withLabel
+        />
+        {flipped && item.kind === "word" && (
+          <SpeakButton text={item.example} label="Ouvir frase de exemplo" withLabel />
+        )}
+      </div>
       <div className="flashcard-actions">
         <button className="ghost-button" disabled={!flipped} onClick={() => answer(false)}>
           <X size={16} /> Ainda difícil

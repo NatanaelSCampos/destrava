@@ -1182,6 +1182,13 @@
   font-style: italic;
   margin: 11px 0 14px;
 }
+.vocab-example-row {
+  align-items: center;
+  margin: 11px 0 14px;
+}
+.vocab-example-row .vocab-example {
+  margin: 0;
+}
 .vocab-card-footer {
   border-top: 1px solid var(--border);
   padding-top: 10px;
