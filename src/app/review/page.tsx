@@ -5,21 +5,22 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, RotateCcw, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewQueue } from "@/components/review/review-queue";
-import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { currentUnit } from "@/domain/study/progress";
 import { featureFlags } from "@/lib/feature-flags";
 
 export default function ReviewPage() {
   const { state, vocabularyItems, course } = useStudy();
   const unit = currentUnit(course, state);
-  const [mode, setMode] = useState<"due" | "new">("due");
-  const dueWords = Object.values(state.vocabulary).filter((item) =>
-    ReviewScheduler.isDue(item.schedule),
-  ).length;
-  const dueMistakes = Object.values(state.mistakes).filter((item) =>
-    ReviewScheduler.isDue(item.schedule),
-  ).length;
+  const {
+    words: dueWords,
+    mistakes: dueMistakes,
+    total: dueTotal,
+  } = dueReviewCounts(state, vocabularyItems);
   const newWords = vocabularyItems.filter((item) => !state.vocabulary[item.id]).length;
+  const [mode, setMode] = useState<"due" | "new">(() =>
+    dueTotal === 0 && newWords > 0 ? "new" : "due",
+  );
   if (!featureFlags.SPACED_REPETITION)
     return <div className="empty-state">A revisão espaçada está temporariamente indisponível.</div>;
   return (
@@ -65,7 +66,7 @@ export default function ReviewPage() {
               className={mode === "due" ? "active" : ""}
               onClick={() => setMode("due")}
             >
-              Revisões pendentes <span>{dueWords + dueMistakes}</span>
+              Revisões pendentes <span>{dueTotal}</span>
             </button>
             <button
               role="tab"

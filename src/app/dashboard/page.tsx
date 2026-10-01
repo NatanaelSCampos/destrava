@@ -17,7 +17,7 @@ import {
 import { useStudy } from "@/components/study-provider";
 import { buildStudyPlan, nextActivity } from "@/domain/study/study-planner";
 import { courseProgress, currentUnit, unitProgress } from "@/domain/study/progress";
-import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { formatMinutes } from "@/lib/utils";
 
 function currentStreak(dates: string[]) {
@@ -45,12 +45,7 @@ export default function DashboardPage() {
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + session.durationSeconds, 0) / 60,
   );
-  const dueWords = Object.values(state.vocabulary).filter((item) =>
-    ReviewScheduler.isDue(item.schedule),
-  ).length;
-  const dueErrors = Object.values(state.mistakes).filter((item) =>
-    ReviewScheduler.isDue(item.schedule),
-  ).length;
+  const { words: dueWords, mistakes: dueErrors } = dueReviewCounts(state, vocabularyItems);
   const streak = currentStreak(
     state.sessions.filter((session) => session.finishedAt).map((session) => session.finishedAt!),
   );

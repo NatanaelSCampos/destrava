@@ -20,6 +20,7 @@ import {
   X,
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
+import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { courseProgress } from "@/domain/study/progress";
 import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
@@ -40,7 +41,7 @@ const navigation = (courseSlug: string) => [
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { course, state, ready, authUserId } = useStudy();
+  const { course, state, vocabularyItems, ready, authUserId } = useStudy();
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
   const requiresAuth = Boolean(
@@ -53,6 +54,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (!ready || (requiresAuth && !authUserId))
     return <div className="page-loading">Preparando seu espaço de estudo…</div>;
   const progress = courseProgress(course, state);
+  const pendingReviews = dueReviewCounts(state, vocabularyItems).total;
   const navItems = navigation(course.slug);
   const activeNav = navItems.find(
     (item) =>
@@ -120,8 +122,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon size={18} strokeWidth={1.8} />
               <span>{label}</span>
-              {href === "/review" && Object.values(state.mistakes).length > 0 && (
-                <span className="nav-count">{Object.values(state.mistakes).length}</span>
+              {href === "/review" && featureFlags.SPACED_REPETITION && pendingReviews > 0 && (
+                <span className="nav-count">{pendingReviews}</span>
               )}
             </Link>
           ))}
