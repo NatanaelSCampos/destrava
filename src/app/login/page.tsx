@@ -39,11 +39,11 @@ export default function LoginPage() {
       <div className="login-art">
         <Link href="/dashboard" className="brand">
           <span className="brand-mark">
-            F<span>.</span>
+            D<span>.</span>
           </span>
           <span>
-            <strong>frecuencias</strong>
-            <small>espanhol em movimento</small>
+            <strong>Destrava</strong>
+            <small>Aprenda. Pratique. Destrave.</small>
           </span>
         </Link>
         <div>
@@ -56,7 +56,7 @@ export default function LoginPage() {
             <span>Mucho gusto.</span>
           </div>
         </div>
-        <small>Frecuencias A1 · Estudo de espanhol</small>
+        <small>Destrava · Aprenda espanhol no seu ritmo</small>
       </div>
       <div className="login-main">
         <div className="login-card">

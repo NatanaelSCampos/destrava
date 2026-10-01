@@ -21,7 +21,7 @@ export default function SettingsPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "frecuencias-meus-dados.json";
+    link.download = "destrava-meus-dados.json";
     link.click();
     URL.revokeObjectURL(url);
   }

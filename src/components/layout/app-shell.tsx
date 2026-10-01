@@ -72,11 +72,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="sidebar-top">
           <Link href="/dashboard" className="brand" onClick={() => setMenuOpen(false)}>
             <span className="brand-mark">
-              F<span>.</span>
+              D<span>.</span>
             </span>
             <span>
-              <strong>frecuencias</strong>
-              <small>espanhol em movimento</small>
+              <strong>Destrava</strong>
+              <small>Aprenda. Pratique. Destrave.</small>
             </span>
           </Link>
           <button

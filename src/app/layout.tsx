@@ -11,8 +11,8 @@ import { AppShell } from "@/components/layout/app-shell";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Frecuencias — Seu espanhol, passo a passo",
-  description: "Plataforma pessoal para estudar espanhol A1 com uma trilha guiada.",
+  title: "Destrava - Aprenda. Pratique. Destrave.",
+  description: "Aprenda espanhol no seu ritmo, pratique com confiança e destrave sua conversa.",
 };
 
 const course = publicCourse(frecuenciasA1);

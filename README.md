@@ -1,4 +1,4 @@
-# Frecuencias A1 — estudo de espanhol
+# Destrava — Aprenda. Pratique. Destrave.
 
 Aplicação pessoal de estudo guiado da Unidade 1, **Nos presentamos**. As 11 lições, 40 atividades e 18 itens de vocabulário são conteúdo original alinhado aos objetivos dos dois livros enviados. Os PDFs não são servidos pela aplicação.
 
