@@ -1,4 +1,5 @@
 import type { GradeResult } from "@/domain/activities/grader";
+import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import type { ReviewSchedule } from "@/domain/review/review-scheduler";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import type { PublicActivity, PublicCourse } from "@/content/public";
@@ -85,6 +86,7 @@ export type SpeakingSubmission = {
   transcription: string;
   audioUrl: string | null;
   audioPath?: string;
+  feedback?: PronunciationFeedback;
   createdAt: string;
 };
 

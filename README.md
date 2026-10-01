@@ -1,6 +1,6 @@
 # Frecuencias A1 — estudo de espanhol
 
-Aplicação pessoal de estudo guiado da Unidade 1, **Nos presentamos**. As 11 lições, 39 atividades e 18 itens de vocabulário são conteúdo original alinhado aos objetivos dos dois livros enviados. Os PDFs não são servidos pela aplicação.
+Aplicação pessoal de estudo guiado da Unidade 1, **Nos presentamos**. As 11 lições, 40 atividades e 18 itens de vocabulário são conteúdo original alinhado aos objetivos dos dois livros enviados. Os PDFs não são servidos pela aplicação.
 
 ## Executar agora
 
@@ -30,6 +30,20 @@ flyctl deploy --ha=false `
 ```
 
 O nome do app, a região, a porta, a checagem de saúde e o desligamento automático estão em [fly.toml](fly.toml). O segredo `OPENAI_API_KEY` deve permanecer configurado no Fly.io, fora do repositório.
+
+## Avaliação de pronúncia com Azure Speech
+
+Crie um recurso **Speech** no [portal Azure](https://portal.azure.com/) com nível de preço **Free (F0)**. Em **Keys and Endpoint** do recurso, copie o **Endpoint** e uma das chaves. Preencha em `.env.local`:
+
+```text
+AZURE_SPEECH_ENDPOINT=https://SEU_RECURSO.cognitiveservices.azure.com/
+AZURE_SPEECH_KEY=SUA_CHAVE
+AZURE_SPEECH_LOCALE=es-ES
+```
+
+Use `es-MX` em `AZURE_SPEECH_LOCALE` se preferir avaliar o espanhol do México. Reinicie o servidor local após editar o arquivo. A chave é lida apenas no servidor; não use prefixo `NEXT_PUBLIC_` nem envie a chave pelo chat ou Git. Para ativar a avaliação no Fly.io, configure `AZURE_SPEECH_ENDPOINT`, `AZURE_SPEECH_KEY` e opcionalmente `AZURE_SPEECH_LOCALE` como segredos do app.
+
+A atividade **Repita uma frase** compara uma gravação de até 20 segundos com a frase exibida e mostra indicadores de clareza, fluência, completude e palavras que merecem outra tentativa. A apresentação livre continua sem nota automática. As chamadas autenticadas compartilham o limite de 20 solicitações por usuário por hora com as outras rotas de IA. Sem a credencial Azure, a gravação ainda pode ser salva, mas a avaliação retorna indisponível.
 
 ## Conectar o Supabase
 
@@ -64,7 +78,7 @@ O renderizador de atividades, o planejador, a revisão e as tabelas usam os regi
 - O professor e a correção de escrita usam a API da OpenAI no servidor, com respostas estruturadas, limite de requisições por hora e contexto curto. O custo estimado só é calculado quando as tarifas por milhão de tokens são configuradas em `OPENAI_INPUT_USD_PER_MILLION` e `OPENAI_OUTPUT_USD_PER_MILLION`.
 - Sem Supabase, as rotas de IA aceitam chamadas somente em desenvolvimento local. Uma publicação exige autenticação configurada.
 - Palavras, frases de exemplo, opções em espanhol, flashcards, transcrições e textos escritos têm botão de escuta. Também é possível selecionar qualquer trecho visível para ouvir em espanhol. A voz vem da síntese do navegador e pode variar conforme o dispositivo.
-- Speaking grava até 20 segundos e pede que o aluno digite sua própria transcrição; ainda não há avaliação automática de pronúncia.
+- Speaking grava até 20 segundos. A repetição de frase pode receber avaliação pelo Azure Speech quando configurado; a fala livre pede a transcrição do aluno e não recebe nota automática.
 - As flags `NEXT_PUBLIC_FEATURE_AI_TUTOR`, `NEXT_PUBLIC_FEATURE_AI_WRITING`, `NEXT_PUBLIC_FEATURE_SPEAKING`, `NEXT_PUBLIC_FEATURE_LISTENING` e `NEXT_PUBLIC_FEATURE_SPACED_REPETITION` aceitam `false` para ocultar ou desativar os recursos correspondentes. Todas vêm ativas por padrão.
 
 ## Verificação

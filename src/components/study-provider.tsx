@@ -12,6 +12,7 @@ import {
 import type { ReactNode } from "react";
 import type { PublicActivity, PublicCourse } from "@/content/public";
 import type { GradeResult } from "@/domain/activities/grader";
+import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import {
   initialStudyState,
   markActivityComplete,
@@ -45,7 +46,12 @@ type StudyContextValue = {
   completeActivity: (id: string) => void;
   submitAttempt: (activity: PublicActivity, answer: string, result: GradeResult) => void;
   saveWriting: (activityId: string, text: string, feedback?: unknown) => void;
-  saveSpeaking: (activityId: string, transcription: string, audioUrl: string | null) => void;
+  saveSpeaking: (
+    activityId: string,
+    transcription: string,
+    audioUrl: string | null,
+    feedback?: PronunciationFeedback,
+  ) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, correct: boolean) => void;
   reviewError: (id: string, correct: boolean) => void;
@@ -212,7 +218,12 @@ export function StudyProvider({
     [course],
   );
   const saveSpeaking = useCallback(
-    (activityId: string, transcription: string, audioUrl: string | null) =>
+    (
+      activityId: string,
+      transcription: string,
+      audioUrl: string | null,
+      feedback?: PronunciationFeedback,
+    ) =>
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
         return {
@@ -223,6 +234,7 @@ export function StudyProvider({
               activityId,
               transcription,
               audioUrl,
+              feedback,
               createdAt: new Date().toISOString(),
             },
             ...current.speaking,

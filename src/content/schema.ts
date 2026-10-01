@@ -90,7 +90,11 @@ export const activitySchema = z.discriminatedUnion("type", [
     options: z.array(z.string()).min(2),
     answer: z.string(),
   }),
-  activityBase.extend({ type: z.literal("speaking"), guidance: z.array(z.string()).default([]) }),
+  activityBase.extend({
+    type: z.literal("speaking"),
+    guidance: z.array(z.string()).default([]),
+    referenceText: z.string().min(1).optional(),
+  }),
   activityBase.extend({
     type: z.literal("flashcard"),
     front: z.string(),

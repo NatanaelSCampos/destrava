@@ -5,22 +5,37 @@ import { Mic, Square, Check } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { audioToWav } from "@/lib/audio-to-wav";
+import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 
 type Speaking = Extract<PublicActivity, { type: "speaking" }>;
 
 export function SpeakingRecorder({ activity }: { activity: Speaking }) {
-  const { saveSpeaking } = useStudy();
+  const { state, saveSpeaking } = useStudy();
+  const previous = state.speaking.find((item) => item.activityId === activity.id);
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [transcription, setTranscription] = useState("");
+  const [feedback, setFeedback] = useState<PronunciationFeedback | null>(
+    previous?.feedback ?? null,
+  );
+  const [hasNewAttempt, setHasNewAttempt] = useState(false);
+  const [assessing, setAssessing] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const shownFeedback = hasNewAttempt ? feedback : (feedback ?? previous?.feedback ?? null);
 
   async function start() {
+    setHasNewAttempt(true);
     setError("");
     setSaved(false);
+    setFeedback(null);
+    setAudioBlob(null);
+    setAudioUrl(null);
+    setTranscription("");
     try {
       if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder)
         throw new Error("A gravação não está disponível neste navegador.");
@@ -33,6 +48,7 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
       };
       next.onstop = () => {
         const blob = new Blob(chunks, { type: next.mimeType || "audio/webm" });
+        setAudioBlob(blob);
         const reader = new FileReader();
         reader.onloadend = () =>
           setAudioUrl(typeof reader.result === "string" ? reader.result : null);
@@ -60,8 +76,31 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
   }
   function save() {
     if (!audioUrl || !transcription.trim()) return;
-    saveSpeaking(activity.id, transcription.trim(), audioUrl);
+    saveSpeaking(activity.id, transcription.trim(), audioUrl, feedback ?? undefined);
     setSaved(true);
+  }
+
+  async function assess() {
+    if (!audioBlob || !activity.referenceText || assessing) return;
+    setAssessing(true);
+    setError("");
+    try {
+      const wav = await audioToWav(audioBlob);
+      const form = new FormData();
+      form.append("activityId", activity.id);
+      form.append("audio", wav, "pronunciation.wav");
+      const response = await fetch("/api/pronunciation", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Não foi possível avaliar a gravação.");
+      const result = data.feedback as PronunciationFeedback;
+      setFeedback(result);
+      setTranscription(result.recognizedText);
+      setSaved(false);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Não foi possível avaliar a gravação.");
+    } finally {
+      setAssessing(false);
+    }
   }
 
   return (
@@ -73,6 +112,16 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
             <li key={item}>{item}</li>
           ))}
         </ul>
+        {activity.referenceText && (
+          <div className="text-audio-row">
+            <p lang="es">{activity.referenceText}</p>
+            <SpeakButton
+              text={activity.referenceText}
+              label="Ouvir a frase para repetir"
+              withLabel
+            />
+          </div>
+        )}
       </div>
       <div className="recording-panel">
         <span className={`mic-orb ${recording ? "recording" : ""}`}>
@@ -87,7 +136,12 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
             <Square size={15} /> Parar gravação
           </button>
         ) : (
-          <button type="button" className="primary-button" onClick={() => void start()}>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => void start()}
+            disabled={assessing}
+          >
             <Mic size={16} /> {audioUrl ? "Gravar novamente" : "Gravar resposta"}
           </button>
         )}
@@ -95,8 +149,47 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
           <audio controls src={audioUrl} aria-label="Ouvir sua gravação" />
         )}
       </div>
+      {activity.referenceText && audioBlob && !recording && (
+        <button
+          type="button"
+          className="secondary-button"
+          disabled={assessing}
+          onClick={() => void assess()}
+        >
+          {assessing ? "Avaliando áudio…" : "Avaliar pronúncia"}
+        </button>
+      )}
+      {shownFeedback && activity.referenceText && (
+        <div className="pronunciation-result" role="status">
+          <strong>Indicadores da gravação</strong>
+          <p>
+            Clareza {Math.round(shownFeedback.accuracy)}/100 · Fluência{" "}
+            {Math.round(shownFeedback.fluency)}
+            /100 · Frase completa {Math.round(shownFeedback.completeness)}/100
+          </p>
+          {shownFeedback.words.length > 0 && (
+            <div className="pronunciation-words" lang="es">
+              {shownFeedback.words.map((word, index) => (
+                <span
+                  key={`${index}-${word.text}`}
+                  title={`Clareza: ${word.accuracy === null ? "sem nota" : `${Math.round(word.accuracy)}/100`}`}
+                >
+                  {word.text}
+                  {word.errorType !== "None" ? " ↻" : ""}
+                </span>
+              ))}
+            </div>
+          )}
+          <small>
+            Indicadores para praticar; não são uma aprovação definitiva. ↻ indica uma palavra para
+            repetir.
+          </small>
+        </div>
+      )}
       <div className="field">
-        <label htmlFor={`transcription-${activity.id}`}>Digite o que você disse</label>
+        <label htmlFor={`transcription-${activity.id}`}>
+          {activity.referenceText ? "Revise ou digite o que você disse" : "Digite o que você disse"}
+        </label>
         <textarea
           id={`transcription-${activity.id}`}
           value={transcription}
@@ -112,13 +205,14 @@ export function SpeakingRecorder({ activity }: { activity: Speaking }) {
         <SpeakButton text={transcription} label="Ouvir a transcrição em espanhol" withLabel />
       )}
       <p className="helper-note">
-        Nesta versão, a transcrição é digitada por você. A nota de pronúncia só aparecerá quando
-        houver uma avaliação real de áudio.
+        {activity.referenceText
+          ? "A avaliação usa a gravação e a frase mostrada. A transcrição pode ser corrigida antes de salvar."
+          : "Nesta atividade livre, você digita a transcrição. A avaliação automática é oferecida na atividade de repetição."}
       </p>
       <button
         type="button"
         className="primary-button"
-        disabled={!audioUrl || !transcription.trim()}
+        disabled={!audioUrl || !transcription.trim() || assessing}
         onClick={save}
       >
         <Check size={16} /> Salvar prática oral

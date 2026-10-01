@@ -262,9 +262,8 @@ export class SupabaseStudyRepository {
         created_at: item.createdAt,
       })),
     );
-    await this.upsert(
-      "ai_feedback",
-      state.writing
+    await this.upsert("ai_feedback", [
+      ...state.writing
         .filter((item) => item.feedback)
         .map((item) => ({
           id: item.id,
@@ -275,7 +274,18 @@ export class SupabaseStudyRepository {
           payload: item.feedback,
           created_at: item.createdAt,
         })),
-    );
+      ...state.speaking
+        .filter((item) => item.feedback)
+        .map((item) => ({
+          id: item.id,
+          user_id: uid,
+          writing_submission_id: null,
+          speaking_submission_id: item.id,
+          feature: "pronunciation",
+          payload: item.feedback,
+          created_at: item.createdAt,
+        })),
+    ]);
     await this.upsert(
       "study_events",
       state.events.map((item) => ({

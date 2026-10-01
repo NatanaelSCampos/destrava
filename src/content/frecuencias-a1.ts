@@ -419,8 +419,8 @@ export const frecuenciasA1 = courseSchema.parse({
           active: true,
           title: "Fale em voz alta",
           eyebrow: "Speaking",
-          description: "Grave uma apresentação curta.",
-          minutes: 6,
+          description: "Repita uma frase e grave uma apresentação curta.",
+          minutes: 9,
           activities: [
             {
               id: "speaking-1",
@@ -435,6 +435,20 @@ export const frecuenciasA1 = courseSchema.parse({
                 "Ouça a gravação e digite o que você disse.",
               ],
               source: { book: "student", pages: "4–5, 10–13 (interação oral)" },
+            },
+            {
+              id: "speaking-repeat-1",
+              type: "speaking",
+              title: "Repita uma frase",
+              prompt: "Escute e repita: Hola, me llamo Lucía y vivo en Madrid.",
+              skill: "speaking",
+              minutes: 3,
+              referenceText: "Hola, me llamo Lucía y vivo en Madrid.",
+              guidance: [
+                "Ouça a frase em espanhol antes de gravar.",
+                "Fale a frase inteira com sua voz natural.",
+                "Veja os indicadores de pronúncia e tente novamente se quiser.",
+              ],
             },
           ],
         },
