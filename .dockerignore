@@ -1,0 +1,10 @@
+.git
+.next
+node_modules
+.env*
+*.pdf
+*-smoke.png
+supabase/.temp
+supabase/.branches
+*.tsbuildinfo
+README.md

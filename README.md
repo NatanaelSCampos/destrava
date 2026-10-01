@@ -15,6 +15,22 @@ Abra <http://localhost:3000>. Sem um projeto Supabase configurado, a aplicação
 
 A chave da OpenAI já foi salva em `.env.local` neste workspace. Ela pertence ao projeto da OpenAI Platform **Chatbot Ecommerce**, conforme a escolha feita nesta sessão. Nunca coloque a chave em variáveis `NEXT_PUBLIC_*` nem publique `.env.local`.
 
+## Prévia pública
+
+A aplicação está disponível em <https://frecuencias-a1-natanael.fly.dev>, na organização Fly.io **plataforma-de-idioma**, região de São Paulo. A prévia usa uma máquina compartilhada de 512 MB, configurada para parar quando não há tráfego e iniciar novamente ao receber uma visita. A hospedagem pode gerar cobranças conforme o uso.
+
+O cadastro da prévia é imediato, sem confirmação de e-mail, para que convidados possam acessar. O Supabase remoto guarda contas e progresso. A chave da OpenAI foi cadastrada como segredo de execução no Fly.io; o `Dockerfile` recebe apenas a URL e a chave **publicável** do Supabase durante a compilação. `.env.local` fica fora da imagem e do Git.
+
+Para publicar uma nova versão, configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` no terminal e execute:
+
+```powershell
+flyctl deploy --ha=false `
+  --build-arg "NEXT_PUBLIC_SUPABASE_URL=$env:NEXT_PUBLIC_SUPABASE_URL" `
+  --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+```
+
+O nome do app, a região, a porta, a checagem de saúde e o desligamento automático estão em [fly.toml](fly.toml). O segredo `OPENAI_API_KEY` deve permanecer configurado no Fly.io, fora do repositório.
+
 ## Conectar o Supabase
 
 O schema está em [uma migração versionada](supabase/migrations/20260930000100_initial.sql). Para vincular um projeto existente pelo CLI:
