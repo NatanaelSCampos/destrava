@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen,
+  CaseUpper,
   ChartNoAxesCombined,
   ChevronDown,
   Clock3,
@@ -30,6 +31,7 @@ import { SelectionAudio } from "@/components/audio/selection-audio";
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
   { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
+  { href: "/alphabet", label: "Alfabeto", icon: CaseUpper },
   { href: "/study", label: "Aula de hoje", icon: Play },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/vocabulary", label: "Vocabulário", icon: GraduationCap },
@@ -110,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <nav className="sidebar-nav" aria-label="Navegação principal">
           <div className="nav-caption">ESTUDAR</div>
-          {navItems.slice(0, 4).map(({ href, label, icon: Icon }) => (
+          {navItems.slice(0, 5).map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
@@ -128,7 +130,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
           <div className="nav-caption nav-caption-second">ACOMPANHAR</div>
-          {navItems.slice(4).map(({ href, label, icon: Icon }) => (
+          {navItems.slice(5).map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}

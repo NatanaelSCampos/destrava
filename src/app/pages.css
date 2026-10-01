@@ -1228,6 +1228,125 @@
   font-size: 9px;
   margin-top: 5px;
 }
+.alphabet-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+}
+.alphabet-summary .panel {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 18px 22px;
+}
+.alphabet-summary strong {
+  font-size: 26px;
+  letter-spacing: -0.05em;
+}
+.alphabet-summary span {
+  color: #818187;
+  font-size: 11px;
+}
+.alphabet-note {
+  margin: 14px 0 0;
+  color: #67676d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.alphabet-card {
+  padding: 18px;
+  min-height: 268px;
+  display: flex;
+  flex-direction: column;
+}
+.alphabet-card-top,
+.alphabet-word-row,
+.alphabet-example-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.alphabet-position {
+  color: #a2a2a7;
+  font-size: 10px;
+  font-weight: 700;
+}
+.alphabet-letter-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin: 18px 0;
+}
+.alphabet-symbol {
+  min-width: 66px;
+  font-size: 52px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  white-space: nowrap;
+}
+.alphabet-symbol span {
+  color: var(--primary);
+  font-size: 25px;
+  margin-left: 2px;
+}
+.alphabet-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+.alphabet-name > span,
+.alphabet-word-row > div > span {
+  color: #818187;
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+.alphabet-name strong {
+  font-size: 15px;
+}
+.alphabet-name .speak-button {
+  margin-top: 2px;
+}
+.alphabet-word-row {
+  border-top: 1px solid var(--border);
+  padding-top: 13px;
+}
+.alphabet-word-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.alphabet-word-row strong {
+  font-size: 16px;
+}
+.alphabet-word-row small {
+  color: #67676d;
+  font-size: 11px;
+}
+.alphabet-example-row {
+  margin-top: 13px;
+  align-items: flex-start;
+}
+.alphabet-example-row p {
+  color: #67676d;
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1.5;
+  margin: 6px 0 0;
+}
+.alphabet-tip {
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-left: 2px solid #d97382;
+  background: #faf7f8;
+  color: #67676d;
+  font-size: 10px;
+  line-height: 1.5;
+}
 .mistake-list {
   display: grid;
   gap: 14px;
@@ -1821,6 +1940,7 @@
   .review-summary,
   .mistake-summary,
   .vocab-summary,
+  .alphabet-summary,
   .history-summary,
   .unit-aside,
   .vocab-grid {

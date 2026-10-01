@@ -76,6 +76,7 @@ O renderizador de atividades, o planejador, a revisão e as tabelas usam os regi
 
 ## Recursos e limites atuais
 
+- O menu **Alfabeto** apresenta as 27 letras do espanhol com seus nomes, palavras, frases de exemplo e áudio para cada item. É possível buscar e filtrar vogais e consoantes. A ordem e os nomes seguem a [Ortografía da RAE/ASALE](https://www.rae.es/sites/default/files/Principales_novedades_de_la_Ortografia_de_la_lengua_espanola.pdf).
 - Exercícios objetivos são corrigidos pela API local; o gabarito não é enviado com o conteúdo público da página.
 - O professor e a correção de escrita usam a API da OpenAI no servidor, com respostas estruturadas, limite de requisições por hora e contexto curto. O custo estimado só é calculado quando as tarifas por milhão de tokens são configuradas em `OPENAI_INPUT_USD_PER_MILLION` e `OPENAI_OUTPUT_USD_PER_MILLION`.
 - Sem Supabase, as rotas de IA aceitam chamadas somente em desenvolvimento local. Uma publicação exige autenticação configurada.
