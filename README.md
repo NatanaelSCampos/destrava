@@ -41,6 +41,8 @@ AZURE_SPEECH_KEY=SUA_CHAVE
 AZURE_SPEECH_LOCALE=es-ES
 ```
 
+O portal também pode mostrar um endpoint regional como `https://eastus.api.cognitive.microsoft.com/`; a aplicação aceita esse formato e usa a região correspondente para reconhecer a fala.
+
 Use `es-MX` em `AZURE_SPEECH_LOCALE` se preferir avaliar o espanhol do México. Reinicie o servidor local após editar o arquivo. A chave é lida apenas no servidor; não use prefixo `NEXT_PUBLIC_` nem envie a chave pelo chat ou Git. Para ativar a avaliação no Fly.io, configure `AZURE_SPEECH_ENDPOINT`, `AZURE_SPEECH_KEY` e opcionalmente `AZURE_SPEECH_LOCALE` como segredos do app.
 
 A atividade **Repita uma frase** compara uma gravação de até 20 segundos com a frase exibida e mostra indicadores de clareza, fluência, completude e palavras que merecem outra tentativa. A apresentação livre continua sem nota automática. As chamadas autenticadas compartilham o limite de 20 solicitações por usuário por hora com as outras rotas de IA. Sem a credencial Azure, a gravação ainda pode ser salva, mas a avaliação retorna indisponível.

@@ -33,9 +33,15 @@ function speechEndpoint() {
   if (!configured) return null;
   try {
     const url = new URL(configured);
-    if (url.protocol !== "https:" || !url.hostname.endsWith(".cognitiveservices.azure.com"))
-      return null;
-    return new URL("/stt/speech/recognition/conversation/cognitiveservices/v1", url);
+    if (url.protocol !== "https:" || url.username || url.password || url.port) return null;
+    if (url.hostname.endsWith(".cognitiveservices.azure.com"))
+      return new URL("/stt/speech/recognition/conversation/cognitiveservices/v1", url);
+    const regional = /^([a-z0-9-]+)\.api\.cognitive\.microsoft\.com$/.exec(url.hostname);
+    if (regional)
+      return new URL(
+        `https://${regional[1]}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1`,
+      );
+    return null;
   } catch {
     return null;
   }
