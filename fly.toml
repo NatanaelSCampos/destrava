@@ -9,6 +9,7 @@ primary_region = "gru"
 [env]
   PORT = "3000"
   NODE_ENV = "production"
+  APP_ORIGIN = "https://frecuencias-a1-natanael.fly.dev"
 
 [http_service]
   internal_port = 3000

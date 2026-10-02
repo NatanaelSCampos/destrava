@@ -29,7 +29,7 @@ flyctl deploy --ha=false `
   --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
 ```
 
-O nome do app, a região, a porta, a checagem de saúde e o desligamento automático estão em [fly.toml](fly.toml). O segredo `OPENAI_API_KEY` deve permanecer configurado no Fly.io, fora do repositório.
+O nome do app, a região, a porta, a checagem de saúde e o desligamento automático estão em [fly.toml](fly.toml). `APP_ORIGIN` deve apontar para a URL pública do app: os callbacks de login e confirmação usam esse valor para voltar ao navegador, pois o endereço interno do servidor Fly não é acessível externamente. Ao trocar de domínio, atualize também os redirecionamentos do Supabase e do Google, o hostname do Turnstile e o RP ID das passkeys. O segredo `OPENAI_API_KEY` deve permanecer configurado no Fly.io, fora do repositório.
 
 ## Avaliação de pronúncia com Azure Speech
 
