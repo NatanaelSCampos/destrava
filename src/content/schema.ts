@@ -65,6 +65,7 @@ export const activitySchema = z.discriminatedUnion("type", [
     type: z.literal("fill_blank"),
     answer: z.string(),
     accepted: z.array(z.string()).default([]),
+    fullAnswers: z.array(z.string()).default([]),
   }),
   activityBase.extend({
     type: z.literal("matching"),

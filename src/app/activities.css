@@ -248,6 +248,11 @@
 .answer-field {
   max-width: 550px;
 }
+.answer-guidance {
+  color: #67676d;
+  font-size: 11px;
+  line-height: 1.5;
+}
 .exercise-submit {
   margin-top: 20px;
 }

@@ -3,7 +3,7 @@ import { isActivityEnabled } from "@/lib/feature-flags";
 
 export type PublicActivity = Activity extends infer A
   ? A extends Activity
-    ? Omit<A, "answer" | "accepted" | "pairs" | "explanation">
+    ? Omit<A, "answer" | "accepted" | "fullAnswers" | "pairs" | "explanation">
     : never
   : never;
 export type PublicLesson = Omit<Lesson, "activities"> & { activities: PublicActivity[] };
@@ -25,7 +25,13 @@ export function publicCourse(course: Course): PublicCourse {
               .filter((activity) => isActivityEnabled(activity.type))
               .map((activity) => {
                 const safe = { ...activity } as Record<string, unknown>;
-                for (const privateField of ["answer", "accepted", "pairs", "explanation"])
+                for (const privateField of [
+                  "answer",
+                  "accepted",
+                  "fullAnswers",
+                  "pairs",
+                  "explanation",
+                ])
                   delete safe[privateField];
                 return safe as PublicActivity;
               }),

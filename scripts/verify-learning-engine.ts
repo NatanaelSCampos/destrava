@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { frecuenciasA1, vocabularySeed } from "../src/content/frecuencias-a1";
 import { publicCourse } from "../src/content/public";
+import { findActivity } from "../src/content/schema";
+import { gradeActivity } from "../src/domain/activities/grader";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
 import { buildLearningMemory } from "../src/domain/study/learning-memory";
@@ -49,6 +51,23 @@ import {
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+const fillBlanks = frecuenciasA1.units.flatMap((unit) =>
+  unit.lessons.flatMap((lesson) =>
+    lesson.activities.filter((activity) => activity.type === "fill_blank"),
+  ),
+);
+for (const activity of fillBlanks) {
+  assert.equal(gradeActivity(activity, activity.answer)?.correct, true);
+  for (const fullAnswer of activity.fullAnswers) {
+    assert.equal(gradeActivity(activity, fullAnswer)?.correct, true, activity.id);
+  }
+}
+assert.equal(
+  gradeActivity(findActivity(frecuenciasA1, "grammar-3")!, "Ana tiene 27 años.")?.correct,
+  false,
+);
+assert.equal(gradeActivity(findActivity(frecuenciasA1, "grammar-3")!, "Es tiene")?.correct, false);
+assert.equal(JSON.stringify(course).includes('"fullAnswers"'), false);
 const adaptiveReview = recordAdaptiveAssessment(initialStudyState, course, {
   courseId: course.id,
   unitId: course.units[0].id,

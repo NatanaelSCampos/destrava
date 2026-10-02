@@ -34,4 +34,16 @@ export const featureAnnouncements: FeatureAnnouncement[] = [
     href: "/course/frecuencias-a1/unit/1/lesson/revision?activity=review-1",
     linkLabel: "Abrir revisão",
   },
+  {
+    id: "2026-10-lacunas-frase-completa",
+    title: "Mais liberdade para responder às lacunas",
+    summary: "Agora você pode escrever o trecho que falta ou a frase completa.",
+    highlights: [
+      "O campo explica o que deve ser digitado.",
+      "Uma frase completa correta também é aceita nos exercícios de lacuna.",
+      "Se errar, você verá o trecho esperado e a frase correta.",
+    ],
+    href: "/course/frecuencias-a1/unit/1/lesson/vocabulario?activity=vocab-3",
+    linkLabel: "Experimentar uma lacuna",
+  },
 ];

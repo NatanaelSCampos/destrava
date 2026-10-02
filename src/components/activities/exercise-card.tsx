@@ -99,9 +99,14 @@ export function ExerciseCard({
       )}
       {(activity.type === "fill_blank" || activity.type === "short_answer") && (
         <div className="field answer-field">
-          <label htmlFor={`answer-${activity.id}`}>Sua resposta</label>
+          <label htmlFor={`answer-${activity.id}`}>
+            {activity.type === "fill_blank" ? "Complete a lacuna" : "Sua resposta"}
+          </label>
           <input
             id={`answer-${activity.id}`}
+            aria-describedby={
+              activity.type === "fill_blank" ? `answer-help-${activity.id}` : undefined
+            }
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
             onKeyDown={(event) => {
@@ -111,9 +116,19 @@ export function ExerciseCard({
               }
             }}
             disabled={!!result}
-            placeholder="Escreva em espanhol…"
+            placeholder={
+              activity.type === "fill_blank"
+                ? "Digite o trecho que falta…"
+                : "Escreva a resposta em espanhol…"
+            }
             autoComplete="off"
           />
+          {activity.type === "fill_blank" && (
+            <small className="answer-guidance" id={`answer-help-${activity.id}`}>
+              Digite só o trecho que falta. Se a lacuna estiver em uma frase, você também pode
+              escrever a frase completa.
+            </small>
+          )}
         </div>
       )}
       {activity.type === "ordering" && (
@@ -182,10 +197,19 @@ export function ExerciseCard({
             </strong>
             <p>{result.explanation}</p>
             {!result.correct && (
-              <p className="correct-answer">
-                Resposta esperada: <strong>{result.correctAnswer}</strong>
-                <SpeakButton text={result.correctAnswer} label="Ouvir resposta esperada" />
-              </p>
+              <>
+                <p className="correct-answer">
+                  {activity.type === "fill_blank" ? "Trecho esperado: " : "Resposta esperada: "}
+                  <strong>{result.correctAnswer}</strong>
+                  <SpeakButton text={result.correctAnswer} label="Ouvir resposta esperada" />
+                </p>
+                {activity.type === "fill_blank" && result.completeAnswer && (
+                  <p className="correct-answer">
+                    Frase completa: <strong lang="es">{result.completeAnswer}</strong>
+                    <SpeakButton text={result.completeAnswer} label="Ouvir frase completa" />
+                  </p>
+                )}
+              </>
             )}
             {activity.type === "listening" && result.transcript && (
               <div className="transcript">

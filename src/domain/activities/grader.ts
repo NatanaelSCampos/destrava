@@ -13,6 +13,7 @@ export function normalizeAnswer(value: string) {
 export type GradeResult = {
   correct: boolean;
   correctAnswer: string;
+  completeAnswer?: string;
   explanation: string;
   transcript?: string;
 };
@@ -31,12 +32,14 @@ export function gradeActivity(activity: Activity, rawAnswer: string): GradeResul
     return null;
   const answer = "answer" in activity ? activity.answer : "";
   const accepted = "accepted" in activity ? activity.accepted : [];
-  const correct = [answer, ...accepted].some(
+  const fullAnswers = activity.type === "fill_blank" ? activity.fullAnswers : [];
+  const correct = [answer, ...accepted, ...fullAnswers].some(
     (candidate) => normalizeAnswer(candidate) === normalizeAnswer(rawAnswer),
   );
   return {
     correct,
     correctAnswer: answer,
+    ...(fullAnswers.length ? { completeAnswer: fullAnswers[0] } : {}),
     explanation:
       activity.explanation ??
       (correct ? "Muito bem!" : "Revise a explicação da lição e tente novamente."),
