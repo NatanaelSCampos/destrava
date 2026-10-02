@@ -21,12 +21,10 @@ A aplicação está disponível em <https://frecuencias-a1-natanael.fly.dev>, na
 
 O cadastro da prévia é imediato, sem confirmação de e-mail, para que convidados possam acessar. O Supabase remoto guarda contas e progresso. A chave da OpenAI foi cadastrada como segredo de execução no Fly.io; o `Dockerfile` recebe apenas a URL e a chave **publicável** do Supabase durante a compilação. `.env.local` fica fora da imagem e do Git.
 
-Para publicar uma nova versão, configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` no terminal e execute:
+Para publicar uma nova versão neste Windows, use o script abaixo. Ele lê apenas a URL e a chave **publicável** do Supabase em `.env.local`, força a conexão do Fly por IPv4 e encerra o proxy local ao terminar:
 
 ```powershell
-flyctl deploy --ha=false `
-  --build-arg "NEXT_PUBLIC_SUPABASE_URL=$env:NEXT_PUBLIC_SUPABASE_URL" `
-  --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$env:NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+powershell -ExecutionPolicy Bypass -File scripts/deploy-fly.ps1
 ```
 
 O nome do app, a região, a porta, a checagem de saúde e o desligamento automático estão em [fly.toml](fly.toml). `APP_ORIGIN` deve apontar para a URL pública do app: os callbacks de login e confirmação usam esse valor para voltar ao navegador, pois o endereço interno do servidor Fly não é acessível externamente. Ao trocar de domínio, atualize também os redirecionamentos do Supabase e do Google, o hostname do Turnstile e o RP ID das passkeys. O segredo `OPENAI_API_KEY` deve permanecer configurado no Fly.io, fora do repositório.
