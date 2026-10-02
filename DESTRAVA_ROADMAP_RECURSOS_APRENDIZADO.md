@@ -72,14 +72,14 @@ Tudo isso deve contribuir para decidir:
 - **APROVADO** → pode ser planejado e desenvolvido.
 - **EM ANÁLISE** → não desenvolver a versão final ainda; pode preparar arquitetura, interfaces e provas de conceito sem integrar definitivamente ao fluxo principal.
 
-## Implementação no produto — auditoria de 2026-10-01
+## Implementação no produto — auditoria atualizada em 2026-10-02
 
 O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **IMPLEMENTADO** indica que o fluxo principal atende ao item; **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise.
 
 | Item | Implementação | Evidência atual e principal lacuna |
 | --- | --- | --- |
-| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala e revisões de palavras e estruturas; ainda falta estado separado por curso/idioma. |
-| 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência e trilha; ainda faltam sinais de uso do dicionário, conversas e avaliações mais amplas. |
+| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala, revisão de palavras/estruturas e respostas do diagnóstico adaptativo; ainda falta estado separado por curso/idioma e evidência estruturada das conversas e descrições de imagem. |
+| 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência, trilha e evidências do diagnóstico; ainda não usa sinais de conversas e descrições de imagem para escolher a próxima prática. |
 | 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
@@ -90,7 +90,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra, áudio→palavra e lacuna quando há exemplo literal; estruturas curadas pedem produção de exemplo. Imagem→termo e lacunas de formas flexionadas ainda faltam. |
-| 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA; ainda faltam mais cenas, variantes por idioma e calibração pedagógica em uso real. |
+| 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA. A IA usa fatos cadastrados para cada cena, sem analisar seus pixels por tentativa; faltam mais cenas, cobertura de detalhes verdadeiros não cadastrados, variantes por idioma e calibração pedagógica. |
 | 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
 | 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
 | 16. Conversação livre adaptativa | **PARCIAL** | Conversa livre com assunto escolhido, turnos persistidos, contexto curto do aluno e correção configurável; a interação ainda é digitada. |
@@ -109,8 +109,27 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Falta cobertura regional maior no curso. |
 | 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições, estruturas e eventos de conversa são registrados; ainda faltam sinais conversacionais no motor adaptativo. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições, estruturas, conversas, descrições de imagem e diagnósticos geram registros/eventos; ainda faltam sinais conversacionais e das imagens no motor adaptativo. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
+
+---
+
+## O que ainda falta — visão rápida
+
+Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira coluna da tabela acima descreve a lacuna de cada um. Para planejar as próximas entregas, as pendências principais são:
+
+| Frente | Itens | Trabalho restante |
+| --- | --- | --- |
+| Base multilíngua | 1, 5, 7, 8, 9, 29 e 31 | Separar todo o estado e conteúdo por curso/idioma, ampliar os catálogos e adaptar as instruções de IA além do espanhol A1. |
+| Conversação e personalização | 2, 3, 14–17, 19, 21, 27, 28 e 32 | Permitir fala espontânea nas conversas, ampliar missões, usar sinais conversacionais no perfil e calibrar ritmo/correção. |
+| Revisão e fala | 6, 10, 12 e 20 | Revisão granular de pronúncia, imagem→termo, lacunas flexionadas e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
+| Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
+| Avaliação | 22–24 | Ampliar o banco adaptativo e a amostra por competência, avaliar escrita livre e criar agendamento automático para lacunas. O teste final atual continua fixo. |
+| Outros fluxos parciais | 18, 30 e 33 | Sequência de microlições, ações para mais tipos de dificuldade e validação contínua de cada nova entrega. |
+| Ainda não iniciado | 26 | AI Bridge: exportar/importar prática com outras IAs. |
+| Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
+
+**Concluídos no escopo descrito:** 4 (sessões rápidas) e 11 (Fale sem ler). Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
 
 ---
 
@@ -2137,7 +2156,7 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 
 - **Implementado:** duas cenas ilustradas do cotidiano, cozinha e café. O aluno pode gravar até 20 segundos ou digitar uma descrição em espanhol. O Azure Speech transcreve a gravação sem frase de referência; a IA devolve um acerto concreto, um ajuste quando necessário e uma frase para ampliar a descrição.
 - **Persistência:** texto, modo de entrada e dicas ficam no `StudyState` e no JSON Supabase existente, limitados às 40 tentativas recentes; o áudio não é salvo. Eventos de conclusão entram na telemetria existente. Não houve migração.
-- **Limites:** feedback qualitativo sem nota de pronúncia, nota oficial ou validação pedagógica em larga escala. As duas cenas e seus fatos são curados para espanhol A1; outro idioma requer novas cenas e instruções.
+- **Limites:** feedback qualitativo sem nota de pronúncia, nota oficial ou validação pedagógica em larga escala. A imagem não é enviada à IA em cada tentativa: ela compara a transcrição com uma lista curta de fatos curados. Detalhes verdadeiros fora dessa lista podem receber feedback incompleto. As duas cenas são específicas do espanhol A1; outro idioma requer novas cenas e instruções.
 
 **Reaproveitado:** gravação via `MediaRecorder`, conversão WAV, endpoint Azure Speech, `AIProvider`, guarda de requisições, `StudyProvider`, `SpeakButton` e persistência Supabase já existente.
 
