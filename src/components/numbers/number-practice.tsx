@@ -115,8 +115,8 @@ export function NumberPractice({ initialPromptId }: { initialPromptId?: string }
             perfil de aprendizado.
           </p>
         </div>
-        <Link href="/progress" className="secondary-button">
-          Ver meu progresso <ArrowRight size={16} />
+        <Link href="/basics?topic=numbers" className="secondary-button">
+          Consultar números <ArrowRight size={16} />
         </Link>
       </div>
       <div className="number-controls panel">

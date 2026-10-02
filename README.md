@@ -49,7 +49,9 @@ A atividade **Repita uma frase** compara uma gravação de até 20 segundos com 
 
 O menu **Praticar fala** reúne o shadowing, com evolução por tentativa e palavras a repetir, e **Fale sem ler**. Este último passa por imitação com texto, memória com apenas áudio e produção de uma frase própria. As duas primeiras etapas precisam de avaliação Azure para avançar; a produção própria é salva com áudio e transcrição, sem nota automática. O conteúdo atual oferece uma frase de referência; outras atividades de fala com `referenceText` aparecem automaticamente nessa página.
 
-O menu **Números** traz ditado, fala e repetição com exemplos de valores, datas, horários, telefone, números grandes e ordinais. O ditado usa a voz do navegador; a avaliação da fala usa a mesma credencial Azure das atividades de pronúncia. Cada tentativa registra o número e o modo no estado do aluno, alimenta o conceito **Números** do perfil e pode gerar uma recomendação para treinar novamente. O catálogo inicial é curado para espanhol e pode ser ampliado em `src/domain/numbers/number-practice.ts`.
+O menu **Fundamentos** reúne **Alfabeto** e **Números** na mesma área. Cada tema tem seu próprio catálogo com busca, filtros, exemplos e áudio; outros fundamentos podem ser adicionados depois sem mudar a navegação principal. O alfabeto também continua acessível em `/alphabet`.
+
+Em **Números**, cada cartão mostra a forma escrita, a leitura por extenso, uma frase, tradução e áudio. O botão **Praticar números** abre `/numbers`, com ditado, fala e repetição de valores, datas, horários, telefone, números grandes e ordinais. O ditado usa a voz do navegador; a avaliação da fala usa a mesma credencial Azure das atividades de pronúncia. Cada tentativa registra o número e o modo no estado do aluno, alimenta o conceito **Números** do perfil e pode gerar uma recomendação para treinar novamente. O catálogo inicial é curado para espanhol e pode ser ampliado em `src/domain/numbers/number-practice.ts`.
 
 ## Conectar o Supabase
 
@@ -104,7 +106,7 @@ npm.cmd run learning:verify
 
 ## Recursos e limites atuais
 
-- O menu **Alfabeto** apresenta as 27 letras do espanhol com seus nomes, palavras, frases de exemplo e áudio para cada item. É possível buscar e filtrar vogais e consoantes. A ordem e os nomes seguem a [Ortografía da RAE/ASALE](https://www.rae.es/sites/default/files/Principales_novedades_de_la_Ortografia_de_la_lengua_espanola.pdf).
+- Em **Fundamentos → Alfabeto**, as 27 letras do espanhol aparecem com nomes, palavras, frases de exemplo e áudio para cada item. É possível buscar e filtrar vogais e consoantes. A ordem e os nomes seguem a [Ortografía da RAE/ASALE](https://www.rae.es/sites/default/files/Principales_novedades_de_la_Ortografia_de_la_lengua_espanola.pdf).
 - Exercícios objetivos são corrigidos pela API local; o gabarito não é enviado com o conteúdo público da página.
 - O professor e a correção de escrita usam a API da OpenAI no servidor, com respostas estruturadas, limite de requisições por hora e contexto curto. O custo estimado só é calculado quando as tarifas por milhão de tokens são configuradas em `OPENAI_INPUT_USD_PER_MILLION` e `OPENAI_OUTPUT_USD_PER_MILLION`.
 - Sem Supabase, as rotas de IA aceitam chamadas somente em desenvolvimento local. Uma publicação exige autenticação configurada.

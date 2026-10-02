@@ -85,7 +85,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
 | 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, expressões do vocabulário, erros de escrita e frases de pronúncia no mesmo fluxo; estruturas e pronúncia ainda não têm agendamentos granulares próprios. |
 | 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados quando disponíveis, ocorrências no curso, buscas recentes, contagens de áudio e revisão automática após buscas repetidas; faltam cobertura ampla e variações regionais. |
-| 8. Números ativos | **PARCIAL** | **Números** oferece ditado, ver e falar, ouvir e repetir, com exemplos de dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
+| 8. Números ativos | **PARCIAL** | **Fundamentos → Números** oferece catálogo com áudio e exemplos; a prática inclui ditado, ver e falar, ouvir e repetir, com dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
 | 9. Particularidades contextualizadas | **PENDENTE** | O curso contém regras básicas, mas não há ferramenta de variantes regionais integrada à prática e à IA. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
@@ -2076,3 +2076,15 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** o catálogo numérico atual é pequeno e específico do espanhol; outro idioma exige seu próprio catálogo e voz. A microlição cria uma questão por chamada, sem sequência adaptativa. Resultados de fala são indicadores de prática, não aprovação. Os novos históricos ficam no JSON de `user_study_state` e eventos, sem migração de banco.
 
 **Reaproveitado:** `StudyState`, perfil de domínio, motor de recomendações, `SpeakingRecorder`, API Azure, `AIProvider`, guarda de requisições e caderno de erros.
+
+---
+
+# Registro da entrega — biblioteca de fundamentos (2026-10-01)
+
+**Objetivo:** reunir conteúdos básicos do idioma em uma área extensível, começando por alfabeto e números.
+
+- **Implementado:** menu **Fundamentos** com seleção de tema na mesma tela. O alfabeto existente foi extraído para um componente compartilhado; `/alphabet` continua acessível por links antigos. O catálogo de números ganhou busca, filtros por situação, forma por extenso, frase, tradução e áudio para cada item. Cada cartão abre o número correspondente na prática existente em `/numbers`.
+- **Arquitetura:** a biblioteca mostra apenas temas disponíveis para o idioma do curso. O conteúdo inicial é espanhol; futuros idiomas podem trazer seus próprios catálogos e temas sem duplicar as práticas existentes.
+- **Limite atual:** o catálogo de números contém 13 exemplos curados. A prática continua separada da consulta para preservar a tela de exercícios e seus históricos.
+
+**Reaproveitado:** `spanishAlphabet`, `numberPrompts`, `SpeakButton`, filtros, busca e páginas existentes. Não há mudança de banco nem de API.

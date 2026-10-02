@@ -14,7 +14,6 @@ import {
   House,
   Menu,
   Mic2,
-  Hash,
   NotebookPen,
   Play,
   RotateCcw,
@@ -33,8 +32,7 @@ import { SelectionAudio } from "@/components/audio/selection-audio";
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
   { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
-  { href: "/alphabet", label: "Alfabeto", icon: CaseUpper },
-  { href: "/numbers", label: "Números", icon: Hash },
+  { href: "/basics", label: "Fundamentos", icon: CaseUpper },
   { href: "/study", label: "Aula de hoje", icon: Play },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
@@ -43,6 +41,11 @@ const navigation = (courseSlug: string) => [
   { href: "/history", label: "Histórico", icon: Clock3 },
   { href: "/progress", label: "Estatísticas", icon: ChartNoAxesCombined },
 ];
+
+function isNavActive(href: string, pathname: string) {
+  if (href === "/basics" && (pathname === "/alphabet" || pathname === "/numbers")) return true;
+  return pathname.startsWith(href) && (href !== "/dashboard" || pathname === href);
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -67,16 +70,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const pendingReviews = dueReviewCounts(state, vocabularyItems, new Date(), activityIds).total;
   const navItems = navigation(course.slug).filter(
-    (item) =>
-      (item.href !== "/speaking" || featureFlags.SPEAKING) &&
-      (item.href !== "/numbers" || course.languageCode.startsWith("es")),
+    (item) => item.href !== "/speaking" || featureFlags.SPEAKING,
   );
-  const studyNavCount =
-    5 + Number(course.languageCode.startsWith("es")) + Number(featureFlags.SPEAKING);
-  const activeNav = navItems.find(
-    (item) =>
-      pathname.startsWith(item.href) && (item.href !== "/dashboard" || pathname === item.href),
-  );
+  const studyNavCount = 5 + Number(featureFlags.SPEAKING);
+  const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
 
   return (
     <div className="app-frame">
@@ -131,10 +128,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link
               key={href}
               href={href}
-              className={cx(
-                "nav-link",
-                pathname.startsWith(href) && (href !== "/study" || pathname === href) && "active",
-              )}
+              className={cx("nav-link", isNavActive(href, pathname) && "active")}
               onClick={() => setMenuOpen(false)}
             >
               <Icon size={18} strokeWidth={1.8} />
@@ -192,7 +186,13 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="breadcrumb-parent">Meu espaço</span>
             <span className="breadcrumb-sep">/</span>
             <strong>
-              {pathname === "/micro-lesson" ? "Microlição" : (activeNav?.label ?? "Meu curso")}
+              {pathname === "/micro-lesson"
+                ? "Microlição"
+                : pathname === "/numbers"
+                  ? "Praticar números"
+                  : pathname === "/alphabet"
+                    ? "Alfabeto"
+                    : (activeNav?.label ?? "Meu curso")}
             </strong>
           </div>
           <div className="topbar-right">
