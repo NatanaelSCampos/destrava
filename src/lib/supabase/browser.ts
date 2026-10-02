@@ -9,6 +9,8 @@ export function createSupabaseBrowserClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) return null;
-  browserClient ??= createBrowserClient(url, key);
+  browserClient ??= createBrowserClient(url, key, {
+    auth: { experimental: { passkey: process.env.NEXT_PUBLIC_PASSKEYS_ENABLED === "true" } },
+  });
   return browserClient;
 }

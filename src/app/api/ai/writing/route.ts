@@ -14,7 +14,7 @@ const inputSchema = z.object({
 export async function POST(request: Request) {
   if (!featureFlags.AI_WRITING)
     return NextResponse.json({ error: "Correção por IA indisponível." }, { status: 503 });
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "writing");
   if (guard.error) return guard.error;
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Atividade de escrita não encontrada." }, { status: 404 });
   try {
     const result = await getAIProvider().correctWriting(parsed.data);
-    await logAIRequest("writing", result.usage, guard.userId ?? null);
+    await logAIRequest("writing", result.usage, guard.reservationId ?? null);
     return NextResponse.json(result);
   } catch {
     return NextResponse.json(

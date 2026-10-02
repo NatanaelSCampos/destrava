@@ -22,7 +22,7 @@ const inputSchema = z.object({
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Microlições indisponíveis." }, { status: 503 });
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "micro_lesson");
   if (guard.error) return guard.error;
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
@@ -62,7 +62,7 @@ export async function POST(request: Request) {
       correctAnswer: mistake.correctAnswer.slice(0, 500),
       explanation: mistake.explanation.slice(0, 1200),
     });
-    await logAIRequest("micro_lesson", result.usage, guard.userId ?? null);
+    await logAIRequest("micro_lesson", result.usage, guard.reservationId ?? null);
     return NextResponse.json({ lesson: result.feedback });
   } catch {
     return NextResponse.json(

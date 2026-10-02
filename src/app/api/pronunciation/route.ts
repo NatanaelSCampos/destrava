@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       { status: 503 },
     );
 
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "pronunciation");
   if (guard.error) return guard.error;
 
   const form = await request.formData().catch(() => null);
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     await logAIRequest(
       "pronunciation",
       { model: `azure-speech-${locale}`, inputTokens: 0, outputTokens: 0, estimatedCostUsd: null },
-      guard.userId ?? null,
+      guard.reservationId ?? null,
     );
     const parsed = azureResultSchema.safeParse(await response.json());
     if (!parsed.success)

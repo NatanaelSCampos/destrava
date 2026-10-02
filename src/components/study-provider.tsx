@@ -136,6 +136,19 @@ export function StudyProvider({
           }
           const accountId = data.user.id;
           setAuthUserId(accountId);
+          const { data: assurance, error: assuranceError } =
+            await client.auth.mfa.getAuthenticatorAssuranceLevel();
+          if (cancelled) return;
+          if (
+            assuranceError ||
+            !assurance ||
+            (assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2")
+          ) {
+            if (assuranceError || !assurance)
+              setSyncError("Não foi possível verificar a segurança da sessão.");
+            setReady(true);
+            return;
+          }
           const nextRepository = new SupabaseStudyRepository(client, accountId);
           repository.current = nextRepository;
           try {

@@ -3118,6 +3118,90 @@
   padding-top: 20px;
   margin-top: 24px;
 }
+.login-alternatives {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.login-alternatives .secondary-button {
+  width: 100%;
+  justify-content: center;
+}
+.auth-step-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--background);
+}
+.auth-step-card {
+  width: min(100%, 420px);
+  display: grid;
+  gap: 18px;
+  padding: 32px;
+}
+.auth-step-card > svg {
+  color: var(--primary);
+}
+.auth-step-card h1 {
+  margin: 0;
+  font-size: 28px;
+}
+.auth-step-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.auth-step-card > a {
+  color: var(--primary);
+  font-weight: 700;
+}
+.account-security {
+  display: grid;
+  gap: 15px;
+  margin-top: 22px;
+  padding: 25px;
+  max-width: 780px;
+}
+.account-security h2,
+.account-security h3 {
+  margin: 0;
+}
+.account-security h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.account-security p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.account-security > .secondary-button,
+.security-enrollment > .primary-button,
+.security-passkeys > .secondary-button {
+  justify-self: start;
+}
+.security-method {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.security-enrollment,
+.security-passkeys {
+  display: grid;
+  gap: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.security-enrollment img {
+  width: min(100%, 220px);
+  background: white;
+}
+.security-enrollment small {
+  overflow-wrap: anywhere;
+}
 @media (max-width: 1300px) {
   .dashboard-grid {
     grid-template-columns: minmax(0, 1fr) 255px;

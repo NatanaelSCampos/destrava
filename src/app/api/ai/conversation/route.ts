@@ -26,7 +26,7 @@ const inputSchema = z.object({
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Conversas indisponíveis." }, { status: 503 });
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "conversation");
   if (guard.error) return guard.error;
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
       },
     });
     const allowed = new Set(scenario?.objectives.map((item) => item.id) ?? []);
-    await logAIRequest("conversation", result.usage, guard.userId ?? null);
+    await logAIRequest("conversation", result.usage, guard.reservationId ?? null);
     return NextResponse.json({
       reply: result.feedback.reply.trim().slice(0, 800),
       correction: input.correction === "off" ? "" : result.feedback.correction.trim().slice(0, 400),

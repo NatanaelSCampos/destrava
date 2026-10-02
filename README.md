@@ -69,6 +69,19 @@ A rota `/login` passa a oferecer cadastro e entrada pelo Supabase Auth. O progre
 
 Mantenha as próximas mudanças no banco em arquivos de migração. Executar a migração manualmente no SQL Editor remoto não registra seu histórico para `supabase db push`.
 
+### Segurança da conta e custos de IA
+
+`supabase/migrations/20261002000100_atomic_ai_quota.sql` reserva cada chamada de IA no banco antes de consultar OpenAI ou Azure. A reserva é atômica e limita a 20 solicitações por conta em uma janela de uma hora; falhas na verificação bloqueiam a chamada. A migração também exige uma sessão com MFA concluído para acessar os dados e os áudios de contas que ativaram MFA. Em **Configurações → Segurança da conta**, o aluno pode cadastrar um aplicativo autenticador; o código é pedido no próximo login. O limite continua sendo por conta, portanto confirme o e-mail e proteja o cadastro antes de abrir a aplicação amplamente.
+
+As integrações abaixo dependem de contas próprias. Não envie senhas, segredos SMTP, OAuth ou Turnstile por chat, não os coloque no Git e não inclua nenhum deles como variável `NEXT_PUBLIC_`. Ative cada opção no Supabase remoto somente quando o frontend correspondente estiver publicado.
+
+1. **E-mail confirmado:** cadastre um serviço SMTP que aceite o domínio do remetente e preencha **Supabase → Authentication → SMTP Settings**. Em **URL Configuration**, configure a URL pública da aplicação como Site URL e inclua as URLs de desenvolvimento na lista de redirecionamentos. Em **Email Templates → Confirm signup**, use o conteúdo de [confirmation.html](supabase/templates/confirmation.html). Faça um cadastro de teste, confirme o recebimento e o acesso, então ative **Confirm Email** em **Authentication → Providers → Email** e altere `enable_confirmations` para `true` em `supabase/config.toml`. O remoto continua com cadastro imediato até essa configuração ser concluída. O envio padrão do Supabase não serve para convidados fora da equipe.
+2. **CAPTCHA:** crie um widget Cloudflare Turnstile para o domínio público e, se necessário, outro para desenvolvimento. Cadastre a chave **secreta** em **Supabase → Authentication → Bot and Abuse Protection**. Publique a chave **pública** como argumento de build `NEXT_PUBLIC_TURNSTILE_SITE_KEY` no Fly.io; só depois habilite a proteção no Supabase. A tela de login passa o token no cadastro e no login e bloqueia o envio sem uma verificação concluída.
+3. **Login Google:** crie um cliente OAuth Web no Google Cloud com o callback exibido em **Supabase → Authentication → Providers → Google**. Cadastre o Client ID e o Client Secret somente nesse painel e ative o provedor. Autorize `https://frecuencias-a1-natanael.fly.dev/auth/callback` em **Supabase → Authentication → URL Configuration**. Publique com o argumento de build `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED=true` para mostrar o botão no login.
+4. **Passkeys (experimental):** em **Supabase → Authentication → Passkeys**, habilite a função com RP ID `frecuencias-a1-natanael.fly.dev` e origem `https://frecuencias-a1-natanael.fly.dev`. Depois publique com `NEXT_PUBLIC_PASSKEYS_ENABLED=true`. A opção aparece no login e nas configurações da conta. Uma conta precisa ter e-mail confirmado para cadastrar uma chave. Mudar o RP ID depois invalida as chaves já criadas.
+
+As variáveis `NEXT_PUBLIC_*` são incorporadas durante `next build`: para mudar essas opções no Fly.io, faça um novo deploy com `--build-arg NOME=valor`. A chave do Turnstile é pública; os demais segredos ficam nos painéis dos serviços. Ative MFA na sua conta administrativa do Supabase separadamente, nas configurações da conta.
+
 ## Conteúdo e extensão
 
 O conteúdo fica em [src/content/frecuencias-a1.ts](src/content/frecuencias-a1.ts) e é validado pelos tipos de [src/content/schema.ts](src/content/schema.ts). Para adicionar a Unidade 2, inclua outro registro na lista `units`, com lições e atividades ordenadas, acrescente seu vocabulário e rode:

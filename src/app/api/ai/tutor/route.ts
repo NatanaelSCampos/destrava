@@ -23,7 +23,7 @@ const inputSchema = z.object({
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Professor IA indisponível." }, { status: 503 });
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "tutor");
   if (guard.error) return guard.error;
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   try {
     const region = await userSpanishRegion(guard.userId ?? null);
     const result = await getAIProvider().tutor({ ...parsed.data, region });
-    await logAIRequest("tutor", result.usage, guard.userId ?? null);
+    await logAIRequest("tutor", result.usage, guard.reservationId ?? null);
     return NextResponse.json(result);
   } catch {
     return NextResponse.json(

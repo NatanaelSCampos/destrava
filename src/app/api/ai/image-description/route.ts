@@ -16,7 +16,7 @@ const azureSchema = z.object({
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Atividade indisponível." }, { status: 503 });
-  const guard = await guardAIRequest(request);
+  const guard = await guardAIRequest(request, "image_description");
   if (guard.error) return guard.error;
   const form = await request.formData().catch(() => null);
   const sceneId = form?.get("sceneId");
@@ -77,16 +77,6 @@ export async function POST(request: Request) {
           { status: 422 },
         );
       transcript = (parsed.data.NBest?.[0]?.Display ?? parsed.data.DisplayText ?? "").trim();
-      await logAIRequest(
-        "image_description_speech",
-        {
-          model: `azure-speech-${locale}`,
-          inputTokens: 0,
-          outputTokens: 0,
-          estimatedCostUsd: null,
-        },
-        guard.userId ?? null,
-      );
     } catch {
       return NextResponse.json(
         { error: "Não foi possível consultar o Azure Speech agora." },
@@ -107,7 +97,7 @@ export async function POST(request: Request) {
       transcript,
       region,
     });
-    await logAIRequest("image_description", result.usage, guard.userId ?? null);
+    await logAIRequest("image_description", result.usage, guard.reservationId ?? null);
     return NextResponse.json({
       transcript,
       feedback: result.feedback,

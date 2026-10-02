@@ -30,6 +30,7 @@ import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
 import { featureFlags } from "@/lib/feature-flags";
 import { SelectionAudio } from "@/components/audio/selection-audio";
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -58,15 +59,46 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { course, state, vocabularyItems, ready, authUserId } = useStudy();
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
+  const [sessionCheck, setSessionCheck] = useState<"checking" | "ready" | "challenge" | "error">(
+    "checking",
+  );
   const requiresAuth = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
   useEffect(() => {
     if (ready && requiresAuth && !authUserId && pathname !== "/login") router.replace("/login");
   }, [ready, requiresAuth, authUserId, pathname, router]);
-  if (pathname === "/login") return <>{children}</>;
-  if (!ready || (requiresAuth && !authUserId))
+  useEffect(() => {
+    if (!ready || !authUserId || !requiresAuth) return;
+    let cancelled = false;
+    const client = createSupabaseBrowserClient();
+    if (!client) return;
+    void client.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data, error }) => {
+      if (cancelled) return;
+      if (error || !data) {
+        setSessionCheck("error");
+        return;
+      }
+      const needsChallenge = data.nextLevel === "aal2" && data.currentLevel !== "aal2";
+      setSessionCheck(needsChallenge ? "challenge" : "ready");
+      if (needsChallenge && pathname !== "/mfa") router.replace("/mfa");
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [ready, authUserId, requiresAuth, pathname, router]);
+  if (pathname === "/login" || pathname === "/mfa") return <>{children}</>;
+  if (
+    !ready ||
+    (requiresAuth && (!authUserId || sessionCheck === "checking" || sessionCheck === "challenge"))
+  )
     return <div className="page-loading">Preparando seu espaço de estudo…</div>;
+  if (sessionCheck === "error")
+    return (
+      <div className="page-loading">
+        Não foi possível verificar sua sessão. Recarregue a página.
+      </div>
+    );
   const progress = courseProgress(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>

@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Check, LockKeyhole } from "lucide-react";
+import { ArrowRight, BookOpen, Check, KeyRound, LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { TurnstileChallenge } from "@/components/auth/turnstile-challenge";
+
+const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED === "true";
+const passkeysEnabled = process.env.NEXT_PUBLIC_PASSKEYS_ENABLED === "true";
+const captchaEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,17 +16,52 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaReset, setCaptchaReset] = useState(0);
   const supabase = createSupabaseBrowserClient();
+  function resetCaptcha() {
+    setCaptchaToken(null);
+    setCaptchaReset((value) => value + 1);
+  }
+
+  async function finishLogin() {
+    if (!supabase) return;
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (error || !data) {
+      setMessage("Não foi possível verificar a segurança da sessão.");
+      return;
+    }
+    window.location.assign(
+      data.nextLevel === "aal2" && data.currentLevel !== "aal2" ? "/mfa" : "/dashboard",
+    );
+  }
+
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!supabase) return;
+    if (captchaEnabled && !captchaToken) {
+      setMessage("Conclua a verificação de segurança.");
+      return;
+    }
     setLoading(true);
     setMessage("");
     const result =
       mode === "login"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
+        ? await supabase.auth.signInWithPassword({
+            email,
+            password,
+            options: { captchaToken: captchaToken ?? undefined },
+          })
+        : await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              captchaToken: captchaToken ?? undefined,
+              emailRedirectTo: `${window.location.origin}/dashboard`,
+            },
+          });
     setLoading(false);
+    resetCaptcha();
     if (result.error) {
       setMessage(result.error.message);
       return;
@@ -30,9 +70,37 @@ export default function LoginPage() {
       setMessage("Confira seu e-mail para confirmar a conta.");
       return;
     }
-    // Reload the document so the account-scoped study provider loads the new session.
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-    window.location.assign("/dashboard");
+    await finishLogin();
+  }
+
+  async function signInWithGoogle() {
+    if (!supabase) return;
+    setMessage("");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) setMessage(error.message);
+  }
+
+  async function signInWithPasskey() {
+    if (!supabase) return;
+    if (captchaEnabled && !captchaToken) {
+      setMessage("Conclua a verificação de segurança.");
+      return;
+    }
+    setLoading(true);
+    setMessage("");
+    const { error } = await supabase.auth.signInWithPasskey({
+      options: { captchaToken: captchaToken ?? undefined },
+    });
+    setLoading(false);
+    resetCaptcha();
+    if (error) {
+      setMessage("Não foi possível entrar com a chave de acesso. Tente sua senha.");
+      return;
+    }
+    await finishLogin();
   }
   return (
     <div className="login-page">
@@ -93,12 +161,15 @@ export default function LoginPage() {
                 <input
                   id="password"
                   type="password"
-                  minLength={6}
+                  minLength={mode === "signup" ? 8 : undefined}
                   required
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
+              {captchaEnabled && (
+                <TurnstileChallenge onToken={setCaptchaToken} resetKey={captchaReset} />
+              )}
               <button className="primary-button" disabled={loading}>
                 {loading ? "Aguarde…" : mode === "login" ? "Entrar" : "Criar conta"}{" "}
                 <ArrowRight size={16} />
@@ -113,6 +184,20 @@ export default function LoginPage() {
             <Link href="/dashboard" className="primary-button login-demo">
               Explorar demonstração <ArrowRight size={16} />
             </Link>
+          )}
+          {supabase && (googleEnabled || passkeysEnabled) && (
+            <div className="login-alternatives">
+              {googleEnabled && (
+                <button className="secondary-button" onClick={() => void signInWithGoogle()}>
+                  Entrar com Google
+                </button>
+              )}
+              {passkeysEnabled && (
+                <button className="secondary-button" onClick={() => void signInWithPasskey()}>
+                  <KeyRound size={16} /> Entrar com chave de acesso
+                </button>
+              )}
+            </div>
           )}
           {supabase && (
             <button

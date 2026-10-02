@@ -8,7 +8,7 @@ import type { AIUsage } from "./ai-provider";
 
 const windows = new Map<string, { count: number; resetAt: number }>();
 
-export async function guardAIRequest(request: Request) {
+export async function guardAIRequest(request: Request, feature: string) {
   if (isSupabaseConfigured()) {
     const user = await getAuthenticatedUser();
     if (!user)
@@ -19,23 +19,44 @@ export async function guardAIRequest(request: Request) {
         ),
       };
     const client = await createSupabaseServerClient();
-    if (client) {
-      const hourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-      const { count } = await client
-        .from("ai_requests")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .gte("created_at", hourAgo);
-      if ((count ?? 0) >= 20) {
-        return {
-          error: NextResponse.json(
-            { error: "Limite de IA por hora atingido. Tente mais tarde." },
-            { status: 429 },
-          ),
-        };
-      }
-    }
-    return { userId: user.id };
+    if (!client)
+      return {
+        error: NextResponse.json({ error: "Limite de IA indisponível." }, { status: 503 }),
+      };
+    const { data: assurance, error: assuranceError } =
+      await client.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (assuranceError || !assurance)
+      return {
+        error: NextResponse.json(
+          { error: "Não foi possível verificar sua sessão." },
+          { status: 503 },
+        ),
+      };
+    if (assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2")
+      return {
+        error: NextResponse.json(
+          { error: "Conclua a verificação em duas etapas." },
+          { status: 403 },
+        ),
+      };
+    const { data: reservationId, error } = await client.rpc("reserve_ai_request", {
+      p_feature: feature,
+    });
+    if (error)
+      return {
+        error: NextResponse.json(
+          { error: "Não foi possível verificar o limite de IA. Tente novamente." },
+          { status: 503 },
+        ),
+      };
+    if (!reservationId)
+      return {
+        error: NextResponse.json(
+          { error: "Limite de IA por hora atingido. Tente mais tarde." },
+          { status: 429 },
+        ),
+      };
+    return { userId: user.id, reservationId: reservationId as string };
   }
   if (process.env.NODE_ENV !== "development")
     return {
@@ -59,20 +80,21 @@ export async function guardAIRequest(request: Request) {
         { status: 429 },
       ),
     };
-  return { userId: null };
+  return { userId: null, reservationId: null };
 }
 
-export async function logAIRequest(feature: string, usage: AIUsage, userId: string | null) {
-  const client = userId ? await createSupabaseServerClient() : null;
-  if (client && userId) {
-    await client.from("ai_requests").insert({
-      user_id: userId,
-      feature,
-      model: usage.model,
-      input_tokens: usage.inputTokens,
-      output_tokens: usage.outputTokens,
-      estimated_cost_usd: usage.estimatedCostUsd,
+export async function logAIRequest(feature: string, usage: AIUsage, reservationId: string | null) {
+  if (reservationId) {
+    const client = await createSupabaseServerClient();
+    if (!client) throw new Error("Supabase indisponível ao registrar uso de IA");
+    const { error } = await client.rpc("complete_ai_request", {
+      p_request_id: reservationId,
+      p_model: usage.model,
+      p_input_tokens: usage.inputTokens,
+      p_output_tokens: usage.outputTokens,
+      p_estimated_cost_usd: usage.estimatedCostUsd,
     });
+    if (error) throw error;
   } else {
     console.info("ai_request", {
       feature,

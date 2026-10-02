@@ -5,6 +5,7 @@ import { Check, Download, LogOut, Settings2 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { spanishRegions, type SpanishRegion } from "@/content/spanish-regions";
+import { AccountSecurity } from "@/components/auth/account-security";
 
 export default function SettingsPage() {
   const { ready } = useStudy();
@@ -189,6 +190,7 @@ function SettingsContent() {
           )}
         </aside>
       </div>
+      {authUserId && <AccountSecurity />}
     </div>
   );
 }
