@@ -7,6 +7,14 @@ import { buildStudyPlan } from "../src/domain/study/study-planner";
 import { buildPracticeHistory, sessionComparisons } from "../src/domain/study/practice-history";
 import { initialStudyState, type StudyState } from "../src/domain/study/study-state";
 import { ReviewScheduler } from "../src/domain/review/review-scheduler";
+import { dueReviewCounts } from "../src/domain/review/due-review-counts";
+import { wordReviewCard } from "../src/domain/review/review-card";
+import {
+  recordEvaluatedSpeaking,
+  recordEvaluatedWriting,
+  recordVocabularySignal,
+} from "../src/domain/study/study-state";
+import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
 
 const course = publicCourse(frecuenciasA1);
 const now = new Date("2026-10-01T12:00:00.000Z");
@@ -301,4 +309,86 @@ assert.deepEqual(
 );
 assert.deepEqual(comparison.find((item) => item.id === "Pronúncia:speaking-repeat-1")?.after, 70);
 
-console.log("Learning profile, time-boxed plans, focused reviews and attempt history verified.");
+const writingFeedback = {
+  correctedText: "Tengo 31 años.",
+  errors: [
+    { excerpt: "Soy 31 años", correction: "Tengo 31 años", explanation: "A idade usa tener." },
+  ],
+  naturalness: [],
+  optionalSuggestions: [],
+  score: { grammar: 60, vocabulary: 75, clarity: 80 },
+};
+const writingIssue = recordEvaluatedWriting(
+  initialStudyState,
+  "writing-1",
+  "Soy 31 años",
+  writingFeedback,
+);
+assert.equal(writingIssue.mistakes["writing-1"].category, "writing");
+assert.equal(writingIssue.mistakes["writing-1"].correctAnswer, "Tengo 31 años.");
+assert.equal(writingIssue.mistakes["writing-1"].timesMissed, 1);
+const correctedWriting = recordEvaluatedWriting(writingIssue, "writing-1", "Tengo 31 años.", {
+  ...writingFeedback,
+  errors: [],
+});
+assert.equal(correctedWriting.mistakes["writing-1"].timesCorrect, 1);
+assert.equal(
+  recordEvaluatedWriting(initialStudyState, "writing-1", "texto", {}).mistakes["writing-1"],
+  undefined,
+);
+
+const pronunciationIssue = recordEvaluatedSpeaking(
+  initialStudyState,
+  "speaking-repeat-1",
+  poorSpeech.speaking[0].feedback,
+);
+assert.equal(pronunciationIssue.mistakes["speaking-repeat-1"].category, "speaking");
+assert(pronunciationIssue.mistakes["speaking-repeat-1"].explanation.includes("Hola"));
+const improvedSpeech = recordEvaluatedSpeaking(pronunciationIssue, "speaking-repeat-1", {
+  ...poorSpeech.speaking[0].feedback!,
+  accuracy: 90,
+  fluency: 90,
+  completeness: 95,
+  words: [],
+});
+assert.equal(improvedSpeech.mistakes["speaking-repeat-1"].timesCorrect, 1);
+const recalledSpeech: StudyState = {
+  ...pronunciationIssue,
+  reviews: [
+    {
+      id: "speech-recall",
+      scheduleId: pronunciationIssue.mistakes["speaking-repeat-1"].schedule.id,
+      correct: true,
+      reviewedAt: yesterday,
+      intervalBefore: 1,
+      intervalAfter: 3,
+    },
+  ],
+};
+assert.equal(
+  buildLearningProfile(course, recalledSpeech, vocabularySeed, now).skills.find(
+    (skill) => skill.id === "speaking",
+  )?.score,
+  null,
+);
+assert.equal(dueReviewCounts(dueMistake, vocabularySeed, now, new Set(["other"])).mistakes, 0);
+
+const searchedOnce = recordVocabularySignal(initialStudyState, "tener", "vocabulary_search");
+const searchedTwice = recordVocabularySignal(searchedOnce, "tener", "vocabulary_search");
+const searchedThrice = recordVocabularySignal(searchedTwice, "tener", "vocabulary_search");
+assert.equal(searchedTwice.vocabulary.tener, undefined);
+assert.equal(searchedThrice.vocabulary.tener.status, "learning");
+assert.equal(searchedThrice.events.filter((item) => item.itemId === "tener").length, 3);
+assert.deepEqual(
+  buildStudyPlan(course, searchedThrice, 5, vocabularySeed, now, "difficulties")[0]?.reviewItems,
+  [{ kind: "word", id: "tener" }],
+);
+assert.equal(wordReviewCard(word, 0).front, word.spanish);
+assert.equal(wordReviewCard(word, 1).front, word.translation);
+assert.equal(wordReviewCard(word, 2).frontLabel, "ESCUTA");
+assert.equal(vocabularyContext(vocabularySeed[6], "es").senses.length, 3);
+assert(vocabularyOccurrences(course, vocabularySeed[6]).length > 0);
+
+console.log(
+  "Learning profile, focused plans, review cards, evaluated errors and vocabulary signals verified.",
+);

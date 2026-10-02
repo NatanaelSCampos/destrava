@@ -110,9 +110,15 @@ export function buildPracticeHistory(
     const activity = activities.get(mistake.activityId);
     if (activity)
       reviewedTarget.set(mistake.schedule.id, {
-        id: `exercise:${mistake.activityId}`,
+        id:
+          mistake.category === "writing" || mistake.category === "speaking"
+            ? `recall:${mistake.activityId}`
+            : `exercise:${mistake.activityId}`,
         title: activity.title,
-        measure: "Acerto",
+        measure:
+          mistake.category === "writing" || mistake.category === "speaking"
+            ? "Recordação da correção"
+            : "Acerto",
         href: activity.href,
       });
   }

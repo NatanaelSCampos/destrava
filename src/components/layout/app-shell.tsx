@@ -13,6 +13,7 @@ import {
   GraduationCap,
   House,
   Menu,
+  Mic2,
   NotebookPen,
   Play,
   RotateCcw,
@@ -34,6 +35,7 @@ const navigation = (courseSlug: string) => [
   { href: "/alphabet", label: "Alfabeto", icon: CaseUpper },
   { href: "/study", label: "Aula de hoje", icon: Play },
   { href: "/review", label: "Revisar", icon: RotateCcw },
+  { href: "/speaking", label: "Praticar fala", icon: Mic2 },
   { href: "/vocabulary", label: "Vocabulário", icon: GraduationCap },
   { href: "/mistakes", label: "Meus erros", icon: NotebookPen },
   { href: "/history", label: "Histórico", icon: Clock3 },
@@ -56,8 +58,16 @@ export function AppShell({ children }: { children: ReactNode }) {
   if (!ready || (requiresAuth && !authUserId))
     return <div className="page-loading">Preparando seu espaço de estudo…</div>;
   const progress = courseProgress(course, state);
-  const pendingReviews = dueReviewCounts(state, vocabularyItems).total;
-  const navItems = navigation(course.slug);
+  const activityIds = new Set(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
+    ),
+  );
+  const pendingReviews = dueReviewCounts(state, vocabularyItems, new Date(), activityIds).total;
+  const navItems = navigation(course.slug).filter(
+    (item) => item.href !== "/speaking" || featureFlags.SPEAKING,
+  );
+  const studyNavCount = featureFlags.SPEAKING ? 6 : 5;
   const activeNav = navItems.find(
     (item) =>
       pathname.startsWith(item.href) && (item.href !== "/dashboard" || pathname === item.href),
@@ -112,7 +122,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         <nav className="sidebar-nav" aria-label="Navegação principal">
           <div className="nav-caption">ESTUDAR</div>
-          {navItems.slice(0, 5).map(({ href, label, icon: Icon }) => (
+          {navItems.slice(0, studyNavCount).map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
@@ -130,7 +140,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
           <div className="nav-caption nav-caption-second">ACOMPANHAR</div>
-          {navItems.slice(5).map(({ href, label, icon: Icon }) => (
+          {navItems.slice(studyNavCount).map(({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}

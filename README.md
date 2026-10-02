@@ -47,6 +47,8 @@ Use `es-MX` em `AZURE_SPEECH_LOCALE` se preferir avaliar o espanhol do México. 
 
 A atividade **Repita uma frase** compara uma gravação de até 20 segundos com a frase exibida e mostra indicadores de clareza, fluência, completude e palavras que merecem outra tentativa. A apresentação livre continua sem nota automática. As chamadas autenticadas compartilham o limite de 20 solicitações por usuário por hora com as outras rotas de IA. Sem a credencial Azure, a gravação ainda pode ser salva, mas a avaliação retorna indisponível.
 
+O menu **Praticar fala** reúne o shadowing, com evolução por tentativa e palavras a repetir, e **Fale sem ler**. Este último passa por imitação com texto, memória com apenas áudio e produção de uma frase própria. As duas primeiras etapas precisam de avaliação Azure para avançar; a produção própria é salva com áudio e transcrição, sem nota automática. O conteúdo atual oferece uma frase de referência; outras atividades de fala com `referenceText` aparecem automaticamente nessa página.
+
 ## Conectar o Supabase
 
 O schema está em [uma migração versionada](supabase/migrations/20260930000100_initial.sql). Para vincular um projeto existente pelo CLI:
@@ -83,6 +85,10 @@ O motor em `src/domain/study/learning-recommendation-engine.ts` usa esse perfil 
 Na página inicial, **Quanto tempo você tem?** abre planos estimados de **5, 15, 30 minutos ou sessão completa**. Em **Aula de hoje**, é possível alternar entre continuar a trilha e **Treinar minhas dificuldades**. O treino focado seleciona apenas erros, palavras difíceis e pontos de fala registrados; quando não há evidência, ele mostra uma orientação para começar pela trilha. Cada sessão inclui somente os cartões planejados, para que a revisão não ultrapasse o tempo estimado por abrir toda a fila. O cronômetro mostra o tempo real e não interrompe o estudo automaticamente.
 
 Depois da sessão, a tela compara resultados avaliados com a tentativa anterior, quando ela existe. **Histórico** mostra a evolução por tentativa de acertos, escrita, pronúncia, fluência e recordação de palavras. Primeiras tentativas aparecem como primeira medida, sem sugerir melhora inexistente. O estado e o resumo da sessão usam o JSON já persistido no Supabase; não há nova migração para este conjunto.
+
+**Meus erros** agora recebe correções avaliadas de escrita e dificuldades de pronúncia, além dos exercícios objetivos. A revisão usa o mesmo agendador e alterna cartões de vocabulário entre espanhol→português, português→espanhol e áudio→termo. O cartão de uma frase avalia sua recordação; para medir a pronúncia, é preciso gravar novamente.
+
+Em **Vocabulário**, os termos mostram sentidos curados quando existem, exemplos, locais em que aparecem no curso, buscas recentes e contagens de uso. Após três buscas exatas ou três reproduções do mesmo termo, uma palavra ainda não estudada entra automaticamente na fila de revisão como “aprendendo”. Os eventos são mantidos no estado do aluno e na coluna `study_events.metadata`; as tabelas atuais bastam para esta entrega.
 
 Cada curso informa `languageCode` e conceitos próprios; o motor filtra o histórico pelas atividades e lições desse curso. Para novos idiomas, crie outro curso com IDs exclusivos para atividades, lições e vocabulário. A seleção de vários cursos pelo mesmo usuário e a separação completa do estado persistido por curso ainda precisam ser desenvolvidas.
 

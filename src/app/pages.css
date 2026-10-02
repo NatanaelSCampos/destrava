@@ -3,6 +3,250 @@
   text-align: center;
   color: var(--text-secondary);
 }
+
+.vocab-context {
+  margin: 0 0 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.vocab-recent-searches {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 11px;
+}
+.vocab-recent-searches > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.vocab-recent-searches button {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #fafafa;
+  padding: 5px 9px;
+  cursor: pointer;
+  color: #a92335;
+}
+.vocab-recent-searches small {
+  color: #818187;
+}
+.vocab-context summary {
+  cursor: pointer;
+  color: #a92335;
+  font-weight: 700;
+}
+.vocab-context > small {
+  display: block;
+  margin-top: 10px;
+}
+.vocab-context ol {
+  padding-left: 18px;
+  margin: 10px 0;
+}
+.vocab-context li {
+  margin: 9px 0;
+  line-height: 1.5;
+}
+.vocab-context li strong,
+.vocab-context li span {
+  display: block;
+}
+.vocab-context li .speak-button {
+  margin-top: 4px;
+}
+.vocab-occurrences {
+  display: grid;
+  gap: 5px;
+  margin: 12px 0;
+}
+.vocab-occurrences a {
+  color: #a92335;
+  text-decoration: none;
+}
+.vocab-memory-note {
+  padding: 9px;
+  border-radius: 8px;
+  background: #fff3f4;
+  color: #a92335;
+}
+.mistake-card .mistake-comparison p {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.mistake-card .mistake-explanation {
+  white-space: pre-line;
+}
+.mistake-card > .text-link {
+  display: inline-flex;
+  margin-top: 12px;
+}
+.speaking-practice-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+}
+.speaking-practice-options .study-option-list button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.speaking-practice-options .study-option-list button.active {
+  background: #27272b;
+  border-color: #27272b;
+  color: white;
+}
+.speaking-practice-options label {
+  display: grid;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.speaking-practice-options select {
+  min-height: 35px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+}
+.speaking-stages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0;
+  margin: 0 0 18px;
+  list-style: none;
+}
+.speaking-stages button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+}
+.speaking-stages button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.speaking-stages .active button {
+  border-color: #bb3446;
+  box-shadow: 0 0 0 2px #fbe7ea;
+}
+.speaking-stages .done button {
+  background: #faf7f8;
+}
+.speaking-stages strong {
+  font-size: 12px;
+}
+.speaking-stages span {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.speaking-practice-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 18px;
+  align-items: start;
+}
+.speaking-practice-work,
+.speaking-practice-history {
+  padding: 22px;
+}
+.speaking-practice-work h2,
+.speaking-practice-history h2 {
+  margin: 9px 0 17px;
+  font-size: 19px;
+}
+.speaking-next-stage {
+  margin-top: 18px;
+}
+.speaking-practice-history ol {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 0;
+  list-style: none;
+}
+.speaking-practice-history li {
+  display: grid;
+  grid-template-columns: 72px 58px 1fr 28px;
+  gap: 8px;
+  align-items: center;
+  font-size: 10px;
+}
+.speaking-history-mode {
+  color: #818187;
+}
+.speaking-practice-history li .progress-track {
+  height: 6px;
+}
+.speaking-practice-history li .progress-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #bb3446;
+}
+.speaking-practice-history p,
+.speaking-practice-history small {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.speaking-weak-words {
+  padding: 12px;
+  background: #faf7f8;
+  border-radius: 9px;
+  margin: 16px 0;
+}
+.speaking-weak-words strong {
+  font-size: 11px;
+}
+.speaking-own-history {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin: 16px 0;
+}
+.speaking-own-history > strong {
+  font-size: 11px;
+}
+.speaking-own-history time,
+.speaking-own-history span {
+  display: block;
+}
+.speaking-own-history time {
+  color: #818187;
+  font-size: 10px;
+}
+@media (max-width: 1100px) {
+  .speaking-practice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .speaking-stages {
+    grid-template-columns: 1fr;
+  }
+  .speaking-practice-options {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
 .eyebrow-dot {
   width: 6px;
   height: 6px;

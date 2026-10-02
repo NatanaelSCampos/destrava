@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { PlannedReviewItem } from "@/domain/study/study-state";
+import { wordReviewCard } from "@/domain/review/review-card";
 
 type ReviewItem = {
   kind: "word" | "mistake";
@@ -13,6 +15,11 @@ type ReviewItem = {
   front: string;
   back: string;
   example: string;
+  frontLabel: string;
+  backLabel: string;
+  spokenText: string;
+  activityHref?: string;
+  category?: string;
 };
 
 export function ReviewQueue({
@@ -24,40 +31,63 @@ export function ReviewQueue({
   plannedItems?: PlannedReviewItem[];
   onComplete?: () => void;
 }) {
-  const { vocabularyItems, state, reviewWord, reviewError } = useStudy();
+  const { course, vocabularyItems, state, reviewWord, reviewError } = useStudy();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [finishedIds, setFinishedIds] = useState<string[]>([]);
   const items = useMemo<ReviewItem[]>(() => {
+    const activityHref = (id: string) => {
+      for (const unit of course.units)
+        for (const lesson of unit.lessons)
+          if (lesson.activities.some((activity) => activity.id === id))
+            return (
+              "/course/" +
+              course.slug +
+              "/unit/" +
+              unit.number +
+              "/lesson/" +
+              lesson.slug +
+              "?activity=" +
+              encodeURIComponent(id)
+            );
+      return undefined;
+    };
+    const wordCard = (id: string): ReviewItem[] => {
+      const word = vocabularyItems.find((entry) => entry.id === id);
+      return word
+        ? [
+            {
+              kind: "word",
+              id: word.id,
+              ...wordReviewCard(word, state.vocabulary[id]?.schedule.reviewCount ?? 0),
+            },
+          ]
+        : [];
+    };
+    const mistakeCard = (id: string): ReviewItem[] => {
+      const mistake = state.mistakes[id];
+      const href = activityHref(id);
+      return mistake && href
+        ? [
+            {
+              kind: "mistake",
+              id: mistake.activityId,
+              front: mistake.originalAnswer,
+              back: mistake.correctAnswer,
+              example: mistake.explanation,
+              frontLabel: mistake.category === "speaking" ? "O QUE FOI OUVIDO" : "SUA RESPOSTA",
+              backLabel: "FORMA ESPERADA",
+              spokenText: mistake.correctAnswer,
+              activityHref: href,
+              category: mistake.category,
+            },
+          ]
+        : [];
+    };
     if (plannedItems) {
-      return plannedItems.flatMap((selected): ReviewItem[] => {
-        if (selected.kind === "word") {
-          const word = vocabularyItems.find((entry) => entry.id === selected.id);
-          return word
-            ? [
-                {
-                  kind: "word" as const,
-                  id: word.id,
-                  front: word.spanish,
-                  back: word.translation,
-                  example: word.example,
-                },
-              ]
-            : [];
-        }
-        const mistake = state.mistakes[selected.id];
-        return mistake
-          ? [
-              {
-                kind: "mistake" as const,
-                id: mistake.activityId,
-                front: mistake.originalAnswer,
-                back: mistake.correctAnswer,
-                example: mistake.explanation,
-              },
-            ]
-          : [];
-      });
+      return plannedItems.flatMap((selected): ReviewItem[] =>
+        selected.kind === "word" ? wordCard(selected.id) : mistakeCard(selected.id),
+      );
     }
     const words = vocabularyItems
       .filter((word) =>
@@ -65,27 +95,15 @@ export function ReviewQueue({
           ? !state.vocabulary[word.id]
           : state.vocabulary[word.id] && ReviewScheduler.isDue(state.vocabulary[word.id].schedule),
       )
-      .map((word) => ({
-        kind: "word" as const,
-        id: word.id,
-        front: word.spanish,
-        back: word.translation,
-        example: word.example,
-      }));
+      .flatMap((word) => wordCard(word.id));
     const mistakes =
       mode === "new"
         ? []
         : Object.values(state.mistakes)
             .filter((item) => ReviewScheduler.isDue(item.schedule))
-            .map((item) => ({
-              kind: "mistake" as const,
-              id: item.activityId,
-              front: item.originalAnswer,
-              back: item.correctAnswer,
-              example: item.explanation,
-            }));
+            .flatMap((item) => mistakeCard(item.activityId));
     return [...mistakes, ...words];
-  }, [mode, plannedItems, state.vocabulary, state.mistakes, vocabularyItems]);
+  }, [mode, plannedItems, state.vocabulary, state.mistakes, vocabularyItems, course]);
   const pending = items.filter((item) => !finishedIds.includes(`${item.kind}-${item.id}`));
   const item = pending[index] ?? pending[0];
 
@@ -139,9 +157,7 @@ export function ReviewQueue({
         onClick={() => setFlipped((current) => !current)}
         aria-label={flipped ? "Mostrar frente do cartão" : "Virar cartão"}
       >
-        <span className="flashcard-label">
-          {flipped ? "VERSO" : item.kind === "word" ? "ESPANHOL" : "SUA RESPOSTA"}
-        </span>
+        <span className="flashcard-label">{flipped ? item.backLabel : item.frontLabel}</span>
         <strong>{flipped ? item.back : item.front}</strong>
         <p>{flipped ? item.example : "Toque para ver a resposta"}</p>
         <span className="flashcard-flip">
@@ -149,15 +165,23 @@ export function ReviewQueue({
         </span>
       </button>
       <div className="flashcard-audio">
-        <SpeakButton
-          text={item.kind === "word" ? item.front : flipped ? item.back : item.front}
-          label="Ouvir palavra ou frase em espanhol"
-          withLabel
-        />
+        {(item.kind === "word" || flipped) && (
+          <SpeakButton
+            text={item.spokenText}
+            label="Ouvir palavra ou frase em espanhol"
+            withLabel
+          />
+        )}
         {flipped && item.kind === "word" && (
           <SpeakButton text={item.example} label="Ouvir frase de exemplo" withLabel />
         )}
       </div>
+      {item.category === "speaking" && item.activityHref && (
+        <p className="review-pronunciation-note">
+          Este cartão verifica se você lembrou a frase. Para medir a pronúncia,{" "}
+          <Link href={item.activityHref}>grave uma nova tentativa</Link>.
+        </p>
+      )}
       <div className="flashcard-actions">
         <button className="ghost-button" disabled={!flipped} onClick={() => answer(false)}>
           <X size={16} /> Ainda difícil

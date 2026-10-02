@@ -4,6 +4,7 @@ import type { ReviewSchedule } from "@/domain/review/review-scheduler";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import type { PublicActivity, PublicCourse } from "@/content/public";
 import type { Skill } from "@/content/schema";
+import { writingFeedbackSchema } from "@/domain/ai/schemas";
 
 export type StudentProfile = {
   goal: string;
@@ -67,7 +68,13 @@ export type StudySession = {
   plan: PlannedItem[];
 };
 
-export type StudyEvent = { id: string; type: string; createdAt: string; activityId?: string };
+export type StudyEvent = {
+  id: string;
+  type: string;
+  createdAt: string;
+  activityId?: string;
+  itemId?: string;
+};
 export type ReviewEntry = {
   id: string;
   scheduleId: string;
@@ -101,6 +108,7 @@ export type SpeakingSubmission = {
   audioUrl: string | null;
   audioPath?: string;
   feedback?: PronunciationFeedback;
+  practiceMode?: "lesson" | "shadowing" | "memory" | "own";
   createdAt: string;
 };
 
@@ -143,6 +151,116 @@ export const initialStudyState: StudyState = {
 
 function event(type: string, activityId?: string): StudyEvent {
   return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), activityId };
+}
+
+function updateEvaluatedMistake(
+  state: StudyState,
+  activityId: string,
+  category: Mistake["category"],
+  failed: boolean,
+  originalAnswer: string,
+  correctAnswer: string,
+  explanation: string,
+): StudyState {
+  const previous = state.mistakes[activityId];
+  if (!failed && !previous) return state;
+  const now = new Date().toISOString();
+  const next: Mistake = failed
+    ? {
+        id: previous?.id ?? crypto.randomUUID(),
+        activityId,
+        category,
+        originalAnswer,
+        correctAnswer,
+        explanation,
+        timesMissed: (previous?.timesMissed ?? 0) + 1,
+        timesCorrect: previous?.timesCorrect ?? 0,
+        lastMissedAt: now,
+        lastReviewedAt: previous?.lastReviewedAt ?? null,
+        schedule: ReviewScheduler.afterAnswer(
+          previous?.schedule ?? ReviewScheduler.initial(),
+          false,
+        ),
+      }
+    : {
+        ...previous!,
+        timesCorrect: previous!.timesCorrect + 1,
+        lastReviewedAt: now,
+        schedule: ReviewScheduler.afterAnswer(previous!.schedule, true),
+      };
+  return { ...state, mistakes: { ...state.mistakes, [activityId]: next } };
+}
+
+export function recordEvaluatedWriting(
+  state: StudyState,
+  activityId: string,
+  text: string,
+  feedback: unknown,
+): StudyState {
+  const result = writingFeedbackSchema.safeParse(feedback);
+  if (!result.success) return state;
+  const errors = result.data.errors;
+  return updateEvaluatedMistake(
+    state,
+    activityId,
+    "writing",
+    errors.length > 0,
+    text,
+    result.data.correctedText,
+    errors.map((item) => `${item.excerpt} → ${item.correction}: ${item.explanation}`).join("\n"),
+  );
+}
+
+export function recordEvaluatedSpeaking(
+  state: StudyState,
+  activityId: string,
+  feedback?: PronunciationFeedback,
+): StudyState {
+  if (!feedback?.referenceText) return state;
+  const weakWords = feedback.words.filter(
+    (word) => word.errorType !== "None" || (word.accuracy !== null && word.accuracy < 75),
+  );
+  const failed = feedback.accuracy < 75 || feedback.fluency < 75 || feedback.completeness < 75;
+  return updateEvaluatedMistake(
+    state,
+    activityId,
+    "speaking",
+    failed,
+    feedback.recognizedText || "Trecho não reconhecido",
+    feedback.referenceText,
+    weakWords.length
+      ? `Trechos para repetir: ${weakWords.map((word) => word.text).join(", ")}. Clareza ${Math.round(feedback.accuracy)}/100; fluência ${Math.round(feedback.fluency)}/100.`
+      : `Clareza ${Math.round(feedback.accuracy)}/100; fluência ${Math.round(feedback.fluency)}/100.`,
+  );
+}
+
+export function recordVocabularySignal(
+  state: StudyState,
+  vocabularyId: string,
+  signal: "vocabulary_search" | "vocabulary_audio",
+): StudyState {
+  const signalCount =
+    state.events.filter((item) => item.type === signal && item.itemId === vocabularyId).length + 1;
+  const entry: StudyEvent = {
+    id: crypto.randomUUID(),
+    type: signal,
+    itemId: vocabularyId,
+    createdAt: new Date().toISOString(),
+  };
+  if (signalCount < 3 || state.vocabulary[vocabularyId])
+    return { ...state, events: [entry, ...state.events] };
+  return {
+    ...state,
+    vocabulary: {
+      ...state.vocabulary,
+      [vocabularyId]: {
+        id: crypto.randomUUID(),
+        status: "learning",
+        schedule: ReviewScheduler.initial(),
+      },
+    },
+    events: [entry, ...state.events],
+  };
 }
 
 export function markActivityComplete(state: StudyState, activityId: string): StudyState {

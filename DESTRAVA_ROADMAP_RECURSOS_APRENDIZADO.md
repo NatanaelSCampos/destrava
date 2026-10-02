@@ -82,22 +82,22 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência e trilha; ainda faltam sinais de uso do dicionário, conversas e avaliações mais amplas. |
 | 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
-| 5. Caderno de erros | **PARCIAL** | A página **Meus erros** guarda respostas, correções e agendamento dos exercícios objetivos; faltam erros de escrita/fala e vínculo explícito com idioma/curso. |
-| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` atende vocabulário e erros; ainda não agenda expressões, estruturas e pronúncia como itens próprios. |
-| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** tem busca, tradução, exemplo e áudio; faltam sentidos por contexto, ocorrências, histórico de busca e integração automática com revisão. |
+| 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
+| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, expressões do vocabulário, erros de escrita e frases de pronúncia no mesmo fluxo; estruturas e pronúncia ainda não têm agendamentos granulares próprios. |
+| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados quando disponíveis, ocorrências no curso, buscas recentes, contagens de áudio e revisão automática após buscas repetidas; faltam cobertura ampla e variações regionais. |
 | 8. Números ativos | **PARCIAL** | Há números em atividades e vocabulário; faltam os modos dedicados de ditado, fala, dinheiro, datas e horários. |
 | 9. Particularidades contextualizadas | **PENDENTE** | O curso contém regras básicas, mas não há ferramenta de variantes regionais integrada à prática e à IA. |
-| 10. Shadowing | **PARCIAL** | É possível ouvir e repetir uma frase com avaliação Azure; faltam modo contínuo, ritmo/prosódia e evolução visual por tentativa. |
-| 11. Fale sem ler | **PENDENTE** | Não existe o fluxo progressivo de imitação, memória e produção própria. |
-| 12. Flashcards ligados ao domínio | **PARCIAL** | Os cartões de palavras alimentam revisão e perfil; faltam formatos como áudio→palavra, lacuna e imagem→termo. |
+| 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
+| 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
+| 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra e áudio→palavra, alimentando o mesmo agendador; lacunas, imagem→termo e estrutura→exemplo ainda faltam. |
 | 13. Explicar imagem | **PENDENTE** | Não existe atividade com imagem e avaliação da descrição falada. |
 | 14. Missões comunicativas | **PENDENTE** | Não há missões com objetivo comunicativo e acompanhamento. |
 | 15. Role-play com IA | **PENDENTE** | Não há cenários conversacionais interativos. |
 | 16. Conversação livre adaptativa | **PENDENTE** | O professor responde perguntas isoladas; não mantém uma conversa livre com turnos. |
 | 17. Tutor persistente | **PARCIAL** | O professor recebe contexto curto da aula e dos erros; faltam memória pedagógica persistente e adaptação contínua ao perfil. |
 | 18. Microlição a partir dos erros | **PENDENTE** | Há indicação do erro e atividade para refazer, mas não uma microlição gerada e avaliada. |
-| 19. Memória ativa de comportamento | **PARCIAL** | Erros e palavras difíceis afetam o perfil; buscas repetidas, áudios repetidos e abandono ainda não geram sinais. |
-| 20. Evolução por tentativa | **PARCIAL** | Histórico mostra linha do tempo por atividade, fala, escrita e palavra; shadowing e futuras avaliações conversacionais ainda não geram séries. |
+| 19. Memória ativa de comportamento | **PARCIAL** | Buscas exatas e áudios de vocabulário geram eventos e incluem o termo na revisão após três usos do mesmo tipo; abandono e sinais conversacionais ainda faltam. |
+| 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PENDENTE** | Livre, role-play e avaliação oral não existem como modos de conversa; a avaliação oficial segue em análise no item 25. |
 | 22. Prova adaptativa escrita/objetiva | **PENDENTE** | Existe teste final fixo; ele não ajusta a dificuldade durante a prova. |
 | 23. Relatório por competências | **PARCIAL** | O resultado mostra nota objetiva e competências avaliadas; faltam metas configuráveis e cobertura completa de escrita e fala. |
@@ -109,7 +109,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 29. Perfil regional | **PARCIAL** | O locale do Azure pode ser configurado para o app; falta preferência regional por aluno e aplicação no conteúdo/IA. |
 | 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra recomendações e links diretos para praticar; faltam ações de explicação e microlição. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões e alguns eventos são registrados; faltam eventos de busca, áudio e recursos conversacionais futuros. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas exatas e áudio de vocabulário são registrados; faltam eventos de recursos conversacionais futuros. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
 ---
@@ -2050,3 +2050,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 **Reaproveitado:** `StudyState`, `LearningRecommendationEngine`, `ReviewScheduler`, `ReviewQueue`, sessões e tentativas já persistidas. Metadados novos ficam no JSON do estado e no campo `performance` da sessão; não há migração de banco.
 
 **Arquivos principais:** `src/domain/study/study-planner.ts`, `src/domain/study/practice-history.ts`, `src/app/study/page.tsx`, `src/app/history/page.tsx`, `src/app/dashboard/page.tsx`, `src/components/review/review-queue.tsx` e `src/components/study-provider.tsx`.
+
+---
+
+# Registro da entrega — revisão, dicionário e fala (2026-10-01)
+
+**Itens agrupados:** 5, 6, 7, 10, 11, 12 e 19; ampliações dos itens 20 e 32.
+
+- **Caderno e revisão:** feedback estruturado de escrita e avaliação Azure de fala atualizam o caderno existente. A fila usa o mesmo `ReviewScheduler` para palavras, correções e frases; cartões de vocabulário alternam direção e escuta. A resposta ao cartão de pronúncia mede recordação; a nova gravação na atividade mede a fala.
+- **Dicionário e memória:** sentidos curados aparecem quando existem, junto das ocorrências no curso e do histórico de buscas. Três buscas exatas ou três reproduções do mesmo termo criam um item de vocabulário em aprendizado e o colocam na revisão. Os sinais ficam no estado e em `study_events.metadata`.
+- **Prática oral:** nova página **Praticar fala** oferece shadowing com tentativas e palavras fracas e **Fale sem ler** em três etapas. Imitação e memória usam a frase fixa da atividade e a avaliação Azure já existente. Produção própria fica salva com áudio e transcrição, sem nota automática.
+- **Limites atuais:** sentidos adicionais dependem de curadoria; ritmo/prosódia não são medidos separadamente; a correção escrita é consolidada por atividade; o estado ainda não é separado por curso/idioma. Não foi criada migração.
+
+**Reaproveitado:** `StudyState`, `ReviewScheduler`, `ReviewQueue`, correção de escrita, gravação e API Azure, histórico e projeções Supabase existentes.

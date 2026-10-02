@@ -12,11 +12,16 @@ import { featureFlags } from "@/lib/feature-flags";
 export default function ReviewPage() {
   const { state, vocabularyItems, course } = useStudy();
   const unit = currentUnit(course, state);
+  const activityIds = new Set(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
+    ),
+  );
   const {
     words: dueWords,
     mistakes: dueMistakes,
     total: dueTotal,
-  } = dueReviewCounts(state, vocabularyItems);
+  } = dueReviewCounts(state, vocabularyItems, new Date(), activityIds);
   const newWords = vocabularyItems.filter((item) => !state.vocabulary[item.id]).length;
   const [mode, setMode] = useState<"due" | "new">(() =>
     dueTotal === 0 && newWords > 0 ? "new" : "due",
@@ -32,8 +37,8 @@ export default function ReviewPage() {
           </span>
           <h1 className="page-title">Revisar fortalece a memória.</h1>
           <p className="page-subtitle">
-            O sistema traz de volta palavras e erros no momento certo para você lembrar por mais
-            tempo.
+            O sistema traz de volta palavras, correções de escrita e frases de fala no momento certo
+            para você lembrar por mais tempo.
           </p>
         </div>
         <Link href="/vocabulary" className="secondary-button">
@@ -47,7 +52,7 @@ export default function ReviewPage() {
           <small>Prontas para um novo encontro</small>
         </div>
         <div className="panel">
-          <span>ERROS PARA REVISAR</span>
+          <span>CORREÇÕES PARA REVISAR</span>
           <strong>{dueMistakes}</strong>
           <small>Transforme dúvidas em acertos</small>
         </div>

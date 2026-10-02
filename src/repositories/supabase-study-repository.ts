@@ -295,6 +295,7 @@ export class SupabaseStudyRepository {
         user_id: uid,
         event_type: item.type,
         activity_id: item.activityId ?? null,
+        metadata: item.itemId ? { itemId: item.itemId } : {},
         created_at: item.createdAt,
       })),
     );

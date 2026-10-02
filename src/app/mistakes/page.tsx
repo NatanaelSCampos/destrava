@@ -13,20 +13,33 @@ const skillNames: Record<string, string> = {
   spelling: "Ortografia",
   listening: "Escuta",
   writing: "Escrita",
-  speaking: "Fala",
+  speaking: "Pronúncia e fala",
   reading: "Leitura",
 };
 
 export default function MistakesPage() {
   const { course, state } = useStudy();
-  const mistakes = Object.values(state.mistakes).sort((a, b) =>
-    b.lastMissedAt.localeCompare(a.lastMissedAt),
+  const contexts = new Map(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) =>
+        lesson.activities.map(
+          (activity) =>
+            [
+              activity.id,
+              {
+                activity,
+                href: `/course/${course.slug}/unit/${unit.number}/lesson/${lesson.slug}?activity=${encodeURIComponent(activity.id)}`,
+              },
+            ] as const,
+        ),
+      ),
+    ),
   );
+  const mistakes = Object.values(state.mistakes)
+    .filter((item) => contexts.has(item.activityId))
+    .sort((a, b) => b.lastMissedAt.localeCompare(a.lastMissedAt));
   const due = mistakes.filter((item) => ReviewScheduler.isDue(item.schedule)).length;
   const improving = mistakes.filter((item) => item.schedule.masteryScore >= 50).length;
-  const activities = course.units.flatMap((unit) =>
-    unit.lessons.flatMap((lesson) => lesson.activities),
-  );
   return (
     <div className="mistakes-page">
       <div className="page-heading">
@@ -66,14 +79,14 @@ export default function MistakesPage() {
       {mistakes.length ? (
         <div className="mistake-list">
           {mistakes.map((item) => {
-            const activity = activities.find((entry) => entry.id === item.activityId);
+            const context = contexts.get(item.activityId);
             return (
               <article className="mistake-card panel" key={item.id}>
                 <div className="mistake-card-header">
                   <span className="pill red">{skillNames[item.category] ?? item.category}</span>
                   <span>{formatDate(item.lastMissedAt)}</span>
                 </div>
-                <h3>{activity?.title ?? "Atividade"}</h3>
+                <h3>{context?.activity.title ?? "Atividade"}</h3>
                 <div className="mistake-comparison">
                   <div>
                     <span>SUA RESPOSTA</span>
@@ -94,6 +107,12 @@ export default function MistakesPage() {
                   </span>
                   <span>Próxima revisão: {formatDate(item.schedule.nextReviewAt)}</span>
                 </div>
+                {context && (
+                  <Link href={context.href} className="text-link">
+                    {item.category === "speaking" ? "Gravar nova tentativa" : "Praticar novamente"}{" "}
+                    <ArrowRight size={15} />
+                  </Link>
+                )}
               </article>
             );
           })}

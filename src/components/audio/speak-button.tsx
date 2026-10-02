@@ -9,11 +9,13 @@ export function SpeakButton({
   label,
   className = "speak-button",
   withLabel = false,
+  onPlay,
 }: {
   text: string;
   label?: string;
   className?: string;
   withLabel?: boolean;
+  onPlay?: () => void;
 }) {
   const [error, setError] = useState("");
   const description = label ?? `Ouvir em espanhol: ${text.slice(0, 70)}`;
@@ -31,6 +33,7 @@ export function SpeakButton({
           setError("");
           if (!speakSpanish(text, () => setError("Não foi possível reproduzir o áudio.")))
             setError("Seu navegador não oferece reprodução por voz.");
+          else onPlay?.();
         }}
       >
         <Volume2 size={17} aria-hidden="true" />

@@ -104,11 +104,12 @@ export function buildLearningProfile(
   }
 
   const mistakeBySchedule = new Map(
-    Object.values(state.mistakes).map((mistake) => [mistake.schedule.id, mistake.activityId]),
+    Object.values(state.mistakes).map((mistake) => [mistake.schedule.id, mistake]),
   );
   for (const review of state.reviews) {
-    const activityId = mistakeBySchedule.get(review.scheduleId);
-    if (activityId) addActivityScore(activityId, review.correct ? 100 : 0, review.reviewedAt);
+    const mistake = mistakeBySchedule.get(review.scheduleId);
+    if (mistake && mistake.category !== "writing" && mistake.category !== "speaking")
+      addActivityScore(mistake.activityId, review.correct ? 100 : 0, review.reviewedAt);
   }
 
   for (const submission of state.writing) {

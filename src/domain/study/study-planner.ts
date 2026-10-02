@@ -28,6 +28,12 @@ function reviewCandidates(
         a.schedule.nextReviewAt.localeCompare(b.schedule.nextReviewAt),
     )
     .map((item): PlannedReviewItem => ({ kind: "mistake", id: item.activityId }));
+  const signalCounts = new Map<string, number>();
+  for (const event of state.events)
+    if (event.itemId && (event.type === "vocabulary_search" || event.type === "vocabulary_audio")) {
+      const key = `${event.type}:${event.itemId}`;
+      signalCounts.set(key, (signalCounts.get(key) ?? 0) + 1);
+    }
   const words = vocabularyItems
     .filter((word) => {
       const progress = state.vocabulary[word.id];
@@ -36,7 +42,9 @@ function reviewCandidates(
         progress &&
         (mode === "difficulties"
           ? progress.status === "difficult" ||
-            (progress.schedule.reviewCount > 0 && progress.schedule.masteryScore < 50)
+            (progress.schedule.reviewCount > 0 && progress.schedule.masteryScore < 50) ||
+            (signalCounts.get(`vocabulary_search:${word.id}`) ?? 0) >= 3 ||
+            (signalCounts.get(`vocabulary_audio:${word.id}`) ?? 0) >= 3
           : ReviewScheduler.isDue(progress.schedule, now))
       );
     })

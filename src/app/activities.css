@@ -444,6 +444,11 @@
   border-radius: 6px;
   background: #e9e9eb;
 }
+.pronunciation-words span.weak {
+  background: #fbe7ea;
+  color: #a92335;
+  font-weight: 700;
+}
 .speaking-recorder > .primary-button {
   justify-self: start;
 }
@@ -514,6 +519,15 @@
   justify-content: center;
   gap: 8px;
   margin-top: 12px;
+}
+.review-pronunciation-note {
+  color: #67676d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.review-pronunciation-note a {
+  color: #a92335;
+  font-weight: 700;
 }
 .review-finished {
   display: grid;

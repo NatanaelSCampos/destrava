@@ -17,6 +17,9 @@ import {
   initialStudyState,
   markActivityComplete,
   recordAttempt,
+  recordEvaluatedSpeaking,
+  recordEvaluatedWriting,
+  recordVocabularySignal,
   reconcileAssessments,
   reviewMistake,
   reviewVocabulary,
@@ -24,6 +27,7 @@ import {
   type StudyState,
   type SessionMode,
   type PlannedItem,
+  type SpeakingSubmission,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -53,7 +57,10 @@ type StudyContextValue = {
     transcription: string,
     audioUrl: string | null,
     feedback?: PronunciationFeedback,
+    practiceMode?: SpeakingSubmission["practiceMode"],
   ) => void;
+  recordVocabularySearch: (id: string) => void;
+  recordVocabularyAudio: (id: string) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, correct: boolean) => void;
   reviewError: (id: string, correct: boolean) => void;
@@ -194,29 +201,34 @@ export function StudyProvider({
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
         return reconcileAssessments(
-          {
-            ...completed,
-            writing: [
-              {
-                id: crypto.randomUUID(),
-                activityId,
-                sessionId: current.activeSessionId,
-                text,
-                createdAt: new Date().toISOString(),
-                feedback,
-              },
-              ...current.writing,
-            ],
-            events: [
-              {
-                id: crypto.randomUUID(),
-                type: "writing_submitted",
-                activityId,
-                createdAt: new Date().toISOString(),
-              },
-              ...completed.events,
-            ],
-          },
+          recordEvaluatedWriting(
+            {
+              ...completed,
+              writing: [
+                {
+                  id: crypto.randomUUID(),
+                  activityId,
+                  sessionId: current.activeSessionId,
+                  text,
+                  createdAt: new Date().toISOString(),
+                  feedback,
+                },
+                ...current.writing,
+              ],
+              events: [
+                {
+                  id: crypto.randomUUID(),
+                  type: "writing_submitted",
+                  activityId,
+                  createdAt: new Date().toISOString(),
+                },
+                ...completed.events,
+              ],
+            },
+            activityId,
+            text,
+            feedback,
+          ),
           course,
         );
       }),
@@ -228,33 +240,39 @@ export function StudyProvider({
       transcription: string,
       audioUrl: string | null,
       feedback?: PronunciationFeedback,
+      practiceMode: SpeakingSubmission["practiceMode"] = "lesson",
     ) =>
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
-        return {
-          ...completed,
-          speaking: [
-            {
-              id: crypto.randomUUID(),
-              activityId,
-              sessionId: current.activeSessionId,
-              transcription,
-              audioUrl,
-              feedback,
-              createdAt: new Date().toISOString(),
-            },
-            ...current.speaking,
-          ],
-          events: [
-            {
-              id: crypto.randomUUID(),
-              type: "speaking_submitted",
-              activityId,
-              createdAt: new Date().toISOString(),
-            },
-            ...completed.events,
-          ],
-        };
+        return recordEvaluatedSpeaking(
+          {
+            ...completed,
+            speaking: [
+              {
+                id: crypto.randomUUID(),
+                activityId,
+                sessionId: current.activeSessionId,
+                transcription,
+                audioUrl,
+                feedback,
+                practiceMode,
+                createdAt: new Date().toISOString(),
+              },
+              ...current.speaking,
+            ],
+            events: [
+              {
+                id: crypto.randomUUID(),
+                type: "speaking_submitted",
+                activityId,
+                createdAt: new Date().toISOString(),
+              },
+              ...completed.events,
+            ],
+          },
+          activityId,
+          feedback,
+        );
       }),
     [],
   );
@@ -279,6 +297,14 @@ export function StudyProvider({
   );
   const reviewError = useCallback(
     (id: string, correct: boolean) => setState((current) => reviewMistake(current, id, correct)),
+    [],
+  );
+  const recordVocabularySearch = useCallback(
+    (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_search")),
+    [],
+  );
+  const recordVocabularyAudio = useCallback(
+    (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_audio")),
     [],
   );
   const startSession = useCallback(
@@ -356,6 +382,8 @@ export function StudyProvider({
       markVocabulary,
       reviewWord,
       reviewError,
+      recordVocabularySearch,
+      recordVocabularyAudio,
       startSession,
       finishSession,
     }),
@@ -374,6 +402,8 @@ export function StudyProvider({
       markVocabulary,
       reviewWord,
       reviewError,
+      recordVocabularySearch,
+      recordVocabularyAudio,
       startSession,
       finishSession,
     ],
