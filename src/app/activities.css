@@ -50,6 +50,118 @@
   font-size: 13px;
   margin: 0 0 17px;
 }
+.review-guide {
+  display: grid;
+  gap: 18px;
+  max-width: 980px;
+  margin-bottom: 18px;
+}
+.review-guide-intro {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-muted);
+}
+.review-guide-intro p {
+  margin: 8px 0 12px;
+  line-height: 1.5;
+}
+.review-guide-intro ol {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+  color: #38383d;
+  line-height: 1.5;
+  font-size: 13px;
+}
+.review-guide-intro li {
+  padding-left: 3px;
+}
+.review-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.review-card {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+.review-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.review-card-heading span {
+  display: grid;
+  place-items: center;
+  width: 27px;
+  height: 27px;
+  border-radius: 8px;
+  background: #faf1f2;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+.review-card-heading h3 {
+  margin: 0;
+  font-size: 14px;
+}
+.review-card .review-card-structure {
+  margin: 12px 0;
+  color: #38383d;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+.review-card-example {
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+}
+.review-card-example small {
+  color: #818187;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.review-card-example .text-audio-row {
+  margin-top: 5px;
+}
+.review-card-example .text-audio-row + .text-audio-row {
+  margin-top: 7px;
+}
+.review-card-example .text-audio-row p {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.review-card .review-card-practice {
+  margin: 12px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.review-guide .review-guide-finish {
+  max-width: none;
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+  background: #faf7f7;
+  color: #38383d;
+  line-height: 1.5;
+}
+@media (max-width: 680px) {
+  .review-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
 .phrase-strip {
   display: flex;
   flex-wrap: wrap;

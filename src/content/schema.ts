@@ -102,7 +102,21 @@ export const activitySchema = z.discriminatedUnion("type", [
     back: z.string(),
     example: z.string(),
   }),
-  activityBase.extend({ type: z.literal("review"), body: z.string() }),
+  activityBase.extend({
+    type: z.literal("review"),
+    body: z.string(),
+    steps: z.array(z.string()).default([]),
+    cards: z
+      .array(
+        z.object({
+          label: z.string(),
+          structure: z.string().optional(),
+          examples: z.array(z.string()).min(1),
+          practice: z.string(),
+        }),
+      )
+      .default([]),
+  }),
   activityBase.extend({ type: z.literal("quiz"), body: z.string() }),
 ]);
 

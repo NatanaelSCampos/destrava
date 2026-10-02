@@ -22,4 +22,16 @@ export const featureAnnouncements: FeatureAnnouncement[] = [
     href: "/conversation",
     linkLabel: "Experimentar conversa",
   },
+  {
+    id: "2026-10-revisao-apresentacao",
+    title: "A revisão da apresentação ficou mais clara",
+    summary: "O antigo mapa mental virou um roteiro para praticar em voz alta.",
+    highlights: [
+      "Siga três passos curtos para revisar e testar o que lembra.",
+      "Veja cada assunto em um cartão, ouça o exemplo e crie sua frase.",
+      "Ao final, diga três frases e faça uma pergunta sem olhar os modelos.",
+    ],
+    href: "/course/frecuencias-a1/unit/1/lesson/revision?activity=review-1",
+    linkLabel: "Abrir revisão",
+  },
 ];

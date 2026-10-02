@@ -21,7 +21,11 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
           </span>
           <h2>{activity.title}</h2>
           <p>{activity.prompt}</p>
-          <small className="audio-selection-hint">Selecione uma palavra ou frase para ouvir.</small>
+          {!(activity.type === "review" && activity.cards.length > 0) && (
+            <small className="audio-selection-hint">
+              Selecione uma palavra ou frase para ouvir.
+            </small>
+          )}
         </div>
         <span className="activity-time">
           <Clock3 size={14} /> {activity.minutes} min
@@ -32,9 +36,50 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
           activity.type === "review" ||
           activity.type === "quiz") && (
           <div className="lesson-body">
-            {activity.body.split("\n\n").map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            {activity.type === "review" && activity.cards.length > 0 ? (
+              <div className="review-guide">
+                <div className="review-guide-intro">
+                  <span className="eyebrow">COMO FAZER</span>
+                  <p>{activity.body}</p>
+                  <ol>
+                    {activity.steps.map((step) => (
+                      <li key={step}>{step}</li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="review-card-grid">
+                  {activity.cards.map((card, index) => (
+                    <section className="review-card" key={card.label}>
+                      <div className="review-card-heading">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <h3>{card.label}</h3>
+                      </div>
+                      {card.structure && <p className="review-card-structure">{card.structure}</p>}
+                      <div className="review-card-example">
+                        <small>
+                          {card.examples.length > 1 ? "EXEMPLOS PARA OUVIR" : "EXEMPLO PARA OUVIR"}
+                        </small>
+                        {card.examples.map((example) => (
+                          <div className="text-audio-row" key={example}>
+                            <p lang="es">{example}</p>
+                            <SpeakButton text={example} label={`Ouvir exemplo: ${example}`} />
+                          </div>
+                        ))}
+                      </div>
+                      <p className="review-card-practice">
+                        <strong>Sua vez:</strong> {card.practice}
+                      </p>
+                    </section>
+                  ))}
+                </div>
+                <p className="review-guide-finish">
+                  Conseguiu falar três frases e fazer uma pergunta sem olhar? Marque a revisão como
+                  feita e siga para a próxima atividade.
+                </p>
+              </div>
+            ) : (
+              activity.body.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)
+            )}
             {activity.type === "lesson_content" && activity.highlights.length > 0 && (
               <div className="phrase-strip">
                 {activity.highlights.map((phrase) => (
@@ -50,7 +95,14 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
               className={done ? "secondary-button" : "primary-button"}
               onClick={() => completeActivity(activity.id)}
             >
-              <Check size={16} /> {done ? "Conteúdo concluído" : "Marcar como estudado"}
+              <Check size={16} />{" "}
+              {done
+                ? activity.type === "review"
+                  ? "Revisão concluída"
+                  : "Conteúdo concluído"
+                : activity.type === "review"
+                  ? "Concluí a revisão"
+                  : "Marcar como estudado"}
             </button>
           </div>
         )}

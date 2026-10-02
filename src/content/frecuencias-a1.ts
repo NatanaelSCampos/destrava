@@ -486,16 +486,64 @@ export const frecuenciasA1 = courseSchema.parse({
           title: "Revisão da unidade",
           eyebrow: "Revisão",
           description: "Recupere as estruturas mais importantes.",
-          minutes: 8,
+          minutes: 10,
           activities: [
             {
               id: "review-1",
               type: "review",
-              title: "Seu mapa mental",
-              prompt: "Leia e tente lembrar um exemplo próprio para cada estrutura.",
+              title: "Revise: fale sobre você",
+              prompt: "Monte uma apresentação curta sobre você usando os modelos abaixo.",
               skill: "grammar",
-              minutes: 3,
-              body: "Nome → me llamo / soy. Idade → tengo … años. Origem → soy de … / soy + nacionalidade. Residência → vivo en …. Profissão → soy … / trabajo en …. Perguntas → ¿cómo?, ¿de dónde?, ¿dónde?, ¿cuántos años?",
+              minutes: 5,
+              body: "Os exemplos são modelos. Troque os dados pelos seus; não precisa escrever nem enviar uma resposta nesta atividade.",
+              steps: [
+                "Leia cada modelo e toque no áudio para ouvir a pronúncia.",
+                "Diga uma frase verdadeira sobre você para cada assunto, em voz alta.",
+                "Sem olhar os cartões, diga três frases sobre você e faça uma pergunta. Então avance para a revisão rápida.",
+              ],
+              cards: [
+                {
+                  label: "Nome",
+                  structure: "Me llamo… / Soy…",
+                  examples: ["Me llamo Ana.", "Soy Ana."],
+                  practice: "Diga seu nome.",
+                },
+                {
+                  label: "Idade",
+                  structure: "Tengo … años.",
+                  examples: ["Tengo 25 años."],
+                  practice: "Diga sua idade.",
+                },
+                {
+                  label: "Origem",
+                  structure: "Soy de…",
+                  examples: ["Soy de Brasil.", "Soy brasileña."],
+                  practice:
+                    "Diga seu país. Para a nacionalidade, você também pode dizer ‘Soy brasileño’ ou ‘Soy brasileña’.",
+                },
+                {
+                  label: "Cidade",
+                  structure: "Vivo en…",
+                  examples: ["Vivo en Recife."],
+                  practice: "Diga onde você mora.",
+                },
+                {
+                  label: "Profissão",
+                  structure: "Soy… / Trabajo en…",
+                  examples: ["Soy profesor.", "Trabajo en una escuela.", "Soy estudiante."],
+                  practice: "Diga sua profissão. Se ainda estuda, use ‘Soy estudiante’.",
+                },
+                {
+                  label: "Perguntas",
+                  examples: [
+                    "¿Cómo te llamas?",
+                    "¿De dónde eres?",
+                    "¿Dónde vives?",
+                    "¿Cuántos años tienes?",
+                  ],
+                  practice: "Escolha uma pergunta e fale como se estivesse conversando com alguém.",
+                },
+              ],
             },
             {
               id: "review-2",
