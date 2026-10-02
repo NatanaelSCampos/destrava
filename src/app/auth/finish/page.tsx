@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
+import { clearGoogleUnlink } from "@/lib/auth/google-consent";
 
 export default function FinishAuthPage() {
   const [message, setMessage] = useState("Verificando a segurança da sua conta…");
@@ -21,6 +22,9 @@ export default function FinishAuthPage() {
       if (error || !data.user) {
         window.location.replace("/login?authError=1");
         return;
+      }
+      if (new URLSearchParams(window.location.search).get("google") === "1") {
+        clearGoogleUnlink();
       }
       const access = await canAccessWithMfa(client);
       if (cancelled) return;

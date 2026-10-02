@@ -3221,12 +3221,6 @@
   color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
-.security-identity-actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-}
 .security-unlink-confirmation {
   display: grid;
   gap: 12px;
