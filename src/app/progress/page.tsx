@@ -298,6 +298,9 @@ export default function ProgressPage() {
             {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
             <ArrowRight size={16} />
           </Link>
+          <Link href="/assessment" className="secondary-button">
+            Fazer diagnóstico adaptativo <ArrowRight size={16} />
+          </Link>
           {progress.assessmentFinished && (
             <div className="assessment-strength">
               <strong>{weakSkills.length ? "Para revisar" : "Seu ponto forte"}</strong>

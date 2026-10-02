@@ -16,7 +16,13 @@ type Exercise = Extract<
   }
 >;
 
-export function ExerciseCard({ activity }: { activity: Exercise }) {
+export function ExerciseCard({
+  activity,
+  onAssessed,
+}: {
+  activity: Exercise;
+  onAssessed?: (answer: string, result: GradeResult) => void;
+}) {
   const { submitAttempt } = useStudy();
   const [answer, setAnswer] = useState("");
   const [ordered, setOrdered] = useState<string[]>([]);
@@ -39,7 +45,8 @@ export function ExerciseCard({ activity }: { activity: Exercise }) {
       if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
       const feedback = data as GradeResult;
       setResult(feedback);
-      submitAttempt(activity, selectedAnswer, feedback);
+      if (onAssessed) onAssessed(selectedAnswer, feedback);
+      else submitAttempt(activity, selectedAnswer, feedback);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível corrigir agora.");
     } finally {
@@ -164,7 +171,7 @@ export function ExerciseCard({ activity }: { activity: Exercise }) {
           {error}
         </p>
       )}
-      {result && (
+      {result && !onAssessed && (
         <div className={`feedback-card ${result.correct ? "correct" : "incorrect"}`} role="status">
           <span className="feedback-icon">
             {result.correct ? <Check size={18} /> : <X size={18} />}

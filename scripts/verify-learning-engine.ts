@@ -26,6 +26,12 @@ import {
 import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
 import { reviewStructures } from "../src/content/review-structures";
 import { conversationScenarios } from "../src/content/conversation-scenarios";
+import { adaptiveAssessmentBank } from "../src/content/adaptive-assessment-bank";
+import {
+  adaptiveAssessmentReport,
+  nextAdaptiveItem,
+  type AdaptiveAnswer,
+} from "../src/domain/study/adaptive-assessment";
 import {
   appendConversationReply,
   finishConversation,
@@ -38,6 +44,64 @@ import {
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+const firstAdaptive = nextAdaptiveItem(adaptiveAssessmentBank, []);
+assert.equal(firstAdaptive?.skill, "vocabulary");
+assert.equal(firstAdaptive?.difficulty, 2);
+const wrongAdaptive: AdaptiveAnswer = {
+  activityId: firstAdaptive!.activityId,
+  skill: "vocabulary",
+  difficulty: 2,
+  correct: false,
+  answer: "erro",
+};
+assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, [wrongAdaptive])?.difficulty, 1);
+const adaptiveAnswers: AdaptiveAnswer[] = [
+  wrongAdaptive,
+  { activityId: "grammar-2", skill: "grammar", difficulty: 1, correct: true, answer: "soy" },
+  { activityId: "listening-1", skill: "listening", difficulty: 1, correct: true, answer: "" },
+  {
+    activityId: "assessment-4",
+    skill: "writing",
+    difficulty: 2,
+    correct: true,
+    answer: "Me llamo Luis",
+  },
+  {
+    activityId: "assessment-6",
+    skill: "grammar",
+    difficulty: 3,
+    correct: true,
+    answer: "¿De dónde eres?",
+  },
+  {
+    activityId: "assessment-5",
+    skill: "reading",
+    difficulty: 2,
+    correct: true,
+    answer: "Ela mora em Quito",
+  },
+];
+assert.equal(adaptiveAssessmentReport(adaptiveAnswers).score, 83);
+assert.equal(adaptiveAssessmentReport(adaptiveAnswers).wrong.length, 1);
+assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, adaptiveAnswers), null);
+const adaptiveState: StudyState = {
+  ...initialStudyState,
+  adaptiveAssessments: [
+    {
+      id: "adaptive-1",
+      courseId: course.id,
+      unitId: course.units[0].id,
+      startedAt: new Date().toISOString(),
+      finishedAt: new Date().toISOString(),
+      answers: adaptiveAnswers,
+    },
+  ],
+};
+assert(
+  (buildLearningProfile(course, adaptiveState, vocabularySeed).skills.find(
+    (item) => item.id === "vocabulary",
+  )?.evidenceCount ?? 0) > 0,
+);
 const mission = conversationScenarios[0];
 const newConversation = startConversation({
   courseId: course.id,

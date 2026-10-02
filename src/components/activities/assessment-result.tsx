@@ -16,9 +16,10 @@ const labels: Array<{ id: Skill; label: string }> = [
 ];
 
 export function AssessmentResult({ lesson, unitId }: { lesson: PublicLesson; unitId: string }) {
-  const { state } = useStudy();
+  const { course, state } = useStudy();
   const result = state.assessmentAttempts?.find((attempt) => attempt.unitId === unitId);
   if (!result) return null;
+  const unit = course.units.find((item) => item.id === unitId);
   const objective = lesson.activities.filter((activity) =>
     [
       "multiple_choice",
@@ -32,7 +33,11 @@ export function AssessmentResult({ lesson, unitId }: { lesson: PublicLesson; uni
   const rows = labels.map(({ id, label }) => {
     const activities = objective.filter((activity) => activity.skill === id);
     const attempts = activities
-      .map((activity) => state.attempts.find((attempt) => attempt.activityId === activity.id))
+      .map((activity) =>
+        state.attempts.find(
+          (attempt) => attempt.activityId === activity.id && attempt.createdAt <= result.finishedAt,
+        ),
+      )
       .filter((attempt) => attempt !== undefined);
     return {
       id,
@@ -50,6 +55,12 @@ export function AssessmentResult({ lesson, unitId }: { lesson: PublicLesson; uni
   const needsReview = rows
     .filter((row) => row.score !== null && row.score < 75)
     .map((row) => row.label);
+  const missedActivities = objective.filter(
+    (activity) =>
+      state.attempts.find(
+        (attempt) => attempt.activityId === activity.id && attempt.createdAt <= result.finishedAt,
+      )?.correct === false,
+  );
   return (
     <section className="assessment-result panel">
       <span className="eyebrow">
@@ -96,8 +107,27 @@ export function AssessmentResult({ lesson, unitId }: { lesson: PublicLesson; uni
             : "Nenhum ponto abaixo da meta nas questões avaliadas."}
         </p>
       </div>
+      {missedActivities.length > 0 && unit && (
+        <div className="assessment-result-notes">
+          <strong>Próximos passos</strong>
+          <ul>
+            {missedActivities.map((activity) => (
+              <li key={activity.id}>
+                <Link
+                  href={`/course/${course.slug}/unit/${unit.number}/lesson/${lesson.slug}?activity=${activity.id}`}
+                >
+                  Revisar {activity.title} <ArrowRight size={14} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <Link href="/review" className="secondary-button">
         <RotateCcw size={16} /> Revisar pontos fracos <ArrowRight size={16} />
+      </Link>
+      <Link href="/assessment" className="secondary-button">
+        Fazer diagnóstico adaptativo <ArrowRight size={16} />
       </Link>
     </section>
   );

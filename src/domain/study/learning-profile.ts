@@ -105,6 +105,12 @@ export function buildLearningProfile(
     addActivityScore(attempt.activityId, attempt.correct ? 100 : 0, attempt.createdAt);
   }
 
+  for (const assessment of state.adaptiveAssessments ?? []) {
+    if (assessment.courseId !== course.id) continue;
+    for (const answer of assessment.answers)
+      addActivityScore(answer.activityId, answer.correct ? 100 : 0, assessment.finishedAt);
+  }
+
   for (const attempt of state.numberAttempts ?? []) {
     const prompt = findNumberPrompt(attempt.promptId);
     if (!prompt || !course.languageCode.startsWith("es")) continue;

@@ -10,6 +10,7 @@ import type { SpanishRegion } from "@/content/spanish-regions";
 import { findReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
+import type { AdaptiveAnswer } from "@/domain/study/adaptive-assessment";
 
 export type StudentProfile = {
   goal: string;
@@ -154,6 +155,15 @@ export type ImageDescriptionAttempt = {
   createdAt: string;
 };
 
+export type AdaptiveAssessmentAttempt = {
+  id: string;
+  courseId: string;
+  unitId: string;
+  answers: AdaptiveAnswer[];
+  startedAt: string;
+  finishedAt: string;
+};
+
 export type StudyState = {
   profile: StudentProfile;
   completedActivityIds: string[];
@@ -172,6 +182,7 @@ export type StudyState = {
   microLessonAttempts: MicroLessonAttempt[];
   conversations: ConversationSession[];
   imageDescriptions: ImageDescriptionAttempt[];
+  adaptiveAssessments: AdaptiveAssessmentAttempt[];
   activeSessionId: string | null;
 };
 
@@ -201,6 +212,7 @@ export const initialStudyState: StudyState = {
   microLessonAttempts: [],
   conversations: [],
   imageDescriptions: [],
+  adaptiveAssessments: [],
   activeSessionId: null,
 };
 

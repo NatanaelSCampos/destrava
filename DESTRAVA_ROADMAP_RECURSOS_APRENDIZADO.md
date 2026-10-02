@@ -99,9 +99,9 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 19. Memória ativa de comportamento | **PARCIAL** | Buscas exatas e áudios de vocabulário geram eventos e incluem o termo na revisão após três usos do mesmo tipo; abandono e sinais conversacionais ainda faltam. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
-| 22. Prova adaptativa escrita/objetiva | **PENDENTE** | Existe teste final fixo; ele não ajusta a dificuldade durante a prova. |
-| 23. Relatório por competências | **PARCIAL** | O resultado mostra nota objetiva e competências avaliadas; faltam metas configuráveis e cobertura completa de escrita e fala. |
-| 24. Feedback pós-avaliação | **PARCIAL** | Tentativas e erros do teste alimentam perfil e revisão; falta um plano pós-prova explícito por competência. |
+| 22. Prova adaptativa escrita/objetiva | **PARCIAL** | **Diagnóstico** de seis questões ajusta a complexidade da próxima questão pelas respostas, usando conteúdo A1 curado. O teste final da unidade continua fixo e separado. |
+| 23. Relatório por competências | **PARCIAL** | O diagnóstico mostra acertos por vocabulário, gramática, escuta, frase escrita e leitura, com meta geral e piso para competências com amostra suficiente; fala, pronúncia e escrita livre não são medidas. |
+| 24. Feedback pós-avaliação | **PARCIAL** | O diagnóstico cria um plano com links para as atividades erradas e injeta evidências no perfil adaptativo. Ainda falta agendamento automático de exercícios específicos gerados para cada lacuna. |
 | 25. Avaliação oral conversacional | **ADIADO** | A versão oficial continua **EM ANÁLISE** no próprio roadmap. |
 | 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
 | 27. Ritmo de conversa por nível | **PARCIAL** | O aluno escolhe iniciante/intermediário/natural; a IA ajusta a extensão da resposta e o áudio muda de velocidade. Falta calibragem empírica por nível. |
@@ -2140,3 +2140,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** feedback qualitativo sem nota de pronúncia, nota oficial ou validação pedagógica em larga escala. As duas cenas e seus fatos são curados para espanhol A1; outro idioma requer novas cenas e instruções.
 
 **Reaproveitado:** gravação via `MediaRecorder`, conversão WAV, endpoint Azure Speech, `AIProvider`, guarda de requisições, `StudyProvider`, `SpeakButton` e persistência Supabase já existente.
+
+---
+
+# Registro da entrega — diagnóstico adaptativo (2026-10-02)
+
+**Itens agrupados:** 22, 23 e 24, com integração ao perfil de domínio (1), motor adaptativo (2) e telemetria (32).
+
+- **Implementado:** diagnóstico opcional de seis questões objetivas ou de frase curta, selecionadas de atividades já curadas do curso A1. A resposta anterior move a próxima questão entre fundamentos, aplicação e contexto, dentro dos objetivos da unidade. O teste final antigo permanece disponível para preservar o histórico e a regra de conclusão existente.
+- **Relatório:** acertos gerais e por competência, meta inicial configurada em código (75% geral, piso de 60% apenas quando há duas ou mais questões), pontos não avaliados declarados e links diretos para praticar cada questão errada. Os resultados anteriores podem ser revisitados.
+- **Integração:** tentativas ficam no JSON `user_study_state` por curso/unidade e entram como evidência do perfil de aprendizado e do motor de recomendações, sem marcar lições como concluídas. Evento de conclusão usa a telemetria existente. Não houve migração.
+- **Limites:** banco de itens adaptativos inicial apenas do espanhol A1; o teste é diagnóstico e não substitui a avaliação final fixa. Uma questão em determinada competência é amostra insuficiente para decisão de aprovação nessa competência. Fala, pronúncia e escrita livre não entram nesta nota.
+
+**Reaproveitado:** banco de atividades existente, `/api/grade`, `ExerciseCard`, `StudyProvider`, `StudyState`, perfil de domínio, recomendações e persistência Supabase existente.

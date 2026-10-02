@@ -34,6 +34,7 @@ import {
   type NumberAttempt,
   type MicroLessonAttempt,
   type ImageDescriptionAttempt,
+  type AdaptiveAssessmentAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -81,6 +82,7 @@ type StudyContextValue = {
   ) => void;
   saveConversation: (session: ConversationSession) => void;
   saveImageDescription: (attempt: Omit<ImageDescriptionAttempt, "id" | "createdAt">) => void;
+  saveAdaptiveAssessment: (attempt: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) => void;
   addConversationReply: (
     sessionId: string,
     studentText: string,
@@ -149,6 +151,7 @@ export function StudyProvider({
                 microLessonAttempts: source.microLessonAttempts ?? [],
                 conversations: source.conversations ?? [],
                 imageDescriptions: source.imageDescriptions ?? [],
+                adaptiveAssessments: source.adaptiveAssessments ?? [],
                 structureReviews: source.structureReviews ?? {},
                 structureAttempts: source.structureAttempts ?? [],
               });
@@ -164,6 +167,7 @@ export function StudyProvider({
                   microLessonAttempts: source.microLessonAttempts ?? [],
                   conversations: source.conversations ?? [],
                   imageDescriptions: source.imageDescriptions ?? [],
+                  adaptiveAssessments: source.adaptiveAssessments ?? [],
                   structureReviews: source.structureReviews ?? {},
                   structureAttempts: source.structureAttempts ?? [],
                 });
@@ -192,6 +196,7 @@ export function StudyProvider({
               microLessonAttempts: parsed.microLessonAttempts ?? [],
               conversations: parsed.conversations ?? [],
               imageDescriptions: parsed.imageDescriptions ?? [],
+              adaptiveAssessments: parsed.adaptiveAssessments ?? [],
               structureReviews: parsed.structureReviews ?? {},
               structureAttempts: parsed.structureAttempts ?? [],
             });
@@ -410,6 +415,29 @@ export function StudyProvider({
       }),
     [],
   );
+  const saveAdaptiveAssessment = useCallback(
+    (input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) =>
+      setState((current) => {
+        const finishedAt = new Date().toISOString();
+        return {
+          ...current,
+          adaptiveAssessments: [
+            { ...input, id: crypto.randomUUID(), finishedAt },
+            ...(current.adaptiveAssessments ?? []),
+          ].slice(0, 20),
+          events: [
+            {
+              id: crypto.randomUUID(),
+              type: "adaptive_assessment_completed",
+              itemId: input.unitId,
+              createdAt: finishedAt,
+            },
+            ...current.events,
+          ],
+        };
+      }),
+    [],
+  );
   const addConversationReply = useCallback(
     (
       sessionId: string,
@@ -542,6 +570,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
+      saveAdaptiveAssessment,
       addConversationReply,
       completeConversation,
       startSession,
@@ -569,6 +598,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
+      saveAdaptiveAssessment,
       addConversationReply,
       completeConversation,
       startSession,
