@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -20,9 +20,12 @@ import { ReviewQueue } from "@/components/review/review-queue";
 import { formatMinutes } from "@/lib/utils";
 
 export default function StudyPage() {
-  const { course, state, ready, startSession, finishSession } = useStudy();
+  const { course, state, vocabularyItems, ready, startSession, finishSession } = useStudy();
   const unit = currentUnit(course, state)!;
-  const planned = buildStudyPlan(course, state, state.profile.dailyMinutes);
+  const planned = useMemo(
+    () => buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems),
+    [course, state, vocabularyItems],
+  );
   const activeSession = state.sessions.find((session) => session.id === state.activeSessionId);
   const plan = activeSession?.plan ?? planned;
   const [index, setIndex] = useState(0);

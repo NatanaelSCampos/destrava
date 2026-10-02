@@ -15,10 +15,14 @@ import {
   Target,
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
-import { buildStudyPlan, nextActivity } from "@/domain/study/study-planner";
+import { buildStudyPlan } from "@/domain/study/study-planner";
 import { courseProgress, currentUnit, unitProgress } from "@/domain/study/progress";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
+import { buildLearningProfile } from "@/domain/study/learning-profile";
+import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import { formatMinutes } from "@/lib/utils";
+import { featureFlags } from "@/lib/feature-flags";
+import { recommendationLink } from "@/lib/recommendation-link";
 
 function currentStreak(dates: string[]) {
   const days = new Set(dates.map((value) => new Date(value).toLocaleDateString("en-CA")));
@@ -37,11 +41,15 @@ export default function DashboardPage() {
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems);
   const totalProgress = courseProgress(course, state);
-  const next = nextActivity(course, state);
-  const lesson = unit.lessons.find((item) =>
-    item.activities.some((activity) => activity.id === next?.id),
-  );
-  const plan = buildStudyPlan(course, state, state.profile.dailyMinutes);
+  const learningProfile = buildLearningProfile(course, state, vocabularyItems);
+  const focus = LearningRecommendationEngine.recommend(
+    course,
+    state,
+    learningProfile,
+    vocabularyItems,
+    { includeReviews: featureFlags.SPACED_REPETITION },
+  )[0];
+  const plan = buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems);
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + session.durationSeconds, 0) / 60,
   );
@@ -266,17 +274,14 @@ export default function DashboardPage() {
             <span className="eyebrow">
               <Target size={13} /> SEU FOCO AGORA
             </span>
-            <h3>{next?.title ?? "Revisar e consolidar"}</h3>
-            <p>{lesson?.description ?? "Continue praticando para manter o conteúdo fresco."}</p>
+            <h3>{focus?.title ?? "Continue praticando"}</h3>
+            <p>{focus?.reason ?? "Sua trilha disponível está em dia."}</p>
             <Link
-              href={
-                lesson
-                  ? `/course/${course.slug}/unit/${unit.number}/lesson/${lesson.slug}`
-                  : "/review"
-              }
+              href={focus ? recommendationLink(course.slug, focus) : "/progress"}
               className="secondary-button"
             >
-              {next ? "Continuar lição" : "Ir para revisão"} <ArrowRight size={15} />
+              {focus?.kind === "review" ? "Revisar agora" : "Praticar agora"}{" "}
+              <ArrowRight size={15} />
             </Link>
           </div>
           <div className="rail-review">

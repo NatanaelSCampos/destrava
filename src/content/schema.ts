@@ -33,6 +33,7 @@ const activityBase = z.object({
   title: z.string().min(1),
   prompt: z.string().default(""),
   skill: skillSchema,
+  conceptIds: z.array(z.string().min(1)).default([]),
   minutes: z.number().positive(),
   explanation: z.string().optional(),
   source: z.object({ book: z.enum(["student", "workbook"]), pages: z.string() }).optional(),
@@ -132,8 +133,12 @@ export const courseSchema = z.object({
   id: z.string(),
   slug: z.string(),
   title: z.string(),
+  languageCode: z.string().regex(/^[a-z]{2,3}(?:-[A-Z]{2})?$/),
   level: z.string(),
   description: z.string(),
+  learningConcepts: z
+    .array(z.object({ id: z.string().min(1), label: z.string().min(1) }))
+    .default([]),
   units: z.array(unitSchema),
 });
 

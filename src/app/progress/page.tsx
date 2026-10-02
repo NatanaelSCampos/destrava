@@ -4,7 +4,11 @@ import Link from "next/link";
 import { ArrowRight, ChartNoAxesCombined, Check, Circle, Target } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { courseProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
+import { buildLearningProfile, type MasteryMetric } from "@/domain/study/learning-profile";
+import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import type { Skill } from "@/content/schema";
+import { featureFlags } from "@/lib/feature-flags";
+import { recommendationLink } from "@/lib/recommendation-link";
 
 const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "vocabulary", label: "Vocabulário" },
@@ -14,6 +18,33 @@ const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "writing", label: "Writing" },
   { id: "speaking", label: "Speaking" },
 ];
+
+function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[] }) {
+  const practiced = items
+    .filter((item) => item.score !== null)
+    .sort((a, b) => a.score! - b.score!)
+    .slice(0, 6);
+  return (
+    <div className="mastery-column">
+      <h3>{title}</h3>
+      {practiced.length ? (
+        practiced.map((item) => (
+          <div className="mastery-metric" key={item.id}>
+            <div>
+              <span>{item.label}</span>
+              <strong>{item.score}</strong>
+            </div>
+            <div className="progress-track">
+              <span style={{ width: `${item.score}%` }} />
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>Os resultados aparecerão depois das primeiras práticas avaliadas.</p>
+      )}
+    </div>
+  );
+}
 
 export default function ProgressPage() {
   const { course, state, vocabularyItems } = useStudy();
@@ -25,6 +56,16 @@ export default function ProgressPage() {
     ...skillProgress(course, state, item.id),
   }));
   const weakSkills = skillData.filter((item) => item.performance !== null && item.performance < 80);
+  const learningProfile = buildLearningProfile(course, state, vocabularyItems);
+  const improvements = LearningRecommendationEngine.recommend(
+    course,
+    state,
+    learningProfile,
+    vocabularyItems,
+    { includeReviews: featureFlags.SPACED_REPETITION },
+  )
+    .filter((item) => item.source !== "curriculum")
+    .slice(0, 3);
   return (
     <div className="progress-page">
       <div className="page-heading">
@@ -43,7 +84,7 @@ export default function ProgressPage() {
       </div>
       <div className="progress-top-grid">
         <section className="progress-main-card">
-          <span className="eyebrow">FRECUENCIAS A1</span>
+          <span className="eyebrow">{course.title.toUpperCase()}</span>
           <h2>
             Você já percorreu <strong>{totalProgress}%</strong> do curso disponível.
           </h2>
@@ -91,6 +132,65 @@ export default function ProgressPage() {
           </div>
         </section>
       </div>
+      <section className="panel improvement-panel">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">RECOMENDAÇÕES DO SEU HISTÓRICO</span>
+            <h2 className="section-title">O que preciso melhorar?</h2>
+            <p className="section-subtitle">
+              Revisões vencidas, erros repetidos e pronúncia avaliada definem suas prioridades.
+            </p>
+          </div>
+        </div>
+        {improvements.length ? (
+          <div className="improvement-list">
+            {improvements.map((item, index) => (
+              <div className="improvement-item" key={`${item.kind}-${item.id}`}>
+                <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{item.title}</strong>
+                  <p>{item.reason}</p>
+                </div>
+                <Link href={recommendationLink(course.slug, item)} className="secondary-button">
+                  Praticar agora <ArrowRight size={15} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="improvement-empty">
+            <p>
+              {learningProfile.skills.some((item) => item.evidenceCount > 0)
+                ? "Nenhuma dificuldade específica foi detectada agora. Continue a trilha para manter o ritmo."
+                : "Ainda não há tentativas avaliadas. Comece uma aula para receber recomendações pessoais."}
+            </p>
+            <Link href="/study" className="secondary-button">
+              Abrir aula <ArrowRight size={15} />
+            </Link>
+          </div>
+        )}
+      </section>
+      <section className="panel learning-profile-panel">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">PERFIL DE APRENDIZADO</span>
+            <h2 className="section-title">Domínio estimado</h2>
+            <p className="section-subtitle">
+              Uma leitura de acertos, revisões e avaliações disponíveis para este curso.
+            </p>
+          </div>
+        </div>
+        <div className="mastery-columns">
+          <MasteryColumn title="Habilidades" items={learningProfile.skills} />
+          <MasteryColumn title="Tópicos" items={learningProfile.topics} />
+          <MasteryColumn title="Conceitos" items={learningProfile.concepts} />
+          <MasteryColumn title="Palavras e sons" items={learningProfile.items} />
+        </div>
+        <p className="helper-note">
+          Estes números orientam a prática; não são notas de aprovação. Resultados antigos perdem
+          peso até uma nova revisão.
+        </p>
+      </section>
       <div className="progress-bottom-grid">
         <section className="panel skill-panel">
           <div className="section-head">

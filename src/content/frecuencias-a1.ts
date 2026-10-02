@@ -6,8 +6,19 @@ export const frecuenciasA1 = courseSchema.parse({
   id: "frecuencias-a1",
   slug: "frecuencias-a1",
   title: "Frecuencias A1",
+  languageCode: "es",
   level: "A1",
   description: "Um caminho guiado para começar a conversar em espanhol com segurança.",
+  learningConcepts: [
+    { id: "greetings", label: "Cumprimentos" },
+    { id: "numbers", label: "Números" },
+    { id: "nationality", label: "Nacionalidades" },
+    { id: "age-tener", label: "Tener para idade" },
+    { id: "personal-questions", label: "Perguntas pessoais" },
+    { id: "origin", label: "Origem" },
+    { id: "residence", label: "Onde mora" },
+    { id: "profession", label: "Profissões" },
+  ],
   units: [
     {
       id: "nos-presentamos",
@@ -82,6 +93,7 @@ export const frecuenciasA1 = courseSchema.parse({
           activities: [
             {
               id: "vocab-1",
+              conceptIds: ["greetings"],
               type: "lesson_content",
               title: "Cumprimentos e dados pessoais",
               prompt: "Palavras em contexto",
@@ -93,6 +105,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "vocab-2",
+              conceptIds: ["greetings"],
               type: "multiple_choice",
               title: "Uma despedida",
               prompt: "Qual expressão você usaria para dizer ‘até amanhã’?",
@@ -104,6 +117,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "vocab-3",
+              conceptIds: ["nationality"],
               type: "fill_blank",
               title: "Nacionalidade",
               prompt: "María es de Brasil. Ella es ___ .",
@@ -115,6 +129,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "vocab-4",
+              conceptIds: ["numbers"],
               type: "multiple_choice",
               title: "Números",
               prompt: "Como se diz 31 em espanhol?",
@@ -126,6 +141,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "vocab-5",
+              conceptIds: ["profession"],
               type: "short_answer",
               title: "Uma profissão",
               prompt: "Complete em espanhol: ‘Eu sou professora.’",
@@ -160,6 +176,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "grammar-2",
+              conceptIds: ["nationality"],
               type: "multiple_choice",
               title: "Ser ou tener?",
               prompt: "Yo ___ brasileño.",
@@ -171,6 +188,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "grammar-3",
+              conceptIds: ["age-tener"],
               type: "fill_blank",
               title: "Falando a idade",
               prompt: "Ana ___ 26 años.",
@@ -181,6 +199,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "grammar-4",
+              conceptIds: ["residence"],
               type: "ordering",
               title: "Organize a frase",
               prompt: "Monte uma frase para dizer onde você mora.",
@@ -192,6 +211,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "grammar-5",
+              conceptIds: ["personal-questions"],
               type: "short_answer",
               title: "Pergunte o nome",
               prompt: "Como você pergunta informalmente ‘Como você se chama?’",
@@ -203,6 +223,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "grammar-6",
+              conceptIds: ["origin", "personal-questions"],
               type: "multiple_choice",
               title: "Origem",
               prompt: "Qual pergunta combina com ‘Soy de Bogotá’?",
@@ -275,6 +296,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "guided-3",
+              conceptIds: ["personal-questions"],
               type: "ordering",
               title: "Uma pergunta",
               prompt: "Organize as palavras para perguntar a idade.",
@@ -286,6 +308,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "guided-4",
+              conceptIds: ["residence"],
               type: "short_answer",
               title: "Sua cidade",
               prompt: "Escreva ‘Eu moro em Recife’ em espanhol.",
@@ -297,6 +320,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "guided-5",
+              conceptIds: ["profession"],
               type: "multiple_choice",
               title: "Profissão",
               prompt: "Pablo ___ ingeniero.",
@@ -341,6 +365,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "workbook-2",
+              conceptIds: ["numbers"],
               type: "fill_blank",
               title: "O número por extenso",
               prompt: "Escreva 42 por extenso em espanhol: ___",
@@ -362,6 +387,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "workbook-4",
+              conceptIds: ["origin"],
               type: "ordering",
               title: "Origem de outra pessoa",
               prompt: "Monte a pergunta ‘De onde ela é?’",
@@ -484,6 +510,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "review-3",
+              conceptIds: ["origin"],
               type: "fill_blank",
               title: "Sua origem",
               prompt: "Soy ___ Colombia.",
@@ -494,6 +521,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "review-4",
+              conceptIds: ["personal-questions"],
               type: "short_answer",
               title: "Pergunta útil",
               prompt: "Como perguntar ‘Onde você mora?’",
@@ -527,6 +555,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "assessment-1",
+              conceptIds: ["greetings"],
               type: "multiple_choice",
               title: "1 · Saudação",
               prompt: "Qual expressão é uma saudação?",
@@ -538,6 +567,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "assessment-2",
+              conceptIds: ["age-tener"],
               type: "fill_blank",
               title: "2 · Idade",
               prompt: "Yo ___ 30 años.",
@@ -548,6 +578,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "assessment-3",
+              conceptIds: ["nationality"],
               type: "multiple_choice",
               title: "3 · Nacionalidade",
               prompt: "Camila es de Argentina. Ella es ___ .",
@@ -570,6 +601,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "assessment-5",
+              conceptIds: ["residence"],
               type: "multiple_choice",
               title: "5 · Leitura",
               prompt: "Leia: ‘Soy médica y vivo en Quito.’ O que sabemos?",
@@ -581,6 +613,7 @@ export const frecuenciasA1 = courseSchema.parse({
             },
             {
               id: "assessment-6",
+              conceptIds: ["origin", "personal-questions"],
               type: "ordering",
               title: "6 · Pergunta",
               prompt: "Monte uma pergunta sobre origem.",

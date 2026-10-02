@@ -74,6 +74,20 @@ npm.cmd run db:seed
 
 O renderizador de atividades, o planejador, a revisão e as tabelas usam os registros de conteúdo, sem lógica exclusiva da Unidade 1. `db:seed` exige o Supabase configurado; no modo local, basta reiniciar o servidor após alterar o conteúdo.
 
+## Perfil de aprendizado e recomendações
+
+O Destrava agora estima domínio por habilidade, tópico, conceito e palavra ou som a partir do histórico já salvo: tentativas corrigidas, avaliações de escrita e pronúncia e revisões de vocabulário. Resultados recentes pesam mais, e a estimativa cai depois de um período longo sem prática. Quando não há evidência, a tela mostra ausência de nota em vez de atribuir zero. Essas pontuações orientam o estudo e não representam aprovação.
+
+O motor em `src/domain/study/learning-recommendation-engine.ts` usa esse perfil para priorizar revisões vencidas, erros recorrentes, baixa pronúncia ou fluência e atividades pendentes. A primeira prioridade aparece na página inicial, o plano de **Aula de hoje** segue a mesma ordem, e **Estatísticas** mostra ações em **O que preciso melhorar?**. Os links abrem a atividade recomendada dentro da lição.
+
+Cada curso informa `languageCode` e conceitos próprios; o motor filtra o histórico pelas atividades e lições desse curso. Para novos idiomas, crie outro curso com IDs exclusivos para atividades, lições e vocabulário. A seleção de vários cursos pelo mesmo usuário e a separação completa do estado persistido por curso ainda precisam ser desenvolvidas.
+
+Para conferir as regras de prioridade e isolamento entre idiomas:
+
+```powershell
+npm.cmd run learning:verify
+```
+
 ## Recursos e limites atuais
 
 - O menu **Alfabeto** apresenta as 27 letras do espanhol com seus nomes, palavras, frases de exemplo e áudio para cada item. É possível buscar e filtrar vogais e consoantes. A ordem e os nomes seguem a [Ortografía da RAE/ASALE](https://www.rae.es/sites/default/files/Principales_novedades_de_la_Ortografia_de_la_lengua_espanola.pdf).
@@ -90,6 +104,7 @@ O renderizador de atividades, o planejador, a revisão e as tabelas usam os regi
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run content:validate
+npm.cmd run learning:verify
 npm.cmd run build
 ```
 

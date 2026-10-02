@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "content:validate": "node --import tsx scripts/validate-content.ts",
+    "learning:verify": "node --import tsx scripts/verify-learning-engine.ts",
     "db:seed": "node --env-file=.env.local --import tsx scripts/seed-supabase.ts",
     "db:verify:local": "node --env-file=.env.local --import tsx scripts/verify-supabase-local.ts",
     "format": "prettier --write src scripts package.json next.config.ts tsconfig.json postcss.config.mjs eslint.config.mjs"

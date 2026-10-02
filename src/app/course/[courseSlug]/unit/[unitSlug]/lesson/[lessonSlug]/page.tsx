@@ -1,28 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { AssessmentResult } from "@/components/activities/assessment-result";
 
-export default function LessonPage() {
+function LessonContent() {
   const { courseSlug, unitSlug, lessonSlug } = useParams<{
     courseSlug: string;
     unitSlug: string;
     lessonSlug: string;
   }>();
   const { course, state } = useStudy();
+  const searchParams = useSearchParams();
   const unit = course.units.find(
     (item) => item.slug === unitSlug || String(item.number) === unitSlug,
   );
   const lesson = unit?.lessons.find((item) => item.slug === lessonSlug);
-  const [selection, setSelection] = useState({ lessonSlug, index: 0 });
-  const index = selection.lessonSlug === lessonSlug ? selection.index : 0;
+  const requestedActivity = searchParams.get("activity");
+  const requestedIndex =
+    lesson?.activities.findIndex((activity) => activity.id === requestedActivity) ?? -1;
+  const routeKey = `${lessonSlug}:${requestedActivity ?? ""}`;
+  const [selection, setSelection] = useState({ routeKey, index: Math.max(0, requestedIndex) });
+  const index = selection.routeKey === routeKey ? selection.index : Math.max(0, requestedIndex);
   const setIndex = (next: number | ((current: number) => number)) =>
-    setSelection({ lessonSlug, index: typeof next === "function" ? next(index) : next });
+    setSelection({ routeKey, index: typeof next === "function" ? next(index) : next });
   if (courseSlug !== course.slug || !unit || !lesson)
     return <div className="empty-state">Lição não encontrada.</div>;
   const active = lesson.activities[index] ?? lesson.activities[0];
@@ -130,5 +135,13 @@ export default function LessonPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LessonPage() {
+  return (
+    <Suspense fallback={<div className="page-loading">Abrindo lição…</div>}>
+      <LessonContent />
+    </Suspense>
   );
 }

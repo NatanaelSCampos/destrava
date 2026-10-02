@@ -1,6 +1,9 @@
 import { frecuenciasA1, vocabularySeed } from "../src/content/frecuencias-a1";
 
 const ids = new Set<string>();
+const conceptIds = new Set(frecuenciasA1.learningConcepts.map((concept) => concept.id));
+if (conceptIds.size !== frecuenciasA1.learningConcepts.length)
+  throw new Error("Duplicate learning concept id.");
 let activityCount = 0;
 for (const unit of frecuenciasA1.units) {
   for (const lesson of unit.lessons) {
@@ -8,6 +11,10 @@ for (const unit of frecuenciasA1.units) {
       if (ids.has(activity.id)) throw new Error(`Duplicate activity id: ${activity.id}`);
       ids.add(activity.id);
       activityCount++;
+      for (const conceptId of activity.conceptIds) {
+        if (!conceptIds.has(conceptId))
+          throw new Error(`Unknown concept ${conceptId} on activity ${activity.id}`);
+      }
       if (
         (activity.type === "multiple_choice" || activity.type === "listening") &&
         !activity.options.includes(activity.answer)

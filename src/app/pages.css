@@ -1592,6 +1592,92 @@
 .assessment-panel {
   padding: 24px;
 }
+.improvement-panel,
+.learning-profile-panel {
+  padding: 24px;
+  margin-bottom: 18px;
+}
+.improvement-list {
+  display: grid;
+  gap: 10px;
+}
+.improvement-item {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px;
+}
+.improvement-rank {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #f3f3f4;
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+}
+.improvement-item strong {
+  font-size: 12px;
+}
+.improvement-item p,
+.improvement-empty p {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 4px 0 0;
+}
+.improvement-item .secondary-button {
+  white-space: nowrap;
+}
+.improvement-empty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.mastery-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+.mastery-column {
+  min-width: 0;
+}
+.mastery-column h3 {
+  font-size: 14px;
+  margin: 4px 0 16px;
+}
+.mastery-column > p {
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.mastery-metric {
+  margin-bottom: 13px;
+}
+.mastery-metric > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+.mastery-metric strong {
+  color: var(--primary);
+  font-size: 11px;
+}
+.mastery-metric .progress-track {
+  height: 5px;
+}
+.learning-profile-panel > .helper-note {
+  margin-bottom: 0;
+}
 .mastery-status h3 {
   font-size: 19px;
   margin: 10px 0 4px;
@@ -1895,6 +1981,9 @@
   }
 }
 @media (max-width: 800px) {
+  .mastery-columns {
+    grid-template-columns: 1fr 1fr;
+  }
   .dashboard-rail {
     grid-template-columns: 1fr 1fr;
   }
@@ -1935,6 +2024,20 @@
   }
 }
 @media (max-width: 600px) {
+  .mastery-columns {
+    grid-template-columns: 1fr;
+  }
+  .improvement-item {
+    grid-template-columns: 35px minmax(0, 1fr);
+  }
+  .improvement-item .secondary-button {
+    grid-column: 2;
+    justify-self: start;
+  }
+  .improvement-empty {
+    align-items: flex-start;
+    flex-direction: column;
+  }
   .dashboard-rail,
   .stats-grid,
   .review-summary,
