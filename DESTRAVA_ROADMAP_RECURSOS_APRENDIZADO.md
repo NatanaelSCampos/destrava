@@ -72,6 +72,46 @@ Tudo isso deve contribuir para decidir:
 - **APROVADO** → pode ser planejado e desenvolvido.
 - **EM ANÁLISE** → não desenvolver a versão final ainda; pode preparar arquitetura, interfaces e provas de conceito sem integrar definitivamente ao fluxo principal.
 
+## Implementação no produto — auditoria de 2026-10-01
+
+O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise. Nenhum item amplo foi marcado como totalmente implementado sem atender ao escopo inteiro.
+
+| Item | Implementação | Evidência atual e principal lacuna |
+| --- | --- | --- |
+| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala e revisões; ainda falta estado separado por curso/idioma. |
+| 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência e trilha; ainda faltam sinais de uso do dicionário, conversas e avaliações mais amplas. |
+| 3. Treinar minhas dificuldades | **PENDENTE** | Há recomendações pessoais, mas não existe uma sessão exclusiva de dificuldades nem comparação do resultado da sessão. |
+| 4. Sessões rápidas | **PARCIAL** | O plano já respeita a meta diária; faltam opções de 5/15/30 minutos e composição própria para cada duração. |
+| 5. Caderno de erros | **PARCIAL** | A página **Meus erros** guarda respostas, correções e agendamento dos exercícios objetivos; faltam erros de escrita/fala e vínculo explícito com idioma/curso. |
+| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` atende vocabulário e erros; ainda não agenda expressões, estruturas e pronúncia como itens próprios. |
+| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** tem busca, tradução, exemplo e áudio; faltam sentidos por contexto, ocorrências, histórico de busca e integração automática com revisão. |
+| 8. Números ativos | **PARCIAL** | Há números em atividades e vocabulário; faltam os modos dedicados de ditado, fala, dinheiro, datas e horários. |
+| 9. Particularidades contextualizadas | **PENDENTE** | O curso contém regras básicas, mas não há ferramenta de variantes regionais integrada à prática e à IA. |
+| 10. Shadowing | **PARCIAL** | É possível ouvir e repetir uma frase com avaliação Azure; faltam modo contínuo, ritmo/prosódia e evolução visual por tentativa. |
+| 11. Fale sem ler | **PENDENTE** | Não existe o fluxo progressivo de imitação, memória e produção própria. |
+| 12. Flashcards ligados ao domínio | **PARCIAL** | Os cartões de palavras alimentam revisão e perfil; faltam formatos como áudio→palavra, lacuna e imagem→termo. |
+| 13. Explicar imagem | **PENDENTE** | Não existe atividade com imagem e avaliação da descrição falada. |
+| 14. Missões comunicativas | **PENDENTE** | Não há missões com objetivo comunicativo e acompanhamento. |
+| 15. Role-play com IA | **PENDENTE** | Não há cenários conversacionais interativos. |
+| 16. Conversação livre adaptativa | **PENDENTE** | O professor responde perguntas isoladas; não mantém uma conversa livre com turnos. |
+| 17. Tutor persistente | **PARCIAL** | O professor recebe contexto curto da aula e dos erros; faltam memória pedagógica persistente e adaptação contínua ao perfil. |
+| 18. Microlição a partir dos erros | **PENDENTE** | Há indicação do erro e atividade para refazer, mas não uma microlição gerada e avaliada. |
+| 19. Memória ativa de comportamento | **PARCIAL** | Erros e palavras difíceis afetam o perfil; buscas repetidas, áudios repetidos e abandono ainda não geram sinais. |
+| 20. Evolução por tentativa | **PARCIAL** | Tentativas e avaliações de fala são salvas e influenciam o perfil; falta linha do tempo comparável por item na interface. |
+| 21. Três modos de conversa | **PENDENTE** | Livre, role-play e avaliação oral não existem como modos de conversa; a avaliação oficial segue em análise no item 25. |
+| 22. Prova adaptativa escrita/objetiva | **PENDENTE** | Existe teste final fixo; ele não ajusta a dificuldade durante a prova. |
+| 23. Relatório por competências | **PARCIAL** | O resultado mostra nota objetiva e competências avaliadas; faltam metas configuráveis e cobertura completa de escrita e fala. |
+| 24. Feedback pós-avaliação | **PARCIAL** | Tentativas e erros do teste alimentam perfil e revisão; falta um plano pós-prova explícito por competência. |
+| 25. Avaliação oral conversacional | **ADIADO** | A versão oficial continua **EM ANÁLISE** no próprio roadmap. |
+| 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
+| 27. Ritmo de conversa por nível | **PENDENTE** | Não há modos beginner/intermediate/natural em conversas. |
+| 28. Controle de correção em conversas | **PENDENTE** | Não há conversa contínua nem escolha do momento da correção. |
+| 29. Perfil regional | **PARCIAL** | O locale do Azure pode ser configurado para o app; falta preferência regional por aluno e aplicação no conteúdo/IA. |
+| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra recomendações e links diretos para praticar; faltam ações de explicação e microlição. |
+| 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões e alguns eventos são registrados; faltam eventos de busca, áudio e recursos conversacionais futuros. |
+| 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
+
 ---
 
 # Ordem recomendada de desenvolvimento
