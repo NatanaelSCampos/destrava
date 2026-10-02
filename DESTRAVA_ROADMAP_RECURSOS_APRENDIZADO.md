@@ -78,18 +78,18 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 
 | Item | Implementação | Evidência atual e principal lacuna |
 | --- | --- | --- |
-| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala e revisões; ainda falta estado separado por curso/idioma. |
+| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala e revisões de palavras e estruturas; ainda falta estado separado por curso/idioma. |
 | 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência e trilha; ainda faltam sinais de uso do dicionário, conversas e avaliações mais amplas. |
 | 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
-| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, expressões do vocabulário, erros de escrita e frases de pronúncia no mesmo fluxo; estruturas e pronúncia ainda não têm agendamentos granulares próprios. |
+| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, estruturas curadas, erros e frases no mesmo fluxo; estruturas têm calendário próprio no JSON do aluno. Pronúncia ainda não tem agendamento granular, e a projeção relacional das estruturas fica para migração futura. |
 | 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados, ocorrências, buscas recentes, áudio e revisão automática; há nota regional para termos curados e `llamarse`, mas ainda faltam cobertura ampla e busca por variantes. |
 | 8. Números ativos | **PARCIAL** | **Fundamentos → Números** oferece catálogo com áudio e exemplos; a prática inclui ditado, ver e falar, ouvir e repetir, com dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
 | 9. Particularidades contextualizadas | **PARCIAL** | **Fundamentos → Variações regionais** compara exemplos de Espanha, México e Argentina com áudio e checagem curta; o professor IA recebe a preferência. Faltam mais categorias, exemplos e integração ao perfil de domínio. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
-| 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra e áudio→palavra, alimentando o mesmo agendador; lacunas, imagem→termo e estrutura→exemplo ainda faltam. |
+| 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra, áudio→palavra e lacuna quando há exemplo literal; estruturas curadas pedem produção de exemplo. Imagem→termo e lacunas de formas flexionadas ainda faltam. |
 | 13. Explicar imagem | **PENDENTE** | Não existe atividade com imagem e avaliação da descrição falada. |
 | 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
 | 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
@@ -109,7 +109,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Falta cobertura regional maior no curso. |
 | 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições e eventos de conversa são registrados; ainda faltam sinais conversacionais no motor adaptativo. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições, estruturas e eventos de conversa são registrados; ainda faltam sinais conversacionais no motor adaptativo. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
 ---
@@ -2115,3 +2115,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** a produção do aluno é digitada; os objetivos da missão são indicadores de prática gerados por IA, sem nota oficial. O histórico conversacional ainda não alimenta o motor de recomendações e a calibração de correções/ritmo precisa ser observada em uso real.
 
 **Reaproveitado:** `AIProvider`, Responses com saída estruturada, `guardAIRequest`, `StudyProvider`, armazenamento Supabase existente, `SpeakButton` e preferência regional.
+
+---
+
+# Registro da entrega — flashcards e revisão (2026-10-02)
+
+**Itens agrupados:** 6 e 12, com ampliação do perfil de domínio (1), motor adaptativo (2) e telemetria (32).
+
+- **Implementado:** quarto formato de cartão de vocabulário, com lacuna no exemplo quando a palavra aparece literalmente na frase. Cartões com pergunta em português só revelam o áudio da resposta depois da virada; o formato de escuta continua disponível antes da virada.
+- **Implementado:** cartões curados de estrutura → exemplo para nome, idade, origem e residência. A fila de revisão e a aula de hoje usam o mesmo `ReviewScheduler` para estas estruturas; o painel conta estruturas vencidas e cartões novos.
+- **Persistência e adaptação:** cada estrutura mantém calendário próprio e tentativas no JSON `user_study_state`. Acertos e erros entram no perfil por habilidade, lição, conceito e item. Estruturas vencidas entram nas recomendações e sessões planejadas. Eventos de estrutura usam a projeção de telemetria já existente.
+- **Limites:** como a tabela relacional `review_schedules` exige vínculo com vocabulário ou erro, os calendários de estrutura ficam no estado JSON, sem migração. A lacuna literal não cobre flexões como `tener` → `tengo`; imagem → termo e agendamento granular de pronúncia ficam para etapas futuras.
+
+**Reaproveitado:** `ReviewQueue`, `ReviewScheduler`, `StudyState`, `StudyProvider`, planejador, perfil de domínio e repositório Supabase existente.

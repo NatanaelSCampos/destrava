@@ -4,6 +4,7 @@ import { buildLearningProfile } from "./learning-profile";
 import { LearningRecommendationEngine } from "./learning-recommendation-engine";
 import { featureFlags } from "@/lib/feature-flags";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { reviewStructures } from "@/content/review-structures";
 
 function reviewCandidates(
   course: PublicCourse,
@@ -57,7 +58,21 @@ function reviewCandidates(
       );
     })
     .map((word): PlannedReviewItem => ({ kind: "word", id: word.id }));
-  return [...mistakes, ...words];
+  const structures = course.languageCode.startsWith("es")
+    ? reviewStructures
+        .filter((item) => {
+          const progress = state.structureReviews?.[item.id];
+          return (
+            lessonIds.has(item.lessonId) &&
+            progress &&
+            (mode === "difficulties"
+              ? progress.schedule.masteryScore < 50
+              : ReviewScheduler.isDue(progress.schedule, now))
+          );
+        })
+        .map((item): PlannedReviewItem => ({ kind: "structure", id: item.id }))
+    : [];
+  return [...mistakes, ...words, ...structures];
 }
 
 export function buildStudyPlan(

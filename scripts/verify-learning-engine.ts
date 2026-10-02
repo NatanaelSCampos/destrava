@@ -15,6 +15,7 @@ import {
   recordVocabularySignal,
   recordNumberAttempt,
   recordMicroLessonAttempt,
+  reviewStructure,
 } from "../src/domain/study/study-state";
 import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
 import {
@@ -23,6 +24,7 @@ import {
   regionalVocabularyNote,
 } from "../src/content/spanish-regions";
 import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
+import { reviewStructures } from "../src/content/review-structures";
 import { conversationScenarios } from "../src/content/conversation-scenarios";
 import {
   appendConversationReply,
@@ -443,6 +445,25 @@ assert.deepEqual(
 assert.equal(wordReviewCard(word, 0).front, word.spanish);
 assert.equal(wordReviewCard(word, 1).front, word.translation);
 assert.equal(wordReviewCard(word, 2).frontLabel, "ESCUTA");
+assert.equal(wordReviewCard(word, 3).presentation, "cloze");
+assert.match(wordReviewCard(word, 3).front, /_____/);
+assert.equal(wordReviewCard(vocabularySeed[6], 3).presentation, "standard");
+const structureIssue = reviewStructure(initialStudyState, reviewStructures[1].id, false);
+const structureDate = new Date(structureIssue.structureAttempts[0].createdAt);
+assert.equal(structureIssue.structureReviews[reviewStructures[1].id].schedule.intervalDays, 1);
+assert.equal(
+  dueReviewCounts(
+    structureIssue,
+    vocabularySeed,
+    new Date(structureDate.getTime() + 2 * 86_400_000),
+  ).structures,
+  1,
+);
+assert(
+  (buildLearningProfile(course, structureIssue, vocabularySeed, structureDate).concepts.find(
+    (item) => item.id === "age-tener",
+  )?.evidenceCount ?? 0) > 0,
+);
 assert.equal(vocabularyContext(vocabularySeed[6], "es").senses.length, 3);
 assert(vocabularyOccurrences(course, vocabularySeed[6]).length > 0);
 

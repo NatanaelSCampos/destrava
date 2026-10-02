@@ -8,6 +8,7 @@ import { ReviewQueue } from "@/components/review/review-queue";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { currentUnit } from "@/domain/study/progress";
 import { featureFlags } from "@/lib/feature-flags";
+import { reviewStructures } from "@/content/review-structures";
 
 export default function ReviewPage() {
   const { state, vocabularyItems, course } = useStudy();
@@ -20,11 +21,15 @@ export default function ReviewPage() {
   const {
     words: dueWords,
     mistakes: dueMistakes,
+    structures: dueStructures,
     total: dueTotal,
   } = dueReviewCounts(state, vocabularyItems, new Date(), activityIds);
   const newWords = vocabularyItems.filter((item) => !state.vocabulary[item.id]).length;
+  const newStructures = course.languageCode.startsWith("es")
+    ? reviewStructures.filter((item) => !state.structureReviews?.[item.id]).length
+    : 0;
   const [mode, setMode] = useState<"due" | "new">(() =>
-    dueTotal === 0 && newWords > 0 ? "new" : "due",
+    dueTotal === 0 && newWords + newStructures > 0 ? "new" : "due",
   );
   if (!featureFlags.SPACED_REPETITION)
     return <div className="empty-state">A revisão espaçada está temporariamente indisponível.</div>;
@@ -37,8 +42,8 @@ export default function ReviewPage() {
           </span>
           <h1 className="page-title">Revisar fortalece a memória.</h1>
           <p className="page-subtitle">
-            O sistema traz de volta palavras, correções de escrita e frases de fala no momento certo
-            para você lembrar por mais tempo.
+            O sistema traz de volta palavras, estruturas, correções de escrita e frases de fala no
+            momento certo para você lembrar por mais tempo.
           </p>
         </div>
         <Link href="/vocabulary" className="secondary-button">
@@ -57,9 +62,14 @@ export default function ReviewPage() {
           <small>Transforme dúvidas em acertos</small>
         </div>
         <div className="panel">
-          <span>PALAVRAS NOVAS</span>
-          <strong>{newWords}</strong>
-          <small>Prontas para conhecer</small>
+          <span>ESTRUTURAS PARA REVISAR</span>
+          <strong>{dueStructures}</strong>
+          <small>Frases para criar de memória</small>
+        </div>
+        <div className="panel">
+          <span>CARTÕES NOVOS</span>
+          <strong>{newWords + newStructures}</strong>
+          <small>Palavras e estruturas para conhecer</small>
         </div>
       </div>
       <div className="review-layout">
@@ -79,7 +89,7 @@ export default function ReviewPage() {
               className={mode === "new" ? "active" : ""}
               onClick={() => setMode("new")}
             >
-              Aprender palavras novas <span>{newWords}</span>
+              Aprender cartões novos <span>{newWords + newStructures}</span>
             </button>
           </div>
           <ReviewQueue key={mode} mode={mode} />

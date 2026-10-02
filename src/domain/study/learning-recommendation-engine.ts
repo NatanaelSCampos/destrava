@@ -55,6 +55,7 @@ export class LearningRecommendationEngine {
           mistakes: Object.fromEntries(
             Object.entries(state.mistakes).filter(([activityId]) => activityById.has(activityId)),
           ),
+          structureReviews: state.structureReviews,
         },
         vocabularyItems,
         now,
@@ -65,7 +66,7 @@ export class LearningRecommendationEngine {
           source: "due_review",
           id: "due",
           title: `Revisar ${due.total} ${due.total === 1 ? "item" : "itens"}`,
-          reason: "Palavras e erros prontos para revisão espaçada.",
+          reason: "Palavras, estruturas e erros prontos para revisão espaçada.",
           priority: 100,
           minutes: Math.min(8, Math.max(4, due.total)),
         });

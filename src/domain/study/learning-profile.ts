@@ -3,6 +3,7 @@ import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
 import type { StudyState } from "./study-state";
+import { findReviewStructure } from "@/content/review-structures";
 
 export type LearningSkill = Skill | "pronunciation" | "fluency" | "comprehension";
 
@@ -124,6 +125,21 @@ export function buildLearningProfile(
   for (const attempt of state.microLessonAttempts ?? [])
     addActivityScore(attempt.activityId, attempt.correct ? 100 : 0, attempt.createdAt);
 
+  if (course.languageCode.startsWith("es")) {
+    const lessonIds = new Set(
+      course.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id)),
+    );
+    for (const attempt of state.structureAttempts ?? []) {
+      const structure = findReviewStructure(attempt.structureId);
+      if (!structure || !lessonIds.has(structure.lessonId)) continue;
+      const score = attempt.correct ? 100 : 0;
+      addEvidence(skillEvidence, "grammar", score, attempt.createdAt);
+      addEvidence(topicEvidence, structure.lessonId, score, attempt.createdAt);
+      addEvidence(conceptEvidence, structure.conceptId, score, attempt.createdAt);
+      addEvidence(itemEvidence, `structure:${structure.id}`, score, attempt.createdAt);
+    }
+  }
+
   const mistakeBySchedule = new Map(
     Object.values(state.mistakes).map((mistake) => [mistake.schedule.id, mistake]),
   );
@@ -225,6 +241,11 @@ export function buildLearningProfile(
           now,
         );
       }),
+    ...[...itemEvidence.entries()]
+      .filter(([id]) => id.startsWith("structure:"))
+      .map(([id, evidence]) =>
+        metric(id, findReviewStructure(id.slice("structure:".length))?.title ?? id, evidence, now),
+      ),
   ];
 
   return {

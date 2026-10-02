@@ -7,6 +7,7 @@ import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import type { NumberMode } from "@/domain/numbers/number-practice";
 import type { SpanishRegion } from "@/content/spanish-regions";
+import { findReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 
 export type StudentProfile = {
@@ -35,7 +36,14 @@ export type VocabularyProgress = {
   schedule: ReviewSchedule;
 };
 export type SessionMode = "guided" | "difficulties";
-export type PlannedReviewItem = { kind: "word" | "mistake"; id: string };
+export type PlannedReviewItem = { kind: "word" | "mistake" | "structure"; id: string };
+export type StructureReviewProgress = { id: string; schedule: ReviewSchedule };
+export type StructureReviewAttempt = {
+  id: string;
+  structureId: string;
+  correct: boolean;
+  createdAt: string;
+};
 export type PlannedItem = {
   kind: "activity" | "review";
   id: string;
@@ -140,6 +148,8 @@ export type StudyState = {
   completedActivityIds: string[];
   attempts: Attempt[];
   vocabulary: Record<string, VocabularyProgress>;
+  structureReviews: Record<string, StructureReviewProgress>;
+  structureAttempts: StructureReviewAttempt[];
   mistakes: Record<string, Mistake>;
   sessions: StudySession[];
   events: StudyEvent[];
@@ -166,6 +176,8 @@ export const initialStudyState: StudyState = {
   completedActivityIds: [],
   attempts: [],
   vocabulary: {},
+  structureReviews: {},
+  structureAttempts: [],
   mistakes: {},
   sessions: [],
   events: [],
@@ -469,6 +481,40 @@ export function reviewVocabulary(
     events: [
       event(correct ? "flashcard_known" : "flashcard_missed", vocabularyId),
       event("review_completed", vocabularyId),
+      ...state.events,
+    ],
+  };
+}
+
+export function reviewStructure(
+  state: StudyState,
+  structureId: string,
+  correct: boolean,
+): StudyState {
+  if (!findReviewStructure(structureId)) return state;
+  const current = state.structureReviews?.[structureId] ?? {
+    id: crypto.randomUUID(),
+    schedule: ReviewScheduler.initial(),
+  };
+  const schedule = ReviewScheduler.afterAnswer(current.schedule, correct);
+  const now = new Date().toISOString();
+  return {
+    ...state,
+    structureReviews: {
+      ...state.structureReviews,
+      [structureId]: { id: current.id, schedule },
+    },
+    structureAttempts: [
+      { id: crypto.randomUUID(), structureId, correct, createdAt: now },
+      ...(state.structureAttempts ?? []),
+    ],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: correct ? "structure_known" : "structure_missed",
+        itemId: structureId,
+        createdAt: now,
+      },
       ...state.events,
     ],
   };

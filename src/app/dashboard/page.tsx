@@ -53,7 +53,11 @@ export default function DashboardPage() {
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + session.durationSeconds, 0) / 60,
   );
-  const { words: dueWords, mistakes: dueErrors } = dueReviewCounts(state, vocabularyItems);
+  const {
+    words: dueWords,
+    mistakes: dueErrors,
+    structures: dueStructures,
+  } = dueReviewCounts(state, vocabularyItems);
   const streak = currentStreak(
     state.sessions.filter((session) => session.finishedAt).map((session) => session.finishedAt!),
   );
@@ -320,7 +324,8 @@ export default function DashboardPage() {
               <strong>Para revisar</strong>
             </div>
             <p>
-              <b>{dueWords}</b> palavras · <b>{dueErrors}</b> erros pendentes
+              <b>{dueWords}</b> palavras · <b>{dueStructures}</b> estruturas · <b>{dueErrors}</b>{" "}
+              erros pendentes
             </p>
             <Link href="/review">
               Revisar agora <ArrowRight size={14} />

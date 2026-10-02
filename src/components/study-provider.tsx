@@ -24,6 +24,7 @@ import {
   recordVocabularySignal,
   reconcileAssessments,
   reviewMistake,
+  reviewStructure,
   reviewVocabulary,
   type StudentProfile,
   type StudyState,
@@ -87,6 +88,7 @@ type StudyContextValue = {
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, correct: boolean) => void;
   reviewError: (id: string, correct: boolean) => void;
+  reviewStructureCard: (id: string, correct: boolean) => void;
   startSession: (
     unitId: string,
     plan: PlannedItem[],
@@ -144,6 +146,8 @@ export function StudyProvider({
                 numberAttempts: source.numberAttempts ?? [],
                 microLessonAttempts: source.microLessonAttempts ?? [],
                 conversations: source.conversations ?? [],
+                structureReviews: source.structureReviews ?? {},
+                structureAttempts: source.structureAttempts ?? [],
               });
           } catch (caught) {
             const cached = window.localStorage.getItem(`${storageKey}:${accountId}`);
@@ -156,6 +160,8 @@ export function StudyProvider({
                   numberAttempts: source.numberAttempts ?? [],
                   microLessonAttempts: source.microLessonAttempts ?? [],
                   conversations: source.conversations ?? [],
+                  structureReviews: source.structureReviews ?? {},
+                  structureAttempts: source.structureAttempts ?? [],
                 });
               } catch {
                 /* Keep fresh state. */
@@ -181,6 +187,8 @@ export function StudyProvider({
               numberAttempts: parsed.numberAttempts ?? [],
               microLessonAttempts: parsed.microLessonAttempts ?? [],
               conversations: parsed.conversations ?? [],
+              structureReviews: parsed.structureReviews ?? {},
+              structureAttempts: parsed.structureAttempts ?? [],
             });
           }
         } catch {
@@ -333,6 +341,10 @@ export function StudyProvider({
   );
   const reviewError = useCallback(
     (id: string, correct: boolean) => setState((current) => reviewMistake(current, id, correct)),
+    [],
+  );
+  const reviewStructureCard = useCallback(
+    (id: string, correct: boolean) => setState((current) => reviewStructure(current, id, correct)),
     [],
   );
   const recordVocabularySearch = useCallback(
@@ -495,6 +507,7 @@ export function StudyProvider({
       markVocabulary,
       reviewWord,
       reviewError,
+      reviewStructureCard,
       recordVocabularySearch,
       recordVocabularyAudio,
       recordNumberPractice,
@@ -520,6 +533,7 @@ export function StudyProvider({
       markVocabulary,
       reviewWord,
       reviewError,
+      reviewStructureCard,
       recordVocabularySearch,
       recordVocabularyAudio,
       recordNumberPractice,

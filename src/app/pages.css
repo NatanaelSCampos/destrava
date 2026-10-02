@@ -2094,6 +2094,14 @@
   gap: 13px;
   margin-bottom: 29px;
 }
+.review-summary {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 1150px) {
+  .review-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .review-summary .panel,
 .mistake-summary .panel {
   padding: 19px 22px;

@@ -1,8 +1,11 @@
 import type { StudyState } from "@/domain/study/study-state";
+import { reviewStructures } from "@/content/review-structures";
 import { ReviewScheduler } from "./review-scheduler";
 
 export function dueReviewCounts(
-  state: Pick<StudyState, "vocabulary" | "mistakes">,
+  state: Pick<StudyState, "vocabulary" | "mistakes"> & {
+    structureReviews?: StudyState["structureReviews"];
+  },
   vocabularyItems: ReadonlyArray<{ id: string }>,
   now = new Date(),
   activityIds?: ReadonlySet<string>,
@@ -17,5 +20,10 @@ export function dueReviewCounts(
       ReviewScheduler.isDue(item.schedule, now),
   ).length;
 
-  return { words, mistakes, total: words + mistakes };
+  const structures = reviewStructures.filter((item) => {
+    const progress = state.structureReviews?.[item.id];
+    return progress && ReviewScheduler.isDue(progress.schedule, now);
+  }).length;
+
+  return { words, mistakes, structures, total: words + mistakes + structures };
 }

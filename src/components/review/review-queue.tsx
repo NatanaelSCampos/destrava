@@ -8,9 +8,10 @@ import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { PlannedReviewItem } from "@/domain/study/study-state";
 import { wordReviewCard } from "@/domain/review/review-card";
+import { findReviewStructure, reviewStructures } from "@/content/review-structures";
 
 type ReviewItem = {
-  kind: "word" | "mistake";
+  kind: "word" | "mistake" | "structure";
   id: string;
   front: string;
   back: string;
@@ -20,6 +21,7 @@ type ReviewItem = {
   spokenText: string;
   activityHref?: string;
   category?: string;
+  presentation?: "standard" | "reverse" | "audio" | "cloze";
 };
 
 export function ReviewQueue({
@@ -31,7 +33,8 @@ export function ReviewQueue({
   plannedItems?: PlannedReviewItem[];
   onComplete?: () => void;
 }) {
-  const { course, vocabularyItems, state, reviewWord, reviewError } = useStudy();
+  const { course, vocabularyItems, state, reviewWord, reviewError, reviewStructureCard } =
+    useStudy();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [finishedIds, setFinishedIds] = useState<string[]>([]);
@@ -84,9 +87,30 @@ export function ReviewQueue({
           ]
         : [];
     };
+    const structureCard = (id: string): ReviewItem[] => {
+      const structure = findReviewStructure(id);
+      if (!structure || !course.languageCode.startsWith("es")) return [];
+      return [
+        {
+          kind: "structure",
+          id: structure.id,
+          front: structure.prompt,
+          back: structure.answer,
+          example: structure.explanation,
+          frontLabel: "ESTRUTURA · CRIE SUA FRASE",
+          backLabel: "UM EXEMPLO POSSÍVEL",
+          spokenText: structure.answer,
+          category: "structure",
+        },
+      ];
+    };
     if (plannedItems) {
       return plannedItems.flatMap((selected): ReviewItem[] =>
-        selected.kind === "word" ? wordCard(selected.id) : mistakeCard(selected.id),
+        selected.kind === "word"
+          ? wordCard(selected.id)
+          : selected.kind === "structure"
+            ? structureCard(selected.id)
+            : mistakeCard(selected.id),
       );
     }
     const words = vocabularyItems
@@ -102,14 +126,33 @@ export function ReviewQueue({
         : Object.values(state.mistakes)
             .filter((item) => ReviewScheduler.isDue(item.schedule))
             .flatMap((item) => mistakeCard(item.activityId));
-    return [...mistakes, ...words];
-  }, [mode, plannedItems, state.vocabulary, state.mistakes, vocabularyItems, course]);
+    const structures = course.languageCode.startsWith("es")
+      ? reviewStructures
+          .filter((entry) =>
+            mode === "new"
+              ? !state.structureReviews?.[entry.id]
+              : state.structureReviews?.[entry.id] &&
+                ReviewScheduler.isDue(state.structureReviews[entry.id].schedule),
+          )
+          .flatMap((entry) => structureCard(entry.id))
+      : [];
+    return [...mistakes, ...structures, ...words];
+  }, [
+    mode,
+    plannedItems,
+    state.vocabulary,
+    state.mistakes,
+    state.structureReviews,
+    vocabularyItems,
+    course,
+  ]);
   const pending = items.filter((item) => !finishedIds.includes(`${item.kind}-${item.id}`));
   const item = pending[index] ?? pending[0];
 
   function answer(correct: boolean) {
     if (!item) return;
     if (item.kind === "word") reviewWord(item.id, correct);
+    else if (item.kind === "structure") reviewStructureCard(item.id, correct);
     else reviewError(item.id, correct);
     setFinishedIds((current) => [...current, `${item.kind}-${item.id}`]);
     setIndex(0);
@@ -126,7 +169,7 @@ export function ReviewQueue({
           {finishedIds.length
             ? "Revisão concluída!"
             : mode === "new"
-              ? "Todas as palavras já foram apresentadas"
+              ? "Todos os cartões novos já foram apresentados"
               : "Nada pendente por agora"}
         </h3>
         <p>
@@ -145,7 +188,7 @@ export function ReviewQueue({
   return (
     <div className="review-queue">
       <div className="review-queue-top">
-        <span className="eyebrow">{mode === "new" ? "NOVAS PALAVRAS" : "REVISÃO INTELIGENTE"}</span>
+        <span className="eyebrow">{mode === "new" ? "NOVOS CARTÕES" : "REVISÃO INTELIGENTE"}</span>
         <span>
           {finishedIds.length + 1} de{" "}
           {plannedItems ? items.length : items.length + finishedIds.length}
@@ -165,7 +208,9 @@ export function ReviewQueue({
         </span>
       </button>
       <div className="flashcard-audio">
-        {(item.kind === "word" || flipped) && (
+        {((item.kind === "word" &&
+          (item.presentation === "standard" || item.presentation === "audio")) ||
+          flipped) && (
           <SpeakButton
             text={item.spokenText}
             label="Ouvir palavra ou frase em espanhol"
