@@ -32,6 +32,7 @@ export const spanishAlphabet: ReadonlyArray<AlphabetLetter> = [
     translation: "casa",
     example: "La casa es pequeña.",
     kind: "consonant",
+    note: "Antes de E e I, o C costuma soar como S na América Latina e como o TH de think em boa parte da Espanha.",
   },
   {
     letter: "D",

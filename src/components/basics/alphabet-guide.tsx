@@ -83,7 +83,9 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
 
       <p className="alphabet-note">
         A letra Ñ faz parte do alfabeto. CH e LL continuam nas palavras, mas são combinações de duas
-        letras.
+        letras. C e Z podem soar diferentes na Espanha e na América Latina. Você pode escolher a voz
+        disponível neste dispositivo em{" "}
+        <Link href="/settings">Configurações → Áudio de estudo</Link>.
       </p>
 
       <div className="vocab-toolbar">

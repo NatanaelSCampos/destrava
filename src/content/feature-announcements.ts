@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-vozes-espanhol",
+    title: "Escolha a voz do seu áudio de estudo",
+    summary: "Agora você pode ouvir e escolher uma voz espanhola disponível no seu dispositivo.",
+    highlights: [
+      "Em Configurações, escolha uma voz para a variante de espanhol que você estuda.",
+      "Ouça uma frase de exemplo antes de continuar seus estudos.",
+      "O alfabeto explica por que C e Z podem soar diferentes entre regiões.",
+    ],
+    href: "/settings",
+    linkLabel: "Escolher voz",
+  },
+  {
     id: "2026-10-conversa-adaptativa",
     title: "Converse por voz e receba práticas mais pessoais",
     summary: "As conversas agora ajudam a escolher o que praticar depois.",

@@ -539,7 +539,13 @@ const tours: Record<string, PageTour> = {
       {
         title: "Seu plano",
         description: "Estas escolhas ajudam o Destrava a montar sessões adequadas ao seu ritmo.",
-        target: ".settings-panel",
+        target: ".settings-grid .settings-panel",
+      },
+      {
+        title: "Áudio de estudo",
+        description:
+          "Escolha uma voz espanhola deste dispositivo e ouça o exemplo. A lista pode ser diferente no celular e no computador.",
+        target: ".audio-settings-panel",
       },
       {
         title: "Seus dados e sua conta",

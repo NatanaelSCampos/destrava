@@ -3007,6 +3007,30 @@
 .settings-form > .primary-button {
   justify-self: start;
 }
+.audio-settings-panel {
+  margin-top: 22px;
+}
+.audio-settings-panel > p {
+  max-width: 68ch;
+  margin: 8px 0 22px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.audio-settings-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 550px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #f8f8f9;
+}
+.audio-settings-preview > span {
+  flex: 1;
+  min-width: 185px;
+}
 .read-only-field {
   border: 1px solid var(--border);
   border-radius: 9px;

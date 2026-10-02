@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, Download, LogOut, Settings2 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
-import { spanishRegions, type SpanishRegion } from "@/content/spanish-regions";
+import {
+  spanishRegion,
+  spanishRegions,
+  spanishSpeechLocale,
+  type SpanishRegion,
+} from "@/content/spanish-regions";
 import { AccountSecurity } from "@/components/auth/account-security";
 import { LinkedAccounts } from "@/components/auth/linked-accounts";
+import { SpeakButton } from "@/components/audio/speak-button";
+import {
+  normalizedVoiceLocale,
+  readSpanishVoicePreference,
+  saveSpanishVoicePreference,
+  spanishVoiceId,
+} from "@/lib/speech-voice-preference";
 
 export default function SettingsPage() {
   const { ready } = useStudy();
@@ -21,6 +33,46 @@ function SettingsContent() {
   const [daysPerWeek, setDaysPerWeek] = useState(state.profile.daysPerWeek);
   const [priorKnowledge, setPriorKnowledge] = useState(state.profile.priorKnowledge);
   const [region, setRegion] = useState(state.profile.spanishRegion ?? "general");
+  const [browserVoices, setBrowserVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceSupported, setVoiceSupported] = useState<boolean | null>(null);
+  const [preferredVoiceId, setPreferredVoiceId] = useState("");
+  const [voiceSaveError, setVoiceSaveError] = useState(false);
+  const speechLocale = spanishSpeechLocale(spanishRegion(region));
+  const matchingVoices = useMemo(
+    () =>
+      browserVoices
+        .filter(
+          (voice) => normalizedVoiceLocale(voice.lang) === normalizedVoiceLocale(speechLocale),
+        )
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
+    [browserVoices, speechLocale],
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setPreferredVoiceId(readSpanishVoicePreference(speechLocale));
+      setVoiceSaveError(false);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [speechLocale]);
+
+  useEffect(() => {
+    if (!window.speechSynthesis) {
+      const timer = window.setTimeout(() => setVoiceSupported(false), 0);
+      return () => window.clearTimeout(timer);
+    }
+    const synthesis = window.speechSynthesis;
+    const refreshVoices = () => {
+      setVoiceSupported(true);
+      setBrowserVoices(synthesis.getVoices());
+    };
+    const timer = window.setTimeout(refreshVoices, 0);
+    synthesis.addEventListener("voiceschanged", refreshVoices);
+    return () => {
+      window.clearTimeout(timer);
+      synthesis.removeEventListener("voiceschanged", refreshVoices);
+    };
+  }, []);
   function save() {
     updateProfile({
       goal,
@@ -191,8 +243,86 @@ function SettingsContent() {
           )}
         </aside>
       </div>
+      <section className="panel settings-panel audio-settings-panel">
+        <span className="eyebrow">ÁUDIO DE ESTUDO</span>
+        <h2>Escolha a voz que você prefere ouvir</h2>
+        <p>
+          As vozes vêm do navegador e do dispositivo. Por isso, os áudios podem soar diferentes no
+          celular e no computador. A pronúncia de letras como C e Z também muda entre regiões do
+          espanhol; as duas variantes podem estar corretas.
+        </p>
+        <div className="settings-form">
+          <div className="field">
+            <label htmlFor="spanish-voice">Voz para {spanishLocaleLabel(speechLocale)}</label>
+            <select
+              id="spanish-voice"
+              value={
+                matchingVoices.some((voice) => spanishVoiceId(voice) === preferredVoiceId)
+                  ? preferredVoiceId
+                  : ""
+              }
+              disabled={!voiceSupported}
+              onChange={(event) => {
+                const next = event.target.value;
+                const didSave = saveSpanishVoicePreference(speechLocale, next);
+                setVoiceSaveError(!didSave);
+                if (didSave) setPreferredVoiceId(next);
+              }}
+            >
+              <option value="">Automática do navegador</option>
+              {matchingVoices.map((voice) => (
+                <option key={spanishVoiceId(voice)} value={spanishVoiceId(voice)}>
+                  {voice.name}
+                </option>
+              ))}
+            </select>
+            {voiceSupported === null ? (
+              <small>Carregando as vozes deste dispositivo…</small>
+            ) : !voiceSupported ? (
+              <small>Este navegador não oferece leitura de texto por voz.</small>
+            ) : matchingVoices.length === 0 ? (
+              <small>
+                Nenhuma voz {speechLocale} apareceu neste dispositivo. O navegador tentará outra voz
+                espanhola disponível; instale uma voz dessa região para poder escolhê-la aqui.
+              </small>
+            ) : preferredVoiceId &&
+              !matchingVoices.some((voice) => spanishVoiceId(voice) === preferredVoiceId) ? (
+              <small>
+                A voz salva não está disponível neste dispositivo. Será usada outra voz.
+              </small>
+            ) : (
+              <small>
+                A escolha é salva neste dispositivo e aplicada aos botões de áudio do app. Em outro
+                dispositivo, escolha a voz novamente.
+              </small>
+            )}
+            {voiceSaveError && (
+              <small role="alert">Não foi possível salvar a voz neste navegador.</small>
+            )}
+          </div>
+          <div className="audio-settings-preview">
+            <span lang="es">Hola, ¿cómo estás? La casa está cerca.</span>
+            <SpeakButton
+              text="Hola, ¿cómo estás? La casa está cerca."
+              label="Ouvir exemplo com a voz escolhida"
+              locale={speechLocale}
+              withLabel
+            />
+          </div>
+        </div>
+      </section>
       {authUserId && <LinkedAccounts />}
       {authUserId && <AccountSecurity />}
     </div>
+  );
+}
+
+function spanishLocaleLabel(locale: string) {
+  return (
+    {
+      "es-ES": "espanhol da Espanha",
+      "es-MX": "espanhol do México",
+      "es-AR": "espanhol da Argentina",
+    }[locale] ?? "espanhol"
   );
 }
