@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -67,6 +66,23 @@ export default function MfaPage() {
     window.location.assign("/dashboard");
   }
 
+  async function returnToLogin() {
+    const client = createSupabaseBrowserClient();
+    if (!client) return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const { error } = await client.auth.signOut({ scope: "local" });
+      if (error) throw error;
+      // Reload to clear the account-scoped study state before another login.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign("/login");
+    } catch {
+      setBusy(false);
+      setMessage("Não foi possível sair desta sessão. Tente novamente.");
+    }
+  }
+
   return (
     <main className="auth-step-page">
       <form className="panel auth-step-card" onSubmit={(event) => void verify(event)}>
@@ -96,7 +112,9 @@ export default function MfaPage() {
             {message}
           </p>
         )}
-        <Link href="/login">Voltar ao login</Link>
+        <button type="button" className="auth-step-exit" onClick={() => void returnToLogin()} disabled={busy}>
+          Sair e voltar ao login
+        </button>
       </form>
     </main>
   );

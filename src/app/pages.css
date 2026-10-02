@@ -3152,9 +3152,18 @@
   color: var(--text-secondary);
   line-height: 1.6;
 }
-.auth-step-card > a {
+.auth-step-exit {
+  width: fit-content;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--primary);
   font-weight: 700;
+  cursor: pointer;
+}
+.auth-step-exit:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 .account-security {
   display: grid;

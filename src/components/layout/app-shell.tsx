@@ -81,7 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       }
       const needsChallenge = data.nextLevel === "aal2" && data.currentLevel !== "aal2";
       setSessionCheck(needsChallenge ? "challenge" : "ready");
-      if (needsChallenge && pathname !== "/mfa") router.replace("/mfa");
+      if (needsChallenge && pathname !== "/mfa" && pathname !== "/login") router.replace("/mfa");
     });
     return () => {
       cancelled = true;
