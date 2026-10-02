@@ -79,6 +79,8 @@ Depois do retorno do Google, `/auth/finish` verifica se a sessão precisa do có
 
 `supabase/migrations/20261002000300_recent_mfa_for_trusted_device.sql` exige que a criação de um novo navegador confiável ocorra até cinco minutos após a confirmação do código.
 
+`supabase/migrations/20261002000600_feature_announcements.sql` registra cada novidade uma vez por usuário autenticado, inclusive em outros dispositivos. Para anunciar outro recurso ou melhoria, adicione uma entrada com ID novo em `src/content/feature-announcements.ts`. A mesma migração permite até 40 transcrições curtas de conversa por hora, separadas das 20 chamadas de IA por hora.
+
 As integrações abaixo dependem de contas próprias. Não envie senhas, segredos SMTP, OAuth ou Turnstile por chat, não os coloque no Git e não inclua nenhum deles como variável `NEXT_PUBLIC_`. Ative cada opção no Supabase remoto somente quando o frontend correspondente estiver publicado.
 
 Na prévia atual, Google e Turnstile já aparecem no login; o Supabase redireciona para o Google e exige o token do CAPTCHA no login por senha. A conclusão desses fluxos ainda precisa ser conferida em um navegador com uma conta de teste. A confirmação de e-mail aguarda o domínio próprio e um serviço SMTP.

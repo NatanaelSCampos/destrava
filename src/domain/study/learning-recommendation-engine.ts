@@ -4,9 +4,21 @@ import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
 import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
+import { findConversationScenario } from "@/content/conversation-scenarios";
+import { findImageDescriptionScene } from "@/content/image-description-scenes";
+import { featureFlags } from "@/lib/feature-flags";
 
 type RecommendationBase = {
-  source: "due_review" | "mistake" | "pronunciation" | "fluency" | "curriculum" | "number";
+  source:
+    | "due_review"
+    | "mistake"
+    | "pronunciation"
+    | "fluency"
+    | "curriculum"
+    | "number"
+    | "conversation"
+    | "image"
+    | "behavior";
   id: string;
   title: string;
   reason: string;
@@ -16,9 +28,11 @@ type RecommendationBase = {
 export type LearningRecommendation =
   | (RecommendationBase & { kind: "review"; source: "due_review" })
   | (RecommendationBase & { kind: "number"; source: "number" })
+  | (RecommendationBase & { kind: "conversation"; source: "conversation"; sessionId?: string })
+  | (RecommendationBase & { kind: "image"; source: "image" })
   | (RecommendationBase & {
       kind: "activity";
-      source: "mistake" | "pronunciation" | "fluency" | "curriculum";
+      source: "mistake" | "pronunciation" | "fluency" | "curriculum" | "behavior";
       unitNumber: number;
       lessonSlug: string;
     });
@@ -108,6 +122,31 @@ export class LearningRecommendationEngine {
       });
     }
 
+    const explanationCounts = new Map<string, number>();
+    for (const event of state.events ?? [])
+      if (
+        event.type === "explanation_opened" &&
+        event.metadata?.courseId === course.id &&
+        event.itemId &&
+        now.getTime() - Date.parse(event.createdAt) < 30 * 86_400_000
+      )
+        explanationCounts.set(event.itemId, (explanationCounts.get(event.itemId) ?? 0) + 1);
+    for (const [activityId, count] of explanationCounts) {
+      const context = activityById.get(activityId);
+      if (!context || count < 3) continue;
+      add({
+        kind: "activity",
+        source: "behavior",
+        id: activityId,
+        title: context.activity.title,
+        reason: "Você abriu a explicação várias vezes. Vale praticar este ponto de novo.",
+        priority: 79 + Math.min(7, count),
+        minutes: context.activity.minutes,
+        unitNumber: context.unit.number,
+        lessonSlug: context.lesson.slug,
+      });
+    }
+
     const latestSpeaking = new Map<string, StudyState["speaking"][number]>();
     for (const submission of state.speaking) {
       if (!submission.feedback || !activityById.has(submission.activityId)) continue;
@@ -159,6 +198,116 @@ export class LearningRecommendationEngine {
           reason: `Você teve dificuldade em ${misses} das últimas ${recent.length} tentativas deste número.`,
           priority: 72 + misses * 6,
           minutes: 3,
+        });
+      }
+    }
+
+    if (featureFlags.AI_TUTOR && course.languageCode.startsWith("es")) {
+      const recentSessions = (state.conversations ?? [])
+        .filter(
+          (session) =>
+            session.courseId === course.id &&
+            now.getTime() - Date.parse(session.startedAt) < 30 * 86_400_000,
+        )
+        .sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+        .slice(0, 12);
+      const categoryCounts = new Map<string, number>();
+      for (const session of recentSessions)
+        for (const turn of session.turns) {
+          if (turn.role !== "partner" || !turn.correction?.trim()) continue;
+          const category = turn.correctionCategory ?? "other";
+          categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+        }
+      const repeated = [...categoryCounts.entries()].sort((a, b) => b[1] - a[1])[0];
+      const latest = recentSessions[0];
+      if (latest && repeated && repeated[1] >= 2) {
+        const scenario = findConversationScenario(latest.scenarioId);
+        add({
+          kind: "conversation",
+          source: "conversation",
+          id: scenario?.id ?? "free",
+          title: scenario ? `Praticar: ${scenario.title}` : "Praticar conversa livre",
+          reason: `As conversas recentes tiveram ${repeated[1]} ajustes de ${
+            {
+              grammar: "gramática",
+              vocabulary: "vocabulário",
+              clarity: "clareza",
+              other: "linguagem",
+            }[repeated[0]] ?? "linguagem"
+          }. Pratique de novo sem nota oficial.`,
+          priority: 78 + Math.min(8, repeated[1]),
+          minutes: 6,
+        });
+      }
+      const unfinished = recentSessions.find(
+        (session) =>
+          session.mode === "mission" &&
+          !session.finishedAt &&
+          session.turns.some((turn) => turn.role === "student"),
+      );
+      if (unfinished) {
+        const scenario = findConversationScenario(unfinished.scenarioId);
+        if (scenario)
+          add({
+            kind: "conversation",
+            source: "conversation",
+            id: unfinished.id,
+            sessionId: unfinished.id,
+            title: `Continuar: ${scenario.title}`,
+            reason: "Você iniciou esta missão e ainda pode concluir os objetivos.",
+            priority: 76,
+            minutes: 5,
+          });
+      }
+      const replayCounts = new Map<string, number>();
+      for (const event of state.events ?? [])
+        if (
+          event.type === "conversation_partner_audio" &&
+          event.metadata?.courseId === course.id &&
+          event.itemId &&
+          now.getTime() - Date.parse(event.createdAt) < 30 * 86_400_000
+        )
+          replayCounts.set(event.itemId, (replayCounts.get(event.itemId) ?? 0) + 1);
+      const repeatedAudio = [...replayCounts.entries()].find(([, count]) => count >= 3);
+      if (repeatedAudio) {
+        const session = recentSessions.find((item) =>
+          item.turns.some((turn) => turn.id === repeatedAudio[0]),
+        );
+        if (session)
+          add({
+            kind: "conversation",
+            source: "conversation",
+            id: session.id,
+            sessionId: session.id,
+            title: "Revisitar uma conversa",
+            reason: "Você ouviu a mesma fala várias vezes. Releia e escute novamente no contexto.",
+            priority: 73,
+            minutes: 4,
+          });
+      }
+      const imageAttempts = (state.imageDescriptions ?? [])
+        .filter(
+          (attempt) =>
+            attempt.courseId === course.id &&
+            now.getTime() - Date.parse(attempt.createdAt) < 30 * 86_400_000,
+        )
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .slice(0, 12);
+      const imageCorrections = new Map<string, number>();
+      for (const attempt of imageAttempts)
+        if (attempt.feedback.correction?.trim())
+          imageCorrections.set(attempt.sceneId, (imageCorrections.get(attempt.sceneId) ?? 0) + 1);
+      for (const [sceneId, count] of imageCorrections) {
+        const scene = findImageDescriptionScene(sceneId);
+        if (!scene || count < 2) continue;
+        add({
+          kind: "image",
+          source: "image",
+          id: sceneId,
+          title: `Descrever: ${scene.title}`,
+          reason: `Você recebeu dicas nesta cena ${count} vezes. Tente uma nova descrição.`,
+          priority: 75 + Math.min(8, count),
+          minutes: 5,
         });
       }
     }

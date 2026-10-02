@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, Check, MessageCircle, Send, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { ConversationVoiceInput } from "@/components/conversation/conversation-voice-input";
 import { conversationScenarios, findConversationScenario } from "@/content/conversation-scenarios";
 import {
   startConversation,
@@ -25,8 +26,16 @@ const correctionOptions: Array<{ id: ConversationCorrection; label: string }> = 
 ];
 
 export default function ConversationPage() {
-  const { course, state, saveConversation, addConversationReply, completeConversation } =
-    useStudy();
+  const {
+    course,
+    state,
+    ready,
+    saveConversation,
+    addConversationReply,
+    completeConversation,
+    recordStudyEvent,
+  } = useStudy();
+  const handledLink = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<ConversationMode>("mission");
   const [scenarioId, setScenarioId] = useState(conversationScenarios[0].id);
@@ -34,12 +43,35 @@ export default function ConversationPage() {
   const [pace, setPace] = useState<ConversationPace>("beginner");
   const [correction, setCorrection] = useState<ConversationCorrection>("important_only");
   const [draft, setDraft] = useState("");
+  const [draftInputMode, setDraftInputMode] = useState<"text" | "speech">("text");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const sessions = (state.conversations ?? []).filter((item) => item.courseId === course.id);
   const selected = sessions.find((item) => item.id === selectedId);
   const scenario = findConversationScenario(selected?.scenarioId);
   const turnsUsed = selected?.turns.filter((item) => item.role === "student").length ?? 0;
+
+  useEffect(() => {
+    if (!ready || handledLink.current) return;
+    const timer = window.setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get("session");
+      if (
+        sessionId &&
+        (state.conversations ?? []).some(
+          (item) => item.courseId === course.id && item.id === sessionId,
+        )
+      )
+        setSelectedId(sessionId);
+      const suggestedScenario = params.get("scenario");
+      if (suggestedScenario && findConversationScenario(suggestedScenario)) {
+        setMode("mission");
+        setScenarioId(suggestedScenario);
+      }
+      handledLink.current = true;
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [ready, state.conversations, course.id]);
 
   function begin() {
     const chosenScenario = mode === "mission" ? findConversationScenario(scenarioId) : undefined;
@@ -58,6 +90,7 @@ export default function ConversationPage() {
     saveConversation(session);
     setSelectedId(session.id);
     setDraft("");
+    setDraftInputMode("text");
     setError("");
   }
 
@@ -83,12 +116,19 @@ export default function ConversationPage() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Não foi possível continuar a conversa.");
       if (!result.reply) throw new Error("A resposta veio vazia. Tente novamente.");
-      addConversationReply(selected.id, message, {
-        text: result.reply,
-        correction: result.correction ?? "",
-        completedObjectiveIds: result.completedObjectiveIds ?? [],
-      });
+      addConversationReply(
+        selected.id,
+        message,
+        {
+          text: result.reply,
+          correction: result.correction ?? "",
+          correctionCategory: result.correctionCategory ?? "none",
+          completedObjectiveIds: result.completedObjectiveIds ?? [],
+        },
+        draftInputMode,
+      );
       setDraft("");
+      setDraftInputMode("text");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível continuar a conversa.");
     } finally {
@@ -154,6 +194,7 @@ export default function ConversationPage() {
                     {turn.role === "student"
                       ? "Você"
                       : (scenario?.character.split(",")[0] ?? "Professor")}
+                    {turn.role === "student" && turn.inputMode === "speech" ? " · voz" : ""}
                   </span>
                   <div className="text-audio-row">
                     <p lang="es">{turn.text}</p>
@@ -162,6 +203,12 @@ export default function ConversationPage() {
                         text={turn.text}
                         label="Ouvir resposta em espanhol"
                         rate={{ beginner: 0.75, intermediate: 0.86, natural: 1 }[selected.pace]}
+                        onPlay={() =>
+                          recordStudyEvent("conversation_partner_audio", turn.id, {
+                            courseId: course.id,
+                            sessionId: selected.id,
+                          })
+                        }
                       />
                     )}
                   </div>
@@ -215,6 +262,13 @@ export default function ConversationPage() {
                 />
                 <div>
                   <small>{turnsUsed}/16 respostas nesta conversa</small>
+                  <ConversationVoiceInput
+                    disabled={loading || turnsUsed >= 16}
+                    onTranscript={(text) => {
+                      setDraft(text);
+                      setDraftInputMode("speech");
+                    }}
+                  />
                   <button
                     type="button"
                     className="primary-button"

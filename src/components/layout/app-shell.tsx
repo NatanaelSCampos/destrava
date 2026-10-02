@@ -28,6 +28,7 @@ import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { courseProgress } from "@/domain/study/progress";
 import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
+import { WhatsNewDialog } from "@/components/layout/whats-new-dialog";
 import { featureFlags } from "@/lib/feature-flags";
 import { SelectionAudio } from "@/components/audio/selection-audio";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -67,7 +68,13 @@ export function AppShell({ children }: { children: ReactNode }) {
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
   useEffect(() => {
-    if (ready && requiresAuth && !authUserId && pathname !== "/login" && pathname !== "/auth/finish")
+    if (
+      ready &&
+      requiresAuth &&
+      !authUserId &&
+      pathname !== "/login" &&
+      pathname !== "/auth/finish"
+    )
       router.replace("/login");
   }, [ready, requiresAuth, authUserId, pathname, router]);
   useEffect(() => {
@@ -265,6 +272,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}
       <SelectionAudio />
+      {featureFlags.AI_TUTOR && <WhatsNewDialog userId={authUserId} />}
     </div>
   );
 }

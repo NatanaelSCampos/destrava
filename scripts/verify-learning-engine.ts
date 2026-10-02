@@ -3,6 +3,8 @@ import { frecuenciasA1, vocabularySeed } from "../src/content/frecuencias-a1";
 import { publicCourse } from "../src/content/public";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
+import { buildLearningMemory } from "../src/domain/study/learning-memory";
+import { recommendationLink } from "../src/lib/recommendation-link";
 import { buildStudyPlan } from "../src/domain/study/study-planner";
 import { buildPracticeHistory, sessionComparisons } from "../src/domain/study/practice-history";
 import { initialStudyState, type StudyState } from "../src/domain/study/study-state";
@@ -146,7 +148,12 @@ assert.equal(newConversation.turns[0]?.text, mission.opening);
 const answeredConversation = appendConversationReply(
   newConversation,
   "Me llamo Ana.",
-  { text: "Mucho gusto, Ana.", correction: "", completedObjectiveIds: ["say-name", "invalid"] },
+  {
+    text: "Mucho gusto, Ana.",
+    correction: "",
+    correctionCategory: "none",
+    completedObjectiveIds: ["say-name", "invalid"],
+  },
   mission.objectives.map((item) => item.id),
 );
 assert.deepEqual(answeredConversation.completedObjectiveIds, ["say-name"]);
@@ -154,7 +161,7 @@ assert.equal(
   appendConversationReply(
     finishConversation(answeredConversation),
     "Hola",
-    { text: "Hola", correction: "", completedObjectiveIds: [] },
+    { text: "Hola", correction: "", correctionCategory: "none", completedObjectiveIds: [] },
     [],
   ).turns.length,
   answeredConversation.turns.length,
@@ -178,6 +185,64 @@ function recommend(state: StudyState) {
   const profile = buildLearningProfile(course, state, vocabularySeed, now);
   return LearningRecommendationEngine.recommend(course, state, profile, vocabularySeed, { now });
 }
+
+const correctedConversation = appendConversationReply(
+  { ...newConversation, startedAt: yesterday },
+  "Yo es Ana",
+  {
+    text: "Entiendo. ¿De dónde eres?",
+    correction: "Diga 'yo soy'.",
+    correctionCategory: "grammar",
+    completedObjectiveIds: [],
+  },
+  [],
+  "speech",
+);
+const correctedTwice = appendConversationReply(
+  correctedConversation,
+  "Yo es de Lima",
+  {
+    text: "¡Qué bien!",
+    correction: "Use 'yo soy de'.",
+    correctionCategory: "grammar",
+    completedObjectiveIds: [],
+  },
+  [],
+  "text",
+);
+const memoryState: StudyState = {
+  ...initialStudyState,
+  conversations: [correctedTwice],
+  imageDescriptions: [1, 2].map((number) => ({
+    id: `image-${number}`,
+    sceneId: "kitchen",
+    courseId: course.id,
+    transcript: "Hay una mujer.",
+    inputMode: "text" as const,
+    feedback: {
+      observed: "Uma mulher",
+      strength: "Acertou",
+      correction: "Use hay.",
+      nextSentence: "Hay una mesa.",
+    },
+    createdAt: yesterday,
+  })),
+};
+const memory = buildLearningMemory(memoryState, course.id);
+assert.equal(memory.voiceTurns, 1);
+assert.equal(memory.correctionPatterns[0]?.count, 2);
+assert.equal(memory.unfinishedMissionIds[0], mission.id);
+const conversationSuggestion = recommend(memoryState).find(
+  (item) => item.kind === "conversation" && item.id === mission.id,
+);
+assert(conversationSuggestion);
+assert.equal(
+  recommendationLink(course.slug, conversationSuggestion),
+  `/conversation?scenario=${mission.id}`,
+);
+const imageSuggestion = recommend(memoryState).find((item) => item.kind === "image");
+assert(imageSuggestion);
+assert.equal(recommendationLink(course.slug, imageSuggestion), "/describe?scene=kitchen");
 
 const freshProfile = buildLearningProfile(course, initialStudyState, vocabularySeed, now);
 assert.equal(freshProfile.languageCode, "es");

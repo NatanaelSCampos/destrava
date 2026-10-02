@@ -26,6 +26,14 @@ export default function DescribePage() {
   const stream = useRef<MediaStream | null>(null);
   const scene =
     imageDescriptionScenes.find((item) => item.id === sceneId) ?? imageDescriptionScenes[0];
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const suggested = new URLSearchParams(window.location.search).get("scene");
+      if (suggested && imageDescriptionScenes.some((item) => item.id === suggested))
+        setSceneId(suggested);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
   const history = (state.imageDescriptions ?? []).filter(
     (item) => item.courseId === course.id && item.sceneId === sceneId,
   );

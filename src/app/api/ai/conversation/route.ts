@@ -8,6 +8,7 @@ import { frecuenciasA1 } from "@/content/frecuencias-a1";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
 import type { StudyState } from "@/domain/study/study-state";
+import { buildLearningMemory } from "@/domain/study/learning-memory";
 
 const inputSchema = z.object({
   mode: z.enum(["free", "mission"]),
@@ -48,12 +49,18 @@ export async function POST(request: Request) {
       : { data: null };
     const state = data?.state as StudyState | null | undefined;
     const region = spanishRegion(state?.profile?.spanishRegion);
+    const currentUnit = frecuenciasA1.units.find((unit) =>
+      unit.lessons.some((lesson) =>
+        lesson.activities.some((activity) => !state?.completedActivityIds?.includes(activity.id)),
+      ),
+    );
     const result = await getAIProvider().conversationTurn({
       ...input,
       scenario,
       context: {
         course: frecuenciasA1.title,
         level: frecuenciasA1.level,
+        unit: currentUnit?.title ?? frecuenciasA1.units.at(-1)?.title ?? "Curso A1",
         goal: (state?.profile?.goal ?? "Praticar conversação").slice(0, 120),
         knownWords: Object.values(state?.vocabulary ?? {}).filter((item) => item.status === "known")
           .length,
@@ -62,6 +69,7 @@ export async function POST(request: Request) {
           .slice(0, 3)
           .map((item) => item.correctAnswer.slice(0, 100)),
         region: spanishRegions.find((item) => item.id === region)?.label ?? "Geral",
+        memory: state ? buildLearningMemory(state, frecuenciasA1.id) : undefined,
       },
     });
     const allowed = new Set(scenario?.objectives.map((item) => item.id) ?? []);
@@ -69,6 +77,10 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: result.feedback.reply.trim().slice(0, 800),
       correction: input.correction === "off" ? "" : result.feedback.correction.trim().slice(0, 400),
+      correctionCategory:
+        input.correction === "off" || !result.feedback.correction.trim()
+          ? "none"
+          : result.feedback.correctionCategory,
       completedObjectiveIds: result.feedback.completedObjectiveIds.filter((id) => allowed.has(id)),
     });
   } catch {

@@ -271,6 +271,19 @@
   justify-content: space-between;
   gap: 12px;
 }
+.conversation-voice-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.conversation-voice-input .secondary-button {
+  min-height: 38px;
+  padding: 7px 11px;
+}
+.conversation-voice-input .inline-error {
+  max-width: 200px;
+}
 .conversation-finished {
   padding: 18px;
   border-radius: 10px;
@@ -363,6 +376,39 @@
   border-bottom: 1px solid var(--border);
   background: transparent;
   text-align: left;
+}
+.study-practice-suggestions {
+  margin: 18px 0;
+  padding: 22px;
+}
+.study-practice-suggestions h2 { margin: 8px 0 15px; }
+.study-practice-suggestion-list { display: grid; gap: 12px; }
+.study-practice-suggestion-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--border);
+}
+.study-practice-suggestion-list span { display: grid; gap: 5px; }
+.study-practice-suggestion-list small { color: var(--text-secondary); line-height: 1.4; }
+.practice-signal-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-muted);
+}
+.practice-signal-summary strong { flex-basis: 100%; }
+.practice-signal-summary span { font-size: 12px; }
+.practice-signal-summary small { flex-basis: 100%; color: var(--text-secondary); }
+@media (max-width: 600px) {
+  .study-practice-suggestion-list > div { align-items: flex-start; flex-direction: column; }
 }
 @media (max-width: 1050px) {
   .conversation-layout {

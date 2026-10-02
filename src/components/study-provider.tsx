@@ -44,6 +44,7 @@ import { SupabaseStudyRepository } from "@/repositories/supabase-study-repositor
 import {
   appendConversationReply,
   finishConversation,
+  type ConversationCorrectionCategory,
   type ConversationSession,
 } from "@/domain/conversation/conversation-session";
 import { findConversationScenario } from "@/content/conversation-scenarios";
@@ -88,9 +89,20 @@ type StudyContextValue = {
   addConversationReply: (
     sessionId: string,
     studentText: string,
-    reply: { text: string; correction: string; completedObjectiveIds: string[] },
+    reply: {
+      text: string;
+      correction: string;
+      correctionCategory: ConversationCorrectionCategory;
+      completedObjectiveIds: string[];
+    },
+    inputMode?: "text" | "speech",
   ) => void;
   completeConversation: (sessionId: string) => void;
+  recordStudyEvent: (
+    type: string,
+    itemId?: string,
+    metadata?: Record<string, string | number | boolean>,
+  ) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, rating: boolean | "difficult") => void;
   reviewError: (id: string, correct: boolean) => void;
@@ -140,8 +152,7 @@ export function StudyProvider({
           const access = await canAccessWithMfa(client);
           if (cancelled) return;
           if (!access.allowed) {
-            if (access.error)
-              setSyncError("Não foi possível verificar a segurança da sessão.");
+            if (access.error) setSyncError("Não foi possível verificar a segurança da sessão.");
             setReady(true);
             return;
           }
@@ -388,19 +399,39 @@ export function StudyProvider({
   );
   const saveConversation = useCallback(
     (session: ConversationSession) =>
-      setState((current) => ({
-        ...current,
-        conversations: [session, ...(current.conversations ?? [])].slice(0, 24),
-        events: [
-          {
-            id: crypto.randomUUID(),
-            type: "conversation_started",
-            itemId: session.id,
-            createdAt: session.startedAt,
-          },
-          ...current.events,
-        ],
-      })),
+      setState((current) => {
+        const abandoned = (current.conversations ?? []).filter(
+          (item) =>
+            item.courseId === session.courseId &&
+            !item.finishedAt &&
+            item.turns.some((turn) => turn.role === "student"),
+        );
+        return {
+          ...current,
+          conversations: [session, ...(current.conversations ?? [])].slice(0, 24),
+          events: [
+            {
+              id: crypto.randomUUID(),
+              type: "conversation_started",
+              itemId: session.id,
+              metadata: {
+                courseId: session.courseId,
+                mode: session.mode,
+                scenarioId: session.scenarioId ?? "",
+              },
+              createdAt: session.startedAt,
+            },
+            ...abandoned.map((item) => ({
+              id: crypto.randomUUID(),
+              type: "conversation_left_unfinished",
+              itemId: item.id,
+              metadata: { courseId: item.courseId, scenarioId: item.scenarioId ?? "" },
+              createdAt: session.startedAt,
+            })),
+            ...current.events,
+          ],
+        };
+      }),
     [],
   );
   const saveImageDescription = useCallback(
@@ -418,6 +449,11 @@ export function StudyProvider({
               id: crypto.randomUUID(),
               type: "image_description_completed",
               itemId: input.sceneId,
+              metadata: {
+                courseId: input.courseId,
+                inputMode: input.inputMode,
+                hasCorrection: Boolean(input.feedback.correction.trim()),
+              },
               createdAt,
             },
             ...current.events,
@@ -435,31 +471,59 @@ export function StudyProvider({
     (
       sessionId: string,
       studentText: string,
-      reply: { text: string; correction: string; completedObjectiveIds: string[] },
+      reply: {
+        text: string;
+        correction: string;
+        correctionCategory: ConversationCorrectionCategory;
+        completedObjectiveIds: string[];
+      },
+      inputMode: "text" | "speech" = "text",
     ) =>
-      setState((current) => ({
-        ...current,
-        conversations: (current.conversations ?? []).map((session) =>
-          session.id === sessionId
-            ? appendConversationReply(
-                session,
-                studentText,
-                reply,
-                findConversationScenario(session.scenarioId)?.objectives.map((item) => item.id) ??
-                  [],
-              )
-            : session,
-        ),
-        events: [
-          {
-            id: crypto.randomUUID(),
-            type: "conversation_turn",
-            itemId: sessionId,
-            createdAt: new Date().toISOString(),
-          },
-          ...current.events,
-        ],
-      })),
+      setState((current) => {
+        const session = (current.conversations ?? []).find((item) => item.id === sessionId);
+        if (!session || session.finishedAt) return current;
+        const updated = appendConversationReply(
+          session,
+          studentText,
+          reply,
+          findConversationScenario(session.scenarioId)?.objectives.map((item) => item.id) ?? [],
+          inputMode,
+        );
+        if (updated === session) return current;
+        const newObjectives = updated.completedObjectiveIds.filter(
+          (id) => !session.completedObjectiveIds.includes(id),
+        );
+        const createdAt = new Date().toISOString();
+        return {
+          ...current,
+          conversations: (current.conversations ?? []).map((item) =>
+            item.id === sessionId ? updated : item,
+          ),
+          events: [
+            {
+              id: crypto.randomUUID(),
+              type: "conversation_turn",
+              itemId: sessionId,
+              createdAt,
+              metadata: {
+                courseId: session.courseId,
+                scenarioId: session.scenarioId ?? "",
+                inputMode,
+                correctionCategory: reply.correction.trim() ? reply.correctionCategory : "none",
+                objectiveCount: newObjectives.length,
+              },
+            },
+            ...newObjectives.map((id) => ({
+              id: crypto.randomUUID(),
+              type: "conversation_objective_completed",
+              itemId: id,
+              createdAt,
+              metadata: { courseId: session.courseId, scenarioId: session.scenarioId ?? "" },
+            })),
+            ...current.events,
+          ],
+        };
+      }),
     [],
   );
   const completeConversation = useCallback(
@@ -476,6 +540,17 @@ export function StudyProvider({
             itemId: sessionId,
             createdAt: new Date().toISOString(),
           },
+          ...current.events,
+        ],
+      })),
+    [],
+  );
+  const recordStudyEvent = useCallback(
+    (type: string, itemId?: string, metadata?: Record<string, string | number | boolean>) =>
+      setState((current) => ({
+        ...current,
+        events: [
+          { id: crypto.randomUUID(), type, itemId, metadata, createdAt: new Date().toISOString() },
           ...current.events,
         ],
       })),
@@ -508,12 +583,18 @@ export function StudyProvider({
             ...current.sessions,
           ],
           events: [
-            { id: crypto.randomUUID(), type: "lesson_started", createdAt: startedAt },
+            {
+              id: crypto.randomUUID(),
+              type: "lesson_started",
+              itemId: id,
+              metadata: { courseId: course.id, unitId, mode, targetMinutes },
+              createdAt: startedAt,
+            },
             ...current.events,
           ],
         };
       }),
-    [],
+    [course.id],
   );
   const finishSession = useCallback(
     () =>
@@ -535,9 +616,19 @@ export function StudyProvider({
                 }
               : session,
           ),
+          events: [
+            {
+              id: crypto.randomUUID(),
+              type: "lesson_finished",
+              itemId: current.activeSessionId,
+              metadata: { courseId: course.id },
+              createdAt: now.toISOString(),
+            },
+            ...current.events,
+          ],
         };
       }),
-    [],
+    [course.id],
   );
 
   const value = useMemo(
@@ -566,6 +657,7 @@ export function StudyProvider({
       saveAdaptiveAssessment,
       addConversationReply,
       completeConversation,
+      recordStudyEvent,
       startSession,
       finishSession,
     }),
@@ -594,6 +686,7 @@ export function StudyProvider({
       saveAdaptiveAssessment,
       addConversationReply,
       completeConversation,
+      recordStudyEvent,
       startSession,
       finishSession,
     ],

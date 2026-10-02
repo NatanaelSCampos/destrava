@@ -78,8 +78,8 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 
 | Item | Implementação | Evidência atual e principal lacuna |
 | --- | --- | --- |
-| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala, revisão de palavras/estruturas e respostas do diagnóstico adaptativo; ainda falta estado separado por curso/idioma e evidência estruturada das conversas e descrições de imagem. |
-| 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência, trilha e evidências do diagnóstico; ainda não usa sinais de conversas e descrições de imagem para escolher a próxima prática. |
+| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala, revisão e diagnóstico. Conversas e imagens têm contagens de prática separadas das notas; ainda falta domínio por curso/idioma e evidência calibrada para atribuir pontuação a essas produções livres. |
+| 2. Motor adaptativo | **IMPLEMENTADO** | Prioriza revisões, erros, pronúncia/fluência, trilha, diagnóstico e sinais de conversa, imagem e comportamento. A aula e Estatísticas oferecem links para a próxima prática; produções livres orientam sugestões sem gerar nota. |
 | 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
@@ -91,12 +91,12 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **IMPLEMENTADO** | A mesma fila alterna palavra→significado, significado→palavra, áudio→palavra, lacuna com forma flexionada curada, figura→termo e estrutura→exemplo. Vocabulário visual tem seis figuras vetoriais curadas; respostas “lembrei”, “não lembrei” e “difícil” atualizam domínio e calendário com prazos distintos. Ampliar a cobertura visual é expansão de conteúdo. |
 | 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA. A IA usa fatos cadastrados para cada cena, sem analisar seus pixels por tentativa; faltam mais cenas, cobertura de detalhes verdadeiros não cadastrados, variantes por idioma e calibração pedagógica. |
-| 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
-| 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
-| 16. Conversação livre adaptativa | **PARCIAL** | Conversa livre com assunto escolhido, turnos persistidos, contexto curto do aluno e correção configurável; a interação ainda é digitada. |
-| 17. Tutor persistente | **PARCIAL** | O professor recebe contexto da aula; conversas agora usam meta, região, vocabulário conhecido e dificuldades recentes. Falta memória pedagógica longitudinal. |
+| 14. Missões comunicativas | **PARCIAL** | Seis missões A1 acompanham objetivos indicados pela IA e guardam o histórico; a validação pedagógica sistemática dos objetivos ainda falta. |
+| 15. Role-play com IA | **IMPLEMENTADO** | Seis cenários com personagem, abertura, objetivos, ritmo e correções; o aluno pode falar ou digitar, revisar a transcrição e ouvir respostas. A IA permanece orientada ao papel e ao nível A1. |
+| 16. Conversação livre adaptativa | **IMPLEMENTADO** | Assunto livre, voz ou texto, turnos persistidos, contexto do aluno e correção configurável. Ajustes e modos de entrada alimentam a memória; a prática não recebe nota oficial. |
+| 17. Tutor persistente | **IMPLEMENTADO** | Professor e conversas recebem contexto curto do curso, unidade, meta, região, vocabulário conhecido, erros e padrões de correção extraídos das sessões recentes. O histórico inteiro não é enviado ao modelo. |
 | 18. Microlição a partir dos erros | **PARCIAL** | **Meus erros** e **Estatísticas** abrem uma microlição com explicação do erro e questão objetiva gerada por IA. A resposta é registrada no perfil; ainda falta uma sequência adaptativa de várias questões. |
-| 19. Memória ativa de comportamento | **PARCIAL** | Buscas exatas e áudios de vocabulário geram eventos e incluem o termo na revisão após três usos do mesmo tipo; abandono e sinais conversacionais ainda faltam. |
+| 19. Memória ativa de comportamento | **IMPLEMENTADO** | Busca/áudio repetido de palavras, repetição de falas, explicações abertas, missões deixadas incompletas e correções de conversa geram sinais. Eles aumentam prioridades ou indicam prática direta; não alteram uma nota sem avaliação confiável. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
 | 22. Prova adaptativa escrita/objetiva | **PARCIAL** | **Diagnóstico** de seis questões ajusta a complexidade da próxima questão pelas respostas, usando conteúdo A1 curado. O teste final da unidade continua fixo e separado. |
@@ -107,9 +107,9 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 27. Ritmo de conversa por nível | **PARCIAL** | O aluno escolhe iniciante/intermediário/natural; a IA ajusta a extensão da resposta e o áudio muda de velocidade. Falta calibragem empírica por nível. |
 | 28. Controle de correção em conversas | **PARCIAL** | Correção a cada resposta, apenas erros importantes, no final ou desligada; ainda falta avaliação da consistência das correções. |
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Falta cobertura regional maior no curso. |
-| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
+| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; números, conversas e imagens abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições, estruturas, conversas, descrições de imagem e diagnósticos geram registros/eventos; ainda faltam sinais conversacionais e das imagens no motor adaptativo. |
+| 32. Telemetria pedagógica | **IMPLEMENTADO** | Eventos por aluno registram turnos, voz, categorias de correção, objetivos, áudios repetidos, uso do professor, descrições de imagem e explicações abertas, além das tentativas existentes. Os sinais alimentam o motor adaptativo sem misturar analytics de marketing. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
 ---
@@ -121,7 +121,7 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 | Frente | Itens | Trabalho restante |
 | --- | --- | --- |
 | Base multilíngua | 1, 5, 7, 8, 9, 29 e 31 | Separar todo o estado e conteúdo por curso/idioma, ampliar os catálogos e adaptar as instruções de IA além do espanhol A1. |
-| Conversação e personalização | 2, 3, 14–17, 19, 21, 27, 28 e 32 | Permitir fala espontânea nas conversas, ampliar missões, usar sinais conversacionais no perfil e calibrar ritmo/correção. |
+| Conversação e personalização | 3, 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos; incorporar microconversas na sessão focada e ampliar o catálogo de missões. |
 | Revisão e fala | 6, 10 e 20 | Revisão granular de pronúncia e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
 | Avaliação | 22 e 23 | Ampliar o banco adaptativo e a amostra por competência e avaliar escrita livre. O teste final atual continua fixo. |
@@ -2185,3 +2185,17 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites de expansão:** as figuras cobrem seis termos picturáveis do curso espanhol A1; outros idiomas precisam de seus próprios recursos visuais e flexões. Diagnósticos salvos antes desta entrega não contêm a resposta esperada necessária para agendar retroativamente os erros. Os calendários de estruturas continuam apenas no JSON do aluno; pronúncia granular segue parcial no item 6.
 
 **Reaproveitado:** `ReviewQueue`, `ReviewScheduler`, `Mistake`, `StudyProvider`, perfil de aprendizado, fila de recomendações e projeções Supabase existentes. Não houve migração de banco.
+
+---
+
+# Registro da entrega — conversa adaptativa e novidades (2026-10-02)
+
+**Itens concluídos no fluxo principal:** 2, 15, 16, 17, 19 e 32.
+
+- **Conversa:** seis missões A1 e conversa livre aceitam fala espontânea ou texto. A gravação de até 20 segundos passa pelo Azure Speech; o aluno confere e pode editar a transcrição antes de enviá-la. A resposta do personagem mantém áudio, ritmo e correção configurável. Não há avaliação oficial de pronúncia conversacional.
+- **Memória e adaptação:** sessões guardam modo de entrada, categoria de ajuste e objetivos atingidos. O professor usa apenas um resumo recente, junto com meta, unidade, vocabulário conhecido, erros e preferência regional. O motor prioriza conversas interrompidas, ajustes repetidos, falas ouvidas várias vezes, explicações reabertas e cenas descritas repetidamente com correção. Aula e Estatísticas oferecem links diretos para essas práticas.
+- **Telemetria:** eventos guardam metadados pedagógicos sem o áudio bruto. Estatísticas separa contagens de prática livre do domínio estimado; correções de conversa e imagem não viram uma nota numérica. Os registros continuam no estado do aluno e na projeção `study_events`.
+- **Novidades:** cada versão com recurso novo ou melhoria ganha um ID e texto em `src/content/feature-announcements.ts`. O aplicativo mostra um popup após o login e marca cada ID uma vez por usuário no Supabase, inclusive entre dispositivos. A migração `20261002000600_feature_announcements.sql` também separa o limite de transcrição de voz (40/h) do limite de chamadas de IA (20/h).
+- **Limites:** conteúdo e prompts atuais são do espanhol A1. A consistência das correções e a identificação de objetivos precisam de validação com alunos; a avaliação oral oficial continua em análise no item 25. Imagens ainda usam fatos curados, como descrito no item 13.
+
+**Verificação:** checagem de tipos, lint, teste do motor de aprendizado e build de produção. A transcrição e o popup autenticado precisam de conferência manual no navegador após a publicação.

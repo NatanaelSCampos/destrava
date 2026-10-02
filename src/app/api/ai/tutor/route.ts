@@ -4,6 +4,10 @@ import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
 import { userSpanishRegion } from "@/lib/user-spanish-region";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { buildLearningMemory } from "@/domain/study/learning-memory";
+import type { StudyState } from "@/domain/study/study-state";
 
 const inputSchema = z.object({
   question: z.string().trim().min(3).max(500),
@@ -33,7 +37,44 @@ export async function POST(request: Request) {
     );
   try {
     const region = await userSpanishRegion(guard.userId ?? null);
-    const result = await getAIProvider().tutor({ ...parsed.data, region });
+    const client = guard.userId ? await createSupabaseServerClient() : null;
+    const { data } = client
+      ? await client
+          .from("user_study_state")
+          .select("state")
+          .eq("user_id", guard.userId)
+          .maybeSingle()
+      : { data: null };
+    const state = data?.state as StudyState | null | undefined;
+    const relevantMistakes = state
+      ? Object.values(state.mistakes ?? {})
+          .sort(
+            (a, b) =>
+              Number(b.activityId === parsed.data.activityId) -
+                Number(a.activityId === parsed.data.activityId) || b.timesMissed - a.timesMissed,
+          )
+          .slice(0, 3)
+          .map((item) => ({
+            activityId: item.activityId,
+            originalAnswer: item.originalAnswer.slice(0, 150),
+            correctAnswer: item.correctAnswer.slice(0, 150),
+          }))
+      : parsed.data.mistakes;
+    const result = await getAIProvider().tutor({
+      ...parsed.data,
+      mistakes: relevantMistakes,
+      region,
+      memory: state ? buildLearningMemory(state, frecuenciasA1.id) : undefined,
+      studentContext: state
+        ? {
+            goal: (state.profile?.goal ?? "Praticar espanhol").slice(0, 120),
+            knownWords: Object.values(state.vocabulary ?? {}).filter(
+              (item) => item.status === "known",
+            ).length,
+            recentDifficulties: relevantMistakes.map((item) => item.correctAnswer.slice(0, 80)),
+          }
+        : undefined,
+    });
     await logAIRequest("tutor", result.usage, guard.reservationId ?? null);
     return NextResponse.json(result);
   } catch {

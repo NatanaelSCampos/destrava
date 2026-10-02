@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { buildStudyPlan } from "@/domain/study/study-planner";
+import { buildLearningProfile } from "@/domain/study/learning-profile";
+import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
+import { recommendationLink } from "@/lib/recommendation-link";
 import { currentUnit } from "@/domain/study/progress";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { ReviewQueue } from "@/components/review/review-queue";
@@ -49,6 +52,12 @@ function StudyContent() {
     () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, new Date(), mode),
     [course, state, targetMinutes, vocabularyItems, mode],
   );
+  const suggestedPractice = useMemo(() => {
+    const profile = buildLearningProfile(course, state, vocabularyItems);
+    return LearningRecommendationEngine.recommend(course, state, profile, vocabularyItems)
+      .filter((entry) => entry.kind === "conversation" || entry.kind === "image")
+      .slice(0, 2);
+  }, [course, state, vocabularyItems]);
   const activeSession = state.sessions.find((session) => session.id === state.activeSessionId);
   const sessionUnit = course.units.find((entry) => entry.id === activeSession?.unitId) ?? unit;
   const plan = activeSession?.plan ?? planned;
@@ -101,6 +110,25 @@ function StudyContent() {
             <Clock3 size={13} /> Até {targetMinutes} min estimados
           </span>
         </div>
+        {suggestedPractice.length > 0 && (
+          <section className="panel study-practice-suggestions">
+            <span className="eyebrow">PRÁTICA INDICADA PELO SEU HISTÓRICO</span>
+            <h2 className="section-title">Continue praticando</h2>
+            <div className="study-practice-suggestion-list">
+              {suggestedPractice.map((entry) => (
+                <div key={`${entry.kind}-${entry.id}`}>
+                  <span>
+                    <strong>{entry.title}</strong>
+                    <small>{entry.reason}</small>
+                  </span>
+                  <Link className="secondary-button" href={recommendationLink(course.slug, entry)}>
+                    Praticar <ArrowRight size={15} />
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
         <div className="study-session-options panel">
           <div>
             <strong>Quanto tempo você tem?</strong>

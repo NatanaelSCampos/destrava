@@ -48,7 +48,7 @@ function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[]
 }
 
 export default function ProgressPage() {
-  const { course, state, vocabularyItems } = useStudy();
+  const { course, state, vocabularyItems, recordStudyEvent } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems);
   const totalProgress = courseProgress(course, state);
@@ -147,7 +147,8 @@ export default function ProgressPage() {
             <span className="eyebrow">RECOMENDAÇÕES DO SEU HISTÓRICO</span>
             <h2 className="section-title">O que preciso melhorar?</h2>
             <p className="section-subtitle">
-              Revisões vencidas, erros repetidos e pronúncia avaliada definem suas prioridades.
+              Revisões vencidas, erros repetidos, pronúncia e práticas de conversa ou imagem definem
+              suas prioridades.
             </p>
           </div>
         </div>
@@ -166,7 +167,15 @@ export default function ProgressPage() {
                   </Link>
                   {item.kind === "activity" && state.mistakes[item.id] && (
                     <>
-                      <details className="improvement-explanation">
+                      <details
+                        className="improvement-explanation"
+                        onToggle={(event) => {
+                          if (event.currentTarget.open)
+                            recordStudyEvent("explanation_opened", item.id, {
+                              courseId: course.id,
+                            });
+                        }}
+                      >
                         <summary>Ver explicação</summary>
                         <p>
                           {state.mistakes[item.id].explanation ||
@@ -188,7 +197,15 @@ export default function ProgressPage() {
                   )}
                   {item.kind === "review" && firstDueMistake && (
                     <>
-                      <details className="improvement-explanation">
+                      <details
+                        className="improvement-explanation"
+                        onToggle={(event) => {
+                          if (event.currentTarget.open)
+                            recordStudyEvent("explanation_opened", firstDueMistake.activityId, {
+                              courseId: course.id,
+                            });
+                        }}
+                      >
                         <summary>Ver um erro pendente</summary>
                         <p>{firstDueMistake.explanation}</p>
                         <p>
@@ -245,6 +262,13 @@ export default function ProgressPage() {
           Estes números orientam a prática; não são notas de aprovação. Resultados antigos perdem
           peso até uma nova revisão.
         </p>
+        <div className="practice-signal-summary">
+          <strong>Prática livre registrada</strong>
+          <span>{learningProfile.practice.conversationTurns} respostas em conversas</span>
+          <span>{learningProfile.practice.voiceTurns} por voz</span>
+          <span>{learningProfile.practice.imageDescriptions} descrições de imagem</span>
+          <small>Correções de conversa orientam sugestões, sem virar nota de pronúncia.</small>
+        </div>
       </section>
       <div className="progress-bottom-grid">
         <section className="panel skill-panel">

@@ -78,6 +78,46 @@ select:focus-visible {
   color: var(--danger);
   font-size: 11px;
 }
+.whats-new-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(20 20 24 / 52%);
+}
+.whats-new-dialog {
+  position: relative;
+  width: min(100%, 540px);
+  max-height: min(88vh, 800px);
+  overflow-y: auto;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 24px 70px rgb(0 0 0 / 18%);
+}
+.whats-new-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+}
+.whats-new-dialog h2 {
+  margin: 12px 38px 18px 0;
+  font-size: clamp(25px, 4vw, 32px);
+  line-height: 1.15;
+}
+.whats-new-entry + .whats-new-entry {
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.whats-new-entry h3 { margin: 0 0 8px; font-size: 18px; }
+.whats-new-entry p { color: var(--text-secondary); line-height: 1.5; }
+.whats-new-entry ul { padding-left: 22px; line-height: 1.6; }
+.whats-new-entry li + li { margin-top: 5px; }
+.whats-new-entry .primary-button { display: inline-flex; margin-top: 8px; }
 .selection-audio {
   position: fixed;
   right: 20px;

@@ -4,6 +4,7 @@ import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
 import type { StudyState } from "./study-state";
 import { findReviewStructure } from "@/content/review-structures";
+import { buildLearningMemory } from "./learning-memory";
 
 export type LearningSkill = Skill | "pronunciation" | "fluency" | "comprehension";
 
@@ -22,6 +23,13 @@ export type LearningProfile = {
   topics: MasteryMetric[];
   concepts: MasteryMetric[];
   items: MasteryMetric[];
+  practice: {
+    conversationTurns: number;
+    voiceTurns: number;
+    imageDescriptions: number;
+    conversationCorrections: number;
+    unfinishedMissions: number;
+  };
 };
 
 type Evidence = { score: number; at: string };
@@ -254,6 +262,11 @@ export function buildLearningProfile(
       ),
   ];
 
+  const conversations = (state.conversations ?? []).filter(
+    (session) => session.courseId === course.id,
+  );
+  const memory = buildLearningMemory(state, course.id);
+
   return {
     courseId: course.id,
     languageCode: course.languageCode,
@@ -261,5 +274,24 @@ export function buildLearningProfile(
     topics: topicMetrics,
     concepts: conceptMetrics,
     items: itemMetrics,
+    practice: {
+      conversationTurns: conversations.reduce(
+        (count, session) => count + session.turns.filter((turn) => turn.role === "student").length,
+        0,
+      ),
+      voiceTurns: memory.voiceTurns,
+      imageDescriptions: (state.imageDescriptions ?? []).filter(
+        (attempt) => attempt.courseId === course.id,
+      ).length,
+      conversationCorrections: conversations.reduce(
+        (count, session) =>
+          count +
+          session.turns.filter(
+            (turn) => turn.role === "partner" && Boolean(turn.correction?.trim()),
+          ).length,
+        0,
+      ),
+      unfinishedMissions: memory.unfinishedMissionIds.length,
+    },
   };
 }

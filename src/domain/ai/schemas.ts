@@ -23,6 +23,7 @@ export const tutorFeedbackSchema = z.object({
 export const conversationReplySchema = z.object({
   reply: z.string(),
   correction: z.string(),
+  correctionCategory: z.enum(["none", "grammar", "vocabulary", "clarity", "other"]),
   completedObjectiveIds: z.array(z.string()),
 });
 

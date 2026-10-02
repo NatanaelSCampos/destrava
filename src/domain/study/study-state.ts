@@ -88,6 +88,7 @@ export type StudyEvent = {
   createdAt: string;
   activityId?: string;
   itemId?: string;
+  metadata?: Record<string, string | number | boolean>;
 };
 export type ReviewEntry = {
   id: string;

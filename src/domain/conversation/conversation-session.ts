@@ -3,12 +3,17 @@ import type { ConversationScenario } from "@/content/conversation-scenarios";
 export type ConversationMode = "free" | "mission";
 export type ConversationPace = "beginner" | "intermediate" | "natural";
 export type ConversationCorrection = "instant" | "important_only" | "end_of_conversation" | "off";
+export type ConversationCorrectionCategory =
+  "none" | "grammar" | "vocabulary" | "clarity" | "other";
 export type ConversationTurn = {
   id: string;
   role: "student" | "partner";
   text: string;
   createdAt: string;
   correction?: string;
+  inputMode?: "text" | "speech";
+  correctionCategory?: ConversationCorrectionCategory;
+  completedObjectiveIds?: string[];
 };
 export type ConversationSession = {
   id: string;
@@ -53,8 +58,14 @@ export function startConversation(input: {
 export function appendConversationReply(
   session: ConversationSession,
   studentText: string,
-  reply: { text: string; correction: string; completedObjectiveIds: string[] },
+  reply: {
+    text: string;
+    correction: string;
+    correctionCategory: ConversationCorrectionCategory;
+    completedObjectiveIds: string[];
+  },
   objectiveIds: string[],
+  inputMode: "text" | "speech" = "text",
 ): ConversationSession {
   if (session.finishedAt || session.turns.filter((turn) => turn.role === "student").length >= 16)
     return session;
@@ -64,12 +75,20 @@ export function appendConversationReply(
     ...session,
     turns: [
       ...session.turns,
-      { id: crypto.randomUUID(), role: "student", text: studentText.trim(), createdAt: now },
+      {
+        id: crypto.randomUUID(),
+        role: "student",
+        text: studentText.trim(),
+        inputMode,
+        createdAt: now,
+      },
       {
         id: crypto.randomUUID(),
         role: "partner",
         text: reply.text.trim(),
         correction: reply.correction.trim(),
+        correctionCategory: reply.correction.trim() ? reply.correctionCategory : "none",
+        completedObjectiveIds: reply.completedObjectiveIds.filter((id) => allowed.has(id)),
         createdAt: now,
       },
     ],

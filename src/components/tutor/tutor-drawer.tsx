@@ -10,7 +10,7 @@ import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
 type TutorFeedback = { answer: string; example: string; quickCheck: string };
 
 export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { course, state } = useStudy();
+  const { course, state, recordStudyEvent } = useStudy();
   const [question, setQuestion] = useState("");
   const [feedback, setFeedback] = useState<TutorFeedback | null>(null);
   const [loading, setLoading] = useState(false);
@@ -46,6 +46,7 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Não foi possível responder agora.");
       setFeedback(data.feedback as TutorFeedback);
+      recordStudyEvent("tutor_used", activity?.id, { courseId: course.id });
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível responder agora.");
     } finally {
