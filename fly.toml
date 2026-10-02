@@ -3,6 +3,8 @@ primary_region = "gru"
 
 [build.args]
   NEXT_PUBLIC_PASSKEYS_ENABLED = "true"
+  NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED = "true"
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY = "0x4AAAAAAFMGz7Xtvb2laRhX"
 
 [env]
   PORT = "3000"
