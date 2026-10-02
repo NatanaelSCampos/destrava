@@ -6,6 +6,7 @@ import type { PublicActivity, PublicCourse } from "@/content/public";
 import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import type { NumberMode } from "@/domain/numbers/number-practice";
+import type { SpanishRegion } from "@/content/spanish-regions";
 
 export type StudentProfile = {
   goal: string;
@@ -13,6 +14,7 @@ export type StudentProfile = {
   daysPerWeek: number;
   level: "A1";
   priorKnowledge: "none" | "some" | "returning";
+  spanishRegion: SpanishRegion;
   onboarded: boolean;
 };
 
@@ -156,6 +158,7 @@ export const initialStudyState: StudyState = {
     daysPerWeek: 4,
     level: "A1",
     priorKnowledge: "none",
+    spanishRegion: "general",
     onboarded: false,
   },
   completedActivityIds: [],

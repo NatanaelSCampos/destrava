@@ -3,6 +3,7 @@ import { z } from "zod";
 import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
+import { userSpanishRegion } from "@/lib/user-spanish-region";
 
 const inputSchema = z.object({
   question: z.string().trim().min(3).max(500),
@@ -31,7 +32,8 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   try {
-    const result = await getAIProvider().tutor(parsed.data);
+    const region = await userSpanishRegion(guard.userId ?? null);
+    const result = await getAIProvider().tutor({ ...parsed.data, region });
     await logAIRequest("tutor", result.usage, guard.userId ?? null);
     return NextResponse.json(result);
   } catch {

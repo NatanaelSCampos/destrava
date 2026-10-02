@@ -1,4 +1,5 @@
 import type { PublicCourse } from "./public";
+import { regionalVocabularyNote, type SpanishRegion } from "./spanish-regions";
 
 export type VocabularySense = {
   meaning: string;
@@ -39,10 +40,18 @@ const spanishContext: Record<string, Context> = {
 export function vocabularyContext(
   word: { id: string; translation: string; example: string },
   languageCode: string,
+  region: SpanishRegion = "general",
 ): Context {
-  return languageCode === "es" && spanishContext[word.id]
-    ? spanishContext[word.id]
-    : { senses: [{ meaning: word.translation, example: word.example }] };
+  const base =
+    languageCode === "es" && spanishContext[word.id]
+      ? spanishContext[word.id]
+      : { senses: [{ meaning: word.translation, example: word.example }] };
+  if (languageCode !== "es") return base;
+  const regionalNote =
+    word.id === "llamarse" && region === "argentina"
+      ? "Na Argentina, a pergunta informal costuma ser ‘¿Cómo te llamás vos?’. O curso apresenta ‘¿Cómo te llamas tú?’ como base."
+      : regionalVocabularyNote(word.id, region);
+  return { ...base, regionalNote };
 }
 
 function normalized(value: string) {

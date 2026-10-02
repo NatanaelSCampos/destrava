@@ -5,6 +5,7 @@ import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import { findNumberPrompt } from "@/domain/numbers/number-practice";
+import { userSpanishRegion } from "@/lib/user-spanish-region";
 
 const azureResultSchema = z.object({
   RecognitionStatus: z.string(),
@@ -99,7 +100,15 @@ export async function POST(request: Request) {
   if (!validWav(audio))
     return NextResponse.json({ error: "Gravação inválida. Grave novamente." }, { status: 400 });
 
-  const locale = process.env.AZURE_SPEECH_LOCALE === "es-MX" ? "es-MX" : "es-ES";
+  const preferredRegion = await userSpanishRegion(guard.userId ?? null);
+  const locale =
+    preferredRegion === "mexico"
+      ? "es-MX"
+      : preferredRegion === "spain"
+        ? "es-ES"
+        : process.env.AZURE_SPEECH_LOCALE === "es-MX"
+          ? "es-MX"
+          : "es-ES";
   endpoint.searchParams.set("language", locale);
   endpoint.searchParams.set("format", "detailed");
   const config = Buffer.from(

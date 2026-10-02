@@ -4,16 +4,30 @@ import { useState } from "react";
 import { Check, Download, LogOut, Settings2 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { spanishRegions, type SpanishRegion } from "@/content/spanish-regions";
 
 export default function SettingsPage() {
+  const { ready } = useStudy();
+  return ready ? <SettingsContent /> : <div className="page-loading">Carregando preferências…</div>;
+}
+
+function SettingsContent() {
   const { state, authUserId, updateProfile } = useStudy();
   const [saved, setSaved] = useState(false);
   const [goal, setGoal] = useState(state.profile.goal);
   const [dailyMinutes, setDailyMinutes] = useState(state.profile.dailyMinutes);
   const [daysPerWeek, setDaysPerWeek] = useState(state.profile.daysPerWeek);
   const [priorKnowledge, setPriorKnowledge] = useState(state.profile.priorKnowledge);
+  const [region, setRegion] = useState(state.profile.spanishRegion ?? "general");
   function save() {
-    updateProfile({ goal, dailyMinutes, daysPerWeek, priorKnowledge, onboarded: true });
+    updateProfile({
+      goal,
+      dailyMinutes,
+      daysPerWeek,
+      priorKnowledge,
+      spanishRegion: region,
+      onboarded: true,
+    });
     setSaved(true);
   }
   function exportData() {
@@ -117,6 +131,32 @@ export default function SettingsPage() {
             <div className="field">
               <label>Nível do curso</label>
               <div className="read-only-field">A1 · Iniciante</div>
+            </div>
+            <div className="field">
+              <label htmlFor="spanish-region">Variante de espanhol para estudar</label>
+              <select
+                id="spanish-region"
+                value={region}
+                onChange={(event) => {
+                  setRegion(event.target.value as SpanishRegion);
+                  setSaved(false);
+                }}
+              >
+                {spanishRegions.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+              <small>
+                Usada nos exemplos regionais, no áudio disponível no navegador e no professor IA.
+              </small>
+              {region === "argentina" && (
+                <small>
+                  A avaliação de pronúncia do Azure usa o modelo configurado para o app, pois não há
+                  avaliação es-AR disponível.
+                </small>
+              )}
             </div>
             <button className="primary-button" onClick={save}>
               <Check size={16} /> Salvar alterações

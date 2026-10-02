@@ -84,9 +84,9 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
 | 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, expressões do vocabulário, erros de escrita e frases de pronúncia no mesmo fluxo; estruturas e pronúncia ainda não têm agendamentos granulares próprios. |
-| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados quando disponíveis, ocorrências no curso, buscas recentes, contagens de áudio e revisão automática após buscas repetidas; faltam cobertura ampla e variações regionais. |
+| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados, ocorrências, buscas recentes, áudio e revisão automática; há nota regional para termos curados e `llamarse`, mas ainda faltam cobertura ampla e busca por variantes. |
 | 8. Números ativos | **PARCIAL** | **Fundamentos → Números** oferece catálogo com áudio e exemplos; a prática inclui ditado, ver e falar, ouvir e repetir, com dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
-| 9. Particularidades contextualizadas | **PENDENTE** | O curso contém regras básicas, mas não há ferramenta de variantes regionais integrada à prática e à IA. |
+| 9. Particularidades contextualizadas | **PARCIAL** | **Fundamentos → Variações regionais** compara exemplos de Espanha, México e Argentina com áudio e checagem curta; o professor IA recebe a preferência. Faltam mais categorias, exemplos e integração ao perfil de domínio. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra e áudio→palavra, alimentando o mesmo agendador; lacunas, imagem→termo e estrutura→exemplo ainda faltam. |
@@ -106,7 +106,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
 | 27. Ritmo de conversa por nível | **PENDENTE** | Não há modos beginner/intermediate/natural em conversas. |
 | 28. Controle de correção em conversas | **PENDENTE** | Não há conversa contínua nem escolha do momento da correção. |
-| 29. Perfil regional | **PARCIAL** | O locale do Azure pode ser configurado para o app; falta preferência regional por aluno e aplicação no conteúdo/IA. |
+| 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Falta cobertura regional maior no curso. |
 | 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
 | 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio de vocabulário, números e microlições são registrados; faltam eventos de recursos conversacionais futuros. |
@@ -2088,3 +2088,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limite atual:** o catálogo de números contém 13 exemplos curados. A prática continua separada da consulta para preservar a tela de exercícios e seus históricos.
 
 **Reaproveitado:** `spanishAlphabet`, `numberPrompts`, `SpeakButton`, filtros, busca e páginas existentes. Não há mudança de banco nem de API.
+
+---
+
+# Registro da entrega — variações regionais (2026-10-01)
+
+**Itens agrupados:** 7 (dicionário contextual), 9 (particularidades contextualizadas) e 29 (perfil regional).
+
+- **Implementado:** preferência Geral, Espanha, México ou Argentina em Configurações, persistida no `StudyState` por aluno e sincronizada no JSON já existente do Supabase. Não houve migração.
+- **Implementado:** tema **Variações regionais** em Fundamentos, com comparações curadas, áudio de cada exemplo, fontes linguísticas e uma checagem curta por tema. O vocabulário mostra nota regional onde existe conteúdo curado.
+- **Implementado:** áudio do navegador solicita a voz da região escolhida quando disponível; o professor IA recebe a preferência salva no servidor e evita tratar outras variantes corretas como erro. A avaliação Azure usa `es-ES` para Espanha e `es-MX` para México; Geral e Argentina mantêm o locale configurado no app, pois o serviço de avaliação não lista `es-AR`.
+- **Limites:** o navegador pode não ter a voz regional solicitada; os exemplos são introdutórios e não representam todos os usos de cada país. A checagem ainda não alimenta o perfil de domínio. O curso A1 permanece com seu conteúdo base; os overlays regionais não o duplicam.
+
+**Reaproveitado:** `StudyState`, `StudyProvider`, `SpeakButton`, página de Configurações, biblioteca de Fundamentos, `TutorContextBuilder`, API do professor e API Azure. O conteúdo regional é específico do espanhol e só aparece quando esse idioma está ativo.

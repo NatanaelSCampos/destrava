@@ -7,6 +7,7 @@ import { useStudy } from "@/components/study-provider";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { vocabularyContext, vocabularyOccurrences } from "@/content/vocabulary-context";
+import { spanishRegion } from "@/content/spanish-regions";
 
 function normalizeSearch(value: string) {
   return value
@@ -134,7 +135,11 @@ export default function VocabularyPage() {
         {items.map((item) => {
           const progress = state.vocabulary[item.id];
           const status = progress?.status ?? "new";
-          const context = vocabularyContext(item, course.languageCode);
+          const context = vocabularyContext(
+            item,
+            course.languageCode,
+            spanishRegion(state.profile.spanishRegion),
+          );
           const occurrences = vocabularyOccurrences(course, item);
           const unit = course.units.find((entry) =>
             entry.lessons.some((lesson) => lesson.id === item.lessonId),
@@ -201,7 +206,12 @@ export default function VocabularyPage() {
                     </li>
                   ))}
                 </ol>
-                {context.regionalNote && <p>{context.regionalNote}</p>}
+                {context.regionalNote && (
+                  <p>
+                    {context.regionalNote}{" "}
+                    <Link href="/basics?topic=regions">Ver variações regionais</Link>
+                  </p>
+                )}
                 {occurrences.length > 0 && (
                   <div className="vocab-occurrences">
                     <strong>Onde apareceu no curso</strong>

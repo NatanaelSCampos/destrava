@@ -6,5 +6,5 @@ export default async function BasicsPage({
   searchParams: Promise<{ topic?: string | string[] }>;
 }) {
   const { topic } = await searchParams;
-  return <BasicsLibrary topic={topic === "numbers" ? "numbers" : "alphabet"} />;
+  return <BasicsLibrary topic={topic === "numbers" || topic === "regions" ? topic : "alphabet"} />;
 }

@@ -5,6 +5,7 @@ import { Send, Sparkles, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { nextActivity } from "@/domain/study/study-planner";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
 
 type TutorFeedback = { answer: string; example: string; quickCheck: string };
 
@@ -76,6 +77,12 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
             <div className="tutor-context">
               {course.title} <span>·</span> {unit?.title ?? "Curso"} <span>·</span>{" "}
               {activity?.title ?? "Revisão"}
+              <span> · </span>
+              {
+                spanishRegions.find(
+                  (item) => item.id === spanishRegion(state.profile.spanishRegion),
+                )?.label
+              }
             </div>
           </div>
           {feedback && (

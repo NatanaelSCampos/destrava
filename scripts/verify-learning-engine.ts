@@ -18,12 +18,30 @@ import {
 } from "../src/domain/study/study-state";
 import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
 import {
+  spanishRegion,
+  spanishSpeechLocale,
+  regionalVocabularyNote,
+} from "../src/content/spanish-regions";
+import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
+import {
   findNumberPrompt,
   gradeNumberDictation,
   numberSpeechScore,
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+assert.equal(spanishRegion("invalid"), "general");
+assert.equal(spanishSpeechLocale("argentina"), "es-AR");
+assert.match(regionalVocabularyNote("celular", "spain") ?? "", /móvil/);
+assert.match(
+  vocabularyContext(
+    { id: "llamarse", translation: "chamar-se", example: "Me llamo Ana." },
+    "es",
+    "argentina",
+  ).regionalNote ?? "",
+  /llamás/,
+);
+assert.equal(TutorContextBuilder.build(undefined, [], "mexico").spanishRegion, "México");
 const now = new Date("2026-10-01T12:00:00.000Z");
 const yesterday = "2026-09-30T12:00:00.000Z";
 

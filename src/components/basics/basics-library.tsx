@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, CaseUpper, Hash } from "lucide-react";
+import { BookOpen, CaseUpper, Globe2, Hash } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { spanishAlphabet } from "@/content/spanish-alphabet";
 import { numberPrompts } from "@/domain/numbers/number-practice";
 import { AlphabetGuide } from "./alphabet-guide";
 import { NumberGuide } from "./number-guide";
+import { RegionalGuide } from "./regional-guide";
+import { regionalTopics } from "@/content/spanish-regions";
 
-type BasicsTopic = "alphabet" | "numbers";
+type BasicsTopic = "alphabet" | "numbers" | "regions";
 
 const topics = [
   {
@@ -27,6 +29,14 @@ const topics = [
     countLabel: "exemplos",
     icon: Hash,
   },
+  {
+    id: "regions" as const,
+    title: "Variações regionais",
+    description: "Expressões, exemplos e formas de tratamento.",
+    count: regionalTopics.length,
+    countLabel: "comparações",
+    icon: Globe2,
+  },
 ];
 
 export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
@@ -42,8 +52,8 @@ export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
           </span>
           <h1 className="page-title">Comece pelo essencial.</h1>
           <p className="page-subtitle">
-            Consulte o alfabeto e os números em um só lugar. Novos temas básicos podem entrar aqui
-            conforme o curso crescer.
+            Consulte o alfabeto, os números e as variações regionais em um só lugar. Novos temas
+            básicos podem entrar aqui conforme o curso crescer.
           </p>
         </div>
       </div>
@@ -87,7 +97,13 @@ export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
             })}
           </nav>
           <div className="basics-selected" aria-labelledby={`basics-tab-${topic}`}>
-            {topic === "alphabet" ? <AlphabetGuide embedded /> : <NumberGuide />}
+            {topic === "alphabet" ? (
+              <AlphabetGuide embedded />
+            ) : topic === "numbers" ? (
+              <NumberGuide />
+            ) : (
+              <RegionalGuide />
+            )}
           </div>
           <p className="basics-future-note">
             Este espaço reúne o conteúdo básico do idioma atual. Novos temas poderão ser adicionados
