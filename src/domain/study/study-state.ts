@@ -9,6 +9,7 @@ import type { NumberMode } from "@/domain/numbers/number-practice";
 import type { SpanishRegion } from "@/content/spanish-regions";
 import { findReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
+import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 
 export type StudentProfile = {
   goal: string;
@@ -143,6 +144,16 @@ export type MicroLessonAttempt = {
   createdAt: string;
 };
 
+export type ImageDescriptionAttempt = {
+  id: string;
+  sceneId: string;
+  courseId: string;
+  transcript: string;
+  inputMode: "speech" | "text";
+  feedback: ImageDescriptionFeedback;
+  createdAt: string;
+};
+
 export type StudyState = {
   profile: StudentProfile;
   completedActivityIds: string[];
@@ -160,6 +171,7 @@ export type StudyState = {
   numberAttempts: NumberAttempt[];
   microLessonAttempts: MicroLessonAttempt[];
   conversations: ConversationSession[];
+  imageDescriptions: ImageDescriptionAttempt[];
   activeSessionId: string | null;
 };
 
@@ -188,6 +200,7 @@ export const initialStudyState: StudyState = {
   numberAttempts: [],
   microLessonAttempts: [],
   conversations: [],
+  imageDescriptions: [],
   activeSessionId: null,
 };
 

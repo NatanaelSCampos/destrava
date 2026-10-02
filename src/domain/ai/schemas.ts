@@ -26,6 +26,13 @@ export const conversationReplySchema = z.object({
   completedObjectiveIds: z.array(z.string()),
 });
 
+export const imageDescriptionFeedbackSchema = z.object({
+  observed: z.string(),
+  strength: z.string(),
+  correction: z.string(),
+  nextSentence: z.string(),
+});
+
 export const microLessonSchema = z.object({
   title: z.string(),
   explanation: z.string(),
@@ -39,4 +46,5 @@ export const microLessonSchema = z.object({
 export type WritingFeedback = z.infer<typeof writingFeedbackSchema>;
 export type TutorFeedback = z.infer<typeof tutorFeedbackSchema>;
 export type ConversationReply = z.infer<typeof conversationReplySchema>;
+export type ImageDescriptionFeedback = z.infer<typeof imageDescriptionFeedbackSchema>;
 export type MicroLesson = z.infer<typeof microLessonSchema>;

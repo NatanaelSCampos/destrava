@@ -33,6 +33,7 @@ import {
   type SpeakingSubmission,
   type NumberAttempt,
   type MicroLessonAttempt,
+  type ImageDescriptionAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -79,6 +80,7 @@ type StudyContextValue = {
     input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
   ) => void;
   saveConversation: (session: ConversationSession) => void;
+  saveImageDescription: (attempt: Omit<ImageDescriptionAttempt, "id" | "createdAt">) => void;
   addConversationReply: (
     sessionId: string,
     studentText: string,
@@ -146,6 +148,7 @@ export function StudyProvider({
                 numberAttempts: source.numberAttempts ?? [],
                 microLessonAttempts: source.microLessonAttempts ?? [],
                 conversations: source.conversations ?? [],
+                imageDescriptions: source.imageDescriptions ?? [],
                 structureReviews: source.structureReviews ?? {},
                 structureAttempts: source.structureAttempts ?? [],
               });
@@ -160,6 +163,7 @@ export function StudyProvider({
                   numberAttempts: source.numberAttempts ?? [],
                   microLessonAttempts: source.microLessonAttempts ?? [],
                   conversations: source.conversations ?? [],
+                  imageDescriptions: source.imageDescriptions ?? [],
                   structureReviews: source.structureReviews ?? {},
                   structureAttempts: source.structureAttempts ?? [],
                 });
@@ -187,6 +191,7 @@ export function StudyProvider({
               numberAttempts: parsed.numberAttempts ?? [],
               microLessonAttempts: parsed.microLessonAttempts ?? [],
               conversations: parsed.conversations ?? [],
+              imageDescriptions: parsed.imageDescriptions ?? [],
               structureReviews: parsed.structureReviews ?? {},
               structureAttempts: parsed.structureAttempts ?? [],
             });
@@ -382,6 +387,29 @@ export function StudyProvider({
       })),
     [],
   );
+  const saveImageDescription = useCallback(
+    (input: Omit<ImageDescriptionAttempt, "id" | "createdAt">) =>
+      setState((current) => {
+        const createdAt = new Date().toISOString();
+        return {
+          ...current,
+          imageDescriptions: [
+            { ...input, id: crypto.randomUUID(), createdAt },
+            ...(current.imageDescriptions ?? []),
+          ].slice(0, 40),
+          events: [
+            {
+              id: crypto.randomUUID(),
+              type: "image_description_completed",
+              itemId: input.sceneId,
+              createdAt,
+            },
+            ...current.events,
+          ],
+        };
+      }),
+    [],
+  );
   const addConversationReply = useCallback(
     (
       sessionId: string,
@@ -513,6 +541,7 @@ export function StudyProvider({
       recordNumberPractice,
       recordMicroLesson,
       saveConversation,
+      saveImageDescription,
       addConversationReply,
       completeConversation,
       startSession,
@@ -539,6 +568,7 @@ export function StudyProvider({
       recordNumberPractice,
       recordMicroLesson,
       saveConversation,
+      saveImageDescription,
       addConversationReply,
       completeConversation,
       startSession,

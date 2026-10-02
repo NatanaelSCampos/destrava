@@ -90,7 +90,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra, áudio→palavra e lacuna quando há exemplo literal; estruturas curadas pedem produção de exemplo. Imagem→termo e lacunas de formas flexionadas ainda faltam. |
-| 13. Explicar imagem | **PENDENTE** | Não existe atividade com imagem e avaliação da descrição falada. |
+| 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA; ainda faltam mais cenas, variantes por idioma e calibração pedagógica em uso real. |
 | 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
 | 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
 | 16. Conversação livre adaptativa | **PARCIAL** | Conversa livre com assunto escolhido, turnos persistidos, contexto curto do aluno e correção configurável; a interação ainda é digitada. |
@@ -2128,3 +2128,15 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** como a tabela relacional `review_schedules` exige vínculo com vocabulário ou erro, os calendários de estrutura ficam no estado JSON, sem migração. A lacuna literal não cobre flexões como `tener` → `tengo`; imagem → termo e agendamento granular de pronúncia ficam para etapas futuras.
 
 **Reaproveitado:** `ReviewQueue`, `ReviewScheduler`, `StudyState`, `StudyProvider`, planejador, perfil de domínio e repositório Supabase existente.
+
+---
+
+# Registro da entrega — explicar imagem (2026-10-02)
+
+**Item agrupado:** 13, com telemetria do item 32.
+
+- **Implementado:** duas cenas ilustradas do cotidiano, cozinha e café. O aluno pode gravar até 20 segundos ou digitar uma descrição em espanhol. O Azure Speech transcreve a gravação sem frase de referência; a IA devolve um acerto concreto, um ajuste quando necessário e uma frase para ampliar a descrição.
+- **Persistência:** texto, modo de entrada e dicas ficam no `StudyState` e no JSON Supabase existente, limitados às 40 tentativas recentes; o áudio não é salvo. Eventos de conclusão entram na telemetria existente. Não houve migração.
+- **Limites:** feedback qualitativo sem nota de pronúncia, nota oficial ou validação pedagógica em larga escala. As duas cenas e seus fatos são curados para espanhol A1; outro idioma requer novas cenas e instruções.
+
+**Reaproveitado:** gravação via `MediaRecorder`, conversão WAV, endpoint Azure Speech, `AIProvider`, guarda de requisições, `StudyProvider`, `SpeakButton` e persistência Supabase já existente.

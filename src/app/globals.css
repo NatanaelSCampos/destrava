@@ -597,6 +597,91 @@ select:focus-visible {
   margin-bottom: 5px;
 }
 
+.describe-scenes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.describe-scene-choice {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-primary);
+  border-radius: 10px;
+  padding: 11px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.describe-scene-choice.active {
+  border-color: #b82a42;
+  color: #ad1934;
+  background: #fff7f8;
+}
+.describe-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  align-items: start;
+}
+.describe-main,
+.describe-feedback {
+  padding: 22px;
+}
+.describe-image {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f5f2ee;
+}
+.describe-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.describe-main h2 {
+  margin: 20px 0 5px;
+}
+.describe-main > p {
+  color: var(--text-secondary);
+}
+.describe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 12px;
+}
+.describe-actions audio {
+  max-width: 100%;
+}
+.describe-main .field {
+  margin: 18px 0 12px;
+}
+.describe-feedback h2 {
+  margin-top: 20px;
+}
+.describe-feedback h3 {
+  font-size: 13px;
+  margin: 22px 0 5px;
+}
+.describe-feedback p {
+  line-height: 1.6;
+}
+.describe-feedback small {
+  display: block;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.describe-history {
+  border-left: 2px solid #d6d6da;
+  padding-left: 10px;
+  font-size: 13px;
+}
+@media (max-width: 850px) {
+  .describe-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 1100px) {
   .sidebar {
     width: 222px;
