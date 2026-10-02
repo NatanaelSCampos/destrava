@@ -41,6 +41,17 @@ export class ReviewScheduler {
     };
   }
 
+  static afterDifficulty(previous: ReviewSchedule, now = new Date()): ReviewSchedule {
+    const missed = ReviewScheduler.afterAnswer(previous, false, now);
+    return {
+      ...missed,
+      nextReviewAt: new Date(now.getTime() + 4 * 60 * 60 * 1000).toISOString(),
+      intervalDays: 0,
+      easeFactor: Math.max(1.3, previous.easeFactor - 0.1),
+      masteryScore: Math.max(0, previous.masteryScore - 10),
+    };
+  }
+
   static isDue(schedule: ReviewSchedule, now = new Date()) {
     return new Date(schedule.nextReviewAt).getTime() <= now.getTime();
   }

@@ -9,12 +9,15 @@ import { initialStudyState, type StudyState } from "../src/domain/study/study-st
 import { ReviewScheduler } from "../src/domain/review/review-scheduler";
 import { dueReviewCounts } from "../src/domain/review/due-review-counts";
 import { wordReviewCard } from "../src/domain/review/review-card";
+import { reviewClozeForms, visualVocabulary } from "../src/content/visual-vocabulary";
 import {
   recordEvaluatedSpeaking,
   recordEvaluatedWriting,
   recordVocabularySignal,
   recordNumberAttempt,
   recordMicroLessonAttempt,
+  recordAdaptiveAssessment,
+  reviewVocabulary,
   reviewStructure,
 } from "../src/domain/study/study-state";
 import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
@@ -44,6 +47,34 @@ import {
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+const adaptiveReview = recordAdaptiveAssessment(initialStudyState, course, {
+  courseId: course.id,
+  unitId: course.units[0].id,
+  startedAt: new Date().toISOString(),
+  answers: [
+    {
+      activityId: "assessment-2",
+      skill: "grammar",
+      difficulty: 2,
+      correct: false,
+      answer: "tiene",
+      correctAnswer: "tengo",
+      explanation: "Yo exige tengo.",
+    },
+  ],
+});
+assert.equal(adaptiveReview.mistakes["assessment-2"].correctAnswer, "tengo");
+assert.equal(dueReviewCounts(adaptiveReview, vocabularySeed).mistakes, 1);
+assert.equal(adaptiveReview.events[0].type, "adaptive_assessment_completed");
+const adaptivePassed = recordAdaptiveAssessment(adaptiveReview, course, {
+  courseId: course.id,
+  unitId: course.units[0].id,
+  startedAt: new Date().toISOString(),
+  answers: [
+    { activityId: "assessment-2", skill: "grammar", difficulty: 2, correct: true, answer: "tengo" },
+  ],
+});
+assert(adaptivePassed.mistakes["assessment-2"]);
 const firstAdaptive = nextAdaptiveItem(adaptiveAssessmentBank, []);
 assert.equal(firstAdaptive?.skill, "vocabulary");
 assert.equal(firstAdaptive?.difficulty, 2);
@@ -512,6 +543,25 @@ assert.equal(wordReviewCard(word, 2).frontLabel, "ESCUTA");
 assert.equal(wordReviewCard(word, 3).presentation, "cloze");
 assert.match(wordReviewCard(word, 3).front, /_____/);
 assert.equal(wordReviewCard(vocabularySeed[6], 3).presentation, "standard");
+assert.equal(
+  wordReviewCard(vocabularySeed[6], 3, { clozeForms: reviewClozeForms.tener }).presentation,
+  "cloze",
+);
+assert.match(
+  wordReviewCard(vocabularySeed[6], 3, { clozeForms: reviewClozeForms.tener }).back,
+  /Tengo/,
+);
+assert.equal(
+  wordReviewCard(vocabularySeed[12], 0, { visual: visualVocabulary.medico }).presentation,
+  "image",
+);
+const hardWord = reviewVocabulary(initialStudyState, "medico", "difficult");
+assert.equal(hardWord.vocabulary.medico.status, "difficult");
+assert.equal(hardWord.vocabulary.medico.schedule.intervalDays, 0);
+assert.equal(
+  reviewVocabulary(initialStudyState, "medico", false).vocabulary.medico.status,
+  "learning",
+);
 const structureIssue = reviewStructure(initialStudyState, reviewStructures[1].id, false);
 const structureDate = new Date(structureIssue.structureAttempts[0].createdAt);
 assert.equal(structureIssue.structureReviews[reviewStructures[1].id].schedule.intervalDays, 1);

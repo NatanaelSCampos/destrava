@@ -89,7 +89,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 9. Particularidades contextualizadas | **PARCIAL** | **Fundamentos → Variações regionais** compara exemplos de Espanha, México e Argentina com áudio e checagem curta; o professor IA recebe a preferência. Faltam mais categorias, exemplos e integração ao perfil de domínio. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
-| 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra, áudio→palavra e lacuna quando há exemplo literal; estruturas curadas pedem produção de exemplo. Imagem→termo e lacunas de formas flexionadas ainda faltam. |
+| 12. Flashcards ligados ao domínio | **IMPLEMENTADO** | A mesma fila alterna palavra→significado, significado→palavra, áudio→palavra, lacuna com forma flexionada curada, figura→termo e estrutura→exemplo. Vocabulário visual tem seis figuras vetoriais curadas; respostas “lembrei”, “não lembrei” e “difícil” atualizam domínio e calendário com prazos distintos. Ampliar a cobertura visual é expansão de conteúdo. |
 | 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA. A IA usa fatos cadastrados para cada cena, sem analisar seus pixels por tentativa; faltam mais cenas, cobertura de detalhes verdadeiros não cadastrados, variantes por idioma e calibração pedagógica. |
 | 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
 | 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
@@ -101,7 +101,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
 | 22. Prova adaptativa escrita/objetiva | **PARCIAL** | **Diagnóstico** de seis questões ajusta a complexidade da próxima questão pelas respostas, usando conteúdo A1 curado. O teste final da unidade continua fixo e separado. |
 | 23. Relatório por competências | **PARCIAL** | O diagnóstico mostra acertos por vocabulário, gramática, escuta, frase escrita e leitura, com meta geral e piso para competências com amostra suficiente; fala, pronúncia e escrita livre não são medidas. |
-| 24. Feedback pós-avaliação | **PARCIAL** | O diagnóstico cria um plano com links para as atividades erradas e injeta evidências no perfil adaptativo. Ainda falta agendamento automático de exercícios específicos gerados para cada lacuna. |
+| 24. Feedback pós-avaliação | **IMPLEMENTADO** | Erros da avaliação final e do diagnóstico alimentam o caderno e a fila de revisão; o diagnóstico agenda imediatamente os itens errados e o relatório aponta a atividade exata para praticar. Acertos posteriores não apagam dificuldades anteriores. Exercícios inéditos gerados por IA ficam como expansão futura. |
 | 25. Avaliação oral conversacional | **ADIADO** | A versão oficial continua **EM ANÁLISE** no próprio roadmap. |
 | 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
 | 27. Ritmo de conversa por nível | **PARCIAL** | O aluno escolhe iniciante/intermediário/natural; a IA ajusta a extensão da resposta e o áudio muda de velocidade. Falta calibragem empírica por nível. |
@@ -122,14 +122,14 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 | --- | --- | --- |
 | Base multilíngua | 1, 5, 7, 8, 9, 29 e 31 | Separar todo o estado e conteúdo por curso/idioma, ampliar os catálogos e adaptar as instruções de IA além do espanhol A1. |
 | Conversação e personalização | 2, 3, 14–17, 19, 21, 27, 28 e 32 | Permitir fala espontânea nas conversas, ampliar missões, usar sinais conversacionais no perfil e calibrar ritmo/correção. |
-| Revisão e fala | 6, 10, 12 e 20 | Revisão granular de pronúncia, imagem→termo, lacunas flexionadas e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
+| Revisão e fala | 6, 10 e 20 | Revisão granular de pronúncia e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
-| Avaliação | 22–24 | Ampliar o banco adaptativo e a amostra por competência, avaliar escrita livre e criar agendamento automático para lacunas. O teste final atual continua fixo. |
+| Avaliação | 22 e 23 | Ampliar o banco adaptativo e a amostra por competência e avaliar escrita livre. O teste final atual continua fixo. |
 | Outros fluxos parciais | 18, 30 e 33 | Sequência de microlições, ações para mais tipos de dificuldade e validação contínua de cada nova entrega. |
 | Ainda não iniciado | 26 | AI Bridge: exportar/importar prática com outras IAs. |
 | Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
 
-**Concluídos no escopo descrito:** 4 (sessões rápidas) e 11 (Fale sem ler). Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+**Concluídos no escopo descrito:** 4 (sessões rápidas), 11 (Fale sem ler), 12 (flashcards ligados ao domínio) e 24 (feedback pós-avaliação). Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
 
 ---
 
@@ -2144,7 +2144,7 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Implementado:** quarto formato de cartão de vocabulário, com lacuna no exemplo quando a palavra aparece literalmente na frase. Cartões com pergunta em português só revelam o áudio da resposta depois da virada; o formato de escuta continua disponível antes da virada.
 - **Implementado:** cartões curados de estrutura → exemplo para nome, idade, origem e residência. A fila de revisão e a aula de hoje usam o mesmo `ReviewScheduler` para estas estruturas; o painel conta estruturas vencidas e cartões novos.
 - **Persistência e adaptação:** cada estrutura mantém calendário próprio e tentativas no JSON `user_study_state`. Acertos e erros entram no perfil por habilidade, lição, conceito e item. Estruturas vencidas entram nas recomendações e sessões planejadas. Eventos de estrutura usam a projeção de telemetria já existente.
-- **Limites:** como a tabela relacional `review_schedules` exige vínculo com vocabulário ou erro, os calendários de estrutura ficam no estado JSON, sem migração. A lacuna literal não cobre flexões como `tener` → `tengo`; imagem → termo e agendamento granular de pronúncia ficam para etapas futuras.
+- **Limites naquela entrega:** como a tabela relacional `review_schedules` exige vínculo com vocabulário ou erro, os calendários de estrutura ficam no estado JSON, sem migração. A lacuna literal não cobria flexões como `tener` → `tengo`; figura → termo e formas flexionadas foram adicionadas na entrega posterior de cartões visuais e plano pós-avaliação. O agendamento granular de pronúncia continua pendente.
 
 **Reaproveitado:** `ReviewQueue`, `ReviewScheduler`, `StudyState`, `StudyProvider`, planejador, perfil de domínio e repositório Supabase existente.
 
@@ -2172,3 +2172,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** banco de itens adaptativos inicial apenas do espanhol A1; o teste é diagnóstico e não substitui a avaliação final fixa. Uma questão em determinada competência é amostra insuficiente para decisão de aprovação nessa competência. Fala, pronúncia e escrita livre não entram nesta nota.
 
 **Reaproveitado:** banco de atividades existente, `/api/grade`, `ExerciseCard`, `StudyProvider`, `StudyState`, perfil de domínio, recomendações e persistência Supabase existente.
+
+---
+
+# Registro da entrega — cartões visuais e plano pós-avaliação (2026-10-02)
+
+**Itens concluídos:** 12 e 24.
+
+- **Flashcards:** a fila existente ganhou figura→termo para seis conceitos A1 que têm representação visual clara, usando ícones vetoriais acessíveis. Lacunas agora aceitam formas flexionadas curadas, como `tener` → `tengo` e `vivir` → `vivo`. Os cartões novos com figura mostram a figura desde a primeira revisão; os demais formatos continuam alternando conforme o histórico.
+- **Respostas:** os cartões de vocabulário distinguem **Lembrei**, **Não lembrei** e **Difícil**. “Difícil” antecipa a próxima revisão para quatro horas; “Não lembrei” retorna em um dia. Os três resultados atualizam estado, histórico, domínio e recomendações pelo mesmo `ReviewScheduler`.
+- **Pós-avaliação:** novas respostas erradas no diagnóstico criam ou reabrem o erro correspondente no caderno, com revisão imediatamente pendente. O plano já aponta para a atividade específica e a fila de revisão recebe o cartão; acertos no diagnóstico mantêm as dificuldades anteriores. A avaliação final fixa já usa o mesmo caderno ao corrigir suas questões.
+- **Limites de expansão:** as figuras cobrem seis termos picturáveis do curso espanhol A1; outros idiomas precisam de seus próprios recursos visuais e flexões. Diagnósticos salvos antes desta entrega não contêm a resposta esperada necessária para agendar retroativamente os erros. Os calendários de estruturas continuam apenas no JSON do aluno; pronúncia granular segue parcial no item 6.
+
+**Reaproveitado:** `ReviewQueue`, `ReviewScheduler`, `Mistake`, `StudyProvider`, perfil de aprendizado, fila de recomendações e projeções Supabase existentes. Não houve migração de banco.

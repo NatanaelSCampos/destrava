@@ -216,6 +216,70 @@ export const initialStudyState: StudyState = {
   activeSessionId: null,
 };
 
+export function recordAdaptiveAssessment(
+  state: StudyState,
+  course: PublicCourse,
+  input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">,
+): StudyState {
+  if (input.courseId !== course.id || !course.units.some((unit) => unit.id === input.unitId))
+    return state;
+  const activities = new Map(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) =>
+        lesson.activities.map((activity) => [activity.id, activity] as const),
+      ),
+    ),
+  );
+  const finishedAt = new Date().toISOString();
+  const mistakes = { ...state.mistakes };
+  const reviewEvents: StudyEvent[] = [];
+  for (const answer of input.answers) {
+    const activity = activities.get(answer.activityId);
+    if (answer.correct || !activity || !answer.correctAnswer?.trim()) continue;
+    const previous = mistakes[answer.activityId];
+    const schedule = previous
+      ? { ...ReviewScheduler.afterAnswer(previous.schedule, false), nextReviewAt: finishedAt }
+      : ReviewScheduler.initial(new Date(finishedAt));
+    mistakes[answer.activityId] = {
+      id: previous?.id ?? crypto.randomUUID(),
+      activityId: answer.activityId,
+      category: activity.skill,
+      originalAnswer: answer.answer,
+      correctAnswer: answer.correctAnswer,
+      explanation: answer.explanation ?? "Revise a explicação da atividade.",
+      timesMissed: (previous?.timesMissed ?? 0) + 1,
+      timesCorrect: previous?.timesCorrect ?? 0,
+      lastMissedAt: finishedAt,
+      lastReviewedAt: previous?.lastReviewedAt ?? null,
+      schedule,
+    };
+    reviewEvents.push({
+      id: crypto.randomUUID(),
+      type: "adaptive_review_scheduled",
+      activityId: answer.activityId,
+      createdAt: finishedAt,
+    });
+  }
+  return {
+    ...state,
+    mistakes,
+    adaptiveAssessments: [
+      { ...input, id: crypto.randomUUID(), finishedAt },
+      ...(state.adaptiveAssessments ?? []),
+    ].slice(0, 20),
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: "adaptive_assessment_completed",
+        itemId: input.unitId,
+        createdAt: finishedAt,
+      },
+      ...reviewEvents,
+      ...state.events,
+    ],
+  };
+}
+
 export function recordNumberAttempt(
   state: StudyState,
   input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
@@ -467,14 +531,18 @@ export function recordAttempt(
 export function reviewVocabulary(
   state: StudyState,
   vocabularyId: string,
-  correct: boolean,
+  rating: boolean | "difficult",
 ): StudyState {
+  const correct = rating === true;
   const current = state.vocabulary[vocabularyId] ?? {
     id: crypto.randomUUID(),
     status: "new",
     schedule: ReviewScheduler.initial(),
   };
-  const schedule = ReviewScheduler.afterAnswer(current.schedule, correct);
+  const schedule =
+    rating === "difficult"
+      ? ReviewScheduler.afterDifficulty(current.schedule)
+      : ReviewScheduler.afterAnswer(current.schedule, correct);
   const sessions = state.sessions.map((session) =>
     session.id === state.activeSessionId
       ? { ...session, wordsReviewed: session.wordsReviewed + 1 }
@@ -487,7 +555,13 @@ export function reviewVocabulary(
       ...state.vocabulary,
       [vocabularyId]: {
         id: current.id,
-        status: correct ? (schedule.masteryScore >= 75 ? "known" : "learning") : "difficult",
+        status: correct
+          ? schedule.masteryScore >= 75
+            ? "known"
+            : "learning"
+          : rating === "difficult"
+            ? "difficult"
+            : "learning",
         schedule,
       },
     },
@@ -504,7 +578,14 @@ export function reviewVocabulary(
       ...state.reviews,
     ],
     events: [
-      event(correct ? "flashcard_known" : "flashcard_missed", vocabularyId),
+      event(
+        correct
+          ? "flashcard_known"
+          : rating === "difficult"
+            ? "flashcard_difficult"
+            : "flashcard_missed",
+        vocabularyId,
+      ),
       event("review_completed", vocabularyId),
       ...state.events,
     ],

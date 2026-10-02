@@ -2,13 +2,34 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Check,
+  House,
+  MapPin,
+  MessageCircle,
+  Presentation,
+  RotateCcw,
+  Stethoscope,
+  X,
+} from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { PlannedReviewItem } from "@/domain/study/study-state";
 import { wordReviewCard } from "@/domain/review/review-card";
 import { findReviewStructure, reviewStructures } from "@/content/review-structures";
+import { reviewClozeForms, visualVocabulary, type VisualCue } from "@/content/visual-vocabulary";
+
+const visualIcons = {
+  home: House,
+  work: BriefcaseBusiness,
+  talk: MessageCircle,
+  doctor: Stethoscope,
+  teacher: Presentation,
+  location: MapPin,
+};
 
 type ReviewItem = {
   kind: "word" | "mistake" | "structure";
@@ -21,7 +42,8 @@ type ReviewItem = {
   spokenText: string;
   activityHref?: string;
   category?: string;
-  presentation?: "standard" | "reverse" | "audio" | "cloze";
+  presentation?: "standard" | "reverse" | "audio" | "cloze" | "image";
+  visual?: VisualCue;
 };
 
 export function ReviewQueue({
@@ -62,7 +84,10 @@ export function ReviewQueue({
             {
               kind: "word",
               id: word.id,
-              ...wordReviewCard(word, state.vocabulary[id]?.schedule.reviewCount ?? 0),
+              ...wordReviewCard(word, state.vocabulary[id]?.schedule.reviewCount ?? 0, {
+                visual: course.languageCode.startsWith("es") ? visualVocabulary[id] : undefined,
+                clozeForms: course.languageCode.startsWith("es") ? reviewClozeForms[id] : undefined,
+              }),
             },
           ]
         : [];
@@ -148,12 +173,13 @@ export function ReviewQueue({
   ]);
   const pending = items.filter((item) => !finishedIds.includes(`${item.kind}-${item.id}`));
   const item = pending[index] ?? pending[0];
+  const VisualIcon = item?.visual ? visualIcons[item.visual.icon] : null;
 
-  function answer(correct: boolean) {
+  function answer(rating: boolean | "difficult") {
     if (!item) return;
-    if (item.kind === "word") reviewWord(item.id, correct);
-    else if (item.kind === "structure") reviewStructureCard(item.id, correct);
-    else reviewError(item.id, correct);
+    if (item.kind === "word") reviewWord(item.id, rating);
+    else if (item.kind === "structure") reviewStructureCard(item.id, rating === true);
+    else reviewError(item.id, rating === true);
     setFinishedIds((current) => [...current, `${item.kind}-${item.id}`]);
     setIndex(0);
     setFlipped(false);
@@ -201,6 +227,11 @@ export function ReviewQueue({
         aria-label={flipped ? "Mostrar frente do cartão" : "Virar cartão"}
       >
         <span className="flashcard-label">{flipped ? item.backLabel : item.frontLabel}</span>
+        {!flipped && item.presentation === "image" && item.visual && VisualIcon && (
+          <span className="flashcard-visual" role="img" aria-label={item.visual.alt}>
+            <VisualIcon size={70} strokeWidth={1.55} />
+          </span>
+        )}
         <strong>{flipped ? item.back : item.front}</strong>
         <p>{flipped ? item.example : "Toque para ver a resposta"}</p>
         <span className="flashcard-flip">
@@ -229,8 +260,17 @@ export function ReviewQueue({
       )}
       <div className="flashcard-actions">
         <button className="ghost-button" disabled={!flipped} onClick={() => answer(false)}>
-          <X size={16} /> Ainda difícil
+          <X size={16} /> Não lembrei
         </button>
+        {item.kind === "word" && (
+          <button
+            className="secondary-button"
+            disabled={!flipped}
+            onClick={() => answer("difficult")}
+          >
+            Difícil
+          </button>
+        )}
         <button className="primary-button" disabled={!flipped} onClick={() => answer(true)}>
           <Check size={16} /> Lembrei
         </button>

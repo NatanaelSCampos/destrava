@@ -21,6 +21,7 @@ import {
   recordEvaluatedWriting,
   recordMicroLessonAttempt,
   recordNumberAttempt,
+  recordAdaptiveAssessment,
   recordVocabularySignal,
   reconcileAssessments,
   reviewMistake,
@@ -90,7 +91,7 @@ type StudyContextValue = {
   ) => void;
   completeConversation: (sessionId: string) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
-  reviewWord: (id: string, correct: boolean) => void;
+  reviewWord: (id: string, rating: boolean | "difficult") => void;
   reviewError: (id: string, correct: boolean) => void;
   reviewStructureCard: (id: string, correct: boolean) => void;
   startSession: (
@@ -346,7 +347,8 @@ export function StudyProvider({
     [],
   );
   const reviewWord = useCallback(
-    (id: string, correct: boolean) => setState((current) => reviewVocabulary(current, id, correct)),
+    (id: string, rating: boolean | "difficult") =>
+      setState((current) => reviewVocabulary(current, id, rating)),
     [],
   );
   const reviewError = useCallback(
@@ -417,26 +419,8 @@ export function StudyProvider({
   );
   const saveAdaptiveAssessment = useCallback(
     (input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) =>
-      setState((current) => {
-        const finishedAt = new Date().toISOString();
-        return {
-          ...current,
-          adaptiveAssessments: [
-            { ...input, id: crypto.randomUUID(), finishedAt },
-            ...(current.adaptiveAssessments ?? []),
-          ].slice(0, 20),
-          events: [
-            {
-              id: crypto.randomUUID(),
-              type: "adaptive_assessment_completed",
-              itemId: input.unitId,
-              createdAt: finishedAt,
-            },
-            ...current.events,
-          ],
-        };
-      }),
-    [],
+      setState((current) => recordAdaptiveAssessment(current, course, input)),
+    [course],
   );
   const addConversationReply = useCallback(
     (

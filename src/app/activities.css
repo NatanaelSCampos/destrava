@@ -494,6 +494,24 @@
   letter-spacing: -0.06em;
   margin: 19px 0 7px;
 }
+.flashcard-visual {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  margin-top: 15px;
+  border: 1px solid #e8c0c7;
+  border-radius: 28px;
+  background: #fff;
+  color: #9e2438;
+}
+.flashcard-visual + strong {
+  max-width: 320px;
+  margin-top: 13px;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
 .flashcard p {
   color: #818187;
   font-size: 12px;

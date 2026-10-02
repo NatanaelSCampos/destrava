@@ -7,6 +7,8 @@ export type AdaptiveAnswer = {
   difficulty: 1 | 2 | 3;
   correct: boolean;
   answer: string;
+  correctAnswer?: string;
+  explanation?: string;
 };
 
 export const adaptiveSkillPlan: Skill[] = [

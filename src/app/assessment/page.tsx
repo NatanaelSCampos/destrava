@@ -80,6 +80,8 @@ export default function AssessmentPage() {
         difficulty: next.difficulty,
         correct: result.correct,
         answer,
+        correctAnswer: result.correctAnswer,
+        explanation: result.explanation,
       },
     ];
     setAnswers(updated);
@@ -217,8 +219,8 @@ export default function AssessmentPage() {
             </Link>
           </div>
           <p className="helper-note">
-            Cada resposta entra no seu perfil de aprendizado. Uma resposta certa na prova não apaga
-            dificuldades anteriores.
+            Cada resposta entra no seu perfil de aprendizado. Questões erradas entram na fila de
+            revisão. Uma resposta certa na prova não apaga dificuldades anteriores.
           </p>
         </section>
       )}
