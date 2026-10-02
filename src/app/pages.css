@@ -3212,6 +3212,27 @@
   justify-content: space-between;
   gap: 12px;
 }
+.security-identity-details {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.security-identity-details small {
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+.security-unlink-confirmation {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.security-unlink-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .security-enrollment,
 .security-passkeys {
   display: grid;

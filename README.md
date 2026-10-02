@@ -75,6 +75,8 @@ Mantenha as próximas mudanças no banco em arquivos de migração. Executar a m
 
 `supabase/migrations/20261002000200_trusted_devices.sql` permite marcar **Confiar neste dispositivo por 30 dias** depois de confirmar o código. O navegador recebe um cookie aleatório, seguro e inacessível ao JavaScript; o banco guarda somente seu hash. Em outro login no mesmo navegador, a sessão só recebe acesso aos dados depois que o servidor confere esse cookie. Um navegador novo, token expirado, fator removido ou dispositivo revogado exige o código novamente. A confirmação MFA também expira após 30 dias, mesmo com a sessão aberta. Os dispositivos podem ser removidos em **Configurações → Segurança da conta**. Clicar em **Sair** encerra a sessão, mas preserva a confiança até o vencimento ou a revogação; não use a opção em computadores compartilhados.
 
+Depois do retorno do Google, `/auth/finish` verifica se a sessão precisa do código MFA; um dispositivo confiável ainda pode ir direto ao painel. Em **Configurações → Contas vinculadas**, a pessoa vê as identidades da conta e pode desvincular o Google quando também possui uma identidade de e-mail. A desvinculação exige `auth.enable_manual_linking = true` no Supabase. Confirme que a senha ainda funciona antes de remover o Google.
+
 `supabase/migrations/20261002000300_recent_mfa_for_trusted_device.sql` exige que a criação de um novo navegador confiável ocorra até cinco minutos após a confirmação do código.
 
 As integrações abaixo dependem de contas próprias. Não envie senhas, segredos SMTP, OAuth ou Turnstile por chat, não os coloque no Git e não inclua nenhum deles como variável `NEXT_PUBLIC_`. Ative cada opção no Supabase remoto somente quando o frontend correspondente estiver publicado.

@@ -67,10 +67,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   );
   useEffect(() => {
-    if (ready && requiresAuth && !authUserId && pathname !== "/login") router.replace("/login");
+    if (ready && requiresAuth && !authUserId && pathname !== "/login" && pathname !== "/auth/finish")
+      router.replace("/login");
   }, [ready, requiresAuth, authUserId, pathname, router]);
   useEffect(() => {
-    if (!ready || !authUserId || !requiresAuth) return;
+    if (!ready || !authUserId || !requiresAuth || pathname === "/auth/finish") return;
     let cancelled = false;
     const client = createSupabaseBrowserClient();
     if (!client) return;
@@ -97,7 +98,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       window.clearInterval(timer);
     };
   }, [ready, authUserId, requiresAuth, pathname, router]);
-  if (pathname === "/login" || pathname === "/mfa") return <>{children}</>;
+  if (pathname === "/login" || pathname === "/mfa" || pathname === "/auth/finish")
+    return <>{children}</>;
   if (
     !ready ||
     (requiresAuth && (!authUserId || sessionCheck === "checking" || sessionCheck === "challenge"))

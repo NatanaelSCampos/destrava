@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const client = await createSupabaseServerClient();
   if (tokenHash && client) {
     const { error } = await client.auth.verifyOtp({ token_hash: tokenHash, type: "email" });
-    if (!error) return NextResponse.redirect(appRedirectUrl(request, "/dashboard"));
+    if (!error) return NextResponse.redirect(appRedirectUrl(request, "/auth/finish"));
   }
   return NextResponse.redirect(appRedirectUrl(request, "/login?authError=1"));
 }
