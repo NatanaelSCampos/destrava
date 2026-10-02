@@ -110,7 +110,7 @@ export function LinkedAccounts() {
     }
     setGoogleBlocked(false);
     setMessageIsError(false);
-    setMessage("Login Google reativado. Ele será vinculado novamente no próximo acesso.");
+    setMessage("Login Google reativado. Você poderá entrar com Google novamente.");
   }
 
   async function removeBlockedIdentity(identityId: string) {
@@ -137,63 +137,79 @@ export function LinkedAccounts() {
     }
     setIdentities((previous) => previous.filter((item) => item.id !== identityId));
     setMessageIsError(false);
-    setMessage("Vínculo Google removido. A entrada por ele continua bloqueada.");
+    setMessage("Vínculo removido. O login continua bloqueado; uma nova tentativa pelo Google pode recriar o vínculo sem permitir o acesso.");
   }
 
   const hasEmailLogin = identities.some((identity) => identity.provider === "email");
+  const googleIdentity = identities.find((identity) => identity.provider === "google");
 
   return (
     <section className="panel account-security account-identities">
       <span className="eyebrow">
         <Link2 size={14} /> ACESSO À CONTA
       </span>
-      <h2>Contas vinculadas</h2>
-      <p>Veja as formas de entrar na sua conta Destrava. O Supabase vincula novamente um Google com o mesmo e-mail, a menos que você bloqueie essa entrada.</p>
+      <h2>Formas de acesso</h2>
+      <p>Confira quais formas de login estão permitidas na sua conta Destrava.</p>
       {loading && <p>Carregando contas…</p>}
-      {identities.map((identity) => (
+      {identities.filter((identity) => identity.provider !== "google").map((identity) => (
         <div className="security-method" key={identity.id}>
           <span className="security-identity-details">
             <strong>{identityLabel(identity.provider)}</strong>
             {identityEmail(identity) && <small>{identityEmail(identity)}</small>}
           </span>
-          {identity.provider === "google" && !hasEmailLogin && (
-            <small>Única forma de entrada</small>
-          )}
-          {identity.provider === "google" && hasEmailLogin && googleBlocked && (
-            <button
-              className="secondary-button"
-              disabled={busy}
-              onClick={() => void removeBlockedIdentity(identity.id)}
-            >
-              Remover vínculo
-            </button>
-          )}
         </div>
       ))}
-      {hasEmailLogin && googleBlocked !== null && (
+      {googleBlocked !== null && (hasEmailLogin || googleIdentity) && (
         <div className="security-method">
           <span className="security-identity-details">
-            <strong>Entrada pelo Google</strong>
-            <small>{googleBlocked ? "Desativada nesta conta" : "Permitida nesta conta"}</small>
+            <strong>Google</strong>
+            {googleIdentity && identityEmail(googleIdentity) && (
+              <small>{identityEmail(googleIdentity)}</small>
+            )}
+            <small>
+              {!hasEmailLogin
+                ? "Única forma de entrada"
+                : googleBlocked && googleIdentity
+                  ? "Login bloqueado. Uma tentativa pelo Google pode recriar o vínculo, mas não permite entrar."
+                  : googleBlocked
+                    ? "Login bloqueado; sem vínculo ativo."
+                    : googleIdentity
+                      ? "Vinculado; login permitido."
+                      : "Login permitido; o vínculo será criado no próximo acesso."}
+            </small>
           </span>
-          <button
-            className="secondary-button"
-            disabled={busy}
-            onClick={() => {
-              setMessage("");
-              if (googleBlocked) void enableGoogle();
-              else setConfirmDisable(true);
-            }}
-          >
-            {googleBlocked ? "Reativar" : "Desvincular e bloquear"}
-          </button>
+          {hasEmailLogin && (
+            <div className="security-identity-actions">
+              {googleBlocked && googleIdentity && (
+                <button
+                  className="secondary-button"
+                  disabled={busy}
+                  onClick={() => void removeBlockedIdentity(googleIdentity.id)}
+                >
+                  Remover vínculo
+                </button>
+              )}
+              <button
+                className="secondary-button"
+                disabled={busy}
+                onClick={() => {
+                  setMessage("");
+                  if (googleBlocked) void enableGoogle();
+                  else setConfirmDisable(true);
+                }}
+              >
+                {googleBlocked ? "Reativar" : googleIdentity ? "Desvincular e bloquear" : "Bloquear entrada"}
+              </button>
+            </div>
+          )}
         </div>
       )}
       {confirmDisable && (
         <div className="security-unlink-confirmation">
           <p>
-            O Google será desvinculado e não poderá entrar novamente nesta conta. As sessões em
-            outros dispositivos também serão encerradas. Confirme que sabe sua senha antes de continuar.
+            O login pelo Google ficará bloqueado até você reativá-lo com e-mail e senha.
+            {googleIdentity ? " O vínculo atual será removido." : ""} As sessões em outros
+            dispositivos também serão encerradas. Confirme que sabe sua senha antes de continuar.
           </p>
           <div className="security-unlink-actions">
             <button
