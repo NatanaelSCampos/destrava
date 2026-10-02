@@ -12,6 +12,7 @@ import {
   Clock3,
   GraduationCap,
   House,
+  CircleHelp,
   Image as ImageIcon,
   Menu,
   MessageCircle,
@@ -29,6 +30,8 @@ import { courseProgress } from "@/domain/study/progress";
 import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
 import { WhatsNewDialog } from "@/components/layout/whats-new-dialog";
+import { PageTour } from "@/components/layout/page-tour";
+import { pageTourFor } from "@/content/page-tours";
 import { featureFlags } from "@/lib/feature-flags";
 import { SelectionAudio } from "@/components/audio/selection-audio";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -61,6 +64,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { course, state, vocabularyItems, ready, authUserId } = useStudy();
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
+  const [tourReplayToken, setTourReplayToken] = useState(0);
   const [sessionCheck, setSessionCheck] = useState<"checking" | "ready" | "challenge" | "error">(
     "checking",
   );
@@ -133,6 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const studyNavCount = 6 + Number(featureFlags.SPEAKING) + 2 * Number(featureFlags.AI_TUTOR);
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
+  const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
 
   return (
     <div className="app-frame">
@@ -256,6 +262,16 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <div className="topbar-right">
             <span className="level-pill">NÍVEL A1</span>
+            {hasPageTour && (
+              <button
+                type="button"
+                className="topbar-tour"
+                aria-label="Rever guia desta tela"
+                onClick={() => setTourReplayToken((value) => value + 1)}
+              >
+                <CircleHelp size={16} /> <span>Ver guia</span>
+              </button>
+            )}
             {featureFlags.AI_TUTOR && (
               <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
                 <Sparkles size={16} /> Perguntar ao professor
@@ -272,7 +288,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}
       <SelectionAudio />
-      {featureFlags.AI_TUTOR && <WhatsNewDialog userId={authUserId} />}
+      <PageTour pathname={pathname} replayToken={tourReplayToken} onOpenChange={setTourOpen} />
+      {featureFlags.AI_TUTOR && <WhatsNewDialog userId={authUserId} enabled={!tourOpen} />}
     </div>
   );
 }

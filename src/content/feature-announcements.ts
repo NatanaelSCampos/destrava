@@ -46,4 +46,16 @@ export const featureAnnouncements: FeatureAnnouncement[] = [
     href: "/course/frecuencias-a1/unit/1/lesson/vocabulario?activity=vocab-3",
     linkLabel: "Experimentar uma lacuna",
   },
+  {
+    id: "2026-10-guias-por-tela",
+    title: "Conheça cada tela passo a passo",
+    summary: "Um guia curto apresenta cada área na primeira visita.",
+    highlights: [
+      "Avance pelo botão Próximo para conhecer uma parte de cada vez.",
+      "Você pode pular o guia e voltar a ele pelo botão Ver guia no topo da tela.",
+      "Cada tela é apresentada uma vez na sua conta.",
+    ],
+    href: "/study",
+    linkLabel: "Abrir aula de hoje",
+  },
 ];

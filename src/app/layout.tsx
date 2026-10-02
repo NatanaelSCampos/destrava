@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "./pages.css";
 import "./activities.css";
+import "./page-tour.css";
 import { frecuenciasA1, vocabularySeed } from "@/content/frecuencias-a1";
 import { publicCourse } from "@/content/public";
 import { StudyProvider } from "@/components/study-provider";

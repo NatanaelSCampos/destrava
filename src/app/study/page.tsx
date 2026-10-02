@@ -239,47 +239,51 @@ function StudyContent() {
             )}
           </div>
         </div>
-        {lastSession && (
-          <section className="panel study-session-result">
-            <span className="eyebrow">SUA ÚLTIMA SESSÃO</span>
-            <h2>O que mudou depois da prática?</h2>
-            <p>
-              {formatMinutes(lastSession.durationSeconds / 60)} estudados · {lastSession.correct}{" "}
-              acertos · {lastSession.wrong} erros
-            </p>
-            {comparisons.length ? (
-              <>
-                <strong>
-                  {improved.length
-                    ? `${improved.length} ${improved.length === 1 ? "item melhorou" : "itens melhoraram"} nesta sessão.`
-                    : "Resultados registrados para acompanhar sua evolução."}
-                </strong>
-                <div className="session-comparison-list">
-                  {comparisons.slice(0, 5).map((item) => (
-                    <div key={item.id}>
-                      <span>
-                        {item.title} · {item.measure}
-                      </span>
-                      <b>
-                        {item.before === null
-                          ? `Primeira marca: ${item.after}`
-                          : `${item.before} → ${item.after}`}
-                      </b>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/history" className="text-link">
-                  Ver evolução por tentativa <ArrowRight size={15} />
-                </Link>
-              </>
-            ) : (
+        <section className="panel study-session-result">
+          <span className="eyebrow">SUA ÚLTIMA SESSÃO</span>
+          <h2>O que mudou depois da prática?</h2>
+          {lastSession ? (
+            <>
               <p>
-                Esta sessão não teve resultados avaliados. Pratique e responda às atividades para
-                comparar as próximas tentativas.
+                {formatMinutes(lastSession.durationSeconds / 60)} estudados · {lastSession.correct}{" "}
+                acertos · {lastSession.wrong} erros
               </p>
-            )}
-          </section>
-        )}
+              {comparisons.length ? (
+                <>
+                  <strong>
+                    {improved.length
+                      ? `${improved.length} ${improved.length === 1 ? "item melhorou" : "itens melhoraram"} nesta sessão.`
+                      : "Resultados registrados para acompanhar sua evolução."}
+                  </strong>
+                  <div className="session-comparison-list">
+                    {comparisons.slice(0, 5).map((item) => (
+                      <div key={item.id}>
+                        <span>
+                          {item.title} · {item.measure}
+                        </span>
+                        <b>
+                          {item.before === null
+                            ? `Primeira marca: ${item.after}`
+                            : `${item.before} → ${item.after}`}
+                        </b>
+                      </div>
+                    ))}
+                  </div>
+                  <Link href="/history" className="text-link">
+                    Ver evolução por tentativa <ArrowRight size={15} />
+                  </Link>
+                </>
+              ) : (
+                <p>
+                  Esta sessão não teve resultados avaliados. Pratique e responda às atividades para
+                  comparar as próximas tentativas.
+                </p>
+              )}
+            </>
+          ) : (
+            <p>Depois da sua primeira sessão, você verá aqui o tempo estudado e seus resultados.</p>
+          )}
+        </section>
       </div>
     );
 

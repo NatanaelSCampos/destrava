@@ -6,11 +6,18 @@ import { Sparkles, X } from "lucide-react";
 import { featureAnnouncements } from "@/content/feature-announcements";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-export function WhatsNewDialog({ userId }: { userId: string | null }) {
+export function WhatsNewDialog({
+  userId,
+  enabled = true,
+}: {
+  userId: string | null;
+  enabled?: boolean;
+}) {
   const [unseenIds, setUnseenIds] = useState<string[]>([]);
   const closeButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (!enabled) return;
     let active = true;
     const client = createSupabaseBrowserClient();
     const ids = featureAnnouncements.map((entry) => entry.id);
@@ -31,12 +38,12 @@ export function WhatsNewDialog({ userId }: { userId: string | null }) {
           /* Storage disabled: skip the announcement. */
         }
       }
-    }, 0);
+    }, 450);
     return () => {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [userId]);
+  }, [enabled, userId]);
 
   useEffect(() => {
     if (!unseenIds.length) return;
@@ -49,7 +56,7 @@ export function WhatsNewDialog({ userId }: { userId: string | null }) {
   }, [unseenIds]);
 
   const entries = featureAnnouncements.filter((entry) => unseenIds.includes(entry.id));
-  if (!entries.length) return null;
+  if (!enabled || !entries.length) return null;
   return (
     <div
       className="whats-new-backdrop"

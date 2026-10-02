@@ -2199,3 +2199,12 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** conteúdo e prompts atuais são do espanhol A1. A consistência das correções e a identificação de objetivos precisam de validação com alunos; a avaliação oral oficial continua em análise no item 25. Imagens ainda usam fatos curados, como descrito no item 13.
 
 **Verificação:** checagem de tipos, lint, teste do motor de aprendizado e build de produção. A transcrição e o popup autenticado precisam de conferência manual no navegador após a publicação.
+
+---
+
+# Registro da entrega — guia por tela (2026-10-02)
+
+- **Implementado:** guia em etapas nas telas autenticadas de estudo, prática e acompanhamento. Cada passo destaca a área explicada e usa os botões Próximo, Voltar e Pular guia. A aula de hoje explica separadamente o objetivo da tela, tempo, modo de estudo, início, roteiro e última sessão; a aula em andamento tem seu próprio guia.
+- **Primeira visita:** o evento `page_tour_seen` fica no estado do aluno, sincronizado com o Supabase, e uma cópia local evita a repetição no mesmo navegador. Pular também marca o guia como visto. O botão **Ver guia** no topo reabre a apresentação da tela atual.
+- **Acesso:** o guia espera o conteúdo da página carregar e mostra somente etapas cujas áreas estão presentes, inclusive nas telas que mudam conforme o progresso. As telas de login, MFA e retorno de autenticação não exibem o guia.
+- **Verificação:** tipos, lint, build e navegação em navegador pelas 18 rotas de conteúdo. Na aula de hoje, a checagem móvel confirmou avanço entre passos, persistência após recarregar e reabertura manual. Não houve migração de banco.
