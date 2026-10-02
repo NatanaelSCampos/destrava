@@ -123,6 +123,8 @@ export class SupabaseStudyRepository {
         duration_seconds: session.durationSeconds,
         performance: {
           plan: session.plan ?? [],
+          mode: session.mode ?? "guided",
+          targetMinutes: session.targetMinutes ?? null,
           activityIds: session.activityIds,
           correct: session.correct,
           wrong: session.wrong,

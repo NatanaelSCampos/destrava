@@ -22,6 +22,8 @@ import {
   reviewVocabulary,
   type StudentProfile,
   type StudyState,
+  type SessionMode,
+  type PlannedItem,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -57,7 +59,9 @@ type StudyContextValue = {
   reviewError: (id: string, correct: boolean) => void;
   startSession: (
     unitId: string,
-    plan: Array<{ kind: "activity" | "review"; id: string; title: string; minutes: number }>,
+    plan: PlannedItem[],
+    mode: SessionMode,
+    targetMinutes: number,
   ) => void;
   finishSession: () => void;
 };
@@ -196,6 +200,7 @@ export function StudyProvider({
               {
                 id: crypto.randomUUID(),
                 activityId,
+                sessionId: current.activeSessionId,
                 text,
                 createdAt: new Date().toISOString(),
                 feedback,
@@ -232,6 +237,7 @@ export function StudyProvider({
             {
               id: crypto.randomUUID(),
               activityId,
+              sessionId: current.activeSessionId,
               transcription,
               audioUrl,
               feedback,
@@ -276,10 +282,7 @@ export function StudyProvider({
     [],
   );
   const startSession = useCallback(
-    (
-      unitId: string,
-      plan: Array<{ kind: "activity" | "review"; id: string; title: string; minutes: number }>,
-    ) =>
+    (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
       setState((current) => {
         if (current.activeSessionId) return current;
         const id = crypto.randomUUID();
@@ -291,6 +294,8 @@ export function StudyProvider({
             {
               id,
               unitId,
+              mode,
+              targetMinutes,
               startedAt,
               finishedAt: null,
               durationSeconds: 0,

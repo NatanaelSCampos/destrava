@@ -80,6 +80,10 @@ O Destrava agora estima domínio por habilidade, tópico, conceito e palavra ou 
 
 O motor em `src/domain/study/learning-recommendation-engine.ts` usa esse perfil para priorizar revisões vencidas, erros recorrentes, baixa pronúncia ou fluência e atividades pendentes. A primeira prioridade aparece na página inicial, o plano de **Aula de hoje** segue a mesma ordem, e **Estatísticas** mostra ações em **O que preciso melhorar?**. Os links abrem a atividade recomendada dentro da lição.
 
+Na página inicial, **Quanto tempo você tem?** abre planos estimados de **5, 15, 30 minutos ou sessão completa**. Em **Aula de hoje**, é possível alternar entre continuar a trilha e **Treinar minhas dificuldades**. O treino focado seleciona apenas erros, palavras difíceis e pontos de fala registrados; quando não há evidência, ele mostra uma orientação para começar pela trilha. Cada sessão inclui somente os cartões planejados, para que a revisão não ultrapasse o tempo estimado por abrir toda a fila. O cronômetro mostra o tempo real e não interrompe o estudo automaticamente.
+
+Depois da sessão, a tela compara resultados avaliados com a tentativa anterior, quando ela existe. **Histórico** mostra a evolução por tentativa de acertos, escrita, pronúncia, fluência e recordação de palavras. Primeiras tentativas aparecem como primeira medida, sem sugerir melhora inexistente. O estado e o resumo da sessão usam o JSON já persistido no Supabase; não há nova migração para este conjunto.
+
 Cada curso informa `languageCode` e conceitos próprios; o motor filtra o histórico pelas atividades e lições desse curso. Para novos idiomas, crie outro curso com IDs exclusivos para atividades, lições e vocabulário. A seleção de vários cursos pelo mesmo usuário e a separação completa do estado persistido por curso ainda precisam ser desenvolvidas.
 
 Para conferir as regras de prioridade e isolamento entre idiomas:

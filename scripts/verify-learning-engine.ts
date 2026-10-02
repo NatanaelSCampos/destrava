@@ -4,6 +4,7 @@ import { publicCourse } from "../src/content/public";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
 import { buildStudyPlan } from "../src/domain/study/study-planner";
+import { buildPracticeHistory, sessionComparisons } from "../src/domain/study/practice-history";
 import { initialStudyState, type StudyState } from "../src/domain/study/study-state";
 import { ReviewScheduler } from "../src/domain/review/review-scheduler";
 
@@ -21,6 +22,13 @@ assert.equal(freshProfile.languageCode, "es");
 assert(freshProfile.skills.every((skill) => skill.score === null));
 assert.equal(recommend(initialStudyState)[0]?.id, "intro-1");
 assert.equal(buildStudyPlan(course, initialStudyState, 15, vocabularySeed, now)[0]?.id, "intro-1");
+const shortPlan = buildStudyPlan(course, initialStudyState, 5, vocabularySeed, now);
+assert(shortPlan.length > 0);
+assert(shortPlan.reduce((minutes, item) => minutes + item.minutes, 0) <= 5);
+assert.equal(
+  buildStudyPlan(course, initialStudyState, 15, vocabularySeed, now, "difficulties").length,
+  0,
+);
 
 const grammarActivity = course.units
   .flatMap((unit) => unit.lessons)
@@ -63,6 +71,10 @@ const wrongProfile = buildLearningProfile(course, wrongGrammar, vocabularySeed, 
 assert((wrongProfile.concepts.find((concept) => concept.id === "age-tener")?.score ?? 100) < 50);
 assert.equal(recommend(wrongGrammar)[0]?.id, "grammar-3");
 assert.equal(buildStudyPlan(course, wrongGrammar, 15, vocabularySeed, now)[0]?.id, "grammar-3");
+const focusedPlan = buildStudyPlan(course, wrongGrammar, 5, vocabularySeed, now, "difficulties");
+assert.equal(focusedPlan[0]?.id, "grammar-3");
+assert(focusedPlan.reduce((minutes, item) => minutes + item.minutes, 0) <= 5);
+assert(focusedPlan.every((item) => item.id === "grammar-3"));
 
 const dueMistake: StudyState = {
   ...wrongGrammar,
@@ -76,6 +88,10 @@ const dueMistake: StudyState = {
 const dueRecommendations = recommend(dueMistake);
 assert.equal(dueRecommendations[0]?.kind, "review");
 assert(!dueRecommendations.some((item) => item.source === "mistake" && item.id === "grammar-3"));
+const focusedReview = buildStudyPlan(course, dueMistake, 5, vocabularySeed, now, "difficulties");
+assert.equal(focusedReview[0]?.kind, "review");
+assert.deepEqual(focusedReview[0]?.reviewItems, [{ kind: "mistake", id: "grammar-3" }]);
+assert(!focusedReview.some((item) => item.kind === "activity" && item.id === "grammar-3"));
 const reviewedMistake: StudyState = {
   ...wrongGrammar,
   reviews: [
@@ -114,6 +130,8 @@ const dueWord: StudyState = {
   },
 };
 assert.equal(recommend(dueWord)[0]?.kind, "review");
+const focusedWord = buildStudyPlan(course, dueWord, 5, vocabularySeed, now, "difficulties");
+assert.deepEqual(focusedWord[0]?.reviewItems, [{ kind: "word", id: word.id }]);
 assert(
   buildLearningProfile(course, dueWord, vocabularySeed, now).items.some(
     (item) => item.id === `word:${word.id}`,
@@ -224,7 +242,63 @@ assert.equal(
   })[0]?.id,
   "en-intro-1",
 );
+assert.equal(buildPracticeHistory(englishCourse, wrongGrammar, []).length, 0);
 
-console.log(
-  "Learning profile and recommendations verified across fresh, mistakes, reviews, writing, speech, recency and language isolation.",
+const sessionId = "focused-session-1";
+const sessionState: StudyState = {
+  ...wrongGrammar,
+  attempts: [
+    {
+      id: "correct-in-session",
+      activityId: grammarActivity.id,
+      answer: "tiene",
+      correct: true,
+      skill: grammarActivity.skill,
+      createdAt: "2026-10-01T11:30:00.000Z",
+      sessionId,
+    },
+    ...wrongGrammar.attempts,
+  ],
+  speaking: [
+    {
+      ...poorSpeech.speaking[0],
+      id: "speech-in-session",
+      sessionId,
+      createdAt: "2026-10-01T11:35:00.000Z",
+      feedback: { ...poorSpeech.speaking[0].feedback!, accuracy: 70, fluency: 80 },
+    },
+    ...poorSpeech.speaking,
+  ],
+  sessions: [
+    {
+      id: sessionId,
+      unitId: course.units[0].id,
+      mode: "difficulties",
+      targetMinutes: 15,
+      startedAt: "2026-10-01T11:00:00.000Z",
+      finishedAt: "2026-10-01T11:40:00.000Z",
+      durationSeconds: 2400,
+      activityIds: [grammarActivity.id, "speaking-repeat-1"],
+      correct: 1,
+      wrong: 0,
+      wordsReviewed: 0,
+      plan: focusedPlan,
+    },
+  ],
+};
+const practiceHistory = buildPracticeHistory(course, sessionState, vocabularySeed);
+assert.equal(practiceHistory.find((item) => item.id === "exercise:grammar-3")?.points.length, 3);
+const comparison = sessionComparisons(sessionState.sessions[0], practiceHistory);
+assert.deepEqual(
+  comparison.find((item) => item.id === "exercise:grammar-3"),
+  {
+    id: "exercise:grammar-3",
+    title: grammarActivity.title,
+    measure: "Acerto",
+    before: 0,
+    after: 100,
+  },
 );
+assert.deepEqual(comparison.find((item) => item.id === "Pronúncia:speaking-repeat-1")?.after, 70);
+
+console.log("Learning profile, time-boxed plans, focused reviews and attempt history verified.");

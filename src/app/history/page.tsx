@@ -1,12 +1,20 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Check, Clock3, History, RotateCcw, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { formatDate, formatMinutes } from "@/lib/utils";
+import { buildPracticeHistory } from "@/domain/study/practice-history";
 
 export default function HistoryPage() {
-  const { state, course } = useStudy();
+  const { state, course, vocabularyItems } = useStudy();
+  const [showAllSeries, setShowAllSeries] = useState(false);
+  const practiceHistory = useMemo(
+    () => buildPracticeHistory(course, state, vocabularyItems),
+    [course, state, vocabularyItems],
+  );
+  const visibleSeries = showAllSeries ? practiceHistory : practiceHistory.slice(0, 6);
   const sessions = state.sessions
     .filter((item) => item.finishedAt)
     .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
@@ -147,6 +155,94 @@ export default function HistoryPage() {
           </p>
         </aside>
       </div>
+      <section className="practice-history-section">
+        <div className="section-head">
+          <div>
+            <span className="eyebrow">EVOLUÇÃO REAL</span>
+            <h2 className="section-title">Seu resultado em cada tentativa</h2>
+            <p className="section-subtitle">
+              Compare acertos, escrita, pronúncia, fluência e recordação ao longo do tempo.
+            </p>
+          </div>
+        </div>
+        {practiceHistory.length ? (
+          <>
+            <div className="practice-history-grid">
+              {visibleSeries.map((series) => {
+                const latest = series.points.at(-1)!;
+                const previous = series.points.at(-2);
+                return (
+                  <article className="panel practice-history-card" key={series.id}>
+                    <div className="practice-history-card-head">
+                      <div>
+                        <span className="eyebrow">{series.measure}</span>
+                        <h3>{series.title}</h3>
+                      </div>
+                      <strong>{latest.score}/100</strong>
+                    </div>
+                    <p>
+                      {previous
+                        ? latest.score > previous.score
+                          ? `Melhorou ${latest.score - previous.score} pontos desde a tentativa anterior.`
+                          : latest.score < previous.score
+                            ? "O resultado caiu na última tentativa; vale praticar novamente."
+                            : "Mesmo resultado da tentativa anterior."
+                        : "Primeira medida registrada para este item."}
+                    </p>
+                    <ol className="practice-attempt-list">
+                      {[...series.points.slice(-5)].reverse().map((point) => (
+                        <li key={point.id}>
+                          <time dateTime={point.at}>{formatDate(point.at)}</time>
+                          <span className="progress-track">
+                            <i style={{ width: `${point.score}%` }} />
+                          </span>
+                          <b>{point.score}</b>
+                        </li>
+                      ))}
+                    </ol>
+                    {series.points.length > 5 && (
+                      <details className="practice-older-attempts">
+                        <summary>Ver {series.points.length - 5} tentativas anteriores</summary>
+                        <ol className="practice-attempt-list">
+                          {[...series.points.slice(0, -5)].reverse().map((point) => (
+                            <li key={point.id}>
+                              <time dateTime={point.at}>{formatDate(point.at)}</time>
+                              <span className="progress-track">
+                                <i style={{ width: `${point.score}%` }} />
+                              </span>
+                              <b>{point.score}</b>
+                            </li>
+                          ))}
+                        </ol>
+                      </details>
+                    )}
+                    <Link href={series.href} className="text-link">
+                      Praticar novamente <ArrowRight size={15} />
+                    </Link>
+                  </article>
+                );
+              })}
+            </div>
+            {practiceHistory.length > 6 && (
+              <button
+                className="secondary-button practice-history-more"
+                onClick={() => setShowAllSeries((current) => !current)}
+              >
+                {showAllSeries ? "Mostrar menos" : `Ver todos os ${practiceHistory.length} itens`}
+              </button>
+            )}
+          </>
+        ) : (
+          <div className="empty-state panel">
+            <History size={26} />
+            <strong>Suas tentativas aparecerão aqui.</strong>
+            <span>Responda atividades ou revise cartões para acompanhar sua evolução.</span>
+            <Link href="/study" className="secondary-button">
+              Começar aula
+            </Link>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

@@ -74,14 +74,14 @@ Tudo isso deve contribuir para decidir:
 
 ## Implementação no produto — auditoria de 2026-10-01
 
-O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise. Nenhum item amplo foi marcado como totalmente implementado sem atender ao escopo inteiro.
+O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **IMPLEMENTADO** indica que o fluxo principal atende ao item; **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise.
 
 | Item | Implementação | Evidência atual e principal lacuna |
 | --- | --- | --- |
 | 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala e revisões; ainda falta estado separado por curso/idioma. |
 | 2. Motor adaptativo | **PARCIAL** | Prioriza revisões, erros, pronúncia/fluência e trilha; ainda faltam sinais de uso do dicionário, conversas e avaliações mais amplas. |
-| 3. Treinar minhas dificuldades | **PENDENTE** | Há recomendações pessoais, mas não existe uma sessão exclusiva de dificuldades nem comparação do resultado da sessão. |
-| 4. Sessões rápidas | **PARCIAL** | O plano já respeita a meta diária; faltam opções de 5/15/30 minutos e composição própria para cada duração. |
+| 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
+| 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | A página **Meus erros** guarda respostas, correções e agendamento dos exercícios objetivos; faltam erros de escrita/fala e vínculo explícito com idioma/curso. |
 | 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` atende vocabulário e erros; ainda não agenda expressões, estruturas e pronúncia como itens próprios. |
 | 7. Dicionário contextual | **PARCIAL** | **Vocabulário** tem busca, tradução, exemplo e áudio; faltam sentidos por contexto, ocorrências, histórico de busca e integração automática com revisão. |
@@ -97,7 +97,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 17. Tutor persistente | **PARCIAL** | O professor recebe contexto curto da aula e dos erros; faltam memória pedagógica persistente e adaptação contínua ao perfil. |
 | 18. Microlição a partir dos erros | **PENDENTE** | Há indicação do erro e atividade para refazer, mas não uma microlição gerada e avaliada. |
 | 19. Memória ativa de comportamento | **PARCIAL** | Erros e palavras difíceis afetam o perfil; buscas repetidas, áudios repetidos e abandono ainda não geram sinais. |
-| 20. Evolução por tentativa | **PARCIAL** | Tentativas e avaliações de fala são salvas e influenciam o perfil; falta linha do tempo comparável por item na interface. |
+| 20. Evolução por tentativa | **PARCIAL** | Histórico mostra linha do tempo por atividade, fala, escrita e palavra; shadowing e futuras avaliações conversacionais ainda não geram séries. |
 | 21. Três modos de conversa | **PENDENTE** | Livre, role-play e avaliação oral não existem como modos de conversa; a avaliação oficial segue em análise no item 25. |
 | 22. Prova adaptativa escrita/objetiva | **PENDENTE** | Existe teste final fixo; ele não ajusta a dificuldade durante a prova. |
 | 23. Relatório por competências | **PARCIAL** | O resultado mostra nota objetiva e competências avaliadas; faltam metas configuráveis e cobertura completa de escrita e fala. |
@@ -2035,3 +2035,18 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 **Reaproveitado:** `StudyState`, tentativas, `writing`, `speaking`, agendamentos de revisão, `dueReviewCounts`, planejador, páginas existentes e esquema de conteúdo. Não foi criada migração nem dependência de IA para calcular o perfil.
 
 **Validação:** `npm.cmd run content:validate`, `npm.cmd run learning:verify`, `npm.cmd run typecheck`, `npm.cmd run lint` e `npm.cmd run build`.
+
+---
+
+# Registro da entrega — sessões e evolução (2026-10-01)
+
+**Itens agrupados:** 3 (Treinar minhas dificuldades), 4 (sessões rápidas) e 20 (evolução por tentativa).
+
+- **Implementado:** escolha de 5, 15, 30 minutos ou sessão completa na home e na aula, com planos baseados no mesmo motor de recomendações. A seleção de cartões é limitada ao plano e o tempo mostrado é estimado.
+- **Implementado:** treino focado em dificuldades reais do curso, com estado vazio para quem ainda não tem evidência. O perfil já se atualiza quando as tentativas e revisões são registradas.
+- **Implementado:** comparação ao terminar a sessão e histórico por tentativa para exercícios corrigidos, escrita avaliada, pronúncia, fluência e revisão de palavras. Uma primeira nota é identificada como primeira medida, sem alegar melhoria.
+- **Ainda pendente nos itens 3 e 20:** microconversa e exercícios gerados por IA no treino focado; séries de shadowing e avaliação oral conversacional, que dependem de recursos futuros.
+
+**Reaproveitado:** `StudyState`, `LearningRecommendationEngine`, `ReviewScheduler`, `ReviewQueue`, sessões e tentativas já persistidas. Metadados novos ficam no JSON do estado e no campo `performance` da sessão; não há migração de banco.
+
+**Arquivos principais:** `src/domain/study/study-planner.ts`, `src/domain/study/practice-history.ts`, `src/app/study/page.tsx`, `src/app/history/page.tsx`, `src/app/dashboard/page.tsx`, `src/components/review/review-queue.tsx` e `src/components/study-provider.tsx`.

@@ -176,6 +176,34 @@ export default function DashboardPage() {
               <div className="hero-note">vamos conversar</div>
             </div>
           </section>
+          <section className="quick-session-panel panel">
+            <div>
+              <span className="eyebrow">
+                <Clock3 size={13} /> SESSÃO SOB MEDIDA
+              </span>
+              <h2>Quanto tempo você tem?</h2>
+              <p>
+                Escolha o tempo; o Destrava monta o roteiro com o que faz sentido praticar agora.
+              </p>
+            </div>
+            <div className="quick-session-actions">
+              {[5, 15, 30].map((minutes) => (
+                <Link
+                  key={minutes}
+                  href={`/study?duration=${minutes}&mode=guided`}
+                  className="quick-session-time"
+                >
+                  {minutes} min <ArrowRight size={14} />
+                </Link>
+              ))}
+              <Link href="/study?duration=full&mode=guided" className="quick-session-time">
+                Completa <ArrowRight size={14} />
+              </Link>
+              <Link href="/study?duration=15&mode=difficulties" className="quick-session-focus">
+                <Target size={15} /> Treinar minhas dificuldades
+              </Link>
+            </div>
+          </section>
           <div className="stats-grid">
             <div className="stat-card panel">
               <span className="stat-icon green">

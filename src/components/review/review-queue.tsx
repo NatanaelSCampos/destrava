@@ -5,6 +5,7 @@ import { ArrowRight, Check, RotateCcw, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { SpeakButton } from "@/components/audio/speak-button";
+import type { PlannedReviewItem } from "@/domain/study/study-state";
 
 type ReviewItem = {
   kind: "word" | "mistake";
@@ -16,9 +17,11 @@ type ReviewItem = {
 
 export function ReviewQueue({
   mode = "due",
+  plannedItems,
   onComplete,
 }: {
   mode?: "due" | "new";
+  plannedItems?: PlannedReviewItem[];
   onComplete?: () => void;
 }) {
   const { vocabularyItems, state, reviewWord, reviewError } = useStudy();
@@ -26,6 +29,36 @@ export function ReviewQueue({
   const [flipped, setFlipped] = useState(false);
   const [finishedIds, setFinishedIds] = useState<string[]>([]);
   const items = useMemo<ReviewItem[]>(() => {
+    if (plannedItems) {
+      return plannedItems.flatMap((selected): ReviewItem[] => {
+        if (selected.kind === "word") {
+          const word = vocabularyItems.find((entry) => entry.id === selected.id);
+          return word
+            ? [
+                {
+                  kind: "word" as const,
+                  id: word.id,
+                  front: word.spanish,
+                  back: word.translation,
+                  example: word.example,
+                },
+              ]
+            : [];
+        }
+        const mistake = state.mistakes[selected.id];
+        return mistake
+          ? [
+              {
+                kind: "mistake" as const,
+                id: mistake.activityId,
+                front: mistake.originalAnswer,
+                back: mistake.correctAnswer,
+                example: mistake.explanation,
+              },
+            ]
+          : [];
+      });
+    }
     const words = vocabularyItems
       .filter((word) =>
         mode === "new"
@@ -52,7 +85,7 @@ export function ReviewQueue({
               example: item.explanation,
             }));
     return [...mistakes, ...words];
-  }, [mode, state.vocabulary, state.mistakes, vocabularyItems]);
+  }, [mode, plannedItems, state.vocabulary, state.mistakes, vocabularyItems]);
   const pending = items.filter((item) => !finishedIds.includes(`${item.kind}-${item.id}`));
   const item = pending[index] ?? pending[0];
 
@@ -96,7 +129,8 @@ export function ReviewQueue({
       <div className="review-queue-top">
         <span className="eyebrow">{mode === "new" ? "NOVAS PALAVRAS" : "REVISÃO INTELIGENTE"}</span>
         <span>
-          {finishedIds.length + 1} de {items.length + finishedIds.length}
+          {finishedIds.length + 1} de{" "}
+          {plannedItems ? items.length : items.length + finishedIds.length}
         </span>
       </div>
       <button

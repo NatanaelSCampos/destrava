@@ -29,6 +29,15 @@ export type VocabularyProgress = {
   status: "new" | "learning" | "known" | "difficult";
   schedule: ReviewSchedule;
 };
+export type SessionMode = "guided" | "difficulties";
+export type PlannedReviewItem = { kind: "word" | "mistake"; id: string };
+export type PlannedItem = {
+  kind: "activity" | "review";
+  id: string;
+  title: string;
+  minutes: number;
+  reviewItems?: PlannedReviewItem[];
+};
 export type Mistake = {
   id: string;
   activityId: string;
@@ -46,6 +55,8 @@ export type Mistake = {
 export type StudySession = {
   id: string;
   unitId: string;
+  mode?: SessionMode;
+  targetMinutes?: number;
   startedAt: string;
   finishedAt: string | null;
   durationSeconds: number;
@@ -53,13 +64,14 @@ export type StudySession = {
   correct: number;
   wrong: number;
   wordsReviewed: number;
-  plan: Array<{ kind: "activity" | "review"; id: string; title: string; minutes: number }>;
+  plan: PlannedItem[];
 };
 
 export type StudyEvent = { id: string; type: string; createdAt: string; activityId?: string };
 export type ReviewEntry = {
   id: string;
   scheduleId: string;
+  sessionId?: string | null;
   correct: boolean;
   reviewedAt: string;
   intervalBefore: number;
@@ -76,6 +88,7 @@ export type AssessmentAttempt = {
 export type WritingSubmission = {
   id: string;
   activityId: string;
+  sessionId?: string | null;
   text: string;
   createdAt: string;
   feedback?: unknown;
@@ -83,6 +96,7 @@ export type WritingSubmission = {
 export type SpeakingSubmission = {
   id: string;
   activityId: string;
+  sessionId?: string | null;
   transcription: string;
   audioUrl: string | null;
   audioPath?: string;
@@ -250,6 +264,7 @@ export function reviewVocabulary(
       {
         id: crypto.randomUUID(),
         scheduleId: schedule.id,
+        sessionId: state.activeSessionId,
         correct,
         reviewedAt: new Date().toISOString(),
         intervalBefore: current.schedule.intervalDays,
@@ -285,6 +300,7 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
       {
         id: crypto.randomUUID(),
         scheduleId: schedule.id,
+        sessionId: state.activeSessionId,
         correct,
         reviewedAt: new Date().toISOString(),
         intervalBefore: mistake.schedule.intervalDays,
