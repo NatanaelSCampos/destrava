@@ -4,6 +4,7 @@ import { frecuenciasA1 } from "@/content/frecuencias-a1";
 import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
+import { findNumberPrompt } from "@/domain/numbers/number-practice";
 
 const azureResultSchema = z.object({
   RecognitionStatus: z.string(),
@@ -77,12 +78,19 @@ export async function POST(request: Request) {
 
   const form = await request.formData().catch(() => null);
   const activityId = form?.get("activityId");
+  const numberPromptId = form?.get("numberPromptId");
   const file = form?.get("audio");
-  if (typeof activityId !== "string" || !(file instanceof File))
+  if (
+    !(file instanceof File) ||
+    (typeof activityId !== "string" && typeof numberPromptId !== "string")
+  )
     return NextResponse.json({ error: "Envie a gravação da atividade." }, { status: 400 });
 
-  const activity = findActivity(frecuenciasA1, activityId);
-  if (activity?.type !== "speaking" || !activity.referenceText)
+  const activity = typeof activityId === "string" ? findActivity(frecuenciasA1, activityId) : null;
+  const numberPrompt = typeof numberPromptId === "string" ? findNumberPrompt(numberPromptId) : null;
+  const referenceText =
+    numberPrompt?.spoken ?? (activity?.type === "speaking" ? activity.referenceText : undefined);
+  if (!referenceText)
     return NextResponse.json({ error: "Frase de repetição não encontrada." }, { status: 404 });
 
   if (file.size > 700_000)
@@ -96,7 +104,7 @@ export async function POST(request: Request) {
   endpoint.searchParams.set("format", "detailed");
   const config = Buffer.from(
     JSON.stringify({
-      ReferenceText: activity.referenceText,
+      ReferenceText: referenceText,
       GradingSystem: "HundredMark",
       Granularity: "Word",
       Dimension: "Comprehensive",
@@ -148,7 +156,7 @@ export async function POST(request: Request) {
       );
 
     const feedback: PronunciationFeedback = {
-      referenceText: activity.referenceText,
+      referenceText,
       recognizedText: result.Display ?? "",
       accuracy: result.AccuracyScore,
       fluency: result.FluencyScore,

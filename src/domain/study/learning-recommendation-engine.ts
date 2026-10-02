@@ -1,11 +1,12 @@
 import type { PublicCourse } from "@/content/public";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
 import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
 
 type RecommendationBase = {
-  source: "due_review" | "mistake" | "pronunciation" | "fluency" | "curriculum";
+  source: "due_review" | "mistake" | "pronunciation" | "fluency" | "curriculum" | "number";
   id: string;
   title: string;
   reason: string;
@@ -14,6 +15,7 @@ type RecommendationBase = {
 };
 export type LearningRecommendation =
   | (RecommendationBase & { kind: "review"; source: "due_review" })
+  | (RecommendationBase & { kind: "number"; source: "number" })
   | (RecommendationBase & {
       kind: "activity";
       source: "mistake" | "pronunciation" | "fluency" | "curriculum";
@@ -132,6 +134,32 @@ export class LearningRecommendationEngine {
         unitNumber: context.unit.number,
         lessonSlug: context.lesson.slug,
       });
+    }
+
+    if (course.languageCode.startsWith("es")) {
+      const numberGroups = new Map<string, NonNullable<StudyState["numberAttempts"]>>();
+      for (const attempt of state.numberAttempts ?? []) {
+        if (!findNumberPrompt(attempt.promptId)) continue;
+        const group = numberGroups.get(attempt.promptId) ?? [];
+        group.push(attempt);
+        numberGroups.set(attempt.promptId, group);
+      }
+      for (const [promptId, group] of numberGroups) {
+        const prompt = findNumberPrompt(promptId)!;
+        const recent = group.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3);
+        if (recent[0].correct && recent.every((item) => item.correct)) continue;
+        const misses = recent.filter((item) => !item.correct).length;
+        if (!misses) continue;
+        add({
+          kind: "number",
+          source: "number",
+          id: promptId,
+          title: `${numberCategoryLabels[prompt.category]}: ${prompt.display}`,
+          reason: `Você teve dificuldade em ${misses} das últimas ${recent.length} tentativas deste número.`,
+          priority: 72 + misses * 6,
+          minutes: 3,
+        });
+      }
     }
 
     for (const [index, context] of activities.entries()) {

@@ -9,6 +9,7 @@ import { LearningRecommendationEngine } from "@/domain/study/learning-recommenda
 import type { Skill } from "@/content/schema";
 import { featureFlags } from "@/lib/feature-flags";
 import { recommendationLink } from "@/lib/recommendation-link";
+import { ReviewScheduler } from "@/domain/review/review-scheduler";
 
 const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "vocabulary", label: "Vocabulário" },
@@ -57,6 +58,14 @@ export default function ProgressPage() {
   }));
   const weakSkills = skillData.filter((item) => item.performance !== null && item.performance < 80);
   const learningProfile = buildLearningProfile(course, state, vocabularyItems);
+  const activityIds = new Set(
+    course.units.flatMap((entry) =>
+      entry.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
+    ),
+  );
+  const firstDueMistake = Object.values(state.mistakes).find(
+    (mistake) => activityIds.has(mistake.activityId) && ReviewScheduler.isDue(mistake.schedule),
+  );
   const improvements = LearningRecommendationEngine.recommend(
     course,
     state,
@@ -151,9 +160,55 @@ export default function ProgressPage() {
                   <strong>{item.title}</strong>
                   <p>{item.reason}</p>
                 </div>
-                <Link href={recommendationLink(course.slug, item)} className="secondary-button">
-                  Praticar agora <ArrowRight size={15} />
-                </Link>
+                <div className="improvement-actions">
+                  <Link href={recommendationLink(course.slug, item)} className="secondary-button">
+                    Praticar agora <ArrowRight size={15} />
+                  </Link>
+                  {item.kind === "activity" && state.mistakes[item.id] && (
+                    <>
+                      <details className="improvement-explanation">
+                        <summary>Ver explicação</summary>
+                        <p>
+                          {state.mistakes[item.id].explanation ||
+                            "Compare sua resposta com a forma esperada no caderno de erros."}
+                        </p>
+                        <p>
+                          <strong>Forma esperada:</strong> {state.mistakes[item.id].correctAnswer}
+                        </p>
+                      </details>
+                      {featureFlags.AI_TUTOR && (
+                        <Link
+                          href={`/micro-lesson?activity=${encodeURIComponent(item.id)}`}
+                          className="text-link"
+                        >
+                          Fazer microlição <ArrowRight size={15} />
+                        </Link>
+                      )}
+                    </>
+                  )}
+                  {item.kind === "review" && firstDueMistake && (
+                    <>
+                      <details className="improvement-explanation">
+                        <summary>Ver um erro pendente</summary>
+                        <p>{firstDueMistake.explanation}</p>
+                        <p>
+                          <strong>Forma esperada:</strong> {firstDueMistake.correctAnswer}
+                        </p>
+                      </details>
+                      {featureFlags.AI_TUTOR && (
+                        <Link
+                          href={`/micro-lesson?activity=${encodeURIComponent(firstDueMistake.activityId)}`}
+                          className="text-link"
+                        >
+                          Fazer microlição <ArrowRight size={15} />
+                        </Link>
+                      )}
+                    </>
+                  )}
+                  {item.kind === "number" && (
+                    <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

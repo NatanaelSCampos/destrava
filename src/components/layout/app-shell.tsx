@@ -14,6 +14,7 @@ import {
   House,
   Menu,
   Mic2,
+  Hash,
   NotebookPen,
   Play,
   RotateCcw,
@@ -33,6 +34,7 @@ const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
   { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
   { href: "/alphabet", label: "Alfabeto", icon: CaseUpper },
+  { href: "/numbers", label: "Números", icon: Hash },
   { href: "/study", label: "Aula de hoje", icon: Play },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
@@ -65,9 +67,12 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const pendingReviews = dueReviewCounts(state, vocabularyItems, new Date(), activityIds).total;
   const navItems = navigation(course.slug).filter(
-    (item) => item.href !== "/speaking" || featureFlags.SPEAKING,
+    (item) =>
+      (item.href !== "/speaking" || featureFlags.SPEAKING) &&
+      (item.href !== "/numbers" || course.languageCode.startsWith("es")),
   );
-  const studyNavCount = featureFlags.SPEAKING ? 6 : 5;
+  const studyNavCount =
+    5 + Number(course.languageCode.startsWith("es")) + Number(featureFlags.SPEAKING);
   const activeNav = navItems.find(
     (item) =>
       pathname.startsWith(item.href) && (item.href !== "/dashboard" || pathname === item.href),
@@ -186,7 +191,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             </button>
             <span className="breadcrumb-parent">Meu espaço</span>
             <span className="breadcrumb-sep">/</span>
-            <strong>{activeNav?.label ?? "Meu curso"}</strong>
+            <strong>
+              {pathname === "/micro-lesson" ? "Microlição" : (activeNav?.label ?? "Meu curso")}
+            </strong>
           </div>
           <div className="topbar-right">
             <span className="level-pill">NÍVEL A1</span>

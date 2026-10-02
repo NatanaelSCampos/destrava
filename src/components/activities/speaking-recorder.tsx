@@ -15,17 +15,28 @@ export function SpeakingRecorder({
   activity,
   practiceMode = "lesson",
   showReference = true,
+  showReferenceAudio = true,
+  referenceHint,
+  numberPromptId,
+  onNumberAssessed,
   onSaved,
 }: {
   activity: Speaking;
   practiceMode?: NonNullable<SpeakingSubmission["practiceMode"]>;
   showReference?: boolean;
+  showReferenceAudio?: boolean;
+  referenceHint?: string;
+  numberPromptId?: string;
+  onNumberAssessed?: (feedback: PronunciationFeedback) => void;
   onSaved?: () => void;
 }) {
   const { course, state, saveSpeaking } = useStudy();
-  const previous = state.speaking.find(
-    (item) => item.activityId === activity.id && (item.practiceMode ?? "lesson") === practiceMode,
-  );
+  const previous = numberPromptId
+    ? undefined
+    : state.speaking.find(
+        (item) =>
+          item.activityId === activity.id && (item.practiceMode ?? "lesson") === practiceMode,
+      );
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
@@ -41,7 +52,8 @@ export function SpeakingRecorder({
   const [error, setError] = useState("");
   const shownFeedback = hasNewAttempt ? feedback : (feedback ?? previous?.feedback ?? null);
   const ownWords = practiceMode === "own";
-  const requireAssessment = practiceMode === "shadowing" || practiceMode === "memory";
+  const requireAssessment =
+    Boolean(numberPromptId) || practiceMode === "shadowing" || practiceMode === "memory";
 
   useEffect(
     () => () => {
@@ -98,6 +110,13 @@ export function SpeakingRecorder({
     setRecording(false);
   }
   function save() {
+    if (numberPromptId) {
+      if (!feedback || !onNumberAssessed) return;
+      onNumberAssessed(feedback);
+      setSaved(true);
+      onSaved?.();
+      return;
+    }
     if (!audioUrl || !transcription.trim()) return;
     saveSpeaking(
       activity.id,
@@ -117,7 +136,7 @@ export function SpeakingRecorder({
     try {
       const wav = await audioToWav(audioBlob);
       const form = new FormData();
-      form.append("activityId", activity.id);
+      form.append(numberPromptId ? "numberPromptId" : "activityId", numberPromptId ?? activity.id);
       form.append("audio", wav, "pronunciation.wav");
       const response = await fetch("/api/pronunciation", { method: "POST", body: form });
       const data = await response.json();
@@ -150,13 +169,15 @@ export function SpeakingRecorder({
             {showReference ? (
               <p lang={course.languageCode}>{activity.referenceText}</p>
             ) : (
-              <p>Escute a frase sem ler e tente reproduzi-la de memória.</p>
+              <p>{referenceHint ?? "Escute a frase sem ler e tente reproduzi-la de memória."}</p>
             )}
-            <SpeakButton
-              text={activity.referenceText}
-              label="Ouvir a frase para repetir"
-              withLabel
-            />
+            {showReferenceAudio && (
+              <SpeakButton
+                text={activity.referenceText}
+                label="Ouvir a frase para repetir"
+                withLabel
+              />
+            )}
           </div>
         )}
       </div>
@@ -230,52 +251,56 @@ export function SpeakingRecorder({
           </small>
         </div>
       )}
-      <div className="field">
-        <label htmlFor={`transcription-${activity.id}`}>
-          {ownWords
-            ? "Transcreva sua frase própria"
-            : activity.referenceText
-              ? "Revise ou digite o que você disse"
-              : "Digite o que você disse"}
-        </label>
-        <textarea
-          id={`transcription-${activity.id}`}
-          value={transcription}
-          onChange={(event) => {
-            setTranscription(event.target.value);
-            setSaved(false);
-          }}
-          placeholder="Me llamo… Soy de…"
-          rows={3}
-        />
-      </div>
-      {transcription.trim() && (
+      {!numberPromptId && (
+        <div className="field">
+          <label htmlFor={`transcription-${activity.id}`}>
+            {ownWords
+              ? "Transcreva sua frase própria"
+              : activity.referenceText
+                ? "Revise ou digite o que você disse"
+                : "Digite o que você disse"}
+          </label>
+          <textarea
+            id={`transcription-${activity.id}`}
+            value={transcription}
+            onChange={(event) => {
+              setTranscription(event.target.value);
+              setSaved(false);
+            }}
+            placeholder="Me llamo… Soy de…"
+            rows={3}
+          />
+        </div>
+      )}
+      {!numberPromptId && transcription.trim() && (
         <SpeakButton text={transcription} label="Ouvir a transcrição" withLabel />
       )}
       <p className="helper-note">
-        {ownWords
-          ? "Sua produção livre fica no histórico sem nota automática; o Azure avalia apenas as etapas com frase de referência."
-          : activity.referenceText
-            ? "A avaliação usa a gravação e a frase de referência da atividade. A transcrição pode ser corrigida antes de salvar."
-            : "Nesta atividade livre, você digita a transcrição. A avaliação automática é oferecida na atividade de repetição."}
+        {numberPromptId
+          ? "O Azure compara a gravação com o número esperado. A tentativa fica no seu histórico sem guardar o áudio."
+          : ownWords
+            ? "Sua produção livre fica no histórico sem nota automática; o Azure avalia apenas as etapas com frase de referência."
+            : activity.referenceText
+              ? "A avaliação usa a gravação e a frase de referência da atividade. A transcrição pode ser corrigida antes de salvar."
+              : "Nesta atividade livre, você digita a transcrição. A avaliação automática é oferecida na atividade de repetição."}
       </p>
       <button
         type="button"
         className="primary-button"
         disabled={
           !audioUrl ||
-          !transcription.trim() ||
+          (!numberPromptId && !transcription.trim()) ||
           assessing ||
           saved ||
           (requireAssessment && !feedback)
         }
         onClick={save}
       >
-        <Check size={16} /> Salvar prática oral
+        <Check size={16} /> {numberPromptId ? "Registrar tentativa" : "Salvar prática oral"}
       </button>
       {saved && (
         <p className="inline-success" role="status">
-          Prática oral salva.
+          {numberPromptId ? "Tentativa registrada." : "Prática oral salva."}
         </p>
       )}
       {error && (

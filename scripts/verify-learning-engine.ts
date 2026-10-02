@@ -13,8 +13,15 @@ import {
   recordEvaluatedSpeaking,
   recordEvaluatedWriting,
   recordVocabularySignal,
+  recordNumberAttempt,
+  recordMicroLessonAttempt,
 } from "../src/domain/study/study-state";
 import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
+import {
+  findNumberPrompt,
+  gradeNumberDictation,
+  numberSpeechScore,
+} from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
 const now = new Date("2026-10-01T12:00:00.000Z");
@@ -389,6 +396,66 @@ assert.equal(wordReviewCard(word, 2).frontLabel, "ESCUTA");
 assert.equal(vocabularyContext(vocabularySeed[6], "es").senses.length, 3);
 assert(vocabularyOccurrences(course, vocabularySeed[6]).length > 0);
 
+const fortySeven = findNumberPrompt("47")!;
+assert(gradeNumberDictation(fortySeven, "47"));
+assert(!gradeNumberDictation(fortySeven, "70"));
+assert(!gradeNumberDictation(fortySeven, "abc47"));
+assert(gradeNumberDictation(findNumberPrompt("money-12-50")!, "12.50"));
+assert(gradeNumberDictation(findNumberPrompt("time-08-15")!, "8:15"));
+assert.deepEqual(
+  numberSpeechScore({ ...poorSpeech.speaking[0].feedback!, accuracy: 80, completeness: 80 }),
+  { score: 80, correct: true },
+);
+const numberIssue = recordNumberAttempt(initialStudyState, {
+  promptId: "47",
+  mode: "dictation",
+  answer: "70",
+  correct: false,
+  score: 0,
+});
+const numberNow = new Date(numberIssue.numberAttempts[0].createdAt);
+assert.equal(numberIssue.events[0].itemId, "47");
+assert(
+  (buildLearningProfile(course, numberIssue, vocabularySeed, numberNow).concepts.find(
+    (item) => item.id === "numbers",
+  )?.evidenceCount ?? 0) > 0,
+);
+assert(recommend(numberIssue).some((item) => item.kind === "number" && item.id === "47"));
+const otherCourse = { ...course, id: "french-a1", languageCode: "fr" };
+assert.equal(
+  buildLearningProfile(otherCourse, numberIssue, vocabularySeed, numberNow).concepts.find(
+    (item) => item.id === "numbers",
+  )?.evidenceCount,
+  0,
+);
+assert(
+  !LearningRecommendationEngine.recommend(
+    otherCourse,
+    numberIssue,
+    buildLearningProfile(otherCourse, numberIssue, vocabularySeed, numberNow),
+    vocabularySeed,
+    { now: numberNow },
+  ).some((item) => item.kind === "number"),
+);
+
+const practicedMistake = recordMicroLessonAttempt(wrongGrammar, {
+  activityId: grammarActivity.id,
+  question: "Qual forma usa tener?",
+  selectedOption: "Tengo 31 años",
+  correct: true,
+});
+assert.equal(practicedMistake.microLessonAttempts[0].correct, true);
+assert.equal(practicedMistake.events[0].type, "micro_lesson_correct");
+assert(
+  (buildLearningProfile(
+    course,
+    practicedMistake,
+    vocabularySeed,
+    new Date(practicedMistake.microLessonAttempts[0].createdAt),
+  ).concepts.find((item) => item.id === "age-tener")?.evidenceCount ?? 0) >
+    wrongProfile.concepts.find((item) => item.id === "age-tener")!.evidenceCount,
+);
+
 console.log(
-  "Learning profile, focused plans, review cards, evaluated errors and vocabulary signals verified.",
+  "Learning profile, focused plans, review cards, errors, vocabulary, numbers and micro-lessons verified.",
 );

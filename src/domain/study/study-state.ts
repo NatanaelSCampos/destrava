@@ -5,6 +5,7 @@ import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import type { PublicActivity, PublicCourse } from "@/content/public";
 import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
+import type { NumberMode } from "@/domain/numbers/number-practice";
 
 export type StudentProfile = {
   goal: string;
@@ -112,6 +113,25 @@ export type SpeakingSubmission = {
   createdAt: string;
 };
 
+export type NumberAttempt = {
+  id: string;
+  promptId: string;
+  mode: NumberMode;
+  answer: string;
+  correct: boolean;
+  score: number;
+  createdAt: string;
+};
+
+export type MicroLessonAttempt = {
+  id: string;
+  activityId: string;
+  question: string;
+  selectedOption: string;
+  correct: boolean;
+  createdAt: string;
+};
+
 export type StudyState = {
   profile: StudentProfile;
   completedActivityIds: string[];
@@ -124,6 +144,8 @@ export type StudyState = {
   assessmentAttempts: AssessmentAttempt[];
   writing: WritingSubmission[];
   speaking: SpeakingSubmission[];
+  numberAttempts: NumberAttempt[];
+  microLessonAttempts: MicroLessonAttempt[];
   activeSessionId: string | null;
 };
 
@@ -146,8 +168,56 @@ export const initialStudyState: StudyState = {
   assessmentAttempts: [],
   writing: [],
   speaking: [],
+  numberAttempts: [],
+  microLessonAttempts: [],
   activeSessionId: null,
 };
+
+export function recordNumberAttempt(
+  state: StudyState,
+  input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
+): StudyState {
+  const now = new Date().toISOString();
+  return {
+    ...state,
+    numberAttempts: [
+      { ...input, id: crypto.randomUUID(), createdAt: now },
+      ...(state.numberAttempts ?? []),
+    ],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: input.correct ? "number_correct" : "number_wrong",
+        itemId: input.promptId,
+        createdAt: now,
+      },
+      ...state.events,
+    ],
+  };
+}
+
+export function recordMicroLessonAttempt(
+  state: StudyState,
+  input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
+): StudyState {
+  const now = new Date().toISOString();
+  return {
+    ...state,
+    microLessonAttempts: [
+      { ...input, id: crypto.randomUUID(), createdAt: now },
+      ...(state.microLessonAttempts ?? []),
+    ],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: input.correct ? "micro_lesson_correct" : "micro_lesson_wrong",
+        activityId: input.activityId,
+        createdAt: now,
+      },
+      ...state.events,
+    ],
+  };
+}
 
 function event(type: string, activityId?: string): StudyEvent {
   return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), activityId };

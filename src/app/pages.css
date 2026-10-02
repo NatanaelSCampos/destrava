@@ -86,6 +86,264 @@
   display: inline-flex;
   margin-top: 12px;
 }
+.mistake-actions,
+.improvement-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+.mistake-actions {
+  margin-top: 14px;
+}
+.improvement-actions {
+  justify-content: flex-end;
+  max-width: 310px;
+}
+.improvement-explanation {
+  flex-basis: 100%;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.improvement-explanation summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 700;
+}
+.improvement-explanation p {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.number-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 18px 22px;
+  margin-bottom: 16px;
+}
+.number-controls label {
+  display: grid;
+  gap: 7px;
+  min-width: 180px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+}
+.number-controls select,
+.number-answer-form input {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: #fafafa;
+  color: var(--text-primary);
+  padding: 9px 11px;
+}
+.number-mode-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.number-mode-list button {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.number-mode-list button.active {
+  border-color: #bb3446;
+  box-shadow: 0 0 0 2px #fbe7ea;
+}
+.number-mode-list svg {
+  color: #bb3446;
+}
+.number-mode-list strong {
+  font-size: 12px;
+}
+.number-mode-list span {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.number-layout,
+.micro-lesson-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: start;
+  gap: 18px;
+}
+.number-work,
+.number-history,
+.micro-lesson-main,
+.micro-lesson-side {
+  padding: 22px;
+}
+.number-work h2,
+.number-history h2,
+.micro-lesson-main h2,
+.micro-lesson-side h2 {
+  font-size: 19px;
+  margin: 9px 0 12px;
+}
+.number-work > p,
+.number-history p,
+.micro-lesson-side p {
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.number-answer-form {
+  display: grid;
+  justify-items: start;
+  gap: 9px;
+  max-width: 360px;
+  margin-top: 18px;
+}
+.number-answer-form label,
+.micro-lesson-options legend {
+  font-size: 12px;
+  font-weight: 700;
+}
+.number-display {
+  color: var(--text-primary) !important;
+  font-size: clamp(28px, 5vw, 46px) !important;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.number-result {
+  margin-top: 18px;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.number-result.correct {
+  background: #eff8f1;
+  color: #225c37;
+}
+.number-result.wrong {
+  background: #fff3f4;
+  color: #962538;
+}
+.number-result p {
+  margin: 6px 0;
+}
+.number-next,
+.number-reference {
+  margin-top: 18px;
+}
+.number-reference {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.number-history h3 {
+  font-size: 12px;
+  margin: 22px 0 10px;
+}
+.number-history ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.number-history li button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.number-history li span,
+.number-history small {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+.micro-lesson-main .mistake-comparison {
+  margin: 16px 0;
+}
+.micro-lesson-known,
+.micro-lesson-generated {
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.micro-lesson-known p,
+.micro-lesson-generated p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.micro-lesson-generated {
+  margin-top: 20px;
+}
+.micro-lesson-generated h3 {
+  font-size: 17px;
+  margin: 8px 0;
+}
+.micro-lesson-options {
+  display: grid;
+  gap: 9px;
+  border: 0;
+  padding: 18px 0;
+  margin: 0;
+}
+.micro-lesson-options legend {
+  padding: 0 0 10px;
+}
+.micro-lesson-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.micro-lesson-options label.selected {
+  border-color: #bb3446;
+  background: #fff7f8;
+}
+.micro-lesson-side p svg {
+  vertical-align: middle;
+  color: #bb3446;
+}
+@media (max-width: 960px) {
+  .number-layout,
+  .micro-lesson-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .number-mode-list {
+    grid-template-columns: 1fr;
+  }
+  .number-mode-list button {
+    grid-template-columns: 18px 1fr;
+    align-items: center;
+  }
+  .number-mode-list span {
+    grid-column: 2;
+  }
+  .improvement-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+  .micro-lesson-main .mistake-comparison {
+    grid-template-columns: 1fr;
+  }
+}
 .speaking-practice-options {
   display: flex;
   align-items: center;

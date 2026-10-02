@@ -1,6 +1,7 @@
 import type { PublicCourse } from "@/content/public";
 import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
+import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
 import type { StudyState } from "./study-state";
 
 export type LearningSkill = Skill | "pronunciation" | "fluency" | "comprehension";
@@ -103,6 +104,26 @@ export function buildLearningProfile(
     addActivityScore(attempt.activityId, attempt.correct ? 100 : 0, attempt.createdAt);
   }
 
+  for (const attempt of state.numberAttempts ?? []) {
+    const prompt = findNumberPrompt(attempt.promptId);
+    if (!prompt || !course.languageCode.startsWith("es")) continue;
+    const score = attempt.score;
+    addEvidence(
+      skillEvidence,
+      attempt.mode === "dictation" ? "listening" : "speaking",
+      score,
+      attempt.createdAt,
+    );
+    if (attempt.mode === "dictation")
+      addEvidence(skillEvidence, "comprehension", score, attempt.createdAt);
+    else addEvidence(skillEvidence, "pronunciation", score, attempt.createdAt);
+    addEvidence(conceptEvidence, "numbers", score, attempt.createdAt);
+    addEvidence(itemEvidence, `number:${prompt.id}`, score, attempt.createdAt);
+  }
+
+  for (const attempt of state.microLessonAttempts ?? [])
+    addActivityScore(attempt.activityId, attempt.correct ? 100 : 0, attempt.createdAt);
+
   const mistakeBySchedule = new Map(
     Object.values(state.mistakes).map((mistake) => [mistake.schedule.id, mistake]),
   );
@@ -193,6 +214,17 @@ export function buildLearningProfile(
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("pronunciation:"))
       .map(([id, evidence]) => metric(id, id.slice("pronunciation:".length), evidence, now)),
+    ...[...itemEvidence.entries()]
+      .filter(([id]) => id.startsWith("number:"))
+      .map(([id, evidence]) => {
+        const prompt = findNumberPrompt(id.slice("number:".length));
+        return metric(
+          id,
+          prompt ? `${numberCategoryLabels[prompt.category]} · ${prompt.display}` : id,
+          evidence,
+          now,
+        );
+      }),
   ];
 
   return {

@@ -49,6 +49,8 @@ A atividade **Repita uma frase** compara uma gravação de até 20 segundos com 
 
 O menu **Praticar fala** reúne o shadowing, com evolução por tentativa e palavras a repetir, e **Fale sem ler**. Este último passa por imitação com texto, memória com apenas áudio e produção de uma frase própria. As duas primeiras etapas precisam de avaliação Azure para avançar; a produção própria é salva com áudio e transcrição, sem nota automática. O conteúdo atual oferece uma frase de referência; outras atividades de fala com `referenceText` aparecem automaticamente nessa página.
 
+O menu **Números** traz ditado, fala e repetição com exemplos de valores, datas, horários, telefone, números grandes e ordinais. O ditado usa a voz do navegador; a avaliação da fala usa a mesma credencial Azure das atividades de pronúncia. Cada tentativa registra o número e o modo no estado do aluno, alimenta o conceito **Números** do perfil e pode gerar uma recomendação para treinar novamente. O catálogo inicial é curado para espanhol e pode ser ampliado em `src/domain/numbers/number-practice.ts`.
+
 ## Conectar o Supabase
 
 O schema está em [uma migração versionada](supabase/migrations/20260930000100_initial.sql). Para vincular um projeto existente pelo CLI:
@@ -87,6 +89,8 @@ Na página inicial, **Quanto tempo você tem?** abre planos estimados de **5, 15
 Depois da sessão, a tela compara resultados avaliados com a tentativa anterior, quando ela existe. **Histórico** mostra a evolução por tentativa de acertos, escrita, pronúncia, fluência e recordação de palavras. Primeiras tentativas aparecem como primeira medida, sem sugerir melhora inexistente. O estado e o resumo da sessão usam o JSON já persistido no Supabase; não há nova migração para este conjunto.
 
 **Meus erros** agora recebe correções avaliadas de escrita e dificuldades de pronúncia, além dos exercícios objetivos. A revisão usa o mesmo agendador e alterna cartões de vocabulário entre espanhol→português, português→espanhol e áudio→termo. O cartão de uma frase avalia sua recordação; para medir a pronúncia, é preciso gravar novamente.
+
+Em **Meus erros** e **Estatísticas**, um erro salvo pode abrir uma microlição. A explicação do caderno aparece imediatamente; ao pedir a microlição, a IA gera um exemplo e uma questão de três alternativas. A resposta entra no histórico e no perfil, sem alterar a agenda de revisão ou servir como nota oficial. A rota usa a chave OpenAI já configurada e o mesmo limite de chamadas autenticadas por hora. No Supabase, a rota lê o erro do estado salvo do usuário; em desenvolvimento local sem Supabase, aceita o erro enviado pela tela. Números e microlições usam o JSON de `user_study_state` e eventos existentes, sem nova migração.
 
 Em **Vocabulário**, os termos mostram sentidos curados quando existem, exemplos, locais em que aparecem no curso, buscas recentes e contagens de uso. Após três buscas exatas ou três reproduções do mesmo termo, uma palavra ainda não estudada entra automaticamente na fila de revisão como “aprendendo”. Os eventos são mantidos no estado do aluno e na coluna `study_events.metadata`; as tabelas atuais bastam para esta entrega.
 

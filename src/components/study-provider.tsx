@@ -19,6 +19,8 @@ import {
   recordAttempt,
   recordEvaluatedSpeaking,
   recordEvaluatedWriting,
+  recordMicroLessonAttempt,
+  recordNumberAttempt,
   recordVocabularySignal,
   reconcileAssessments,
   reviewMistake,
@@ -28,6 +30,8 @@ import {
   type SessionMode,
   type PlannedItem,
   type SpeakingSubmission,
+  type NumberAttempt,
+  type MicroLessonAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -61,6 +65,12 @@ type StudyContextValue = {
   ) => void;
   recordVocabularySearch: (id: string) => void;
   recordVocabularyAudio: (id: string) => void;
+  recordNumberPractice: (
+    input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
+  ) => void;
+  recordMicroLesson: (
+    input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
+  ) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, correct: boolean) => void;
   reviewError: (id: string, correct: boolean) => void;
@@ -118,12 +128,20 @@ export function StudyProvider({
                 ...initialStudyState,
                 ...source,
                 profile: { ...initialStudyState.profile, ...source.profile },
+                numberAttempts: source.numberAttempts ?? [],
+                microLessonAttempts: source.microLessonAttempts ?? [],
               });
           } catch (caught) {
             const cached = window.localStorage.getItem(`${storageKey}:${accountId}`);
             if (cached) {
               try {
-                setState({ ...initialStudyState, ...(JSON.parse(cached) as StudyState) });
+                const source = JSON.parse(cached) as StudyState;
+                setState({
+                  ...initialStudyState,
+                  ...source,
+                  numberAttempts: source.numberAttempts ?? [],
+                  microLessonAttempts: source.microLessonAttempts ?? [],
+                });
               } catch {
                 /* Keep fresh state. */
               }
@@ -145,6 +163,8 @@ export function StudyProvider({
               ...initialStudyState,
               ...parsed,
               profile: { ...initialStudyState.profile, ...parsed.profile },
+              numberAttempts: parsed.numberAttempts ?? [],
+              microLessonAttempts: parsed.microLessonAttempts ?? [],
             });
           }
         } catch {
@@ -307,6 +327,16 @@ export function StudyProvider({
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_audio")),
     [],
   );
+  const recordNumberPractice = useCallback(
+    (input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">) =>
+      setState((current) => recordNumberAttempt(current, input)),
+    [],
+  );
+  const recordMicroLesson = useCallback(
+    (input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">) =>
+      setState((current) => recordMicroLessonAttempt(current, input)),
+    [],
+  );
   const startSession = useCallback(
     (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
       setState((current) => {
@@ -384,6 +414,8 @@ export function StudyProvider({
       reviewError,
       recordVocabularySearch,
       recordVocabularyAudio,
+      recordNumberPractice,
+      recordMicroLesson,
       startSession,
       finishSession,
     }),
@@ -404,6 +436,8 @@ export function StudyProvider({
       reviewError,
       recordVocabularySearch,
       recordVocabularyAudio,
+      recordNumberPractice,
+      recordMicroLesson,
       startSession,
       finishSession,
     ],

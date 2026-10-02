@@ -85,7 +85,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
 | 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, expressões do vocabulário, erros de escrita e frases de pronúncia no mesmo fluxo; estruturas e pronúncia ainda não têm agendamentos granulares próprios. |
 | 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados quando disponíveis, ocorrências no curso, buscas recentes, contagens de áudio e revisão automática após buscas repetidas; faltam cobertura ampla e variações regionais. |
-| 8. Números ativos | **PARCIAL** | Há números em atividades e vocabulário; faltam os modos dedicados de ditado, fala, dinheiro, datas e horários. |
+| 8. Números ativos | **PARCIAL** | **Números** oferece ditado, ver e falar, ouvir e repetir, com exemplos de dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
 | 9. Particularidades contextualizadas | **PENDENTE** | O curso contém regras básicas, mas não há ferramenta de variantes regionais integrada à prática e à IA. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
@@ -95,7 +95,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 15. Role-play com IA | **PENDENTE** | Não há cenários conversacionais interativos. |
 | 16. Conversação livre adaptativa | **PENDENTE** | O professor responde perguntas isoladas; não mantém uma conversa livre com turnos. |
 | 17. Tutor persistente | **PARCIAL** | O professor recebe contexto curto da aula e dos erros; faltam memória pedagógica persistente e adaptação contínua ao perfil. |
-| 18. Microlição a partir dos erros | **PENDENTE** | Há indicação do erro e atividade para refazer, mas não uma microlição gerada e avaliada. |
+| 18. Microlição a partir dos erros | **PARCIAL** | **Meus erros** e **Estatísticas** abrem uma microlição com explicação do erro e questão objetiva gerada por IA. A resposta é registrada no perfil; ainda falta uma sequência adaptativa de várias questões. |
 | 19. Memória ativa de comportamento | **PARCIAL** | Buscas exatas e áudios de vocabulário geram eventos e incluem o termo na revisão após três usos do mesmo tipo; abandono e sinais conversacionais ainda faltam. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PENDENTE** | Livre, role-play e avaliação oral não existem como modos de conversa; a avaliação oficial segue em análise no item 25. |
@@ -107,9 +107,9 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 27. Ritmo de conversa por nível | **PENDENTE** | Não há modos beginner/intermediate/natural em conversas. |
 | 28. Controle de correção em conversas | **PENDENTE** | Não há conversa contínua nem escolha do momento da correção. |
 | 29. Perfil regional | **PARCIAL** | O locale do Azure pode ser configurado para o app; falta preferência regional por aluno e aplicação no conteúdo/IA. |
-| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra recomendações e links diretos para praticar; faltam ações de explicação e microlição. |
+| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas exatas e áudio de vocabulário são registrados; faltam eventos de recursos conversacionais futuros. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio de vocabulário, números e microlições são registrados; faltam eventos de recursos conversacionais futuros. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
 ---
@@ -2063,3 +2063,16 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites atuais:** sentidos adicionais dependem de curadoria; ritmo/prosódia não são medidos separadamente; a correção escrita é consolidada por atividade; o estado ainda não é separado por curso/idioma. Não foi criada migração.
 
 **Reaproveitado:** `StudyState`, `ReviewScheduler`, `ReviewQueue`, correção de escrita, gravação e API Azure, histórico e projeções Supabase existentes.
+
+---
+
+# Registro da entrega — números e microlições (2026-10-01)
+
+**Itens agrupados:** 8 (números ativos), 18 (microlição a partir dos erros) e 30 (painel acionável), com ampliação dos itens 1, 2 e 32.
+
+- **Números:** a nova página reúne ditado, leitura em voz alta e repetição. Os exemplos curados cobrem números básicos, dinheiro, datas, horários, telefone, números grandes e ordinais. A fala reutiliza a gravação e a avaliação Azure; cada tentativa guarda o número, modo, resposta e resultado no estado do aluno. Erros recentes geram recomendações e as notas alimentam o conceito **Números** do perfil.
+- **Microlições:** o caderno de erros e as recomendações abrem a explicação do erro e permitem gerar uma questão objetiva por IA. A rota autenticada lê o erro salvo no Supabase, valida a atividade do curso e usa resposta estruturada. A tentativa é registrada, mas não altera a agenda de revisão nem conta como nota oficial.
+- **Painel:** **O que preciso melhorar?** agora oferece explicação e acesso à microlição quando há erro no caderno, além de enviar dificuldades de números para o exemplo específico.
+- **Limites:** o catálogo numérico atual é pequeno e específico do espanhol; outro idioma exige seu próprio catálogo e voz. A microlição cria uma questão por chamada, sem sequência adaptativa. Resultados de fala são indicadores de prática, não aprovação. Os novos históricos ficam no JSON de `user_study_state` e eventos, sem migração de banco.
+
+**Reaproveitado:** `StudyState`, perfil de domínio, motor de recomendações, `SpeakingRecorder`, API Azure, `AIProvider`, guarda de requisições e caderno de erros.

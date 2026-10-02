@@ -20,5 +20,16 @@ export const tutorFeedbackSchema = z.object({
   quickCheck: z.string(),
 });
 
+export const microLessonSchema = z.object({
+  title: z.string(),
+  explanation: z.string(),
+  example: z.string(),
+  question: z.string(),
+  options: z.array(z.string()),
+  correctIndex: z.number().int().min(0).max(2),
+  answerExplanation: z.string(),
+});
+
 export type WritingFeedback = z.infer<typeof writingFeedbackSchema>;
 export type TutorFeedback = z.infer<typeof tutorFeedbackSchema>;
+export type MicroLesson = z.infer<typeof microLessonSchema>;

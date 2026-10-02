@@ -6,6 +6,7 @@ import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { featureFlags } from "@/lib/feature-flags";
 
 const skillNames: Record<string, string> = {
   grammar: "Gramática",
@@ -108,10 +109,22 @@ export default function MistakesPage() {
                   <span>Próxima revisão: {formatDate(item.schedule.nextReviewAt)}</span>
                 </div>
                 {context && (
-                  <Link href={context.href} className="text-link">
-                    {item.category === "speaking" ? "Gravar nova tentativa" : "Praticar novamente"}{" "}
-                    <ArrowRight size={15} />
-                  </Link>
+                  <div className="mistake-actions">
+                    <Link href={context.href} className="text-link">
+                      {item.category === "speaking"
+                        ? "Gravar nova tentativa"
+                        : "Praticar novamente"}{" "}
+                      <ArrowRight size={15} />
+                    </Link>
+                    {featureFlags.AI_TUTOR && (
+                      <Link
+                        href={`/micro-lesson?activity=${encodeURIComponent(item.activityId)}`}
+                        className="text-link"
+                      >
+                        Fazer microlição <ArrowRight size={15} />
+                      </Link>
+                    )}
+                  </div>
                 )}
               </article>
             );
