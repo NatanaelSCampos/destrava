@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { ArrowRight, BookOpen, Check, KeyRound, LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { TurnstileChallenge } from "@/components/auth/turnstile-challenge";
@@ -10,6 +11,17 @@ import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED === "true";
 const passkeysEnabled = process.env.NEXT_PUBLIC_PASSKEYS_ENABLED === "true";
 const captchaEnabled = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+
+function AuthNotice() {
+  const params = useSearchParams();
+  const notice =
+    params.get("googleDisabled") === "1" || params.get("authError") === "googleDisabled"
+      ? "O login pelo Google está desativado nesta conta. Entre com e-mail e senha."
+      : params.has("authError")
+        ? "Não foi possível concluir o acesso. Tente novamente."
+        : "";
+  return notice ? <p className="inline-error" role="status">{notice}</p> : null;
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -177,6 +189,9 @@ export default function LoginPage() {
                 <p className="inline-error" role="status">
                   {message}
                 </p>
+              )}
+              {!message && mode === "login" && (
+                <Suspense fallback={null}><AuthNotice /></Suspense>
               )}
             </form>
           ) : (
