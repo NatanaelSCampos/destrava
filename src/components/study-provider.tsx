@@ -36,6 +36,12 @@ import {
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { SupabaseStudyRepository } from "@/repositories/supabase-study-repository";
+import {
+  appendConversationReply,
+  finishConversation,
+  type ConversationSession,
+} from "@/domain/conversation/conversation-session";
+import { findConversationScenario } from "@/content/conversation-scenarios";
 
 export type VocabularyItem = {
   id: string;
@@ -71,6 +77,13 @@ type StudyContextValue = {
   recordMicroLesson: (
     input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
   ) => void;
+  saveConversation: (session: ConversationSession) => void;
+  addConversationReply: (
+    sessionId: string,
+    studentText: string,
+    reply: { text: string; correction: string; completedObjectiveIds: string[] },
+  ) => void;
+  completeConversation: (sessionId: string) => void;
   markVocabulary: (id: string, status: "new" | "learning" | "known" | "difficult") => void;
   reviewWord: (id: string, correct: boolean) => void;
   reviewError: (id: string, correct: boolean) => void;
@@ -130,6 +143,7 @@ export function StudyProvider({
                 profile: { ...initialStudyState.profile, ...source.profile },
                 numberAttempts: source.numberAttempts ?? [],
                 microLessonAttempts: source.microLessonAttempts ?? [],
+                conversations: source.conversations ?? [],
               });
           } catch (caught) {
             const cached = window.localStorage.getItem(`${storageKey}:${accountId}`);
@@ -141,6 +155,7 @@ export function StudyProvider({
                   ...source,
                   numberAttempts: source.numberAttempts ?? [],
                   microLessonAttempts: source.microLessonAttempts ?? [],
+                  conversations: source.conversations ?? [],
                 });
               } catch {
                 /* Keep fresh state. */
@@ -165,6 +180,7 @@ export function StudyProvider({
               profile: { ...initialStudyState.profile, ...parsed.profile },
               numberAttempts: parsed.numberAttempts ?? [],
               microLessonAttempts: parsed.microLessonAttempts ?? [],
+              conversations: parsed.conversations ?? [],
             });
           }
         } catch {
@@ -337,6 +353,73 @@ export function StudyProvider({
       setState((current) => recordMicroLessonAttempt(current, input)),
     [],
   );
+  const saveConversation = useCallback(
+    (session: ConversationSession) =>
+      setState((current) => ({
+        ...current,
+        conversations: [session, ...(current.conversations ?? [])].slice(0, 24),
+        events: [
+          {
+            id: crypto.randomUUID(),
+            type: "conversation_started",
+            itemId: session.id,
+            createdAt: session.startedAt,
+          },
+          ...current.events,
+        ],
+      })),
+    [],
+  );
+  const addConversationReply = useCallback(
+    (
+      sessionId: string,
+      studentText: string,
+      reply: { text: string; correction: string; completedObjectiveIds: string[] },
+    ) =>
+      setState((current) => ({
+        ...current,
+        conversations: (current.conversations ?? []).map((session) =>
+          session.id === sessionId
+            ? appendConversationReply(
+                session,
+                studentText,
+                reply,
+                findConversationScenario(session.scenarioId)?.objectives.map((item) => item.id) ??
+                  [],
+              )
+            : session,
+        ),
+        events: [
+          {
+            id: crypto.randomUUID(),
+            type: "conversation_turn",
+            itemId: sessionId,
+            createdAt: new Date().toISOString(),
+          },
+          ...current.events,
+        ],
+      })),
+    [],
+  );
+  const completeConversation = useCallback(
+    (sessionId: string) =>
+      setState((current) => ({
+        ...current,
+        conversations: (current.conversations ?? []).map((session) =>
+          session.id === sessionId ? finishConversation(session) : session,
+        ),
+        events: [
+          {
+            id: crypto.randomUUID(),
+            type: "conversation_finished",
+            itemId: sessionId,
+            createdAt: new Date().toISOString(),
+          },
+          ...current.events,
+        ],
+      })),
+    [],
+  );
   const startSession = useCallback(
     (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
       setState((current) => {
@@ -416,6 +499,9 @@ export function StudyProvider({
       recordVocabularyAudio,
       recordNumberPractice,
       recordMicroLesson,
+      saveConversation,
+      addConversationReply,
+      completeConversation,
       startSession,
       finishSession,
     }),
@@ -438,6 +524,9 @@ export function StudyProvider({
       recordVocabularyAudio,
       recordNumberPractice,
       recordMicroLesson,
+      saveConversation,
+      addConversationReply,
+      completeConversation,
       startSession,
       finishSession,
     ],

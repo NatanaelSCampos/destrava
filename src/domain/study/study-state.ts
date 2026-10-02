@@ -7,6 +7,7 @@ import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import type { NumberMode } from "@/domain/numbers/number-practice";
 import type { SpanishRegion } from "@/content/spanish-regions";
+import type { ConversationSession } from "@/domain/conversation/conversation-session";
 
 export type StudentProfile = {
   goal: string;
@@ -148,6 +149,7 @@ export type StudyState = {
   speaking: SpeakingSubmission[];
   numberAttempts: NumberAttempt[];
   microLessonAttempts: MicroLessonAttempt[];
+  conversations: ConversationSession[];
   activeSessionId: string | null;
 };
 
@@ -173,6 +175,7 @@ export const initialStudyState: StudyState = {
   speaking: [],
   numberAttempts: [],
   microLessonAttempts: [],
+  conversations: [],
   activeSessionId: null,
 };
 

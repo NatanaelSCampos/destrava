@@ -1,4 +1,4 @@
-export function speakSpanish(text: string, onError?: () => void, locale = "es-ES") {
+export function speakSpanish(text: string, onError?: () => void, locale = "es-ES", rate = 0.86) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
 
   const spokenText = text.trim().replace(/\s*\/\s*/g, ", ");
@@ -7,7 +7,7 @@ export function speakSpanish(text: string, onError?: () => void, locale = "es-ES
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(spokenText);
   utterance.lang = locale;
-  utterance.rate = 0.86;
+  utterance.rate = rate;
   const voices = window.speechSynthesis.getVoices();
   const voice =
     voices.find((item) => item.lang.toLowerCase() === locale.toLowerCase()) ??

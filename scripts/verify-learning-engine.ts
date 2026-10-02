@@ -23,6 +23,12 @@ import {
   regionalVocabularyNote,
 } from "../src/content/spanish-regions";
 import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
+import { conversationScenarios } from "../src/content/conversation-scenarios";
+import {
+  appendConversationReply,
+  finishConversation,
+  startConversation,
+} from "../src/domain/conversation/conversation-session";
 import {
   findNumberPrompt,
   gradeNumberDictation,
@@ -30,6 +36,32 @@ import {
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+const mission = conversationScenarios[0];
+const newConversation = startConversation({
+  courseId: course.id,
+  mode: "mission",
+  scenario: mission,
+  topic: "",
+  pace: "beginner",
+  correction: "end_of_conversation",
+});
+assert.equal(newConversation.turns[0]?.text, mission.opening);
+const answeredConversation = appendConversationReply(
+  newConversation,
+  "Me llamo Ana.",
+  { text: "Mucho gusto, Ana.", correction: "", completedObjectiveIds: ["say-name", "invalid"] },
+  mission.objectives.map((item) => item.id),
+);
+assert.deepEqual(answeredConversation.completedObjectiveIds, ["say-name"]);
+assert.equal(
+  appendConversationReply(
+    finishConversation(answeredConversation),
+    "Hola",
+    { text: "Hola", correction: "", completedObjectiveIds: [] },
+    [],
+  ).turns.length,
+  answeredConversation.turns.length,
+);
 assert.equal(spanishRegion("invalid"), "general");
 assert.equal(spanishSpeechLocale("argentina"), "es-AR");
 assert.match(regionalVocabularyNote("celular", "spain") ?? "", /móvil/);

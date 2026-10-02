@@ -91,25 +91,25 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **PARCIAL** | Cartões alternam palavra→significado, significado→palavra e áudio→palavra, alimentando o mesmo agendador; lacunas, imagem→termo e estrutura→exemplo ainda faltam. |
 | 13. Explicar imagem | **PENDENTE** | Não existe atividade com imagem e avaliação da descrição falada. |
-| 14. Missões comunicativas | **PENDENTE** | Não há missões com objetivo comunicativo e acompanhamento. |
-| 15. Role-play com IA | **PENDENTE** | Não há cenários conversacionais interativos. |
-| 16. Conversação livre adaptativa | **PENDENTE** | O professor responde perguntas isoladas; não mantém uma conversa livre com turnos. |
-| 17. Tutor persistente | **PARCIAL** | O professor recebe contexto curto da aula e dos erros; faltam memória pedagógica persistente e adaptação contínua ao perfil. |
+| 14. Missões comunicativas | **PARCIAL** | Duas missões A1 acompanham objetivos indicados pela IA e guardam o histórico; faltam mais cenários e validação pedagógica dos objetivos. |
+| 15. Role-play com IA | **PARCIAL** | Conversas em texto com personagens de colega e atendente, áudio das respostas e controle de ritmo; faltam mais cenários e fala espontânea do aluno. |
+| 16. Conversação livre adaptativa | **PARCIAL** | Conversa livre com assunto escolhido, turnos persistidos, contexto curto do aluno e correção configurável; a interação ainda é digitada. |
+| 17. Tutor persistente | **PARCIAL** | O professor recebe contexto da aula; conversas agora usam meta, região, vocabulário conhecido e dificuldades recentes. Falta memória pedagógica longitudinal. |
 | 18. Microlição a partir dos erros | **PARCIAL** | **Meus erros** e **Estatísticas** abrem uma microlição com explicação do erro e questão objetiva gerada por IA. A resposta é registrada no perfil; ainda falta uma sequência adaptativa de várias questões. |
 | 19. Memória ativa de comportamento | **PARCIAL** | Buscas exatas e áudios de vocabulário geram eventos e incluem o termo na revisão após três usos do mesmo tipo; abandono e sinais conversacionais ainda faltam. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
-| 21. Três modos de conversa | **PENDENTE** | Livre, role-play e avaliação oral não existem como modos de conversa; a avaliação oficial segue em análise no item 25. |
+| 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
 | 22. Prova adaptativa escrita/objetiva | **PENDENTE** | Existe teste final fixo; ele não ajusta a dificuldade durante a prova. |
 | 23. Relatório por competências | **PARCIAL** | O resultado mostra nota objetiva e competências avaliadas; faltam metas configuráveis e cobertura completa de escrita e fala. |
 | 24. Feedback pós-avaliação | **PARCIAL** | Tentativas e erros do teste alimentam perfil e revisão; falta um plano pós-prova explícito por competência. |
 | 25. Avaliação oral conversacional | **ADIADO** | A versão oficial continua **EM ANÁLISE** no próprio roadmap. |
 | 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
-| 27. Ritmo de conversa por nível | **PENDENTE** | Não há modos beginner/intermediate/natural em conversas. |
-| 28. Controle de correção em conversas | **PENDENTE** | Não há conversa contínua nem escolha do momento da correção. |
+| 27. Ritmo de conversa por nível | **PARCIAL** | O aluno escolhe iniciante/intermediário/natural; a IA ajusta a extensão da resposta e o áudio muda de velocidade. Falta calibragem empírica por nível. |
+| 28. Controle de correção em conversas | **PARCIAL** | Correção a cada resposta, apenas erros importantes, no final ou desligada; ainda falta avaliação da consistência das correções. |
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Falta cobertura regional maior no curso. |
 | 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; recomendações de números abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
-| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio de vocabulário, números e microlições são registrados; faltam eventos de recursos conversacionais futuros. |
+| 32. Telemetria pedagógica | **PARCIAL** | Tentativas, revisões, sessões, buscas, áudio, números, microlições e eventos de conversa são registrados; ainda faltam sinais conversacionais no motor adaptativo. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
 ---
@@ -2101,3 +2101,17 @@ O Destrava deve parecer um único sistema inteligente de aprendizado, e não uma
 - **Limites:** o navegador pode não ter a voz regional solicitada; os exemplos são introdutórios e não representam todos os usos de cada país. A checagem ainda não alimenta o perfil de domínio. O curso A1 permanece com seu conteúdo base; os overlays regionais não o duplicam.
 
 **Reaproveitado:** `StudyState`, `StudyProvider`, `SpeakButton`, página de Configurações, biblioteca de Fundamentos, `TutorContextBuilder`, API do professor e API Azure. O conteúdo regional é específico do espanhol e só aparece quando esse idioma está ativo.
+
+---
+
+# Registro da entrega — conversas e missões (2026-10-02)
+
+**Itens agrupados:** 14, 15, 16, 21, 27 e 28; ampliação dos itens 17 e 32.
+
+- **Implementado:** área **Conversar** com duas missões A1 e prática livre por assunto. Cada missão traz personagem, abertura e objetivos; a IA indica os objetivos cumpridos durante a conversa.
+- **Implementado:** escolha de ritmo (iniciante, intermediário ou natural) e correção (a cada resposta, erros importantes, no final ou desligada). As respostas têm áudio e velocidade ajustada ao ritmo.
+- **Persistência:** turnos, preferências da sessão, objetivos indicados e conclusão ficam no `StudyState`, com sincronização pelo JSON `user_study_state` existente. Conversas recentes podem ser retomadas; eventos de início, turno e conclusão entram na telemetria já existente. Não houve migração.
+- **Segurança e custo:** rota autenticada usa o limite de IA por usuário, valida texto e opções, aceita somente cenários curados e limita histórico e tamanho da conversa. O contexto pedagógico é pequeno e lido do estado do próprio aluno no servidor.
+- **Limites:** a produção do aluno é digitada; os objetivos da missão são indicadores de prática gerados por IA, sem nota oficial. O histórico conversacional ainda não alimenta o motor de recomendações e a calibração de correções/ritmo precisa ser observada em uso real.
+
+**Reaproveitado:** `AIProvider`, Responses com saída estruturada, `guardAIRequest`, `StudyProvider`, armazenamento Supabase existente, `SpeakButton` e preferência regional.

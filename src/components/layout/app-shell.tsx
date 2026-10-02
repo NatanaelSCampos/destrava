@@ -13,6 +13,7 @@ import {
   GraduationCap,
   House,
   Menu,
+  MessageCircle,
   Mic2,
   NotebookPen,
   Play,
@@ -36,6 +37,7 @@ const navigation = (courseSlug: string) => [
   { href: "/study", label: "Aula de hoje", icon: Play },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
+  { href: "/conversation", label: "Conversar", icon: MessageCircle },
   { href: "/vocabulary", label: "Vocabulário", icon: GraduationCap },
   { href: "/mistakes", label: "Meus erros", icon: NotebookPen },
   { href: "/history", label: "Histórico", icon: Clock3 },
@@ -70,9 +72,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
   const pendingReviews = dueReviewCounts(state, vocabularyItems, new Date(), activityIds).total;
   const navItems = navigation(course.slug).filter(
-    (item) => item.href !== "/speaking" || featureFlags.SPEAKING,
+    (item) =>
+      (item.href !== "/speaking" || featureFlags.SPEAKING) &&
+      (item.href !== "/conversation" || featureFlags.AI_TUTOR),
   );
-  const studyNavCount = 5 + Number(featureFlags.SPEAKING);
+  const studyNavCount = 5 + Number(featureFlags.SPEAKING) + Number(featureFlags.AI_TUTOR);
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
 
   return (

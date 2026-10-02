@@ -13,6 +13,7 @@ export function SpeakButton({
   withLabel = false,
   onPlay,
   locale,
+  rate,
 }: {
   text: string;
   label?: string;
@@ -20,6 +21,7 @@ export function SpeakButton({
   withLabel?: boolean;
   onPlay?: () => void;
   locale?: string;
+  rate?: number;
 }) {
   const { state } = useStudy();
   const [error, setError] = useState("");
@@ -41,6 +43,7 @@ export function SpeakButton({
               text,
               () => setError("Não foi possível reproduzir o áudio."),
               locale ?? spanishSpeechLocale(spanishRegion(state.profile.spanishRegion)),
+              rate,
             )
           )
             setError("Seu navegador não oferece reprodução por voz.");
