@@ -23,22 +23,6 @@ export async function guardAIRequest(request: Request, feature: string) {
       return {
         error: NextResponse.json({ error: "Limite de IA indisponível." }, { status: 503 }),
       };
-    const { data: assurance, error: assuranceError } =
-      await client.auth.mfa.getAuthenticatorAssuranceLevel();
-    if (assuranceError || !assurance)
-      return {
-        error: NextResponse.json(
-          { error: "Não foi possível verificar sua sessão." },
-          { status: 503 },
-        ),
-      };
-    if (assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2")
-      return {
-        error: NextResponse.json(
-          { error: "Conclua a verificação em duas etapas." },
-          { status: 403 },
-        ),
-      };
     const { data: reservationId, error } = await client.rpc("reserve_ai_request", {
       p_feature: feature,
     });

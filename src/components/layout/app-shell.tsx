@@ -31,6 +31,7 @@ import { TutorDrawer } from "@/components/tutor/tutor-drawer";
 import { featureFlags } from "@/lib/feature-flags";
 import { SelectionAudio } from "@/components/audio/selection-audio";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -73,18 +74,27 @@ export function AppShell({ children }: { children: ReactNode }) {
     let cancelled = false;
     const client = createSupabaseBrowserClient();
     if (!client) return;
-    void client.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data, error }) => {
-      if (cancelled) return;
-      if (error || !data) {
-        setSessionCheck("error");
-        return;
-      }
-      const needsChallenge = data.nextLevel === "aal2" && data.currentLevel !== "aal2";
-      setSessionCheck(needsChallenge ? "challenge" : "ready");
-      if (needsChallenge && pathname !== "/mfa" && pathname !== "/login") router.replace("/mfa");
-    });
+    const checkAccess = () => {
+      void canAccessWithMfa(client).then(({ allowed, error }) => {
+        if (cancelled) return;
+        if (error) {
+          setSessionCheck("error");
+          return;
+        }
+        const needsChallenge = !allowed;
+        setSessionCheck(needsChallenge ? "challenge" : "ready");
+        if (needsChallenge && pathname !== "/mfa" && pathname !== "/login") {
+          // A full reload clears study data already loaded before trust expired.
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+          window.location.assign("/mfa");
+        }
+      });
+    };
+    checkAccess();
+    const timer = window.setInterval(checkAccess, 60 * 1000);
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, [ready, authUserId, requiresAuth, pathname, router]);
   if (pathname === "/login" || pathname === "/mfa") return <>{children}</>;

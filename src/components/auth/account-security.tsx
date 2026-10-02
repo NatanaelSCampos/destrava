@@ -4,13 +4,16 @@ import { useEffect, useState } from "react";
 import { KeyRound, ShieldCheck } from "lucide-react";
 import type { PasskeyListItem } from "@supabase/supabase-js";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 
 type TotpFactor = { id: string; friendly_name?: string };
+type TrustedDevice = { id: string; created_at: string; last_used_at: string | null; expires_at: string };
 const passkeysEnabled = process.env.NEXT_PUBLIC_PASSKEYS_ENABLED === "true";
 
 export function AccountSecurity() {
   const [factors, setFactors] = useState<TotpFactor[]>([]);
   const [passkeys, setPasskeys] = useState<PasskeyListItem[]>([]);
+  const [trustedDevices, setTrustedDevices] = useState<TrustedDevice[]>([]);
   const [pendingFactorId, setPendingFactorId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState("");
   const [secret, setSecret] = useState("");
@@ -27,6 +30,8 @@ export function AccountSecurity() {
       return;
     }
     setFactors(data?.totp ?? []);
+    const devices = await client.rpc("list_trusted_devices");
+    if (!devices.error) setTrustedDevices((devices.data ?? []) as TrustedDevice[]);
     if (passkeysEnabled) {
       const result = await client.auth.passkey.list();
       if (!result.error) setPasskeys(result.data ?? []);
@@ -39,6 +44,9 @@ export function AccountSecurity() {
     void client.auth.mfa.listFactors().then(({ data, error }) => {
       if (error) setMessage("Não foi possível carregar os métodos de segurança.");
       else setFactors(data?.totp ?? []);
+    });
+    void client.rpc("list_trusted_devices").then(({ data, error }) => {
+      if (!error) setTrustedDevices((data ?? []) as TrustedDevice[]);
     });
     if (passkeysEnabled)
       void client.auth.passkey.list().then(({ data, error }) => {
@@ -132,6 +140,28 @@ export function AccountSecurity() {
     await refresh();
   }
 
+  async function revokeTrustedDevice(deviceId: string) {
+    const client = createSupabaseBrowserClient();
+    if (!client) return;
+    setBusy(true);
+    setMessage("");
+    const { data, error } = await client.rpc("revoke_trusted_device", { p_device_id: deviceId });
+    setBusy(false);
+    if (error || data !== true) {
+      setMessage("Não foi possível remover o dispositivo confiável.");
+      return;
+    }
+    const access = await canAccessWithMfa(client);
+    if (!access.allowed) {
+      // The current browser was revoked; clear previously loaded study data.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign("/mfa");
+      return;
+    }
+    setMessage("Dispositivo confiável removido.");
+    await refresh();
+  }
+
   return (
     <section className="panel account-security">
       <span className="eyebrow">
@@ -212,6 +242,29 @@ export function AccountSecurity() {
           <button className="secondary-button" disabled={busy} onClick={() => void addPasskey()}>
             Adicionar chave de acesso
           </button>
+        </div>
+      )}
+      {trustedDevices.length > 0 && (
+        <div className="security-passkeys">
+          <h3>Dispositivos confiáveis</h3>
+          <p>Dispensam o código por até 30 dias. Remova um dispositivo se você não o usa mais.</p>
+          {trustedDevices.map((device) => (
+            <div className="security-method" key={device.id}>
+              <span>
+                Confiável até {new Date(device.expires_at).toLocaleDateString("pt-BR")}
+                {device.last_used_at && (
+                  <small> · último acesso em {new Date(device.last_used_at).toLocaleDateString("pt-BR")}</small>
+                )}
+              </span>
+              <button
+                className="secondary-button"
+                disabled={busy}
+                onClick={() => void revokeTrustedDevice(device.id)}
+              >
+                Remover
+              </button>
+            </div>
+          ))}
         </div>
       )}
       {message && (

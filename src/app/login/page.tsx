@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Check, KeyRound, LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { TurnstileChallenge } from "@/components/auth/turnstile-challenge";
+import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 
 const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED === "true";
 const passkeysEnabled = process.env.NEXT_PUBLIC_PASSKEYS_ENABLED === "true";
@@ -26,14 +27,12 @@ export default function LoginPage() {
 
   async function finishLogin() {
     if (!supabase) return;
-    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-    if (error || !data) {
+    const access = await canAccessWithMfa(supabase);
+    if (access.error) {
       setMessage("Não foi possível verificar a segurança da sessão.");
       return;
     }
-    window.location.assign(
-      data.nextLevel === "aal2" && data.currentLevel !== "aal2" ? "/mfa" : "/dashboard",
-    );
+    window.location.assign(access.allowed ? "/dashboard" : "/mfa");
   }
 
   async function submit(event: React.FormEvent) {

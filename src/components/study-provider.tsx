@@ -39,6 +39,7 @@ import {
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { SupabaseStudyRepository } from "@/repositories/supabase-study-repository";
 import {
   appendConversationReply,
@@ -136,15 +137,10 @@ export function StudyProvider({
           }
           const accountId = data.user.id;
           setAuthUserId(accountId);
-          const { data: assurance, error: assuranceError } =
-            await client.auth.mfa.getAuthenticatorAssuranceLevel();
+          const access = await canAccessWithMfa(client);
           if (cancelled) return;
-          if (
-            assuranceError ||
-            !assurance ||
-            (assurance.nextLevel === "aal2" && assurance.currentLevel !== "aal2")
-          ) {
-            if (assuranceError || !assurance)
+          if (!access.allowed) {
+            if (access.error)
               setSyncError("Não foi possível verificar a segurança da sessão.");
             setReady(true);
             return;

@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 
 export default function MfaPage() {
   const [factorId, setFactorId] = useState<string | null>(null);
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [rememberDevice, setRememberDevice] = useState(false);
+  const [mfaVerified, setMfaVerified] = useState(false);
 
   useEffect(() => {
     const client = createSupabaseBrowserClient();
@@ -23,14 +26,13 @@ export default function MfaPage() {
         window.location.assign("/login");
         return;
       }
-      const { data: assurance, error: assuranceError } =
-        await client.auth.mfa.getAuthenticatorAssuranceLevel();
+      const access = await canAccessWithMfa(client);
       if (cancelled) return;
-      if (assuranceError || !assurance) {
+      if (access.error) {
         setMessage("Não foi possível verificar sua sessão. Recarregue a página.");
         return;
       }
-      if (assurance.nextLevel !== "aal2" || assurance.currentLevel === "aal2") {
+      if (access.allowed) {
         // Reload to reset the account-scoped study provider.
         // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         window.location.assign("/dashboard");
@@ -52,14 +54,36 @@ export default function MfaPage() {
   async function verify(event: React.FormEvent) {
     event.preventDefault();
     const client = createSupabaseBrowserClient();
-    if (!client || !factorId || !/^\d{6}$/.test(code)) return;
+    if (!client || !factorId || (!mfaVerified && !/^\d{6}$/.test(code))) return;
     setBusy(true);
     setMessage("");
-    const { error } = await client.auth.mfa.challengeAndVerify({ factorId, code });
-    setBusy(false);
-    if (error) {
-      setMessage("Código inválido ou expirado. Confira o aplicativo e tente novamente.");
-      return;
+    if (!mfaVerified) {
+      const { error } = await client.auth.mfa.challengeAndVerify({ factorId, code });
+      if (error) {
+        setBusy(false);
+        setMessage("Código inválido ou expirado. Confira o aplicativo e tente novamente.");
+        return;
+      }
+      setMfaVerified(true);
+    }
+    if (rememberDevice) {
+      try {
+        const response = await fetch("/api/auth/trusted-device", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "remember", factorId }),
+        });
+        if (!response.ok) {
+          setBusy(false);
+          setMessage("Código confirmado, mas não foi possível salvar este dispositivo. Tente novamente ou desmarque a opção para continuar.");
+          return;
+        }
+      } catch {
+        setBusy(false);
+        setMessage("Código confirmado, mas não foi possível salvar este dispositivo. Tente novamente ou desmarque a opção para continuar.");
+        return;
+      }
     }
     // Reload to load the now-authorized study data.
     // eslint-disable-next-line @next/next/no-location-assign-relative-destination
@@ -100,13 +124,24 @@ export default function MfaPage() {
             maxLength={6}
             value={code}
             onChange={(event) => setCode(event.target.value.replace(/\D/g, ""))}
-            required
+            required={!mfaVerified}
             autoFocus
+            disabled={mfaVerified || busy}
           />
         </div>
-        <button className="primary-button" disabled={!factorId || busy || code.length !== 6}>
-          {busy ? "Verificando…" : "Confirmar e entrar"}
+        <button className="primary-button" disabled={!factorId || busy || (!mfaVerified && code.length !== 6)}>
+          {busy ? "Verificando…" : mfaVerified ? "Continuar" : "Confirmar e entrar"}
         </button>
+        <label className="auth-step-remember">
+          <input
+            type="checkbox"
+            checked={rememberDevice}
+            onChange={(event) => setRememberDevice(event.target.checked)}
+            disabled={busy}
+          />
+          Confiar neste dispositivo por 30 dias
+        </label>
+        <small>Neste navegador, inclusive após sair, o código volta a ser pedido em até 30 dias ou se você remover a confiança. Use apenas no seu dispositivo.</small>
         {message && (
           <p className="inline-error" role="status">
             {message}

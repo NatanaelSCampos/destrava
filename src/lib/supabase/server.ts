@@ -34,5 +34,7 @@ export async function getAuthenticatedUser() {
   const client = await createSupabaseServerClient();
   if (!client) return null;
   const { data, error } = await client.auth.getUser();
-  return error ? null : data.user;
+  if (error || !data.user) return null;
+  const { data: allowed, error: accessError } = await client.rpc("mfa_access_allowed");
+  return !accessError && allowed === true ? data.user : null;
 }

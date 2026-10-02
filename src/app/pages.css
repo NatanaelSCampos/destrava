@@ -3165,6 +3165,21 @@
   opacity: 0.6;
   cursor: wait;
 }
+.auth-step-remember {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.auth-step-remember input {
+  margin-top: 3px;
+  accent-color: var(--primary);
+}
+.auth-step-card > small {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
 .account-security {
   display: grid;
   gap: 15px;
