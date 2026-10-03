@@ -474,7 +474,7 @@
 }
 @media (max-width: 1050px) {
   .conversation-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (max-width: 600px) {
@@ -490,6 +490,11 @@
   }
   .conversation-mode-panel {
     padding: 14px;
+  }
+  .conversation-setup,
+  .conversation-side,
+  .conversation-mode-panel {
+    min-width: 0;
   }
   .conversation-scenario-grid {
     grid-auto-flow: column;
