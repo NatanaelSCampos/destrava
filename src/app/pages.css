@@ -703,7 +703,7 @@
 }
 .improvement-explanation {
   flex-basis: 100%;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
 }
 .improvement-explanation summary {
@@ -892,6 +892,53 @@
 .micro-lesson-generated h3 {
   font-size: 17px;
   margin: 8px 0;
+}
+.micro-lesson-progress {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.micro-lesson-progress .progress-track {
+  margin: 0;
+}
+.micro-lesson-examples {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+}
+.micro-lesson-examples > div,
+.micro-lesson-model {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+.micro-lesson-examples small,
+.micro-lesson-model small {
+  color: var(--text-secondary);
+}
+.micro-lesson-next {
+  margin-top: 14px;
+}
+.micro-lesson-transcript {
+  margin: 12px 0;
+}
+.micro-lesson-model {
+  margin: 18px 0 0;
+}
+.micro-lesson-model .text-audio-row {
+  margin: 8px 0;
+}
+.micro-lesson-summary h3 {
+  font-size: 24px;
+}
+.micro-lesson-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
 }
 .micro-lesson-options {
   display: grid;

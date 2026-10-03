@@ -66,6 +66,9 @@ function StudyContent() {
     () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, new Date(), mode),
     [course, state, targetMinutes, vocabularyItems, mode],
   );
+  const focusedMistakeId = planned.find(
+    (entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]),
+  )?.id;
   const suggestedPractice = useMemo(() => {
     const profile = buildLearningProfile(course, state, vocabularyItems);
     return LearningRecommendationEngine.recommend(course, state, profile, vocabularyItems)
@@ -142,6 +145,9 @@ function StudyContent() {
           .find((entry) => entry.id === item.id)
       : undefined;
   const lastSession = state.sessions.find((session) => session.finishedAt);
+  const lastFocusedMistakeId = lastSession?.mode === "difficulties"
+    ? lastSession.plan.find((entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]))?.id
+    : undefined;
   const practiceHistory = useMemo(
     () => buildPracticeHistory(course, state, vocabularyItems),
     [course, state, vocabularyItems],
@@ -255,6 +261,14 @@ function StudyContent() {
             >
               <Play size={17} fill="currentColor" /> Começar sessão <ArrowRight size={17} />
             </button>
+            {mode === "difficulties" && focusedMistakeId && (
+              <Link
+                href={`/micro-lesson?activity=${encodeURIComponent(focusedMistakeId)}`}
+                className="text-link"
+              >
+                Entender um erro antes do treino <ArrowRight size={15} />
+              </Link>
+            )}
           </section>
           <div className="panel study-plan-card">
             <div className="section-head">
@@ -335,6 +349,14 @@ function StudyContent() {
                   <Link href="/history" className="text-link">
                     Ver evolução por tentativa <ArrowRight size={15} />
                   </Link>
+                  {lastFocusedMistakeId && (
+                    <Link
+                      href={`/micro-lesson?activity=${encodeURIComponent(lastFocusedMistakeId)}`}
+                      className="text-link"
+                    >
+                      Reforçar uma dificuldade com microlição <ArrowRight size={15} />
+                    </Link>
+                  )}
                 </>
               ) : (
                 <p>

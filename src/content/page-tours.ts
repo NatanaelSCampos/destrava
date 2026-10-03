@@ -577,7 +577,7 @@ const tours: Record<string, PageTour> = {
       },
       {
         title: "Entenda e pratique",
-        description: "Compare as respostas, leia a explicação e tente a nova questão.",
+        description: "Compare as respostas, leia a explicação e avance por três exercícios, uma fala e a checagem final.",
         target: ".micro-lesson-main",
       },
       {

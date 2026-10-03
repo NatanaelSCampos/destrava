@@ -34,14 +34,20 @@ export const imageDescriptionFeedbackSchema = z.object({
   nextSentence: z.string(),
 });
 
-export const microLessonSchema = z.object({
-  title: z.string(),
-  explanation: z.string(),
-  example: z.string(),
-  question: z.string(),
-  options: z.array(z.string()),
+export const microLessonQuestionSchema = z.object({
+  question: z.string().min(8),
+  options: z.array(z.string().min(1)).length(3),
   correctIndex: z.number().int().min(0).max(2),
-  answerExplanation: z.string(),
+  answerExplanation: z.string().min(8),
+});
+
+export const microLessonSchema = z.object({
+  title: z.string().min(3),
+  explanation: z.string().min(20),
+  examples: z.array(z.object({ text: z.string().min(3), translation: z.string().min(3) })).length(2),
+  exercises: z.array(microLessonQuestionSchema).length(3),
+  speaking: z.object({ prompt: z.string().min(8), modelAnswer: z.string().min(3) }),
+  finalCheck: microLessonQuestionSchema,
 });
 
 export type WritingFeedback = z.infer<typeof writingFeedbackSchema>;

@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-microlicoes-em-etapas",
+    title: "Microlições para treinar um erro até o fim",
+    summary: "Seu erro agora vira uma sequência curta de explicação, exercícios e fala.",
+    highlights: [
+      "Resolva três questões sobre o mesmo ponto e confira o resultado na etapa final.",
+      "Pratique uma frase em voz alta; o microfone mostra a transcrição sem dar nota de pronúncia.",
+      "Em Estatísticas, abra explicações específicas para números, conversas e imagens.",
+    ],
+    href: "/progress",
+    linkLabel: "Ver o que melhorar",
+  },
+  {
     id: "2026-10-tempo-de-estudo-ativo",
     title: "Seu tempo de estudo ficou mais preciso",
     summary: "A sessão agora pausa fora da aula ou após cinco minutos sem interação.",

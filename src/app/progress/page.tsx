@@ -10,6 +10,8 @@ import type { Skill } from "@/content/schema";
 import { featureFlags } from "@/lib/feature-flags";
 import { recommendationLink } from "@/lib/recommendation-link";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { recommendationGuidance } from "@/domain/study/recommendation-guidance";
+import { SpeakButton } from "@/components/audio/speak-button";
 
 const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "vocabulary", label: "Vocabulário" },
@@ -154,8 +156,12 @@ export default function ProgressPage() {
         </div>
         {improvements.length ? (
           <div className="improvement-list">
-            {improvements.map((item, index) => (
-              <div className="improvement-item" key={`${item.kind}-${item.id}`}>
+            {improvements.map((item, index) => {
+              const guidance = recommendationGuidance(course, state, item);
+              const lessonActivityId = item.kind === "activity" && state.mistakes[item.id]
+                ? item.id
+                : item.kind === "review" ? firstDueMistake?.activityId : undefined;
+              return <div className="improvement-item" key={`${item.kind}-${item.id}`}>
                 <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
                 <div>
                   <strong>{item.title}</strong>
@@ -165,69 +171,41 @@ export default function ProgressPage() {
                   <Link href={recommendationLink(course.slug, item)} className="secondary-button">
                     Praticar agora <ArrowRight size={15} />
                   </Link>
-                  {item.kind === "activity" && state.mistakes[item.id] && (
-                    <>
-                      <details
-                        className="improvement-explanation"
-                        onToggle={(event) => {
-                          if (event.currentTarget.open)
-                            recordStudyEvent("explanation_opened", item.id, {
-                              courseId: course.id,
-                            });
-                        }}
-                      >
-                        <summary>Ver explicação</summary>
-                        <p>
-                          {state.mistakes[item.id].explanation ||
-                            "Compare sua resposta com a forma esperada no caderno de erros."}
-                        </p>
-                        <p>
-                          <strong>Forma esperada:</strong> {state.mistakes[item.id].correctAnswer}
-                        </p>
-                      </details>
-                      {featureFlags.AI_TUTOR && (
-                        <Link
-                          href={`/micro-lesson?activity=${encodeURIComponent(item.id)}`}
-                          className="text-link"
-                        >
-                          Fazer microlição <ArrowRight size={15} />
-                        </Link>
-                      )}
-                    </>
-                  )}
-                  {item.kind === "review" && firstDueMistake && (
-                    <>
-                      <details
-                        className="improvement-explanation"
-                        onToggle={(event) => {
-                          if (event.currentTarget.open)
-                            recordStudyEvent("explanation_opened", firstDueMistake.activityId, {
-                              courseId: course.id,
-                            });
-                        }}
-                      >
-                        <summary>Ver um erro pendente</summary>
-                        <p>{firstDueMistake.explanation}</p>
-                        <p>
-                          <strong>Forma esperada:</strong> {firstDueMistake.correctAnswer}
-                        </p>
-                      </details>
-                      {featureFlags.AI_TUTOR && (
-                        <Link
-                          href={`/micro-lesson?activity=${encodeURIComponent(firstDueMistake.activityId)}`}
-                          className="text-link"
-                        >
-                          Fazer microlição <ArrowRight size={15} />
-                        </Link>
-                      )}
-                    </>
+                  <details
+                    className="improvement-explanation"
+                    onToggle={(event) => {
+                      if (event.currentTarget.open)
+                        recordStudyEvent("explanation_opened", item.id, { courseId: course.id });
+                    }}
+                  >
+                    <summary>Ver explicação</summary>
+                    <p>{guidance.explanation}</p>
+                    {guidance.example && (
+                      <p>
+                        <strong>{item.kind === "image" ? "Observe:" : "Exemplo:"}</strong>{" "}
+                        <span lang={item.kind === "image" ? "pt-BR" : course.languageCode}>
+                          {guidance.example}
+                        </span>{" "}
+                        {item.kind !== "image" && (
+                          <SpeakButton text={guidance.example} label="Ouvir exemplo" />
+                        )}
+                      </p>
+                    )}
+                  </details>
+                  {featureFlags.AI_TUTOR && lessonActivityId && (
+                    <Link
+                      href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
+                      className="text-link"
+                    >
+                      Fazer microlição <ArrowRight size={15} />
+                    </Link>
                   )}
                   {item.kind === "number" && (
                     <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
                   )}
                 </div>
-              </div>
-            ))}
+              </div>;
+            })}
           </div>
         ) : (
           <div className="improvement-empty">

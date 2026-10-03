@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- This Fly helper runs as CommonJS. */
 const http = require('node:http');
 const net = require('node:net');
 const dns = require('node:dns').promises;

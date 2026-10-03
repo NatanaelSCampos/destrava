@@ -72,7 +72,7 @@ Tudo isso deve contribuir para decidir:
 - **APROVADO** → pode ser planejado e desenvolvido.
 - **EM ANÁLISE** → não desenvolver a versão final ainda; pode preparar arquitetura, interfaces e provas de conceito sem integrar definitivamente ao fluxo principal.
 
-## Implementação no produto — auditoria atualizada em 2026-10-02
+## Implementação no produto — auditoria atualizada em 2026-10-03
 
 O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **IMPLEMENTADO** indica que o fluxo principal atende ao item; **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise.
 
@@ -80,7 +80,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | --- | --- | --- |
 | 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala, revisão e diagnóstico. Conversas e imagens têm contagens de prática separadas das notas; ainda falta domínio por curso/idioma e evidência calibrada para atribuir pontuação a essas produções livres. |
 | 2. Motor adaptativo | **IMPLEMENTADO** | Prioriza revisões, erros, pronúncia/fluência, trilha, diagnóstico e sinais de conversa, imagem e comportamento. A aula e Estatísticas oferecem links para a próxima prática; produções livres orientam sugestões sem gerar nota. |
-| 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar; microconversa e exercícios gerados por IA ficam para outra etapa. |
+| 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar. Agora oferece microlição com exercícios gerados a partir de um erro antes e depois da sessão. A microconversa ainda não integra o roteiro da própria sessão. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
 | 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
 | 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, estruturas curadas, erros e frases no mesmo fluxo; estruturas têm calendário próprio no JSON do aluno. Pronúncia ainda não tem agendamento granular, e a projeção relacional das estruturas fica para migração futura. |
@@ -95,7 +95,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 15. Role-play com IA | **IMPLEMENTADO** | Seis cenários com personagem, abertura, objetivos, ritmo e correções; o aluno pode falar ou digitar, revisar a transcrição e ouvir respostas. A IA permanece orientada ao papel e ao nível A1. |
 | 16. Conversação livre adaptativa | **IMPLEMENTADO** | Assunto livre, voz ou texto, turnos persistidos, contexto do aluno e correção configurável. Ajustes e modos de entrada alimentam a memória; a prática não recebe nota oficial. |
 | 17. Tutor persistente | **IMPLEMENTADO** | Professor e conversas recebem contexto curto do curso, unidade, meta, região, vocabulário conhecido, erros e padrões de correção extraídos das sessões recentes. O histórico inteiro não é enviado ao modelo. |
-| 18. Microlição a partir dos erros | **PARCIAL** | **Meus erros** e **Estatísticas** abrem uma microlição com explicação do erro e questão objetiva gerada por IA. A resposta é registrada no perfil; ainda falta uma sequência adaptativa de várias questões. |
+| 18. Microlição a partir dos erros | **IMPLEMENTADO** | **Meus erros** e **Estatísticas** abrem uma microlição ancorada em erro real: explicação, dois exemplos, três exercícios progressivos, fala opcional com transcrição e checagem final. As quatro respostas alimentam o perfil; o resultado compara a prática com as últimas tentativas, sem alegar nota oficial ou avaliação da pronúncia. A geração é solicitada pelo aluno e reutiliza a explicação já registrada. |
 | 19. Memória ativa de comportamento | **IMPLEMENTADO** | Busca/áudio repetido de palavras, repetição de falas, explicações abertas, missões deixadas incompletas e correções de conversa geram sinais. Eles aumentam prioridades ou indicam prática direta; não alteram uma nota sem avaliação confiável. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
@@ -107,7 +107,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 27. Ritmo de conversa por nível | **PARCIAL** | O aluno escolhe iniciante/intermediário/natural; a IA ajusta a extensão da resposta e o áudio muda de velocidade. Falta calibragem empírica por nível. |
 | 28. Controle de correção em conversas | **PARCIAL** | Correção a cada resposta, apenas erros importantes, no final ou desligada; ainda falta avaliação da consistência das correções. |
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. Configurações permite escolher e testar uma voz espanhola instalada para a variante neste dispositivo. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Faltam áudio uniforme entre dispositivos e cobertura regional maior no curso. |
-| 30. O que preciso melhorar? | **PARCIAL** | **Estatísticas** mostra prioridades, prática direta, explicação do erro e microlição quando há erro registrado; números, conversas e imagens abrem o treino específico. Explicações e microlições de outras fontes ainda dependem de conteúdo próprio. |
+| 30. O que preciso melhorar? | **IMPLEMENTADO** | **Estatísticas** traduz prioridades do histórico em prática direta e explicação contextual para revisão, atividades, números, conversas e imagens. Quando há erro de atividade, oferece microlição; nos demais casos, usa o treino específico da fonte em vez de gerar conteúdo artificial. |
 | 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
 | 32. Telemetria pedagógica | **IMPLEMENTADO** | Eventos por aluno registram turnos, voz, categorias de correção, objetivos, áudios repetidos, uso do professor, descrições de imagem e explicações abertas, além das tentativas existentes. Os sinais alimentam o motor adaptativo sem misturar analytics de marketing. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
@@ -121,15 +121,22 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 | Frente | Itens | Trabalho restante |
 | --- | --- | --- |
 | Base multilíngua | 1, 5, 7, 8, 9, 29 e 31 | Separar todo o estado e conteúdo por curso/idioma, ampliar os catálogos e adaptar as instruções de IA além do espanhol A1. |
-| Conversação e personalização | 3, 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos; incorporar microconversas na sessão focada e ampliar o catálogo de missões. |
+| Conversação e personalização | 3, 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos; incorporar microconversas na sessão focada e ampliar o catálogo de missões. Exercícios gerados já podem ser acessados antes/depois da sessão por meio da microlição. |
 | Revisão e fala | 6, 10 e 20 | Revisão granular de pronúncia e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
 | Avaliação | 22 e 23 | Ampliar o banco adaptativo e a amostra por competência e avaliar escrita livre. O teste final atual continua fixo. |
-| Outros fluxos parciais | 18, 30 e 33 | Sequência de microlições, ações para mais tipos de dificuldade e validação contínua de cada nova entrega. |
+| Validação contínua | 33 | A entrega de cada recurso ainda deve passar por proposta, verificação, testes e documentação. |
 | Ainda não iniciado | 26 | AI Bridge: exportar/importar prática com outras IAs. |
 | Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
 
-**Concluídos no escopo descrito:** 4 (sessões rápidas), 11 (Fale sem ler), 12 (flashcards ligados ao domínio) e 24 (feedback pós-avaliação). Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+**Concluídos no escopo descrito:** 2, 4, 11, 12, 15–19, 24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+
+### Entrega de 2026-10-03 — dificuldades, microlição e recomendações
+
+- Foram reaproveitados o caderno de erros, o provedor de IA com resposta estruturada, a transcrição Azure já usada em conversas, o perfil de aprendizado e o motor de recomendações.
+- A microlição usa apenas o erro e a atividade do curso como contexto. A fala é prática livre, sem nota de pronúncia; as questões objetivas têm resultado e histórico por ponto.
+- O painel de Estatísticas explica também as recomendações de números, conversa e imagem usando o histórico do aluno e o conteúdo curado. A microlição aparece quando existe um erro concreto para fundamentá-la.
+- O treino focado indica a microlição antes e depois da sessão. Incorporar uma microconversa dentro da sessão ainda é a pendência do item 3.
 
 ---
 

@@ -5,6 +5,7 @@ import { findActivity } from "../src/content/schema";
 import { gradeActivity } from "../src/domain/activities/grader";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
+import { recommendationGuidance } from "../src/domain/study/recommendation-guidance";
 import { buildLearningMemory } from "../src/domain/study/learning-memory";
 import { recommendationLink } from "../src/lib/recommendation-link";
 import { buildStudyPlan } from "../src/domain/study/study-planner";
@@ -262,6 +263,8 @@ assert.equal(
 const imageSuggestion = recommend(memoryState).find((item) => item.kind === "image");
 assert(imageSuggestion);
 assert.equal(recommendationLink(course.slug, imageSuggestion), "/describe?scene=kitchen");
+assert.match(recommendationGuidance(course, memoryState, conversationSuggestion).explanation, /yo soy de/);
+assert.match(recommendationGuidance(course, memoryState, imageSuggestion).explanation, /Use hay/);
 
 const freshProfile = buildLearningProfile(course, initialStudyState, vocabularySeed, now);
 assert.equal(freshProfile.languageCode, "es");
@@ -690,6 +693,10 @@ assert(
   )?.evidenceCount ?? 0) > 0,
 );
 assert(recommend(numberIssue).some((item) => item.kind === "number" && item.id === "47"));
+const numberSuggestion = recommend(numberIssue).find(
+  (item) => item.kind === "number" && item.id === "47",
+)!;
+assert.match(recommendationGuidance(course, numberIssue, numberSuggestion).explanation, /cuarenta y siete/);
 const otherCourse = { ...course, id: "french-a1", languageCode: "fr" };
 assert.equal(
   buildLearningProfile(otherCourse, numberIssue, vocabularySeed, numberNow).concepts.find(
