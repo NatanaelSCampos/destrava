@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-ingles-a1-validacao",
+    title: "Experimente os primeiros passos em inglês",
+    summary: "Um curso curto de inglês A1 já está disponível para você conhecer a nova jornada multilíngua.",
+    highlights: [
+      "No menu Curso atual, selecione Inglês A1 · Primeiros encontros.",
+      "Pratique apresentação, escuta e fala; explore alfabeto, números e vocabulário.",
+      "Seu progresso em inglês fica separado do progresso em espanhol.",
+    ],
+    href: "/dashboard",
+    linkLabel: "Escolher curso",
+  },
+  {
     id: "2026-10-perfil-e-revisao-por-idioma",
     title: "Seu treino agora conecta erros, fala e vocabulário",
     summary: "A aula focada inclui uma conversa curta e a revisão mostra pontos específicos de pronúncia.",
