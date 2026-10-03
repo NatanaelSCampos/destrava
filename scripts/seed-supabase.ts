@@ -59,6 +59,7 @@ async function main() {
         const payload = { ...specific } as Record<string, unknown>;
         delete payload.answer;
         delete payload.accepted;
+        delete payload.fullAnswers;
         delete payload.options;
         delete payload.pairs;
         delete payload.explanation;
@@ -97,6 +98,7 @@ async function main() {
                 answer: {
                   answer: activity.answer,
                   accepted: "accepted" in activity ? activity.accepted : [],
+                  fullAnswers: "fullAnswers" in activity ? activity.fullAnswers : [],
                   explanation: explanation ?? "",
                 },
               },
