@@ -119,7 +119,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
             <span className="pill">Gramática {feedback.score.grammar}/100</span>
           </div>
           <div className="text-audio-row">
-            <p className="corrected-text" lang="es">
+            <p className="corrected-text" lang={course.languageCode}>
               {feedback.correctedText}
             </p>
             <SpeakButton text={feedback.correctedText} label="Ouvir texto revisado" withLabel />

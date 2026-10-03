@@ -1,0 +1,14 @@
+[
+  {
+    "id": "en.mission.colleague", "level": "A1", "scenario": "meet_new_colleague",
+    "objectives": ["say-hello", "say-name", "ask-origin"],
+    "recommendedConcepts": ["en.greetings", "en.be.name", "en.be.origin", "en.personal.questions"],
+    "title": "Conheça um colega", "setting": "Você encontra um novo colega no primeiro dia de trabalho.",
+    "character": "Alex, colega de equipe", "opening": "Hello! My name is Alex. What is your name?",
+    "objectiveDetails": [
+      { "id": "say-hello", "label": "Cumprimente Alex", "hint": "Hello!" },
+      { "id": "say-name", "label": "Diga seu nome", "hint": "My name is..." },
+      { "id": "ask-origin", "label": "Pergunte de onde Alex é", "hint": "Where are you from?" }
+    ]
+  }
+]

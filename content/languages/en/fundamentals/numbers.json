@@ -1,0 +1,12 @@
+{
+  "categoryLabels": { "basic": "Números para começar" },
+  "prompts": [
+    { "id": "en.number.0", "category": "basic", "display": "0", "spoken": "zero", "example": "I have zero books.", "exampleTranslation": "Eu tenho zero livros." },
+    { "id": "en.number.1", "category": "basic", "display": "1", "spoken": "one", "example": "I have one book.", "exampleTranslation": "Eu tenho um livro." },
+    { "id": "en.number.2", "category": "basic", "display": "2", "spoken": "two", "example": "I have two books.", "exampleTranslation": "Eu tenho dois livros." },
+    { "id": "en.number.3", "category": "basic", "display": "3", "spoken": "three", "example": "I have three books.", "exampleTranslation": "Eu tenho três livros." },
+    { "id": "en.number.5", "category": "basic", "display": "5", "spoken": "five", "example": "I have five books.", "exampleTranslation": "Eu tenho cinco livros." },
+    { "id": "en.number.10", "category": "basic", "display": "10", "spoken": "ten", "example": "I have ten books.", "exampleTranslation": "Eu tenho dez livros." },
+    { "id": "en.number.20", "category": "basic", "display": "20", "spoken": "twenty", "example": "I am twenty years old.", "exampleTranslation": "Eu tenho vinte anos." }
+  ]
+}

@@ -639,9 +639,11 @@ Objetivos da refatoração:
 - permitir novos idiomas através de conteúdo;
 - criar validação e compilação de pacotes.
 
-O registro compilado contém o curso espanhol e o curso sintético **xx-Test**. A seleção do curso fica no cookie `destrava-active-course`; o estado pedagógico é separado por usuário e `courseId`. O pacote de língua define variantes, normalização, módulos e recursos de voz. O pacote de curso define currículo, léxico, missões e avaliações. O motor recebe esses pacotes pelo registro de cursos, sem importar conteúdo espanhol.
+O registro compilado contém o curso espanhol, o curso sintético **xx-Test** e um pacote mínimo de inglês A1 para validar a arquitetura. A seleção do curso fica no cookie `destrava-active-course`; o estado pedagógico é separado por usuário e `courseId`. O pacote de língua define variantes, normalização, módulos e recursos de voz. O pacote de curso define currículo, léxico, missões e avaliações. O motor recebe esses pacotes pelo registro de cursos, sem importar conteúdo específico de um idioma.
 
 Veja [DESTRAVA_ARQUITETURA_MULTILINGUA.md](DESTRAVA_ARQUITETURA_MULTILINGUA.md) para os contratos, o processo de autoria e as limitações verificadas.
+
+O escopo, os resultados e o teste manual do pacote de inglês estão em [DESTRAVA_VALIDACAO_MULTILINGUA_EN.md](DESTRAVA_VALIDACAO_MULTILINGUA_EN.md).
 
 ---
 

@@ -87,7 +87,7 @@ export function ExerciseCard({
                 onClick={() => setAnswer(value)}
               >
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                <span lang={activity.type === "true_false" ? undefined : "es"}>{label}</span>
+                <span lang={activity.type === "true_false" ? undefined : course.languageCode}>{label}</span>
                 {answer === value && <Check size={17} />}
               </button>
               {activity.type !== "true_false" && (
@@ -205,7 +205,7 @@ export function ExerciseCard({
                 </p>
                 {activity.type === "fill_blank" && result.completeAnswer && (
                   <p className="correct-answer">
-                    Frase completa: <strong lang="es">{result.completeAnswer}</strong>
+                    Frase completa: <strong lang={course.languageCode}>{result.completeAnswer}</strong>
                     <SpeakButton text={result.completeAnswer} label="Ouvir frase completa" />
                   </p>
                 )}
@@ -215,7 +215,7 @@ export function ExerciseCard({
               <div className="transcript">
                 <span>TRANSCRIÇÃO</span>
                 <div className="text-audio-row">
-                  <p lang="es">{result.transcript}</p>
+                  <p lang={course.languageCode}>{result.transcript}</p>
                   <SpeakButton text={result.transcript} label="Ouvir transcrição" />
                 </div>
               </div>

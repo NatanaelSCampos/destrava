@@ -1,9 +1,9 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
-const roots = ["src/domain", "src/app/api", "src/components", "src/lib"];
+const roots = ["src/domain", "src/app", "src/components", "src/lib", "src/repositories"];
 const allowed = new Set(["src/domain/study/course-state-storage.ts"]);
-const leak = /frecuenciasA1|spanishResources|spanishAlphabet|spanishRegions|SpanishRegion|speakSpanish|es-ES|es-MX|es-AR|\bspanish\b|\bespanhol\b/i;
+const leak = /frecuenciasA1|spanishResources|spanishAlphabet|spanishRegions|SpanishRegion|speakSpanish|es-ES|es-MX|es-AR|\bspanish\b|\bespanhol\b|en-US|en-GB|\bEnglish\b|\binglês\b|lang=["'](?:es|en)["']/i;
 const matches: string[] = [];
 function scan(directory: string) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -19,6 +19,6 @@ function scan(directory: string) {
 }
 for (const root of roots) scan(resolve(root));
 if (matches.length) {
-  console.error(`Spanish-specific references in generic runtime:\n${matches.join("\n")}`);
+  console.error(`Language-specific references in generic runtime:\n${matches.join("\n")}`);
   process.exitCode = 1;
 } else console.log("architecture boundary: ok");

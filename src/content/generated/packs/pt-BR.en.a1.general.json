@@ -1,0 +1,1667 @@
+{
+  "course": {
+    "schemaVersion": "1.0",
+    "contentVersion": "1.0.0",
+    "id": "pt-BR.en.a1.general",
+    "slug": "ingles-a1",
+    "isDefault": false,
+    "sourceLanguage": "pt-BR",
+    "targetLanguage": "en",
+    "defaultVariant": "general",
+    "framework": {
+      "name": "CEFR",
+      "entryLevel": "A0",
+      "exitLevel": "A1"
+    },
+    "track": "architecture-validation",
+    "title": "Inglês A1 · Primeiros encontros",
+    "description": "Unidade curta de validação: apresente-se e conheça alguém em inglês.",
+    "learningGoals": [
+      "greet",
+      "introduce_self",
+      "ask_personal_questions"
+    ],
+    "units": [
+      {
+        "id": "en.u01",
+        "slug": "primeiros-encontros",
+        "order": 1,
+        "title": "Primeiros encontros",
+        "objectives": [
+          "Cumprimentar e dizer o nome",
+          "Dizer origem e residência",
+          "Falar de profissão e entender perguntas pessoais"
+        ],
+        "skills": [
+          "reading",
+          "vocabulary",
+          "grammar",
+          "listening",
+          "writing",
+          "speaking"
+        ],
+        "introduces": {
+          "concepts": [
+            "en.greetings",
+            "en.be.name",
+            "en.be.origin",
+            "en.live.location",
+            "en.work.profession",
+            "en.personal.questions"
+          ],
+          "vocabulary": [
+            "en.lex.hello",
+            "en.lex.name",
+            "en.lex.my",
+            "en.lex.is",
+            "en.lex.your",
+            "en.lex.meet",
+            "en.lex.from",
+            "en.lex.am",
+            "en.lex.brazil",
+            "en.lex.live",
+            "en.lex.where",
+            "en.lex.teacher",
+            "en.lex.student",
+            "en.lex.work",
+            "en.lex.what",
+            "en.lex.you"
+          ]
+        },
+        "lessons": [
+          {
+            "id": "en.l01",
+            "slug": "nome-e-cumprimentos",
+            "title": "Olá! Qual é seu nome?",
+            "order": 1,
+            "objectives": [
+              "Cumprimentar",
+              "Dizer e perguntar o nome"
+            ],
+            "activities": [
+              {
+                "id": "en.act.01.intro",
+                "type": "lesson_content",
+                "skills": [
+                  "reading",
+                  "grammar"
+                ],
+                "concepts": [
+                  "en.greetings",
+                  "en.be.name"
+                ],
+                "title": "Comece a conversa",
+                "prompt": "Leia e escute as duas frases.",
+                "minutes": 2,
+                "payload": {
+                  "body": "Para cumprimentar, diga Hello. Para dizer seu nome, use My name is + nome. Para perguntar, use What is your name? Em Nice to meet you, você diz que foi um prazer conhecer a pessoa.",
+                  "highlights": [
+                    "Hello! My name is Ana.",
+                    "What is your name?",
+                    "Nice to meet you."
+                  ]
+                }
+              },
+              {
+                "id": "en.act.02.greeting",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.greetings"
+                ],
+                "difficulty": 0.2,
+                "title": "Cumprimente em inglês",
+                "prompt": "Qual palavra serve para dizer olá?",
+                "minutes": 1,
+                "payload": {
+                  "options": [
+                    "Hello",
+                    "Goodbye",
+                    "Please"
+                  ],
+                  "answer": "Hello"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.03.name-fill",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar",
+                  "writing"
+                ],
+                "concepts": [
+                  "en.be.name"
+                ],
+                "difficulty": 0.3,
+                "title": "Diga seu nome",
+                "prompt": "My ___ is Ana. Escreva só a palavra que falta; a frase completa também é aceita.",
+                "minutes": 1,
+                "payload": {
+                  "answer": "name",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "My name is Ana."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.04.name-question",
+                "type": "ordering",
+                "skills": [
+                  "grammar",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.personal.questions",
+                  "en.be.name"
+                ],
+                "difficulty": 0.4,
+                "title": "Pergunte o nome",
+                "prompt": "Organize as palavras para perguntar: Qual é o seu nome?",
+                "minutes": 2,
+                "payload": {
+                  "words": [
+                    "your",
+                    "name",
+                    "What",
+                    "is"
+                  ],
+                  "answer": "What is your name"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.05.name-speak",
+                "type": "speaking",
+                "skills": [
+                  "speaking",
+                  "pronunciation"
+                ],
+                "concepts": [
+                  "en.be.name"
+                ],
+                "title": "Fale seu nome",
+                "prompt": "Ouça e repita a frase modelo.",
+                "minutes": 2,
+                "payload": {
+                  "guidance": [
+                    "Ouça antes de gravar.",
+                    "Fale cada palavra com calma."
+                  ],
+                  "referenceText": "My name is Ana."
+                }
+              },
+              {
+                "id": "en.act.06.name-card",
+                "type": "flashcard",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "en.be.name"
+                ],
+                "title": "Lembre-se de name",
+                "prompt": "Leia a frente e tente recordar a tradução.",
+                "minutes": 1,
+                "payload": {
+                  "front": "name",
+                  "back": "nome",
+                  "example": "My name is Ana."
+                }
+              }
+            ],
+            "eyebrow": "Apresentação",
+            "description": "Primeiro contato com Hello e My name is.",
+            "minutes": 9,
+            "active": true
+          },
+          {
+            "id": "en.l02",
+            "slug": "origem-e-moradia",
+            "title": "De onde você é?",
+            "order": 2,
+            "objectives": [
+              "Dizer de onde é",
+              "Dizer onde mora",
+              "Entender uma pergunta sobre residência"
+            ],
+            "activities": [
+              {
+                "id": "en.act.07.origin-intro",
+                "type": "lesson_content",
+                "skills": [
+                  "reading",
+                  "grammar"
+                ],
+                "concepts": [
+                  "en.be.origin",
+                  "en.live.location"
+                ],
+                "title": "Origem e residência",
+                "prompt": "Compare as duas estruturas.",
+                "minutes": 2,
+                "payload": {
+                  "body": "I am from indica origem: I am from Brazil. I live in indica onde você mora: I live in Rio. Pergunte Where are you from? ou Where do you live?",
+                  "highlights": [
+                    "I am from Brazil.",
+                    "I live in Rio.",
+                    "Where do you live?"
+                  ]
+                }
+              },
+              {
+                "id": "en.act.08.origin-listen",
+                "type": "listening",
+                "skills": [
+                  "listening"
+                ],
+                "concepts": [
+                  "en.be.origin",
+                  "en.live.location"
+                ],
+                "difficulty": 0.3,
+                "title": "Escute onde a pessoa mora",
+                "prompt": "Ouça e escolha a informação correta.",
+                "minutes": 2,
+                "payload": {
+                  "transcript": "I am from Brazil. I live in Rio.",
+                  "options": [
+                    "I live in Rio.",
+                    "I live in London.",
+                    "I am from London."
+                  ],
+                  "answer": "I live in Rio."
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.09.origin-choice",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.be.origin"
+                ],
+                "difficulty": 0.4,
+                "title": "Diga de onde é",
+                "prompt": "Qual frase significa Eu sou do Brasil?",
+                "minutes": 1,
+                "payload": {
+                  "options": [
+                    "I am from Brazil.",
+                    "I live in Brazil.",
+                    "I am from Rio."
+                  ],
+                  "answer": "I am from Brazil."
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.10.origin-fill",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar",
+                  "writing"
+                ],
+                "concepts": [
+                  "en.be.origin"
+                ],
+                "difficulty": 0.4,
+                "title": "Complete a origem",
+                "prompt": "I am ___ Brazil. Escreva só a palavra que falta; a frase completa também é aceita.",
+                "minutes": 1,
+                "payload": {
+                  "answer": "from",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "I am from Brazil."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.11.home-answer",
+                "type": "short_answer",
+                "skills": [
+                  "writing",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.live.location"
+                ],
+                "difficulty": 0.5,
+                "title": "Responda onde mora",
+                "prompt": "Where do you live? Escreva em inglês: Eu moro no Rio.",
+                "minutes": 2,
+                "payload": {
+                  "answer": "I live in Rio.",
+                  "accepted": []
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.12.origin-speak",
+                "type": "speaking",
+                "skills": [
+                  "speaking",
+                  "pronunciation"
+                ],
+                "concepts": [
+                  "en.be.origin",
+                  "en.live.location"
+                ],
+                "title": "Fale sua origem",
+                "prompt": "Escute, repita e depois tente falar de memória.",
+                "minutes": 2,
+                "payload": {
+                  "guidance": [
+                    "Ouça as duas frases.",
+                    "Repita em voz alta e, se quiser, pratique de memória."
+                  ],
+                  "referenceText": "I am from Brazil. I live in Rio."
+                }
+              }
+            ],
+            "eyebrow": "Origem e lugar",
+            "description": "Use I am from e I live in para dar duas informações sobre você.",
+            "minutes": 10,
+            "active": true
+          },
+          {
+            "id": "en.l03",
+            "slug": "profissao-e-perguntas",
+            "title": "O que você faz?",
+            "order": 3,
+            "objectives": [
+              "Dizer profissão",
+              "Reconhecer What do you do?",
+              "Montar uma breve apresentação"
+            ],
+            "activities": [
+              {
+                "id": "en.act.13.job-intro",
+                "type": "lesson_content",
+                "skills": [
+                  "reading",
+                  "grammar"
+                ],
+                "concepts": [
+                  "en.work.profession",
+                  "en.personal.questions"
+                ],
+                "title": "Sua profissão",
+                "prompt": "Leia as frases e a pergunta.",
+                "minutes": 2,
+                "payload": {
+                  "body": "Para dizer a profissão, use I am a teacher ou I am a student. A pergunta What do you do? pode significar O que você faz? no contexto de trabalho. Responda com uma frase simples.",
+                  "highlights": [
+                    "I am a teacher.",
+                    "I am a student.",
+                    "What do you do?"
+                  ]
+                }
+              },
+              {
+                "id": "en.act.14.job-choice",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.work.profession"
+                ],
+                "difficulty": 0.5,
+                "title": "Escolha a frase natural",
+                "prompt": "Qual frase diz Eu sou professor(a)?",
+                "minutes": 1,
+                "payload": {
+                  "options": [
+                    "I am a teacher.",
+                    "I am teacher.",
+                    "I are a teacher."
+                  ],
+                  "answer": "I am a teacher."
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.15.job-order",
+                "type": "ordering",
+                "skills": [
+                  "grammar",
+                  "reading"
+                ],
+                "concepts": [
+                  "en.work.profession"
+                ],
+                "difficulty": 0.5,
+                "title": "Monte sua profissão",
+                "prompt": "Organize as palavras para dizer: Eu sou professor(a).",
+                "minutes": 2,
+                "payload": {
+                  "words": [
+                    "teacher",
+                    "a",
+                    "am",
+                    "I"
+                  ],
+                  "answer": "I am a teacher"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.16.job-listen",
+                "type": "listening",
+                "skills": [
+                  "listening"
+                ],
+                "concepts": [
+                  "en.be.name",
+                  "en.work.profession"
+                ],
+                "difficulty": 0.5,
+                "title": "Escute a apresentação",
+                "prompt": "Qual profissão a pessoa mencionou?",
+                "minutes": 2,
+                "payload": {
+                  "transcript": "Hello! My name is Sam. I am a student.",
+                  "options": [
+                    "I am a student.",
+                    "I am a teacher.",
+                    "I am a doctor."
+                  ],
+                  "answer": "I am a student."
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.act.17.introduction-write",
+                "type": "writing",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [
+                  "en.be.name",
+                  "en.be.origin",
+                  "en.live.location",
+                  "en.work.profession"
+                ],
+                "title": "Apresente-se por escrito",
+                "prompt": "Escreva duas ou três frases em inglês: seu nome, de onde é e o que faz.",
+                "minutes": 2,
+                "payload": {
+                  "guidance": [
+                    "Use My name is... para o nome.",
+                    "Use I am from... e I am a... para origem e profissão."
+                  ],
+                  "minWords": 5
+                }
+              },
+              {
+                "id": "en.act.18.question-speak",
+                "type": "speaking",
+                "skills": [
+                  "speaking",
+                  "pronunciation"
+                ],
+                "concepts": [
+                  "en.personal.questions"
+                ],
+                "title": "Pergunte a profissão",
+                "prompt": "Escute e repita; depois tente sem ler.",
+                "minutes": 1,
+                "payload": {
+                  "guidance": [
+                    "Ouça a pergunta.",
+                    "Fale no seu ritmo e repita para melhorar."
+                  ],
+                  "referenceText": "What do you do?"
+                }
+              }
+            ],
+            "eyebrow": "Conversa",
+            "description": "Una nome, origem, residência e profissão em uma conversa curta.",
+            "minutes": 10,
+            "active": true
+          }
+        ],
+        "assessmentId": "en.u01.diagnostic",
+        "description": "Cumprimente, apresente-se e faça perguntas pessoais simples.",
+        "active": true
+      }
+    ],
+    "concepts": [
+      {
+        "id": "en.greetings",
+        "language": "en",
+        "type": "communication",
+        "name": "Cumprimentos",
+        "description": {
+          "pt-BR": "Inicie uma conversa com Hello e Nice to meet you."
+        },
+        "examples": [
+          {
+            "target": "Hello!",
+            "translations": {
+              "pt-BR": "Olá!"
+            }
+          }
+        ]
+      },
+      {
+        "id": "en.be.name",
+        "language": "en",
+        "type": "grammar",
+        "name": "Nome com be",
+        "description": {
+          "pt-BR": "Use My name is para se apresentar."
+        },
+        "prerequisites": [
+          "en.greetings"
+        ],
+        "examples": [
+          {
+            "target": "My name is Ana.",
+            "translations": {
+              "pt-BR": "Meu nome é Ana."
+            }
+          }
+        ]
+      },
+      {
+        "id": "en.be.origin",
+        "language": "en",
+        "type": "grammar",
+        "name": "Origem com be",
+        "description": {
+          "pt-BR": "Use I am from para dizer de onde você é."
+        },
+        "prerequisites": [
+          "en.be.name"
+        ],
+        "examples": [
+          {
+            "target": "I am from Brazil.",
+            "translations": {
+              "pt-BR": "Eu sou do Brasil."
+            }
+          }
+        ]
+      },
+      {
+        "id": "en.live.location",
+        "language": "en",
+        "type": "communication",
+        "name": "Onde mora",
+        "description": {
+          "pt-BR": "Use I live in para dizer onde mora."
+        },
+        "examples": [
+          {
+            "target": "I live in Rio.",
+            "translations": {
+              "pt-BR": "Eu moro no Rio."
+            }
+          }
+        ]
+      },
+      {
+        "id": "en.work.profession",
+        "language": "en",
+        "type": "grammar",
+        "name": "Profissão",
+        "description": {
+          "pt-BR": "Use I am a ou I am an antes da profissão."
+        },
+        "prerequisites": [
+          "en.be.origin"
+        ],
+        "examples": [
+          {
+            "target": "I am a teacher.",
+            "translations": {
+              "pt-BR": "Eu sou professor(a)."
+            }
+          }
+        ]
+      },
+      {
+        "id": "en.personal.questions",
+        "language": "en",
+        "type": "communication",
+        "name": "Perguntas pessoais",
+        "description": {
+          "pt-BR": "Pergunte nome, origem, residência e profissão com frases curtas."
+        },
+        "prerequisites": [
+          "en.be.name"
+        ],
+        "examples": [
+          {
+            "target": "Where are you from?",
+            "translations": {
+              "pt-BR": "De onde você é?"
+            }
+          }
+        ]
+      }
+    ],
+    "lexicon": [
+      {
+        "id": "en.lex.hello",
+        "language": "en",
+        "lemma": "hello",
+        "meanings": [
+          {
+            "id": "greeting",
+            "translations": {
+              "pt-BR": [
+                "olá"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Hello, Ana!",
+            "translations": {
+              "pt-BR": "Olá, Ana!"
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.name",
+        "language": "en",
+        "lemma": "name",
+        "meanings": [
+          {
+            "id": "identity",
+            "translations": {
+              "pt-BR": [
+                "nome"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "My name is Ana.",
+            "translations": {
+              "pt-BR": "Meu nome é Ana."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.my",
+        "language": "en",
+        "lemma": "my",
+        "meanings": [
+          {
+            "id": "possession",
+            "translations": {
+              "pt-BR": [
+                "meu",
+                "minha"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "My name is Ana.",
+            "translations": {
+              "pt-BR": "Meu nome é Ana."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.is",
+        "language": "en",
+        "lemma": "is",
+        "meanings": [
+          {
+            "id": "be-third-person",
+            "translations": {
+              "pt-BR": [
+                "é"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "My name is Ana.",
+            "translations": {
+              "pt-BR": "Meu nome é Ana."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.your",
+        "language": "en",
+        "lemma": "your",
+        "meanings": [
+          {
+            "id": "possession",
+            "translations": {
+              "pt-BR": [
+                "seu",
+                "sua"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "What is your name?",
+            "translations": {
+              "pt-BR": "Qual é o seu nome?"
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.meet",
+        "language": "en",
+        "lemma": "meet",
+        "meanings": [
+          {
+            "id": "encounter",
+            "translations": {
+              "pt-BR": [
+                "conhecer",
+                "encontrar"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Nice to meet you.",
+            "translations": {
+              "pt-BR": "Prazer em conhecer você."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l01"
+      },
+      {
+        "id": "en.lex.from",
+        "language": "en",
+        "lemma": "from",
+        "meanings": [
+          {
+            "id": "origin",
+            "translations": {
+              "pt-BR": [
+                "de"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I am from Brazil.",
+            "translations": {
+              "pt-BR": "Eu sou do Brasil."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l02"
+      },
+      {
+        "id": "en.lex.am",
+        "language": "en",
+        "lemma": "am",
+        "meanings": [
+          {
+            "id": "be-first-person",
+            "translations": {
+              "pt-BR": [
+                "sou",
+                "estou"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I am from Brazil.",
+            "translations": {
+              "pt-BR": "Eu sou do Brasil."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l02"
+      },
+      {
+        "id": "en.lex.brazil",
+        "language": "en",
+        "lemma": "Brazil",
+        "meanings": [
+          {
+            "id": "country",
+            "translations": {
+              "pt-BR": [
+                "Brasil"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I am from Brazil.",
+            "translations": {
+              "pt-BR": "Eu sou do Brasil."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l02"
+      },
+      {
+        "id": "en.lex.live",
+        "language": "en",
+        "lemma": "live",
+        "meanings": [
+          {
+            "id": "reside",
+            "translations": {
+              "pt-BR": [
+                "morar",
+                "viver"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I live in Rio.",
+            "translations": {
+              "pt-BR": "Eu moro no Rio."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l02"
+      },
+      {
+        "id": "en.lex.where",
+        "language": "en",
+        "lemma": "where",
+        "meanings": [
+          {
+            "id": "location-question",
+            "translations": {
+              "pt-BR": [
+                "onde"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Where do you live?",
+            "translations": {
+              "pt-BR": "Onde você mora?"
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l02"
+      },
+      {
+        "id": "en.lex.teacher",
+        "language": "en",
+        "lemma": "teacher",
+        "meanings": [
+          {
+            "id": "profession",
+            "translations": {
+              "pt-BR": [
+                "professor",
+                "professora"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I am a teacher.",
+            "translations": {
+              "pt-BR": "Eu sou professor(a)."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l03"
+      },
+      {
+        "id": "en.lex.student",
+        "language": "en",
+        "lemma": "student",
+        "meanings": [
+          {
+            "id": "occupation",
+            "translations": {
+              "pt-BR": [
+                "estudante"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I am a student.",
+            "translations": {
+              "pt-BR": "Eu sou estudante."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l03"
+      },
+      {
+        "id": "en.lex.work",
+        "language": "en",
+        "lemma": "work",
+        "meanings": [
+          {
+            "id": "job",
+            "translations": {
+              "pt-BR": [
+                "trabalhar",
+                "trabalho"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "I work in a school.",
+            "translations": {
+              "pt-BR": "Eu trabalho em uma escola."
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l03"
+      },
+      {
+        "id": "en.lex.what",
+        "language": "en",
+        "lemma": "what",
+        "meanings": [
+          {
+            "id": "question",
+            "translations": {
+              "pt-BR": [
+                "o que",
+                "qual"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "What do you do?",
+            "translations": {
+              "pt-BR": "O que você faz?"
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l03"
+      },
+      {
+        "id": "en.lex.you",
+        "language": "en",
+        "lemma": "you",
+        "meanings": [
+          {
+            "id": "second-person",
+            "translations": {
+              "pt-BR": [
+                "você"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Where do you live?",
+            "translations": {
+              "pt-BR": "Onde você mora?"
+            }
+          }
+        ],
+        "level": "A1",
+        "lessonId": "en.l03"
+      }
+    ],
+    "missions": [
+      {
+        "id": "en.mission.colleague",
+        "level": "A1",
+        "scenario": "meet_new_colleague",
+        "objectives": [
+          "say-hello",
+          "say-name",
+          "ask-origin"
+        ],
+        "recommendedConcepts": [
+          "en.greetings",
+          "en.be.name",
+          "en.be.origin",
+          "en.personal.questions"
+        ],
+        "title": "Conheça um colega",
+        "setting": "Você encontra um novo colega no primeiro dia de trabalho.",
+        "character": "Alex, colega de equipe",
+        "opening": "Hello! My name is Alex. What is your name?",
+        "objectiveDetails": [
+          {
+            "id": "say-hello",
+            "label": "Cumprimente Alex",
+            "hint": "Hello!"
+          },
+          {
+            "id": "say-name",
+            "label": "Diga seu nome",
+            "hint": "My name is..."
+          },
+          {
+            "id": "ask-origin",
+            "label": "Pergunte de onde Alex é",
+            "hint": "Where are you from?"
+          }
+        ]
+      }
+    ],
+    "roleplays": [
+      {
+        "id": "en.roleplay.colleague",
+        "scenario": "meet_new_colleague",
+        "level": "A1",
+        "character": {
+          "role": "new colleague"
+        },
+        "objectives": [
+          "say-hello",
+          "say-name",
+          "ask-origin"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      }
+    ],
+    "assessments": [
+      {
+        "id": "en.u01.diagnostic",
+        "type": "adaptive_diagnostic",
+        "unitId": "en.u01",
+        "skillWeights": {
+          "vocabulary": 0.2,
+          "grammar": 0.2,
+          "listening": 0.2,
+          "writing": 0.2,
+          "reading": 0.2
+        },
+        "passingPolicy": {
+          "overall": 0.6,
+          "minimumBySkill": {}
+        },
+        "skillPlan": [
+          "vocabulary",
+          "grammar",
+          "listening",
+          "writing",
+          "reading"
+        ],
+        "bank": [
+          {
+            "activityId": "en.act.02.greeting",
+            "skill": "vocabulary",
+            "difficulty": 1
+          },
+          {
+            "activityId": "en.act.03.name-fill",
+            "skill": "grammar",
+            "difficulty": 1
+          },
+          {
+            "activityId": "en.act.08.origin-listen",
+            "skill": "listening",
+            "difficulty": 2
+          },
+          {
+            "activityId": "en.act.11.home-answer",
+            "skill": "writing",
+            "difficulty": 2
+          },
+          {
+            "activityId": "en.act.09.origin-choice",
+            "skill": "reading",
+            "difficulty": 2
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "media": [
+      {
+        "id": "en.media.cafe",
+        "type": "image",
+        "src": "/images/description/cafe.png",
+        "metadata": {
+          "title": "Pessoas em um café",
+          "alt": "Um garçom e uma cliente na mesa de um café, perto de uma bicicleta.",
+          "prompt": "Em inglês, diga quem está no café e cite um objeto que você vê.",
+          "facts": [
+            "terraço de café",
+            "garçom com avental",
+            "mulher tomando café",
+            "xícara branca",
+            "bicicleta estacionada",
+            "plantas",
+            "toldo vermelho"
+          ]
+        }
+      }
+    ],
+    "practice": {
+      "reviewStructures": [
+        {
+          "id": "en.structure.name",
+          "lessonId": "en.l01",
+          "conceptId": "en.be.name",
+          "title": "Dizer o nome",
+          "prompt": "Complete: My name ___ Ana.",
+          "answer": "is",
+          "explanation": "Com my name, usamos is: My name is Ana."
+        },
+        {
+          "id": "en.structure.origin",
+          "lessonId": "en.l02",
+          "conceptId": "en.be.origin",
+          "title": "Dizer a origem",
+          "prompt": "Complete: I ___ from Brazil.",
+          "answer": "am",
+          "explanation": "Com I, usamos am: I am from Brazil."
+        }
+      ]
+    },
+    "provenance": {
+      "origin": "human",
+      "review": {
+        "status": "approved"
+      }
+    }
+  },
+  "language": {
+    "schemaVersion": "1.0",
+    "contentVersion": "1.0.0",
+    "id": "en",
+    "identity": {
+      "name": "English",
+      "nativeName": "English",
+      "iso639_1": "en"
+    },
+    "writingSystem": {
+      "direction": "ltr",
+      "scripts": [
+        "Latin"
+      ],
+      "caseSensitive": false
+    },
+    "variants": [
+      {
+        "id": "general",
+        "name": "Inglês geral",
+        "default": true
+      },
+      {
+        "id": "en-US",
+        "name": "Inglês dos Estados Unidos"
+      },
+      {
+        "id": "en-GB",
+        "name": "Inglês do Reino Unido"
+      }
+    ],
+    "capabilities": {
+      "speechRecognition": true,
+      "textToSpeech": true,
+      "pronunciationAssessment": true,
+      "regionalVariants": true,
+      "romanization": false,
+      "tones": false,
+      "grammaticalGender": false
+    },
+    "speech": {
+      "defaultVariant": "general",
+      "providers": {
+        "azure": {
+          "general": {
+            "recognitionLocale": "en-US",
+            "assessmentLocale": "en-US",
+            "ttsLocale": "en-US"
+          },
+          "en-US": {
+            "recognitionLocale": "en-US",
+            "assessmentLocale": "en-US",
+            "ttsLocale": "en-US"
+          },
+          "en-GB": {
+            "recognitionLocale": "en-GB",
+            "assessmentLocale": "en-GB",
+            "ttsLocale": "en-GB"
+          }
+        }
+      }
+    },
+    "normalization": {
+      "trimWhitespace": true,
+      "collapseWhitespace": true,
+      "caseInsensitive": true,
+      "ignoreTerminalPunctuation": true,
+      "ignoreDiacritics": false
+    },
+    "modules": {
+      "alphabet": {
+        "enabled": true,
+        "source": "fundamentals/alphabet.json"
+      },
+      "numbers": {
+        "enabled": true,
+        "source": "fundamentals/numbers.json"
+      },
+      "regionalVariants": {
+        "enabled": true,
+        "source": "fundamentals/regional-variants.json"
+      }
+    },
+    "strategies": {
+      "textTokenizer": "latin-word-v1",
+      "answerNormalizer": "default-latin-v1"
+    }
+  },
+  "moduleData": {
+    "alphabet": [
+      {
+        "letter": "A",
+        "name": "ay",
+        "word": "apple",
+        "translation": "maçã",
+        "example": "This is an apple.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "B",
+        "name": "bee",
+        "word": "book",
+        "translation": "livro",
+        "example": "This is my book.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "C",
+        "name": "see",
+        "word": "cat",
+        "translation": "gato",
+        "example": "The cat is here.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "D",
+        "name": "dee",
+        "word": "door",
+        "translation": "porta",
+        "example": "The door is open.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "E",
+        "name": "ee",
+        "word": "egg",
+        "translation": "ovo",
+        "example": "I have an egg.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "F",
+        "name": "ef",
+        "word": "friend",
+        "translation": "amigo",
+        "example": "She is my friend.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "G",
+        "name": "jee",
+        "word": "girl",
+        "translation": "menina",
+        "example": "The girl is here.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "H",
+        "name": "aitch",
+        "word": "house",
+        "translation": "casa",
+        "example": "My house is small.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "I",
+        "name": "eye",
+        "word": "I",
+        "translation": "eu",
+        "example": "I am Ana.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "J",
+        "name": "jay",
+        "word": "job",
+        "translation": "trabalho",
+        "example": "I like my job.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "K",
+        "name": "kay",
+        "word": "key",
+        "translation": "chave",
+        "example": "This is my key.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "L",
+        "name": "el",
+        "word": "live",
+        "translation": "morar",
+        "example": "I live in Rio.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "M",
+        "name": "em",
+        "word": "mother",
+        "translation": "mãe",
+        "example": "My mother is here.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "N",
+        "name": "en",
+        "word": "name",
+        "translation": "nome",
+        "example": "My name is Ana.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "O",
+        "name": "oh",
+        "word": "orange",
+        "translation": "laranja",
+        "example": "The orange is sweet.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "P",
+        "name": "pee",
+        "word": "person",
+        "translation": "pessoa",
+        "example": "That person is my friend.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "Q",
+        "name": "cue",
+        "word": "question",
+        "translation": "pergunta",
+        "example": "I have a question.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "R",
+        "name": "ar",
+        "word": "room",
+        "translation": "quarto",
+        "example": "The room is small.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "S",
+        "name": "ess",
+        "word": "student",
+        "translation": "estudante",
+        "example": "I am a student.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "T",
+        "name": "tee",
+        "word": "teacher",
+        "translation": "professor",
+        "example": "She is a teacher.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "U",
+        "name": "you",
+        "word": "umbrella",
+        "translation": "guarda-chuva",
+        "example": "This is my umbrella.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "V",
+        "name": "vee",
+        "word": "very",
+        "translation": "muito",
+        "example": "It is very good.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "W",
+        "name": "double u",
+        "word": "where",
+        "translation": "onde",
+        "example": "Where do you live?",
+        "kind": "consonant"
+      },
+      {
+        "letter": "X",
+        "name": "ex",
+        "word": "box",
+        "translation": "caixa",
+        "example": "The box is here.",
+        "kind": "consonant",
+        "note": "Nesta palavra, X aparece no final."
+      },
+      {
+        "letter": "Y",
+        "name": "why",
+        "word": "yes",
+        "translation": "sim",
+        "example": "Yes, I am a student.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "Z",
+        "name": "Z",
+        "word": "zebra",
+        "translation": "zebra",
+        "example": "The zebra is here.",
+        "kind": "consonant",
+        "note": "O nome desta letra costuma ser zee nos Estados Unidos e zed no Reino Unido. A voz do dispositivo pode variar."
+      }
+    ],
+    "numbers": {
+      "prompts": [
+        {
+          "id": "en.number.0",
+          "category": "basic",
+          "display": "0",
+          "spoken": "zero",
+          "example": "I have zero books.",
+          "exampleTranslation": "Eu tenho zero livros."
+        },
+        {
+          "id": "en.number.1",
+          "category": "basic",
+          "display": "1",
+          "spoken": "one",
+          "example": "I have one book.",
+          "exampleTranslation": "Eu tenho um livro."
+        },
+        {
+          "id": "en.number.2",
+          "category": "basic",
+          "display": "2",
+          "spoken": "two",
+          "example": "I have two books.",
+          "exampleTranslation": "Eu tenho dois livros."
+        },
+        {
+          "id": "en.number.3",
+          "category": "basic",
+          "display": "3",
+          "spoken": "three",
+          "example": "I have three books.",
+          "exampleTranslation": "Eu tenho três livros."
+        },
+        {
+          "id": "en.number.5",
+          "category": "basic",
+          "display": "5",
+          "spoken": "five",
+          "example": "I have five books.",
+          "exampleTranslation": "Eu tenho cinco livros."
+        },
+        {
+          "id": "en.number.10",
+          "category": "basic",
+          "display": "10",
+          "spoken": "ten",
+          "example": "I have ten books.",
+          "exampleTranslation": "Eu tenho dez livros."
+        },
+        {
+          "id": "en.number.20",
+          "category": "basic",
+          "display": "20",
+          "spoken": "twenty",
+          "example": "I am twenty years old.",
+          "exampleTranslation": "Eu tenho vinte anos."
+        }
+      ],
+      "categoryLabels": {
+        "basic": "Números para começar"
+      }
+    },
+    "regionalVariants": [
+      {
+        "id": "en.home.word",
+        "title": "Apartamento",
+        "meaning": "Duas palavras para o mesmo tipo de moradia.",
+        "note": "Ambas podem ser entendidas em diferentes regiões; a preferência muda conforme o país.",
+        "variants": [
+          {
+            "region": "en-US",
+            "term": "apartment",
+            "example": "I live in an apartment."
+          },
+          {
+            "region": "en-GB",
+            "term": "flat",
+            "example": "I live in a flat."
+          }
+        ],
+        "checkPrompt": "Qual palavra é mais comum no Reino Unido para apartamento?",
+        "checkRegion": "en-GB",
+        "sources": [
+          {
+            "label": "Cambridge Dictionary: flat",
+            "url": "https://dictionary.cambridge.org/dictionary/english/flat"
+          }
+        ]
+      },
+      {
+        "id": "en.lift.word",
+        "title": "Elevador",
+        "meaning": "O objeto tem nomes frequentes diferentes nas duas variantes.",
+        "note": "A diferença é de vocabulário, não de objetivo da frase.",
+        "variants": [
+          {
+            "region": "en-US",
+            "term": "elevator",
+            "example": "The elevator is here."
+          },
+          {
+            "region": "en-GB",
+            "term": "lift",
+            "example": "The lift is here."
+          }
+        ],
+        "checkPrompt": "Qual palavra é mais comum nos Estados Unidos para elevador?",
+        "checkRegion": "en-US",
+        "sources": [
+          {
+            "label": "Cambridge Dictionary: lift",
+            "url": "https://dictionary.cambridge.org/dictionary/english/lift"
+          }
+        ]
+      }
+    ]
+  }
+}

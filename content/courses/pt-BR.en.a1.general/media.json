@@ -1,0 +1,11 @@
+[
+  {
+    "id": "en.media.cafe", "type": "image", "src": "/images/description/cafe.png",
+    "metadata": {
+      "title": "Pessoas em um café",
+      "alt": "Um garçom e uma cliente na mesa de um café, perto de uma bicicleta.",
+      "prompt": "Em inglês, diga quem está no café e cite um objeto que você vê.",
+      "facts": ["terraço de café", "garçom com avental", "mulher tomando café", "xícara branca", "bicicleta estacionada", "plantas", "toldo vermelho"]
+    }
+  }
+]

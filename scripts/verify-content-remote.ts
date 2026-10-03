@@ -17,12 +17,23 @@ for (const { course } of loadContent()) {
   if (unitError || units !== course.units.length)
     throw new Error(`Remote unit count mismatch: ${course.id}`);
   const unitIds = course.units.map((unit) => unit.id);
+  const lessonIds = course.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id));
+  const { count: lessons, error: lessonError } = await db.from("lessons")
+    .select("id", { count: "exact", head: true }).in("unit_id", unitIds);
+  const expectedLessons = lessonIds.length;
+  if (lessonError || lessons !== expectedLessons)
+    throw new Error(`Remote lesson count mismatch: ${course.id}`);
+  const { count: activities, error: activityError } = await db.from("activities")
+    .select("id", { count: "exact", head: true }).in("lesson_id", lessonIds);
+  const expectedActivities = course.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities)).length;
+  if (activityError || activities !== expectedActivities)
+    throw new Error(`Remote activity count mismatch: ${course.id}`);
   const { count: words, error: wordError } = await db.from("vocabulary_items")
     .select("term", { count: "exact", head: true }).in("unit_id", unitIds);
   const expectedWords = course.lexicon.filter((entry) => entry.lessonId).length;
   if (wordError || words !== expectedWords)
     throw new Error(`Remote vocabulary count mismatch: ${course.id}`);
-  console.log(`Remote course verified: ${course.id} (${units} unit, ${words} vocabulary items).`);
+  console.log(`Remote course verified: ${course.id} (${units} unit, ${lessons} lessons, ${activities} activities, ${words} vocabulary items).`);
 }
 const { error: profileError } = await db.from("user_course_profiles").select("course_id").limit(0);
 if (profileError) throw new Error(`Course profile migration unavailable: ${profileError.message}`);

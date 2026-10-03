@@ -1,0 +1,8 @@
+[
+  { "id": "en.greetings", "language": "en", "type": "communication", "name": "Cumprimentos", "description": { "pt-BR": "Inicie uma conversa com Hello e Nice to meet you." }, "examples": [{ "target": "Hello!", "translations": { "pt-BR": "Olá!" } }] },
+  { "id": "en.be.name", "language": "en", "type": "grammar", "name": "Nome com be", "prerequisites": ["en.greetings"], "description": { "pt-BR": "Use My name is para se apresentar." }, "examples": [{ "target": "My name is Ana.", "translations": { "pt-BR": "Meu nome é Ana." } }] },
+  { "id": "en.be.origin", "language": "en", "type": "grammar", "name": "Origem com be", "prerequisites": ["en.be.name"], "description": { "pt-BR": "Use I am from para dizer de onde você é." }, "examples": [{ "target": "I am from Brazil.", "translations": { "pt-BR": "Eu sou do Brasil." } }] },
+  { "id": "en.live.location", "language": "en", "type": "communication", "name": "Onde mora", "description": { "pt-BR": "Use I live in para dizer onde mora." }, "examples": [{ "target": "I live in Rio.", "translations": { "pt-BR": "Eu moro no Rio." } }] },
+  { "id": "en.work.profession", "language": "en", "type": "grammar", "name": "Profissão", "prerequisites": ["en.be.origin"], "description": { "pt-BR": "Use I am a ou I am an antes da profissão." }, "examples": [{ "target": "I am a teacher.", "translations": { "pt-BR": "Eu sou professor(a)." } }] },
+  { "id": "en.personal.questions", "language": "en", "type": "communication", "name": "Perguntas pessoais", "prerequisites": ["en.be.name"], "description": { "pt-BR": "Pergunte nome, origem, residência e profissão com frases curtas." }, "examples": [{ "target": "Where are you from?", "translations": { "pt-BR": "De onde você é?" } }] }
+]

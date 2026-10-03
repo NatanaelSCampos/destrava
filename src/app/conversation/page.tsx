@@ -205,7 +205,7 @@ export default function ConversationPage() {
                     {turn.role === "student" && turn.inputMode === "speech" ? " · voz" : ""}
                   </span>
                   <div className="text-audio-row">
-                    <p lang="es">{turn.text}</p>
+                    <p lang={course.languageCode}>{turn.text}</p>
                     {turn.role === "partner" && (
                       <SpeakButton
                         text={turn.text}

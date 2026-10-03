@@ -1,0 +1,28 @@
+[
+  {
+    "id": "en.home.word",
+    "title": "Apartamento",
+    "meaning": "Duas palavras para o mesmo tipo de moradia.",
+    "note": "Ambas podem ser entendidas em diferentes regiões; a preferência muda conforme o país.",
+    "variants": [
+      { "region": "en-US", "term": "apartment", "example": "I live in an apartment." },
+      { "region": "en-GB", "term": "flat", "example": "I live in a flat." }
+    ],
+    "checkPrompt": "Qual palavra é mais comum no Reino Unido para apartamento?",
+    "checkRegion": "en-GB",
+    "sources": [{ "label": "Cambridge Dictionary: flat", "url": "https://dictionary.cambridge.org/dictionary/english/flat" }]
+  },
+  {
+    "id": "en.lift.word",
+    "title": "Elevador",
+    "meaning": "O objeto tem nomes frequentes diferentes nas duas variantes.",
+    "note": "A diferença é de vocabulário, não de objetivo da frase.",
+    "variants": [
+      { "region": "en-US", "term": "elevator", "example": "The elevator is here." },
+      { "region": "en-GB", "term": "lift", "example": "The lift is here." }
+    ],
+    "checkPrompt": "Qual palavra é mais comum nos Estados Unidos para elevador?",
+    "checkRegion": "en-US",
+    "sources": [{ "label": "Cambridge Dictionary: lift", "url": "https://dictionary.cambridge.org/dictionary/english/lift" }]
+  }
+]

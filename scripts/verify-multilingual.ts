@@ -8,15 +8,21 @@ import { recordAttempt, recordVocabularySignal, reviewVocabulary } from "../src/
 import { projectStudyEvents } from "../src/repositories/study-event-projection";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { skillProgress } from "../src/domain/study/progress";
+import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
+import { dueReviewCounts } from "../src/domain/review/due-review-counts";
+import { searchDictionary } from "../src/domain/vocabulary/dictionary-search";
+import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
 import { nextAdaptiveItem } from "../src/domain/study/adaptive-assessment";
 import { speechLocale, textToSpeechLocale } from "../src/content/language-variant";
 import { runtimeBundle } from "../src/content/runtime-package";
 
 const es = findCourseBundle("frecuencias-a1")!;
 const test = findCourseBundle("pt-BR.xx-Test.a1.general")!;
-assert(allCourseBundles().length >= 2);
+const en = findCourseBundle("pt-BR.en.a1.general")!;
+assert.equal(allCourseBundles().length, 3);
 assert.equal(es.language.id, "es");
 assert.equal(test.language.id, "xx-Test");
+assert.equal(en.language.id, "en");
 assert.equal(test.resources.vocabulary.length, 5);
 assert.equal(test.resources.alphabet.length, 4);
 assert.equal(test.resources.numbers.length, 0);
@@ -93,4 +99,71 @@ assert.equal(skillProgress(publicCourse(test.course), loadedTest, "reading").per
 assert.equal(buildLearningProfile(publicCourse(es.course), loadedEs, es.resources.vocabulary, es.resources).courseId, es.course.id);
 stored = writeCourseState(stored, es.course.id, { ...loadedEs, completedActivityIds: [] });
 assert.deepEqual(readCourseState(stored, test.course.id).completedActivityIds, ["xx.act.choice"]);
-console.log("multilingual packages, grading, capabilities, assessment and course state isolation: ok");
+
+assert.deepEqual(en.language.variants.map((variant) => variant.id), ["general", "en-US", "en-GB"]);
+for (const variant of ["general", "en-US", "en-GB"]) {
+  const locale = variant === "en-GB" ? "en-GB" : "en-US";
+  assert.equal(speechLocale(en.language, variant, "recognitionLocale"), locale);
+  assert.equal(speechLocale(en.language, variant, "assessmentLocale"), locale);
+  assert.equal(textToSpeechLocale(en.language, variant), locale);
+}
+assert.equal(en.resources.alphabet.length, 26);
+assert.equal(en.resources.numbers.length, 7);
+assert.equal(en.resources.regionalTopics.length, 2);
+assert.equal(en.course.units.length, 1);
+assert.equal(en.course.units[0].lessons.length, 3);
+assert.equal(en.course.units[0].lessons.flatMap((lesson) => lesson.activities).length, 18);
+assert.equal(en.resources.vocabulary.length, en.coursePackage.lexicon.length);
+assert.equal(en.resources.conversationScenarios.length, 1);
+assert.equal(en.coursePackage.roleplays.length, 1);
+assert.equal(en.coursePackage.assessments[0].bank.length, 5);
+assert.equal(en.coursePackage.assessments[0].passingPolicy.overall, 0.6);
+assert.equal(en.resources.imageScenes[0].image, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.image);
+assert.notEqual(en.resources.imageScenes[0].prompt, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.prompt);
+assert.equal(searchDictionary(en.resources, "hello")[0]?.id, "en.lex.hello");
+assert.equal(searchDictionary(en.resources, "olá").length, 1);
+assert.equal(searchDictionary(es.resources, "hello").length, 0);
+assert.equal(searchDictionary(en.resources, "tener").length, 0);
+
+const enActivity = findActivity(en.course, "en.act.14.job-choice")!;
+assert.equal(gradeActivity(enActivity, "I am a teacher.", en.language.normalization)?.correct, true);
+assert.equal(gradeActivity(enActivity, "I are a teacher.", en.language.normalization)?.correct, false);
+const enPublic = publicCourse(en.course, en.language);
+const enPublicActivity = enPublic.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities))
+  .find((activity) => activity.id === enActivity.id)!;
+const enState = recordAttempt(
+  readCourseState(null, en.course.id, en.language.id), enPublicActivity, "I are a teacher.",
+  gradeActivity(enActivity, "I are a teacher.", en.language.normalization)!,
+);
+stored = writeCourseState(stored, en.course.id, enState);
+assert.deepEqual(readCourseState(stored, en.course.id).completedActivityIds, [enActivity.id]);
+assert.deepEqual(readCourseState(stored, test.course.id).completedActivityIds, [testActivity.id]);
+assert.equal(readCourseState(stored, es.course.id).mistakes[enActivity.id], undefined);
+assert.equal(readCourseState(stored, en.course.id).mistakes[esActivity.id], undefined);
+
+const esPublic = publicCourse(es.course, es.language);
+const enProfile = buildLearningProfile(enPublic, enState, en.resources.vocabulary, en.resources);
+const esProfile = buildLearningProfile(esPublic, esState, es.resources.vocabulary, es.resources);
+assert.equal(enProfile.courseId, en.course.id);
+assert.equal(enProfile.concepts.find((concept) => concept.id === "en.work.profession")?.evidenceCount, 1);
+assert.equal(esProfile.concepts.some((concept) => concept.id.startsWith("en.")), false);
+assert.equal(buildLearningProfile(enPublic, esState, en.resources.vocabulary, en.resources)
+  .skills.find((skill) => skill.id === "grammar")?.evidenceCount, 0);
+const enRecommendations = LearningRecommendationEngine.recommend(enPublic, enState, enProfile, en.resources.vocabulary, en.resources, { includeReviews: false });
+const esRecommendations = LearningRecommendationEngine.recommend(esPublic, esState, esProfile, es.resources.vocabulary, es.resources, { includeReviews: false });
+assert(enRecommendations.some((item) => item.source === "mistake" && item.id === enActivity.id));
+assert(esRecommendations.some((item) => item.source === "mistake" && item.id === esActivity.id));
+assert(!enRecommendations.some((item) => item.id === esActivity.id));
+assert(!esRecommendations.some((item) => item.id === enActivity.id));
+assert.equal(dueReviewCounts(enState, en.resources.vocabulary, new Date(Date.now() + 86_400_000),
+  new Set(enPublic.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)))),
+  en.resources.structures).mistakes, 1);
+assert.equal(dueReviewCounts(esState, en.resources.vocabulary, new Date(Date.now() + 86_400_000),
+  new Set(enPublic.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id))))).mistakes, 0);
+const enTutorContext = TutorContextBuilder.build(en.course, en.language, enActivity.id, [], "en-GB");
+assert.equal(enTutorContext.language, "English");
+assert.equal(enTutorContext.variant, "Inglês do Reino Unido");
+assert.equal(enTutorContext.activity?.title, enActivity.title);
+assert(!/Frecuencias|tener|español/i.test(JSON.stringify(enTutorContext)));
+
+console.log("ES, EN and xx-Test packages, speech locales, curriculum, adaptive state, review, dictionary and tutor isolation: ok");

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "contentVersion": "1.0.0",
+  "id": "pt-BR.en.a1.general",
+  "slug": "ingles-a1",
+  "sourceLanguage": "pt-BR",
+  "targetLanguage": "en",
+  "defaultVariant": "general",
+  "framework": { "name": "CEFR", "entryLevel": "A0", "exitLevel": "A1" },
+  "track": "architecture-validation",
+  "title": "Inglês A1 · Primeiros encontros",
+  "description": "Unidade curta de validação: apresente-se e conheça alguém em inglês.",
+  "learningGoals": ["greet", "introduce_self", "ask_personal_questions"],
+  "practice": {
+    "reviewStructures": [
+      { "id": "en.structure.name", "lessonId": "en.l01", "conceptId": "en.be.name", "title": "Dizer o nome", "prompt": "Complete: My name ___ Ana.", "answer": "is", "explanation": "Com my name, usamos is: My name is Ana." },
+      { "id": "en.structure.origin", "lessonId": "en.l02", "conceptId": "en.be.origin", "title": "Dizer a origem", "prompt": "Complete: I ___ from Brazil.", "answer": "am", "explanation": "Com I, usamos am: I am from Brazil." }
+    ]
+  },
+  "provenance": { "origin": "human", "review": { "status": "approved" } }
+}
