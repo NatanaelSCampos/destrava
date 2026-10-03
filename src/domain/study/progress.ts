@@ -121,7 +121,7 @@ export function currentUnit(course: PublicCourse, state: StudyState) {
 export function skillProgress(course: PublicCourse, state: StudyState, skill: Skill) {
   const activities = course.units
     .flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities))
-    .filter((activity) => activity.skill === skill);
+    .filter((activity) => (activity.skills.length ? activity.skills.includes(skill) : activity.skill === skill));
   const attempts = activities
     .map((activity) => state.attempts.find((attempt) => attempt.activityId === activity.id))
     .filter((attempt) => attempt !== undefined);

@@ -63,6 +63,7 @@ function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }
     title: `${numberCategoryLabels[prompt.category]}: ${prompt.display}`,
     prompt: `Fale ${prompt.display} em ${language.identity.nativeName}.`,
     skill: "speaking",
+    skills: ["speaking", "pronunciation"],
     conceptIds: ["numbers"],
     minutes: 2,
     guidance: [

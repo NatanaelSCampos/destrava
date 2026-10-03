@@ -315,7 +315,12 @@ export class LearningRecommendationEngine {
 
     for (const [index, context] of activities.entries()) {
       if (state.completedActivityIds.includes(context.activity.id)) continue;
-      const skillScore = skillScores.get(context.activity.skill);
+      const skillScore = Math.min(
+        ...(context.activity.skills.length ? context.activity.skills : [context.activity.skill])
+          .map((skill) => skillScores.get(skill))
+          .filter((score): score is number => score !== null && score !== undefined),
+        100,
+      );
       const conceptScore = Math.min(
         ...context.activity.conceptIds
           .map((id) => conceptScores.get(id))
@@ -325,9 +330,7 @@ export class LearningRecommendationEngine {
       const priority = Math.round(
         50 -
           Math.min(12, index * 0.35) +
-          (skillScore === null || skillScore === undefined
-            ? 0
-            : Math.max(0, (65 - skillScore) / 7)) +
+          Math.max(0, (65 - skillScore) / 7) +
           Math.max(0, (65 - conceptScore) / 6),
       );
       add({

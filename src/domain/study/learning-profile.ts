@@ -100,11 +100,15 @@ export function buildLearningProfile(
   function addActivityScore(activityId: string, score: number, at: string, skill?: LearningSkill) {
     const context = activities.get(activityId);
     if (!context) return;
-    addEvidence(skillEvidence, skill ?? context.activity.skill, score, at);
+    const skills = skill ? [skill] :
+      (context.activity.skills.length ? context.activity.skills : [context.activity.skill]);
+    for (const assessedSkill of new Set(skills))
+      addEvidence(skillEvidence, assessedSkill, score, at);
     addEvidence(topicEvidence, context.lesson.id, score, at);
     for (const conceptId of context.activity.conceptIds)
       addEvidence(conceptEvidence, conceptId, score, at);
-    if (context.activity.skill === "reading" || context.activity.skill === "listening")
+    if (!skills.includes("comprehension") &&
+        (skills.includes("reading") || skills.includes("listening")))
       addEvidence(skillEvidence, "comprehension", score, at);
   }
 

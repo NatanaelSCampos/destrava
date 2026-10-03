@@ -39,6 +39,7 @@ export function runtimeBundle(raw: CompiledPackage) {
           ...activity.payload,
           id: activity.id, type: activity.type, title: activity.title,
           prompt: activity.prompt, skill: activitySkill(activity.skills),
+          skills: activity.skills,
           conceptIds: activity.concepts, minutes: activity.minutes,
           normalization: activity.evaluation?.normalization,
         })),

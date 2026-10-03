@@ -31,7 +31,8 @@ export function AssessmentResult({ lesson, unitId }: { lesson: PublicLesson; uni
     ].includes(activity.type),
   );
   const rows = labels.map(({ id, label }) => {
-    const activities = objective.filter((activity) => activity.skill === id);
+    const activities = objective.filter((activity) =>
+      activity.skills.length ? activity.skills.includes(id) : activity.skill === id);
     const attempts = activities
       .map((activity) =>
         state.attempts.find(

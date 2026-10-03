@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { activityTypeSchema, normalizationRulesSchema } from "./contracts";
+import { activityTypeSchema, normalizationRulesSchema, skillIdSchema } from "./contracts";
 export { activityTypeSchema } from "./contracts";
 
 export const skillSchema = z.enum([
@@ -20,6 +20,7 @@ const activityBase = z.object({
   title: z.string().min(1),
   prompt: z.string().default(""),
   skill: skillSchema,
+  skills: z.array(skillIdSchema).default([]),
   conceptIds: z.array(z.string().min(1)).default([]),
   minutes: z.number().positive(),
   explanation: z.string().optional(),

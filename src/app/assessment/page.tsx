@@ -11,15 +11,20 @@ import {
   type AdaptiveAnswer,
 } from "@/domain/study/adaptive-assessment";
 import type { GradeResult } from "@/domain/activities/grader";
-import type { Skill } from "@/content/schema";
+import type { CoursePackage } from "@/content/contracts";
 
-const labels: Record<Skill, string> = {
+type AssessmentSkill = CoursePackage["assessments"][number]["skillPlan"][number];
+
+const labels: Record<AssessmentSkill, string> = {
   vocabulary: "Vocabulário",
   grammar: "Gramática",
   listening: "Escuta",
   writing: "Frase escrita",
   reading: "Leitura",
   speaking: "Fala",
+  pronunciation: "Pronúncia",
+  fluency: "Fluência",
+  comprehension: "Compreensão",
 };
 const objectiveTypes = new Set([
   "multiple_choice",
@@ -51,7 +56,7 @@ export default function AssessmentPage() {
   const bank = assessment
     ? assessment.bank.filter((item) => {
         const entry = activities.get(item.activityId);
-        return entry?.activity.skill === item.skill && objectiveTypes.has(entry.activity.type);
+        return entry?.activity.skills.includes(item.skill) && objectiveTypes.has(entry.activity.type);
       })
     : [];
   const questionAnswers = hasAnswered ? answers.slice(0, -1) : answers;
@@ -76,7 +81,7 @@ export default function AssessmentPage() {
       ...answers,
       {
         activityId: current.id,
-        skill: current.skill,
+        skill: next.skill,
         difficulty: next.difficulty,
         correct: result.correct,
         answer,
@@ -116,7 +121,7 @@ export default function AssessmentPage() {
         <section className="panel adaptive-intro">
           <h2>Pronto para começar?</h2>
           <p>
-            O teste usa {Array.from(new Set(skillPlan)).map((skill) => labels[skill as Skill] ?? skill).join(", ")}.
+            O teste usa {Array.from(new Set(skillPlan)).map((skill) => labels[skill] ?? skill).join(", ")}.
             As questões usam o conteúdo da unidade e o resultado orienta sua prática.
           </p>
           <button type="button" className="primary-button" onClick={begin}>
@@ -130,7 +135,7 @@ export default function AssessmentPage() {
             <span className="eyebrow">
               QUESTÃO {questionAnswers.length + 1} DE {skillPlan.length}
             </span>
-            <span className="pill">{labels[current.skill]}</span>
+            <span className="pill">{labels[next.skill]}</span>
           </div>
           <h2>{current.title}</h2>
           <p>{current.prompt}</p>
@@ -175,7 +180,7 @@ export default function AssessmentPage() {
                   <li key={item.activityId}>
                     <div>
                       <strong>
-                        {labels[item.skill as Skill] ?? item.skill}: {entry.activity.title}
+                        {labels[item.skill] ?? item.skill}: {entry.activity.title}
                       </strong>
                       <p>Revise a explicação e pratique esta habilidade novamente.</p>
                     </div>
@@ -198,7 +203,7 @@ export default function AssessmentPage() {
           <div className="adaptive-skill-grid">
             {report.bySkill.map((item) => (
               <div key={item.skill}>
-                <span>{labels[item.skill as Skill] ?? item.skill}</span>
+                <span>{labels[item.skill] ?? item.skill}</span>
                 <strong>{item.score === null ? "Não avaliada" : `${item.score}%`}</strong>
                 <small>
                   {item.correct}/{item.answered} acertos
