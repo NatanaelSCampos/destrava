@@ -11,6 +11,11 @@
   "title": "Inglês A1 · Primeiros encontros",
   "description": "Unidade curta de validação: apresente-se e conheça alguém em inglês.",
   "learningGoals": ["greet", "introduce_self", "ask_personal_questions"],
+  "supportedGoals": ["general", "travel", "work", "study", "conversation"],
+  "contexts": [
+    { "id": "workplace", "label": "Conhecer colegas", "goal": "work" }
+  ],
+  "skillFloors": { "reading": 0.3, "listening": 0.3 },
   "practice": {
     "reviewStructures": [
       { "id": "en.structure.name", "lessonId": "en.l01", "conceptId": "en.be.name", "title": "Dizer o nome", "prompt": "Complete: My name ___ Ana.", "answer": "is", "explanation": "Com my name, usamos is: My name is Ana." },

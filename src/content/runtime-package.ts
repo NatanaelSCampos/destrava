@@ -41,6 +41,7 @@ export function runtimeBundle(raw: CompiledPackage) {
           prompt: activity.prompt, skill: activitySkill(activity.skills),
           skills: activity.skills,
           conceptIds: activity.concepts, minutes: activity.minutes,
+          goals: activity.goals, contexts: activity.contexts,
           normalization: activity.evaluation?.normalization,
         })),
       })),
@@ -73,6 +74,8 @@ export function runtimeBundle(raw: CompiledPackage) {
     const roleplay = coursePackage.roleplays.find((entry) => entry.scenario === mission.scenario);
     return {
       id: mission.id, focusConceptIds: mission.recommendedConcepts,
+      goals: [...new Set([...(mission.goals ?? []), ...(roleplay?.goals ?? [])])],
+      contexts: [...new Set([...(mission.contexts ?? []), ...(roleplay?.contexts ?? [])])],
       title: mission.title ?? mission.scenario, setting: mission.setting ?? mission.scenario,
       character: mission.character ?? roleplay?.character.role ?? "Colega",
       opening: mission.opening ?? "Olá!",
@@ -94,6 +97,11 @@ export function runtimeBundle(raw: CompiledPackage) {
       facts: item.metadata?.facts as string[],
     }));
   const resources: LanguageResources = {
+    learningOptions: {
+      supportedGoals: coursePackage.supportedGoals ?? ["general"],
+      contexts: coursePackage.contexts ?? [],
+      skillFloors: coursePackage.skillFloors ?? {},
+    },
     courseId: coursePackage.id, languageCode: language.id,
     languageLabel: language.identity.nativeName,
     regionalContentHref: language.modules.regionalVariants?.enabled ? "/basics?topic=regions" : undefined,

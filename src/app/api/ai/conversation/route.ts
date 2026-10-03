@@ -67,7 +67,9 @@ export async function POST(request: Request) {
         sourceLanguage: coursePackage.sourceLanguage,
         level: course.level,
         unit: currentUnit?.title ?? course.units.at(-1)?.title ?? "Curso",
-        goal: (state?.profile?.goal ?? "Praticar conversação").slice(0, 120),
+        goal: state?.profile?.learningPreferences?.goal ?? "general",
+        contexts: coursePackage.contexts?.filter((item) =>
+          state?.profile?.learningPreferences?.contexts?.includes(item.id)).map((item) => item.label).slice(0, 3) ?? [],
         knownWords: Object.values(state?.vocabulary ?? {}).filter((item) => item.status === "known")
           .length,
         difficulty: Object.values(state?.mistakes ?? {})

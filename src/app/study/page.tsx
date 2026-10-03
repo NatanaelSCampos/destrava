@@ -62,7 +62,7 @@ function StudyContent() {
     durationValue === "5" || durationValue === "15" || durationValue === "30"
       ? (Number(durationValue) as 5 | 15 | 30)
       : "full";
-  const targetMinutes = duration === "full" ? state.profile.dailyMinutes : duration;
+  const targetMinutes = duration === "full" ? state.profile.learningPreferences.preferredSessionMinutes : duration;
   const unit = currentUnit(course, state)!;
   const planned = useMemo(
     () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode),
@@ -384,7 +384,7 @@ function StudyContent() {
             {activeSession.mode === "difficulties"
               ? "Treino de dificuldades"
               : `Unidade ${sessionUnit.number} · ${sessionUnit.title}`}{" "}
-            · meta de {activeSession.targetMinutes ?? state.profile.dailyMinutes} min
+            · meta de {activeSession.targetMinutes ?? state.profile.learningPreferences.preferredSessionMinutes} min
           </p>
         </div>
         <div className="study-session-meta">

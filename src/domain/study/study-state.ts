@@ -10,8 +10,12 @@ import type { ReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 import type { AdaptiveAnswer } from "@/domain/study/adaptive-assessment";
+import { defaultLearningPreferences, type LearningPreferences, type SelfReportedLevel } from "./learning-preferences";
 
 export type StudentProfile = {
+  learningPreferences: LearningPreferences;
+  selfReportedLevel: SelfReportedLevel | null;
+  onboardingStep: number;
   goal: string;
   dailyMinutes: number;
   daysPerWeek: number;
@@ -203,6 +207,9 @@ export type StudyState = {
 
 export const initialStudyState: StudyState = {
   profile: {
+    learningPreferences: defaultLearningPreferences,
+    selfReportedLevel: null,
+    onboardingStep: 0,
     goal: "Conversar com confiança",
     dailyMinutes: 45,
     daysPerWeek: 4,

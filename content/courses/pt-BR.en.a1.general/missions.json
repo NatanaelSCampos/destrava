@@ -1,6 +1,7 @@
 [
   {
     "id": "en.mission.colleague", "level": "A1", "scenario": "meet_new_colleague",
+    "goals": ["work", "conversation"], "contexts": ["workplace"],
     "objectives": ["say-hello", "say-name", "ask-origin"],
     "recommendedConcepts": ["en.greetings", "en.be.name", "en.be.origin", "en.personal.questions"],
     "title": "Conheça um colega", "setting": "Você encontra um novo colega no primeiro dia de trabalho.",

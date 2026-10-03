@@ -5,6 +5,7 @@ import type { LanguageResources } from "@/content/language-resources";
 import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
 import { featureFlags } from "@/lib/feature-flags";
+import { contentAffinityRank, orderByLearningAffinity, type LearningSkill } from "./learning-preferences";
 
 type RecommendationBase = {
   source:
@@ -41,7 +42,7 @@ export class LearningRecommendationEngine {
     state: StudyState,
     profile: LearningProfile,
     vocabularyItems: ReadonlyArray<{ id: string }>,
-    resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "conversationScenarios" | "imageScenes">,
+    resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "conversationScenarios" | "imageScenes" | "learningOptions">,
     options: { now?: Date; includeReviews?: boolean } = {},
   ): LearningRecommendation[] {
     const now = options.now ?? new Date();
@@ -51,9 +52,11 @@ export class LearningRecommendationEngine {
         lesson.activities.map((activity) => ({ activity, lesson, unit })),
       ),
     );
+    const nextCoreActivityId = activities.find((item) => !state.completedActivityIds.includes(item.activity.id))?.activity.id;
     const activityById = new Map(activities.map((entry) => [entry.activity.id, entry]));
     const skillScores = new Map(profile.skills.map((item) => [item.id, item.score]));
     const conceptScores = new Map(profile.concepts.map((item) => [item.id, item.score]));
+    const preferences = state.profile.learningPreferences;
 
     function add(item: LearningRecommendation) {
       const key = `${item.kind}:${item.id}`;
@@ -204,6 +207,14 @@ export class LearningRecommendationEngine {
     }
 
     if (featureFlags.AI_TUTOR) {
+      const suggested = orderByLearningAffinity(resources.conversationScenarios, preferences)[0];
+      if (suggested) add({
+        kind: "conversation", source: "conversation", id: suggested.id,
+        title: `Praticar: ${suggested.title}`,
+        reason: contentAffinityRank(suggested, preferences) > 1
+          ? "Missão relacionada ao seu objetivo de estudo." : "Uma situação para praticar o que aprendeu.",
+        priority: 35 + contentAffinityRank(suggested, preferences), minutes: 5,
+      });
       const recentSessions = (state.conversations ?? [])
         .filter(
           (session) =>
@@ -327,12 +338,21 @@ export class LearningRecommendationEngine {
           .filter((score): score is number => score !== null && score !== undefined),
         100,
       );
-      const priority = Math.round(
+      const pedagogicalPriority = Math.round(
         50 -
           Math.min(12, index * 0.35) +
           Math.max(0, (65 - skillScore) / 7) +
           Math.max(0, (65 - conceptScore) / 6),
       );
+      const skillPreference = Math.max(0, ...context.activity.skills
+        .filter((skill): skill is LearningSkill => skill in preferences.skillWeights)
+        .map((skill) => Math.max(preferences.skillWeights[skill], resources.learningOptions.skillFloors[skill] ?? 0)));
+      const goalAffinity = context.activity.goals?.includes(preferences.goal) ? 3 : 0;
+      const contextAffinity = preferences.contexts.some((id) => context.activity.contexts?.includes(id)) ? 4 : 0;
+      // Personalization only reorders curriculum choices. Reviews and demonstrated weaknesses keep their tiers.
+      const priority = Math.min(69, pedagogicalPriority +
+        (context.activity.id === nextCoreActivityId ? 15 : 0) +
+        Math.round((skillPreference - 0.6) * 10) + goalAffinity + contextAffinity);
       add({
         kind: "activity",
         source: "curriculum",

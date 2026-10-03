@@ -34,7 +34,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Ajuste seu ritmo",
         description:
-          "Se for seu primeiro acesso, escolha uma meta e quantos dias quer estudar. Você poderá mudar isso em Configurações.",
+          "Em Configurações → Meu aprendizado, ajuste objetivo, habilidades e tempo de sessão sem perder progresso.",
         target: ".onboarding-panel",
       },
       {

@@ -36,6 +36,7 @@ import { featureFlags } from "@/lib/feature-flags";
 import { SelectionAudio } from "@/components/audio/selection-audio";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
+import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboarding";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -128,6 +129,8 @@ export function AppShell({ children, courseOptions }: {
         Não foi possível verificar sua sessão. Recarregue a página.
       </div>
     );
+  if (!state.profile.onboarded)
+    return <PedagogicalOnboarding courseOptions={courseOptions} />;
   const progress = courseProgress(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>

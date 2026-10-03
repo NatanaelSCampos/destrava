@@ -1,3 +1,3 @@
 [
-  { "id": "en.roleplay.colleague", "scenario": "meet_new_colleague", "level": "A1", "character": { "role": "new colleague" }, "objectives": ["say-hello", "say-name", "ask-origin"], "constraints": { "maxVocabularyLevel": "A1", "allowHints": true } }
+  { "id": "en.roleplay.colleague", "scenario": "meet_new_colleague", "level": "A1", "goals": ["work", "conversation"], "contexts": ["workplace"], "character": { "role": "new colleague" }, "objectives": ["say-hello", "say-name", "ask-origin"], "constraints": { "maxVocabularyLevel": "A1", "allowHints": true } }
 ]

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { goalLabels } from "@/domain/study/learning-preferences";
 import { z } from "zod";
 import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
@@ -75,7 +76,9 @@ export async function POST(request: Request) {
       memory: state ? buildLearningMemory(state, bundle.course.id) : undefined,
       studentContext: state
         ? {
-            goal: (state.profile?.goal ?? `Praticar ${bundle.language.identity.nativeName}`).slice(0, 120),
+            goal: goalLabels[state.profile.learningPreferences.goal],
+            contexts: bundle.coursePackage.contexts?.filter((item) =>
+              state.profile.learningPreferences.contexts.includes(item.id)).map((item) => item.label).slice(0, 3) ?? [],
             knownWords: Object.values(state.vocabulary ?? {}).filter(
               (item) => item.status === "known",
             ).length,

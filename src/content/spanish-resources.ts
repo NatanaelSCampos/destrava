@@ -10,6 +10,7 @@ import { imageDescriptionScenes } from "./image-description-scenes";
 import { spanishAlphabet } from "./spanish-alphabet";
 
 export const spanishResources: LanguageResources = {
+  learningOptions: { supportedGoals: ["general"], contexts: [], skillFloors: {} },
   courseId: "frecuencias-a1",
   languageCode: "es",
   languageLabel: "Espanhol",

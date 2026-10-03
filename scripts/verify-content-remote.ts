@@ -35,10 +35,17 @@ for (const { course } of loadContent()) {
     throw new Error(`Remote vocabulary count mismatch: ${course.id}`);
   console.log(`Remote course verified: ${course.id} (${units} unit, ${lessons} lessons, ${activities} activities, ${words} vocabulary items).`);
 }
-const { error: profileError } = await db.from("user_course_profiles").select("course_id").limit(0);
+const { error: profileError } = await db.from("user_course_profiles")
+  .select("course_id,learning_preferences,self_reported_level,onboarding_step").limit(0);
 if (profileError) throw new Error(`Course profile migration unavailable: ${profileError.message}`);
 const { error: eventsError } = await db.from("study_events").select("course_id").limit(0);
 if (eventsError) throw new Error(`Course-scoped study events unavailable: ${eventsError.message}`);
+const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+if (publicKey && url) {
+  const anonymous = createClient(url, publicKey, { auth: { persistSession: false } });
+  const { data: exposed } = await anonymous.from("user_course_profiles").select("user_id").limit(1);
+  if (exposed?.length) throw new Error("Anonymous access exposed a course profile.");
+}
 console.log("Remote course profile projection is available.");
 }
 

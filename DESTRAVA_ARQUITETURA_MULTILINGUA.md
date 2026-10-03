@@ -27,6 +27,8 @@ cookie do curso ativo → CourseRegistry → CoursePackage + LanguagePackage
 
 ## Migrações desta refatoração
 
+- `20261003000700_pedagogical_onboarding.sql`: preferências pedagógicas, nível percebido e passo de onboarding por usuário e curso. O fluxo e seus consumidores estão descritos em [Onboarding pedagógico v1](DESTRAVA_ONBOARDING_PEDAGOGICO_V1.md).
+
 - `20261003000400_course_profiles.sql`: perfil por usuário e curso, com cópia da preferência legada de região.
 - `20261003000500_generic_vocabulary.sql`: coluna `term` independente do espanhol, preenchida a partir da coluna antiga; `spanish` permanece para compatibilidade dos dados históricos.
 - `20261003000600_study_events_course.sql`: `course_id` em eventos novos e preenchimento dos eventos antigos identificáveis; registros sem curso recuperável permanecem intactos.

@@ -1,6 +1,8 @@
 export type MissionObjective = { id: string; label: string; hint: string };
 export type ConversationScenario = {
   id: string;
+  goals?: string[];
+  contexts?: string[];
   focusConceptIds?: string[];
   title: string;
   setting: string;

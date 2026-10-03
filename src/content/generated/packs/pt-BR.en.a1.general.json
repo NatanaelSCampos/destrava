@@ -558,6 +558,24 @@
         "active": true
       }
     ],
+    "supportedGoals": [
+      "general",
+      "travel",
+      "work",
+      "study",
+      "conversation"
+    ],
+    "contexts": [
+      {
+        "id": "workplace",
+        "label": "Conhecer colegas",
+        "goal": "work"
+      }
+    ],
+    "skillFloors": {
+      "reading": 0.3,
+      "listening": 0.3
+    },
     "concepts": [
       {
         "id": "en.greetings",
@@ -1120,6 +1138,13 @@
             "label": "Pergunte de onde Alex é",
             "hint": "Where are you from?"
           }
+        ],
+        "goals": [
+          "work",
+          "conversation"
+        ],
+        "contexts": [
+          "workplace"
         ]
       }
     ],
@@ -1139,7 +1164,14 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "work",
+          "conversation"
+        ],
+        "contexts": [
+          "workplace"
+        ]
       }
     ],
     "assessments": [

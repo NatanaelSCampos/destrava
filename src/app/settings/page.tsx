@@ -8,6 +8,7 @@ import { speechLocale as languageSpeechLocale, textToSpeechLocale } from "@/cont
 import { AccountSecurity } from "@/components/auth/account-security";
 import { LinkedAccounts } from "@/components/auth/linked-accounts";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { createLearningPreferences, goalLabels, learningSkills, skillLabels, type LearningGoal, type LearningSkill } from "@/domain/study/learning-preferences";
 import {
   normalizedVoiceLocale,
   readVoicePreference,
@@ -21,12 +22,9 @@ export default function SettingsPage() {
 }
 
 function SettingsContent() {
-  const { course, language, resources, state, authUserId, updateProfile } = useStudy();
+  const { course, language, resources, state, authUserId, updateProfile, recordStudyEvent } = useStudy();
   const [saved, setSaved] = useState(false);
-  const [goal, setGoal] = useState(state.profile.goal);
-  const [dailyMinutes, setDailyMinutes] = useState(state.profile.dailyMinutes);
-  const [daysPerWeek, setDaysPerWeek] = useState(state.profile.daysPerWeek);
-  const [priorKnowledge, setPriorKnowledge] = useState(state.profile.priorKnowledge);
+  const [preferences, setPreferences] = useState(state.profile.learningPreferences);
   const [region, setRegion] = useState(state.profile.variantId ?? language.speech.defaultVariant);
   const [browserVoices, setBrowserVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceSupported, setVoiceSupported] = useState<boolean | null>(null);
@@ -71,14 +69,27 @@ function SettingsContent() {
   }, []);
   function save() {
     updateProfile({
-      goal,
-      dailyMinutes,
-      daysPerWeek,
-      priorKnowledge,
+      learningPreferences: preferences,
+      goal: goalLabels[preferences.goal],
+      dailyMinutes: preferences.preferredSessionMinutes,
       variantId: region,
-      onboarded: true,
     });
+    recordStudyEvent("learning_preferences_updated", undefined, { courseId: course.id });
     setSaved(true);
+  }
+  function changePreferences(changes: Partial<Omit<typeof preferences, "skillWeights">>) {
+    setPreferences((current) => createLearningPreferences({
+      goal: changes.goal ?? current.goal,
+      contexts: changes.contexts ?? current.contexts,
+      skillPriorities: changes.skillPriorities ?? current.skillPriorities,
+      preferredSessionMinutes: changes.preferredSessionMinutes ?? current.preferredSessionMinutes,
+    }));
+    setSaved(false);
+  }
+  function togglePriority(skill: LearningSkill) {
+    changePreferences({ skillPriorities: preferences.skillPriorities.includes(skill)
+      ? preferences.skillPriorities.filter((item) => item !== skill)
+      : preferences.skillPriorities.length < 2 ? [...preferences.skillPriorities, skill] : preferences.skillPriorities });
   }
   function exportData() {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
@@ -112,70 +123,42 @@ function SettingsContent() {
       </div>
       <div className="settings-grid">
         <section className="panel settings-panel">
-          <span className="eyebrow">MEU PLANO</span>
-          <h2>Objetivo de estudo</h2>
+          <span className="eyebrow">MEU APRENDIZADO · {resources.languageLabel}</span>
+          <h2>Seu plano de estudo</h2>
           <div className="settings-form">
             <div className="field">
-              <label htmlFor="goal">Por que você quer aprender {language.identity.nativeName}?</label>
-              <input
-                id="goal"
-                value={goal}
-                onChange={(event) => {
-                  setGoal(event.target.value);
-                  setSaved(false);
-                }}
-                maxLength={120}
-              />
+              <label htmlFor="learning-goal">Onde quer usar {language.identity.nativeName}?</label>
+              <select id="learning-goal" value={preferences.goal}
+                onChange={(event) => changePreferences({ goal: event.target.value as LearningGoal, contexts: [] })}>
+                {resources.learningOptions.supportedGoals.map((goal) => <option key={goal} value={goal}>{goalLabels[goal]}</option>)}
+              </select>
             </div>
-            <div className="settings-form-row">
-              <div className="field">
-                <label htmlFor="daily-minutes">Tempo por dia</label>
-                <select
-                  id="daily-minutes"
-                  value={dailyMinutes}
-                  onChange={(event) => {
-                    setDailyMinutes(Number(event.target.value));
-                    setSaved(false);
-                  }}
-                >
-                  {[15, 30, 45, 60].map((minutes) => (
-                    <option key={minutes} value={minutes}>
-                      {minutes} minutos
-                    </option>
-                  ))}
-                </select>
+            {resources.learningOptions.contexts.some((item) => item.goal === preferences.goal) && <div className="field">
+              <label>Contextos (até três)</label>
+              <div className="settings-preference-choices">
+                {resources.learningOptions.contexts.filter((item) => item.goal === preferences.goal).map((item) =>
+                  <button key={item.id} type="button" aria-pressed={preferences.contexts.includes(item.id)}
+                    className={preferences.contexts.includes(item.id) ? "selected" : ""}
+                    onClick={() => changePreferences({ contexts: preferences.contexts.includes(item.id)
+                      ? preferences.contexts.filter((id) => id !== item.id)
+                      : preferences.contexts.length < 3 ? [...preferences.contexts, item.id] : preferences.contexts })}>
+                    {item.label}</button>)}
               </div>
-              <div className="field">
-                <label htmlFor="days-week">Dias por semana</label>
-                <select
-                  id="days-week"
-                  value={daysPerWeek}
-                  onChange={(event) => {
-                    setDaysPerWeek(Number(event.target.value));
-                    setSaved(false);
-                  }}
-                >
-                  {[2, 3, 4, 5, 6, 7].map((days) => (
-                    <option key={days} value={days}>
-                      {days} dias
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            </div>}
             <div className="field">
-              <label htmlFor="prior-knowledge">Conhecimento atual</label>
-              <select
-                id="prior-knowledge"
-                value={priorKnowledge}
-                onChange={(event) => {
-                  setPriorKnowledge(event.target.value as typeof priorKnowledge);
-                  setSaved(false);
-                }}
-              >
-                <option value="none">Estou começando</option>
-                <option value="some">Conheço algumas palavras</option>
-                <option value="returning">Estou retomando os estudos</option>
+              <label>Prioridades (até duas, na ordem)</label>
+              <div className="settings-preference-choices">
+                {learningSkills.map((skill) => <button key={skill} type="button"
+                  aria-pressed={preferences.skillPriorities.includes(skill)}
+                  className={preferences.skillPriorities.includes(skill) ? "selected" : ""}
+                  onClick={() => togglePriority(skill)}>{skillLabels[skill]}
+                  {preferences.skillPriorities.includes(skill) && ` · ${preferences.skillPriorities.indexOf(skill) + 1}ª`}</button>)}
+              </div>
+            </div>
+            <div className="field"><label htmlFor="session-minutes">Tempo de cada sessão</label>
+              <select id="session-minutes" value={preferences.preferredSessionMinutes}
+                onChange={(event) => changePreferences({ preferredSessionMinutes: Number(event.target.value) as 5 | 15 | 30 | 45 })}>
+                {[5, 15, 30, 45].map((minutes) => <option key={minutes} value={minutes}>{minutes === 45 ? "45 min ou mais" : `${minutes} min`}</option>)}
               </select>
             </div>
             <div className="field">

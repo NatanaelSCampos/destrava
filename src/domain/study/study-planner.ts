@@ -5,6 +5,7 @@ import { LearningRecommendationEngine } from "./learning-recommendation-engine";
 import { featureFlags } from "@/lib/feature-flags";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import type { LanguageResources } from "@/content/language-resources";
+import { orderByLearningAffinity } from "./learning-preferences";
 
 function reviewCandidates(
   course: PublicCourse,
@@ -100,11 +101,11 @@ export function buildStudyPlan(
   const plan: PlannedItem[] = [];
   const budget = Math.max(1, Math.round(dailyMinutes));
   const focusedConversation = mode === "difficulties" && budget >= 10
-    ? resources.conversationScenarios.find((scenario) =>
+    ? orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences).find((scenario) =>
         scenario.focusConceptIds?.some((id) =>
           profile.concepts.some((concept) => concept.id === id && concept.score !== null && concept.score < 75),
         ),
-      ) ?? resources.conversationScenarios[0]
+      ) ?? orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences)[0]
     : undefined;
   const activityBudget = budget - (focusedConversation ? 3 : 0);
   const candidates = featureFlags.SPACED_REPETITION

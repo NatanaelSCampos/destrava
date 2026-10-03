@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { learningGoalSchema, learningSkillSchema } from "@/domain/study/learning-preferences";
 
 const id = z.string().trim().min(1);
 const version = z.string().regex(/^\d+\.\d+(?:\.\d+)?$/);
@@ -141,6 +142,7 @@ export const missionSchema = z.object({
   character: z.string().optional(),
   opening: z.string().optional(),
   objectiveDetails: z.array(z.object({ id, label: id, hint: z.string() })).optional(),
+  goals: z.array(learningGoalSchema).optional(), contexts: z.array(id).optional(),
 });
 export const roleplaySchema = z.object({
   id,
@@ -149,6 +151,7 @@ export const roleplaySchema = z.object({
   character: z.object({ role: id }),
   objectives: z.array(id).min(1),
   constraints: z.object({ maxVocabularyLevel: z.string().optional(), allowHints: z.boolean().optional() }).optional(),
+  goals: z.array(learningGoalSchema).optional(), contexts: z.array(id).optional(),
 });
 
 export const skillIdSchema = z.enum([
@@ -173,6 +176,7 @@ export const activitySchema = z.object({
   evaluation: z.object({ strategy: id, normalization: normalizationRulesSchema.optional() }).optional(),
   media: z.array(id).optional(),
   provenance: provenanceSchema.optional(),
+  goals: z.array(learningGoalSchema).optional(), contexts: z.array(id).optional(),
 });
 export const lessonSchema = z.object({
   id, slug: id, title: id, order: z.number().int().positive(),
@@ -204,6 +208,9 @@ export const coursePackageSchema = z.object({
   framework: z.object({ name: id, entryLevel: z.string().optional(), exitLevel: id }),
   track: id, title: id, description: z.string().default(""),
   learningGoals: z.array(id).min(1), units: z.array(unitSchema).min(1),
+  supportedGoals: z.array(learningGoalSchema).min(1).optional(),
+  contexts: z.array(z.object({ id, label: id, goal: learningGoalSchema })).optional(),
+  skillFloors: z.partialRecord(learningSkillSchema, z.number().min(0).max(1)).optional(),
   concepts: z.array(conceptSchema), lexicon: z.array(lexiconEntrySchema),
   missions: z.array(missionSchema).default([]), roleplays: z.array(roleplaySchema).default([]),
   assessments: z.array(assessmentSchema).default([]), media: z.array(mediaSchema).default([]),
@@ -211,6 +218,23 @@ export const coursePackageSchema = z.object({
     id, lessonId: id, conceptId: id, title: id, prompt: id, answer: id, explanation: id,
   })).default([]) }).optional(),
   provenance: provenanceSchema.optional(),
+}).superRefine((course, ctx) => {
+  const goals = new Set(course.supportedGoals ?? ["general"]);
+  const contexts = new Set<string>();
+  for (const entry of course.contexts ?? []) {
+    if (!goals.has(entry.goal)) ctx.addIssue({ code: "custom", message: `Unsupported goal for context ${entry.id}` });
+    if (contexts.has(entry.id)) ctx.addIssue({ code: "custom", message: `Duplicate context ${entry.id}` });
+    contexts.add(entry.id);
+  }
+  for (const item of [
+    ...course.missions, ...course.roleplays,
+    ...course.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities)),
+  ]) {
+    for (const goal of item.goals ?? []) if (!goals.has(goal))
+      ctx.addIssue({ code: "custom", message: `Unsupported content goal ${goal}` });
+    for (const context of item.contexts ?? []) if (!contexts.has(context))
+      ctx.addIssue({ code: "custom", message: `Unknown content context ${context}` });
+  }
 });
 export type CoursePackage = z.infer<typeof coursePackageSchema>;
 export type PublicAssessment = Pick<CoursePackage["assessments"][number], "id" | "unitId" | "skillWeights" | "passingPolicy" | "skillPlan" | "bank">;

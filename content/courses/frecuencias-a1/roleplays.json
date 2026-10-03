@@ -1,6 +1,7 @@
 [
   {
     "id": "roleplay.new-colleague",
+    "goals": ["work", "conversation"], "contexts": ["workplace"],
     "scenario": "new-colleague",
     "level": "A1",
     "character": {
@@ -19,6 +20,7 @@
   },
   {
     "id": "roleplay.cafe",
+    "goals": ["travel", "conversation"], "contexts": ["food_and_drink"],
     "scenario": "cafe",
     "level": "A1",
     "character": {
@@ -37,6 +39,7 @@
   },
   {
     "id": "roleplay.directions",
+    "goals": ["travel"], "contexts": ["getting_around"],
     "scenario": "directions",
     "level": "A1",
     "character": {
@@ -54,6 +57,7 @@
   },
   {
     "id": "roleplay.market",
+    "goals": ["travel"], "contexts": ["food_and_drink"],
     "scenario": "market",
     "level": "A1",
     "character": {
@@ -71,6 +75,7 @@
   },
   {
     "id": "roleplay.hotel",
+    "goals": ["travel"], "contexts": ["getting_around"],
     "scenario": "hotel",
     "level": "A1",
     "character": {
@@ -88,6 +93,7 @@
   },
   {
     "id": "roleplay.restaurant",
+    "goals": ["travel"], "contexts": ["food_and_drink"],
     "scenario": "restaurant",
     "level": "A1",
     "character": {

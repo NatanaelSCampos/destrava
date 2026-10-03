@@ -1,4 +1,5 @@
 import { initialStudyState, type StudyState } from "./study-state";
+import { readLearningPreferences } from "./learning-preferences";
 
 export const LEGACY_COURSE_ID = "frecuencias-a1";
 
@@ -33,6 +34,12 @@ function normalize(
     profile: {
       ...initialStudyState.profile,
       ...source.profile,
+      learningPreferences: readLearningPreferences(source.profile?.learningPreferences),
+      selfReportedLevel: source.profile?.selfReportedLevel ?? null,
+      onboardingStep: source.profile?.onboardingStep ?? 0,
+      // A course profile saved before this flow is an existing enrollment.
+      onboarded: source.profile && !("learningPreferences" in source.profile)
+        ? true : source.profile?.onboarded ?? false,
       variantId: source.profile?.variantId ??
         ((source.profile as unknown as { spanishRegion?: string } | undefined)?.spanishRegion ?? "general"),
     },

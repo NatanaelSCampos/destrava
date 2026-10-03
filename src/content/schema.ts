@@ -22,6 +22,8 @@ const activityBase = z.object({
   skill: skillSchema,
   skills: z.array(skillIdSchema).default([]),
   conceptIds: z.array(z.string().min(1)).default([]),
+  goals: z.array(z.string()).optional(),
+  contexts: z.array(z.string()).optional(),
   minutes: z.number().positive(),
   explanation: z.string().optional(),
   normalization: normalizationRulesSchema.optional(),

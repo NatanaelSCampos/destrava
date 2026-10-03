@@ -1531,6 +1531,34 @@
         "active": true
       }
     ],
+    "supportedGoals": [
+      "general",
+      "travel",
+      "work",
+      "study",
+      "conversation"
+    ],
+    "contexts": [
+      {
+        "id": "workplace",
+        "label": "Conhecer colegas",
+        "goal": "work"
+      },
+      {
+        "id": "getting_around",
+        "label": "Circular pela cidade",
+        "goal": "travel"
+      },
+      {
+        "id": "food_and_drink",
+        "label": "Pedir comida e bebida",
+        "goal": "travel"
+      }
+    ],
+    "skillFloors": {
+      "reading": 0.3,
+      "listening": 0.3
+    },
     "concepts": [
       {
         "id": "greetings",
@@ -2417,6 +2445,13 @@
             "label": "Perguntar o nome",
             "hint": "¿Cómo te llamas?"
           }
+        ],
+        "goals": [
+          "work",
+          "conversation"
+        ],
+        "contexts": [
+          "workplace"
         ]
       },
       {
@@ -2455,6 +2490,13 @@
             "label": "Agradecer",
             "hint": "Gracias"
           }
+        ],
+        "goals": [
+          "travel",
+          "conversation"
+        ],
+        "contexts": [
+          "food_and_drink"
         ]
       },
       {
@@ -2487,6 +2529,12 @@
             "label": "Agradecer a ajuda",
             "hint": "Muchas gracias."
           }
+        ],
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "getting_around"
         ]
       },
       {
@@ -2519,6 +2567,12 @@
             "label": "Encerrar a compra",
             "hint": "Eso es todo, gracias."
           }
+        ],
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "food_and_drink"
         ]
       },
       {
@@ -2551,6 +2605,12 @@
             "label": "Perguntar pelo quarto",
             "hint": "¿Cuál es mi habitación?"
           }
+        ],
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "getting_around"
         ]
       },
       {
@@ -2583,6 +2643,12 @@
             "label": "Pedir uma refeição",
             "hint": "Quisiera..., por favor."
           }
+        ],
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "food_and_drink"
         ]
       }
     ],
@@ -2603,7 +2669,14 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "work",
+          "conversation"
+        ],
+        "contexts": [
+          "workplace"
+        ]
       },
       {
         "id": "roleplay.cafe",
@@ -2621,7 +2694,14 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "travel",
+          "conversation"
+        ],
+        "contexts": [
+          "food_and_drink"
+        ]
       },
       {
         "id": "roleplay.directions",
@@ -2638,7 +2718,13 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "getting_around"
+        ]
       },
       {
         "id": "roleplay.market",
@@ -2655,7 +2741,13 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "food_and_drink"
+        ]
       },
       {
         "id": "roleplay.hotel",
@@ -2672,7 +2764,13 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "getting_around"
+        ]
       },
       {
         "id": "roleplay.restaurant",
@@ -2689,7 +2787,13 @@
         "constraints": {
           "maxVocabularyLevel": "A1",
           "allowHints": true
-        }
+        },
+        "goals": [
+          "travel"
+        ],
+        "contexts": [
+          "food_and_drink"
+        ]
       }
     ],
     "assessments": [

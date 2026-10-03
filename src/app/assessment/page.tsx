@@ -36,7 +36,7 @@ const objectiveTypes = new Set([
 ]);
 
 export default function AssessmentPage() {
-  const { course, language, assessments, state, saveAdaptiveAssessment } = useStudy();
+  const { course, language, assessments, state, saveAdaptiveAssessment, recordStudyEvent } = useStudy();
   const unit = course.units.find((item) => item.active);
   const assessment = assessments.find((item) => item.unitId === unit?.id);
   const skillPlan = assessment?.skillPlan ?? [];
@@ -69,6 +69,7 @@ export default function AssessmentPage() {
   const showReport = finished || (!startedAt && latest);
 
   function begin() {
+    recordStudyEvent("diagnostic_started", undefined, { courseId: course.id });
     setStartedAt(new Date().toISOString());
     setAnswers([]);
     setHasAnswered(false);

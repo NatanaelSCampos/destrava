@@ -233,6 +233,9 @@
         "active": true
       }
     ],
+    "supportedGoals": [
+      "general"
+    ],
     "concepts": [
       {
         "id": "xx.greeting",

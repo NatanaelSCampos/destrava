@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-onboarding-pedagogico-v1",
+    title: "Seu plano agora acompanha seus objetivos",
+    summary: "Ao começar um novo curso, escolha objetivo, prioridades e tempo. As aulas e missões se ajustam ao seu percurso.",
+    highlights: [
+      "O diagnóstico curto ajuda a encontrar o melhor ponto de partida e continua opcional.",
+      "Em Configurações → Meu aprendizado, ajuste suas escolhas sem perder o progresso.",
+      "Cada curso guarda preferências independentes.",
+    ],
+    href: "/settings",
+    linkLabel: "Ver meu aprendizado",
+  },
+  {
     id: "2026-10-ingles-a1-validacao",
     title: "Experimente os primeiros passos em inglês",
     summary: "Um curso curto de inglês A1 já está disponível para você conhecer a nova jornada multilíngua.",

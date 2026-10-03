@@ -38,7 +38,7 @@ function currentStreak(dates: string[]) {
 }
 
 export default function DashboardPage() {
-  const { course, resources, state, ready, updateProfile, vocabularyItems } = useStudy();
+  const { course, resources, state, ready, vocabularyItems } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems);
   const totalProgress = courseProgress(course, state);
@@ -51,7 +51,7 @@ export default function DashboardPage() {
     resources,
     { includeReviews: featureFlags.SPACED_REPETITION },
   )[0];
-  const plan = buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems, resources);
+  const plan = buildStudyPlan(course, state, state.profile.learningPreferences.preferredSessionMinutes, vocabularyItems, resources);
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + countedStudySeconds(session), 0) / 60,
   );
@@ -87,65 +87,11 @@ export default function DashboardPage() {
           }).format(new Date())}
         </div>
       </div>
-      {!state.profile.onboarded && (
+      {state.profile.selfReportedLevel === null && (
         <section className="onboarding-panel">
-          <div>
-            <span className="eyebrow">ANTES DE COMEÇAR</span>
-            <h2>Monte seu ritmo de estudo</h2>
-            <p>Uma meta pequena e constante ajuda a transformar prática em hábito.</p>
-          </div>
-          <div className="onboarding-fields">
-            <label>
-              Meu objetivo
-              <input
-                defaultValue={state.profile.goal}
-                onBlur={(event) => updateProfile({ goal: event.target.value })}
-              />
-            </label>
-            <label>
-              Minutos por dia
-              <select
-                value={state.profile.dailyMinutes}
-                onChange={(event) => updateProfile({ dailyMinutes: Number(event.target.value) })}
-              >
-                <option value={15}>15 minutos</option>
-                <option value={30}>30 minutos</option>
-                <option value={45}>45 minutos</option>
-                <option value={60}>60 minutos</option>
-              </select>
-            </label>
-            <label>
-              Dias por semana
-              <select
-                value={state.profile.daysPerWeek}
-                onChange={(event) => updateProfile({ daysPerWeek: Number(event.target.value) })}
-              >
-                {[2, 3, 4, 5, 6, 7].map((day) => (
-                  <option key={day} value={day}>
-                    {day} dias
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Conhecimento atual
-              <select
-                value={state.profile.priorKnowledge}
-                onChange={(event) =>
-                  updateProfile({
-                    priorKnowledge: event.target.value as typeof state.profile.priorKnowledge,
-                  })
-                }
-              >
-                <option value="none">Estou começando</option>
-                <option value="some">Conheço algumas palavras</option>
-                <option value="returning">Estou retomando os estudos</option>
-              </select>
-            </label>
-            <button className="primary-button" onClick={() => updateProfile({ onboarded: true })}>
-              Salvar meta <ArrowRight size={16} />
-            </button>
-          </div>
+          <div><span className="eyebrow">SEU PLANO</span><h2>Personalize seu aprendizado</h2>
+            <p>Escolha seu objetivo, as habilidades que quer priorizar e o tempo de sessão.</p></div>
+          <Link href="/settings" className="secondary-button">Personalize seu plano <ArrowRight size={16} /></Link>
         </section>
       )}
       <div className="dashboard-grid">

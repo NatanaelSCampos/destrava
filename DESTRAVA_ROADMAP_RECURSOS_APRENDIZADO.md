@@ -133,6 +133,8 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 
 ### Entrega de 2026-10-03 — arquitetura multilíngua v1
 
+**Onboarding pedagógico v1:** a entrada de novos cursos agora pergunta idioma, nível percebido, objetivo, contextos disponíveis, prioridades e tempo. As respostas ficam por usuário e curso, alimentam recomendação, sessões, missões, conversa e tutor; o diagnóstico existente é recomendado sem converter autopercepção em CEFR. Alunos com estado legado continuam estudando e podem personalizar em Configurações. Contratos, migração, testes e limites estão em `DESTRAVA_ONBOARDING_PEDAGOGICO_V1.md`.
+
 - `LanguagePackage` e `CoursePackage` agora são contratos Zod compilados para o runtime. Curso ativo, vocabulário, fundamentos, avaliações, IA, fala e normalização são resolvidos por pacote. O curso inicial é marcado no conteúdo, sem depender da ordem dos arquivos.
 - O mesmo usuário pode alternar espanhol e `xx-Test`; progresso, erros, revisão, domínio, histórico e preferências pedagógicas são guardados por curso. O pacote sintético não declara speech e oculta as ações dependentes dessa capacidade.
 - O pipeline inclui validação estrutural, revisão pedagógica, preview, compilação e verificação de acoplamento. Migrações `20261003000400` a `20261003000600` preservam dados antigos enquanto generalizam perfil, vocabulário e eventos de estudo.

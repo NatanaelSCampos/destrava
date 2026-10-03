@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Check, MessageCircle, Send, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { ConversationVoiceInput } from "@/components/conversation/conversation-voice-input";
 import type { ConversationScenario } from "@/content/conversation-scenarios";
+import { orderByLearningAffinity } from "@/domain/study/learning-preferences";
 import {
   startConversation,
   type ConversationCorrection,
@@ -41,7 +42,9 @@ export default function ConversationPage() {
     completeConversation,
     recordStudyEvent,
   } = useStudy();
-  const conversationScenarios = resources.conversationScenarios;
+  const conversationScenarios = useMemo(() =>
+    orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences),
+    [resources.conversationScenarios, state.profile.learningPreferences]);
   const handledLink = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<ConversationMode>("mission");

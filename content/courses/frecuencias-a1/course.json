@@ -19,6 +19,13 @@
     "basic_communication",
     "daily_life"
   ],
+  "supportedGoals": ["general", "travel", "work", "study", "conversation"],
+  "contexts": [
+    { "id": "workplace", "label": "Conhecer colegas", "goal": "work" },
+    { "id": "getting_around", "label": "Circular pela cidade", "goal": "travel" },
+    { "id": "food_and_drink", "label": "Pedir comida e bebida", "goal": "travel" }
+  ],
+  "skillFloors": { "reading": 0.3, "listening": 0.3 },
   "practice": {
     "reviewStructures": [
       {
