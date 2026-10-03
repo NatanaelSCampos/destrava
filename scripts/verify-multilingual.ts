@@ -4,7 +4,8 @@ import { publicCourse } from "../src/content/public";
 import { findActivity } from "../src/content/schema";
 import { gradeActivity, normalizeAnswer } from "../src/domain/activities/grader";
 import { readCourseState, writeCourseState } from "../src/domain/study/course-state-storage";
-import { recordAttempt, recordVocabularySignal } from "../src/domain/study/study-state";
+import { recordAttempt, recordVocabularySignal, reviewVocabulary } from "../src/domain/study/study-state";
+import { projectStudyEvents } from "../src/repositories/study-event-projection";
 import { buildLearningProfile } from "../src/domain/study/learning-profile";
 import { skillProgress } from "../src/domain/study/progress";
 import { nextAdaptiveItem } from "../src/domain/study/adaptive-assessment";
@@ -67,6 +68,21 @@ assert.equal(Object.keys(loadedEs.mistakes).length, 1);
 assert.equal(Object.keys(loadedTest.mistakes).length, 0);
 assert.equal(loadedEs.vocabulary["xx.lex.milo"], undefined);
 assert.equal(loadedTest.vocabulary["xx.lex.milo"].status, "learning");
+const reviewedTest = reviewVocabulary(loadedTest, "xx.lex.milo", true);
+assert.equal(reviewedTest.events[0].itemId, "xx.lex.milo");
+assert.equal(reviewedTest.events[0].activityId, undefined);
+const projectedEvents = projectStudyEvents(
+  [
+    ...reviewedTest.events,
+    { id: "legacy-review", type: "review_completed", activityId: "xx.lex.milo", createdAt: "2026-10-03T00:00:00.000Z" },
+  ],
+  "test-user", test.course.id, new Set(["xx.act.choice"]),
+);
+assert.equal(projectedEvents[0].activity_id, null);
+assert.equal(projectedEvents[0].metadata.itemId, "xx.lex.milo");
+assert.equal(projectedEvents.at(-1)?.activity_id, null);
+assert.equal(projectedEvents.at(-1)?.metadata.unresolvedActivityId, "xx.lex.milo");
+assert.equal(projectedEvents.find((item) => item.event_type === "exercise_answered")?.activity_id, "xx.act.choice");
 assert.equal(loadedEs.attempts.length, 1);
 assert.equal(loadedTest.attempts.length, 1);
 const testProfile = buildLearningProfile(publicCourse(test.course), loadedTest, test.resources.vocabulary, test.resources);

@@ -349,6 +349,10 @@ function event(type: string, activityId?: string): StudyEvent {
   return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), activityId };
 }
 
+function itemEvent(type: string, itemId: string): StudyEvent {
+  return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), itemId };
+}
+
 function updateEvaluatedMistake(
   state: StudyState,
   activityId: string,
@@ -627,7 +631,7 @@ export function reviewVocabulary(
       ...state.reviews,
     ],
     events: [
-      event(
+      itemEvent(
         correct
           ? "flashcard_known"
           : rating === "difficult"
@@ -635,7 +639,7 @@ export function reviewVocabulary(
             : "flashcard_missed",
         vocabularyId,
       ),
-      event("review_completed", vocabularyId),
+      itemEvent("review_completed", vocabularyId),
       ...state.events,
     ],
   };

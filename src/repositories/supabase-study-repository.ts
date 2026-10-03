@@ -5,6 +5,7 @@ import type { StudyState } from "@/domain/study/study-state";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { skillProgress, unitProgress } from "@/domain/study/progress";
 import type { Skill } from "@/content/schema";
+import { projectStudyEvents } from "./study-event-projection";
 
 const skills: Skill[] = ["vocabulary", "grammar", "listening", "writing", "speaking", "reading"];
 
@@ -317,15 +318,7 @@ export class SupabaseStudyRepository {
     ]);
     await this.upsert(
       "study_events",
-      state.events.map((item) => ({
-        id: item.id,
-        user_id: uid,
-        course_id: course.id,
-        event_type: item.type,
-        activity_id: item.activityId ?? null,
-        metadata: { ...(item.itemId ? { itemId: item.itemId } : {}), ...item.metadata },
-        created_at: item.createdAt,
-      })),
+      projectStudyEvents(state.events, uid, course.id, new Set(activityToUnit.keys())),
     );
     await this.upsert(
       "lesson_progress",
