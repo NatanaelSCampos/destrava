@@ -3,14 +3,14 @@ import { z } from "zod";
 import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
-import { findConversationScenario } from "@/content/conversation-scenarios";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { findCourseBundle } from "@/content/course-registry";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
-import type { StudyState } from "@/domain/study/study-state";
+import { readCourseState } from "@/domain/study/course-state-storage";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
 
 const inputSchema = z.object({
+  courseId: z.string().min(1).max(80),
   mode: z.enum(["free", "mission"]),
   scenarioId: z.string().max(50).nullable(),
   topic: z.string().trim().max(80),
@@ -33,8 +33,11 @@ export async function POST(request: Request) {
   if (!parsed.success)
     return NextResponse.json({ error: "Mensagem ou configuração inválida." }, { status: 400 });
   const input = parsed.data;
+  const bundle = findCourseBundle(input.courseId);
+  if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
+  const { course, resources } = bundle;
   const scenario =
-    input.mode === "mission" ? findConversationScenario(input.scenarioId) : undefined;
+    input.mode === "mission" ? resources.conversationScenarios.find((item) => item.id === input.scenarioId) : undefined;
   if ((input.mode === "mission" && !scenario) || (input.mode === "free" && input.topic.length < 3))
     return NextResponse.json({ error: "Escolha uma missão ou um assunto." }, { status: 400 });
 
@@ -42,14 +45,15 @@ export async function POST(request: Request) {
     const client = guard.userId ? await createSupabaseServerClient() : null;
     const { data } = client
       ? await client
-          .from("user_study_state")
+          .from("user_course_state")
           .select("state")
           .eq("user_id", guard.userId)
+          .eq("course_id", course.id)
           .maybeSingle()
       : { data: null };
-    const state = data?.state as StudyState | null | undefined;
+    const state = data?.state ? readCourseState(data.state, course.id, course.languageCode) : null;
     const region = spanishRegion(state?.profile?.spanishRegion);
-    const currentUnit = frecuenciasA1.units.find((unit) =>
+    const currentUnit = course.units.find((unit) =>
       unit.lessons.some((lesson) =>
         lesson.activities.some((activity) => !state?.completedActivityIds?.includes(activity.id)),
       ),
@@ -58,9 +62,10 @@ export async function POST(request: Request) {
       ...input,
       scenario,
       context: {
-        course: frecuenciasA1.title,
-        level: frecuenciasA1.level,
-        unit: currentUnit?.title ?? frecuenciasA1.units.at(-1)?.title ?? "Curso A1",
+        course: course.title,
+        language: resources.languageLabel,
+        level: course.level,
+        unit: currentUnit?.title ?? course.units.at(-1)?.title ?? "Curso",
         goal: (state?.profile?.goal ?? "Praticar conversação").slice(0, 120),
         knownWords: Object.values(state?.vocabulary ?? {}).filter((item) => item.status === "known")
           .length,
@@ -68,8 +73,8 @@ export async function POST(request: Request) {
           .sort((a, b) => b.timesMissed - a.timesMissed)
           .slice(0, 3)
           .map((item) => item.correctAnswer.slice(0, 100)),
-        region: spanishRegions.find((item) => item.id === region)?.label ?? "Geral",
-        memory: state ? buildLearningMemory(state, frecuenciasA1.id) : undefined,
+        region: course.languageCode === "es" ? spanishRegions.find((item) => item.id === region)?.label ?? "Geral" : "Geral",
+        memory: state ? buildLearningMemory(state, course.id) : undefined,
       },
     });
     const allowed = new Set(scenario?.objectives.map((item) => item.id) ?? []);

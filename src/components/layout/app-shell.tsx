@@ -61,7 +61,7 @@ function isNavActive(href: string, pathname: string) {
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { course, state, vocabularyItems, ready, authUserId } = useStudy();
+  const { course, resources, state, vocabularyItems, ready, authUserId } = useStudy();
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
@@ -129,7 +129,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
     ),
   );
-  const pendingReviews = dueReviewCounts(state, vocabularyItems, new Date(), activityIds).total;
+  const pendingReviews = dueReviewCounts(
+    state, vocabularyItems, new Date(), activityIds, resources.structures,
+  ).total;
   const navItems = navigation(course.slug).filter(
     (item) =>
       (item.href !== "/speaking" || featureFlags.SPEAKING) &&

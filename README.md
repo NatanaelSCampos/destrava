@@ -49,6 +49,12 @@ O menu **Praticar fala** reúne o shadowing, com evolução por tentativa e pala
 
 O menu **Fundamentos** reúne **Alfabeto** e **Números** na mesma área. Cada tema tem seu próprio catálogo com busca, filtros, exemplos e áudio; outros fundamentos podem ser adicionados depois sem mudar a navegação principal. O alfabeto também continua acessível em `/alphabet`.
 
+## Motor de estudo e idiomas
+
+`src/content/language-resources.ts` define o pacote de dados de um idioma: vocabulário, dicionário, estruturas, números, cenários de conversa e exemplos visuais. `src/content/spanish-resources.ts` fornece o pacote espanhol; `src/content/course-registry.ts` associa pacote e curso no servidor. O planejamento, perfil, revisão e busca do dicionário recebem esse pacote como entrada, para que as regras não precisem conhecer palavras ou formas específicas do espanhol. Um novo idioma ainda precisa de conteúdo próprio e da adaptação das telas/rotas antigas indicadas no roadmap, sobretudo áudio e tutor.
+
+O progresso é salvo em `user_course_state`, uma linha por usuário e curso. A migração `20261003000100_course_learning_state.sql` copia o estado antigo do espanhol sem apagá-lo e cria a projeção relacional dos calendários de estruturas e pronúncia. `20261003000200_mistake_course_context.sql` acrescenta curso, idioma, tópico e último acerto ao caderno de erros; `20261003000300_mfa_for_course_state.sql` aplica a proteção MFA existente às novas tabelas. As três migrações já foram aplicadas no projeto remoto. Execute `npx.cmd supabase db push` em uma nova instalação antes de publicar o frontend. A revisão de pronúncia avança apenas quando uma nova gravação é avaliada pelo Azure; ouvir o cartão não equivale a acertar.
+
 Em **Números**, cada cartão mostra a forma escrita, a leitura por extenso, uma frase, tradução e áudio. O botão **Praticar números** abre `/numbers`, com ditado, fala e repetição de valores, datas, horários, telefone, números grandes e ordinais. O ditado usa a voz do navegador; a avaliação da fala usa a mesma credencial Azure das atividades de pronúncia. Cada tentativa registra o número e o modo no estado do aluno, alimenta o conceito **Números** do perfil e pode gerar uma recomendação para treinar novamente. O catálogo inicial é curado para espanhol e pode ser ampliado em `src/domain/numbers/number-practice.ts`.
 
 ## Conectar o Supabase

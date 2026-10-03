@@ -2292,7 +2292,7 @@
   margin-bottom: 29px;
 }
 .review-summary {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 @media (max-width: 1150px) {
   .review-summary {
@@ -2704,6 +2704,25 @@
   padding-top: 12px;
   color: #a2a2a7;
   font-size: 10px;
+}
+.mistake-history {
+  margin-top: 14px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+.mistake-history summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 700;
+}
+.mistake-history ol {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+}
+.mistake-history li p {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
 }
 .history-summary .panel {
   padding: 20px;
@@ -3742,3 +3761,13 @@
     justify-self: start;
   }
 }
+.focused-conversation { display: grid; gap: 12px; }
+.focused-conversation h2, .focused-conversation p { margin: 0; }
+.focused-conversation ul { display: flex; flex-wrap: wrap; gap: 6px 20px; padding-left: 20px; margin: 0; }
+.focused-conversation-turns { display: grid; gap: 8px; max-height: 320px; overflow-y: auto; }
+.focused-conversation-turns > div { display: grid; gap: 4px; border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+.focused-conversation-turns > .student { margin-left: min(10%, 40px); }
+.focused-conversation-turns > .partner { margin-right: min(10%, 40px); }
+.focused-conversation-compose { display: grid; gap: 8px; }
+.focused-conversation-compose textarea { width: 100%; min-height: 68px; padding: 10px; border: 1px solid var(--border); border-radius: 10px; font: inherit; }
+.focused-conversation-compose > div { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }

@@ -5,7 +5,7 @@ import { ArrowLeft, Check, MessageCircle, Send, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { ConversationVoiceInput } from "@/components/conversation/conversation-voice-input";
-import { conversationScenarios, findConversationScenario } from "@/content/conversation-scenarios";
+import type { ConversationScenario } from "@/content/conversation-scenarios";
 import {
   startConversation,
   type ConversationCorrection,
@@ -25,9 +25,14 @@ const correctionOptions: Array<{ id: ConversationCorrection; label: string }> = 
   { id: "off", label: "Sem correção" },
 ];
 
+function findScenario(scenarios: ConversationScenario[], id: string | null | undefined) {
+  return scenarios.find((item) => item.id === id);
+}
+
 export default function ConversationPage() {
   const {
     course,
+    resources,
     state,
     ready,
     saveConversation,
@@ -35,10 +40,11 @@ export default function ConversationPage() {
     completeConversation,
     recordStudyEvent,
   } = useStudy();
+  const conversationScenarios = resources.conversationScenarios;
   const handledLink = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<ConversationMode>("mission");
-  const [scenarioId, setScenarioId] = useState(conversationScenarios[0].id);
+  const [scenarioId, setScenarioId] = useState(conversationScenarios[0]?.id ?? "");
   const [topic, setTopic] = useState("");
   const [pace, setPace] = useState<ConversationPace>("beginner");
   const [correction, setCorrection] = useState<ConversationCorrection>("important_only");
@@ -48,7 +54,7 @@ export default function ConversationPage() {
   const [error, setError] = useState("");
   const sessions = (state.conversations ?? []).filter((item) => item.courseId === course.id);
   const selected = sessions.find((item) => item.id === selectedId);
-  const scenario = findConversationScenario(selected?.scenarioId);
+  const scenario = findScenario(conversationScenarios, selected?.scenarioId);
   const turnsUsed = selected?.turns.filter((item) => item.role === "student").length ?? 0;
 
   useEffect(() => {
@@ -64,17 +70,17 @@ export default function ConversationPage() {
       )
         setSelectedId(sessionId);
       const suggestedScenario = params.get("scenario");
-      if (suggestedScenario && findConversationScenario(suggestedScenario)) {
+      if (suggestedScenario && findScenario(conversationScenarios, suggestedScenario)) {
         setMode("mission");
         setScenarioId(suggestedScenario);
       }
       handledLink.current = true;
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [ready, state.conversations, course.id]);
+  }, [ready, state.conversations, course.id, conversationScenarios]);
 
   function begin() {
-    const chosenScenario = mode === "mission" ? findConversationScenario(scenarioId) : undefined;
+    const chosenScenario = mode === "mission" ? findScenario(conversationScenarios, scenarioId) : undefined;
     if (mode === "free" && topic.trim().length < 3) {
       setError("Escreva um assunto com pelo menos 3 caracteres.");
       return;
@@ -104,6 +110,7 @@ export default function ConversationPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          courseId: course.id,
           mode: selected.mode,
           scenarioId: selected.scenarioId,
           topic: selected.topic,
@@ -250,7 +257,7 @@ export default function ConversationPage() {
               </div>
             ) : (
               <div className="conversation-compose">
-                <label htmlFor="conversation-draft">Sua resposta em espanhol</label>
+                <label htmlFor="conversation-draft">Sua resposta em {resources.languageLabel.toLowerCase()}</label>
                 <textarea
                   id="conversation-draft"
                   value={draft}
@@ -469,7 +476,7 @@ export default function ConversationPage() {
                     }}
                   >
                     <strong>
-                      {findConversationScenario(item.scenarioId)?.title ?? item.topic}
+                      {findScenario(conversationScenarios, item.scenarioId)?.title ?? item.topic}
                     </strong>
                     <small>
                       {item.finishedAt ? "Concluída" : "Continuar"} ·{" "}

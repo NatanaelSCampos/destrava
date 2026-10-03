@@ -3,16 +3,17 @@ import { frecuenciasA1, vocabularySeed } from "../src/content/frecuencias-a1";
 import { publicCourse } from "../src/content/public";
 import { findActivity } from "../src/content/schema";
 import { gradeActivity } from "../src/domain/activities/grader";
-import { buildLearningProfile } from "../src/domain/study/learning-profile";
-import { LearningRecommendationEngine } from "../src/domain/study/learning-recommendation-engine";
+import { buildLearningProfile as buildLearningProfileCore } from "../src/domain/study/learning-profile";
+import { LearningRecommendationEngine as RecommendationCore } from "../src/domain/study/learning-recommendation-engine";
 import { recommendationGuidance } from "../src/domain/study/recommendation-guidance";
 import { buildLearningMemory } from "../src/domain/study/learning-memory";
 import { recommendationLink } from "../src/lib/recommendation-link";
-import { buildStudyPlan } from "../src/domain/study/study-planner";
+import { buildStudyPlan as buildStudyPlanCore } from "../src/domain/study/study-planner";
 import { buildPracticeHistory, sessionComparisons } from "../src/domain/study/practice-history";
 import { initialStudyState, type StudyState } from "../src/domain/study/study-state";
+import { readCourseState, writeCourseState } from "../src/domain/study/course-state-storage";
 import { ReviewScheduler } from "../src/domain/review/review-scheduler";
-import { dueReviewCounts } from "../src/domain/review/due-review-counts";
+import { dueReviewCounts as dueReviewCountsCore } from "../src/domain/review/due-review-counts";
 import { wordReviewCard } from "../src/domain/review/review-card";
 import { reviewClozeForms, visualVocabulary } from "../src/content/visual-vocabulary";
 import {
@@ -23,9 +24,11 @@ import {
   recordMicroLessonAttempt,
   recordAdaptiveAssessment,
   reviewVocabulary,
-  reviewStructure,
+  reviewStructure as reviewStructureCore,
 } from "../src/domain/study/study-state";
 import { vocabularyContext, vocabularyOccurrences } from "../src/content/vocabulary-context";
+import { searchDictionary } from "../src/domain/vocabulary/dictionary-search";
+import { spanishResources } from "../src/content/spanish-resources";
 import {
   spanishRegion,
   spanishSpeechLocale,
@@ -52,6 +55,65 @@ import {
 } from "../src/domain/numbers/number-practice";
 
 const course = publicCourse(frecuenciasA1);
+const otherResources = {
+  ...spanishResources,
+  courseId: "other",
+  languageCode: "fr",
+  vocabulary: [],
+  dictionary: {},
+  structures: [],
+  numbers: [],
+  numberCategoryLabels: {},
+  conversationScenarios: [],
+  imageScenes: [],
+  visualVocabulary: {},
+  reviewClozeForms: {},
+};
+const resourcesFor = (id: string) => id === course.id ? spanishResources : otherResources;
+const buildLearningProfile = (
+  content: Parameters<typeof buildLearningProfileCore>[0],
+  state: StudyState,
+  vocabulary: Parameters<typeof buildLearningProfileCore>[2],
+  now?: Date,
+) => buildLearningProfileCore(content, state, vocabulary, resourcesFor(content.id), now);
+const buildStudyPlan = (
+  content: Parameters<typeof buildStudyPlanCore>[0],
+  state: StudyState,
+  minutes: number,
+  vocabulary: Parameters<typeof buildStudyPlanCore>[3],
+  now?: Date,
+  mode?: Parameters<typeof buildStudyPlanCore>[6],
+) => buildStudyPlanCore(content, state, minutes, vocabulary, resourcesFor(content.id), now, mode);
+const dueReviewCounts = (
+  state: Parameters<typeof dueReviewCountsCore>[0],
+  vocabulary: Parameters<typeof dueReviewCountsCore>[1],
+  now?: Date,
+  activityIds?: ReadonlySet<string>,
+) => dueReviewCountsCore(state, vocabulary, now, activityIds, spanishResources.structures);
+const LearningRecommendationEngine = {
+  recommend: (
+    content: Parameters<typeof RecommendationCore.recommend>[0],
+    state: StudyState,
+    profile: Parameters<typeof RecommendationCore.recommend>[2],
+    vocabulary: Parameters<typeof RecommendationCore.recommend>[3],
+    options?: Parameters<typeof RecommendationCore.recommend>[5],
+  ) => RecommendationCore.recommend(
+    content, state, profile, vocabulary, resourcesFor(content.id), options,
+  ),
+};
+const reviewStructure = (state: StudyState, id: string, correct: boolean) =>
+  reviewStructureCore(state, id, correct, spanishResources.structures);
+const legacy = { ...initialStudyState, completedActivityIds: ["intro-1"] };
+assert.deepEqual(readCourseState(legacy, course.id).completedActivityIds, ["intro-1"]);
+assert.deepEqual(readCourseState(legacy, "english-a1").completedActivityIds, []);
+const secondCourse = { ...initialStudyState, completedActivityIds: ["english-intro"] };
+const migrated = writeCourseState(legacy, "english-a1", secondCourse);
+assert.deepEqual(readCourseState(migrated, course.id).completedActivityIds, ["intro-1"]);
+assert.deepEqual(readCourseState(migrated, "english-a1").completedActivityIds, ["english-intro"]);
+assert.deepEqual(readCourseState({ ...secondCourse, courseId: "english-a1" }, "english-a1").completedActivityIds, ["english-intro"]);
+assert.deepEqual(readCourseState({ ...secondCourse, courseId: "english-a1" }, course.id).completedActivityIds, []);
+assert(searchDictionary(spanishResources, "llamás").some((item) => item.id === "llamarse" || item.id === "vos"));
+assert(searchDictionary(spanishResources, "ordenador").some((item) => item.catalogOnly && item.term === "ordenador"));
 const fillBlanks = frecuenciasA1.units.flatMap((unit) =>
   unit.lessons.flatMap((lesson) =>
     lesson.activities.filter((activity) => activity.type === "fill_blank"),
@@ -192,7 +254,7 @@ assert.match(regionalVocabularyNote("celular", "spain") ?? "", /móvil/);
 assert.match(
   vocabularyContext(
     { id: "llamarse", translation: "chamar-se", example: "Me llamo Ana." },
-    "es",
+    spanishResources.dictionary,
     "argentina",
   ).regionalNote ?? "",
   /llamás/,
@@ -263,8 +325,8 @@ assert.equal(
 const imageSuggestion = recommend(memoryState).find((item) => item.kind === "image");
 assert(imageSuggestion);
 assert.equal(recommendationLink(course.slug, imageSuggestion), "/describe?scene=kitchen");
-assert.match(recommendationGuidance(course, memoryState, conversationSuggestion).explanation, /yo soy de/);
-assert.match(recommendationGuidance(course, memoryState, imageSuggestion).explanation, /Use hay/);
+assert.match(recommendationGuidance(course, memoryState, conversationSuggestion, spanishResources).explanation, /yo soy de/);
+assert.match(recommendationGuidance(course, memoryState, imageSuggestion, spanishResources).explanation, /Use hay/);
 
 const freshProfile = buildLearningProfile(course, initialStudyState, vocabularySeed, now);
 assert.equal(freshProfile.languageCode, "es");
@@ -324,6 +386,9 @@ const focusedPlan = buildStudyPlan(course, wrongGrammar, 5, vocabularySeed, now,
 assert.equal(focusedPlan[0]?.id, "grammar-3");
 assert(focusedPlan.reduce((minutes, item) => minutes + item.minutes, 0) <= 5);
 assert(focusedPlan.every((item) => item.id === "grammar-3"));
+const focusedLong = buildStudyPlan(course, wrongGrammar, 15, vocabularySeed, now, "difficulties");
+assert(focusedLong.some((item) => item.kind === "conversation"));
+assert(focusedLong.reduce((minutes, item) => minutes + item.minutes, 0) <= 15);
 
 const dueMistake: StudyState = {
   ...wrongGrammar,
@@ -585,6 +650,8 @@ const pronunciationIssue = recordEvaluatedSpeaking(
 );
 assert.equal(pronunciationIssue.mistakes["speaking-repeat-1"].category, "speaking");
 assert(pronunciationIssue.mistakes["speaking-repeat-1"].explanation.includes("Hola"));
+assert.equal(Object.values(pronunciationIssue.pronunciationReviews)[0]?.term, "Hola");
+assert.equal(dueReviewCounts(pronunciationIssue, vocabularySeed).pronunciation, 1);
 const improvedSpeech = recordEvaluatedSpeaking(pronunciationIssue, "speaking-repeat-1", {
   ...poorSpeech.speaking[0].feedback!,
   accuracy: 90,
@@ -593,6 +660,13 @@ const improvedSpeech = recordEvaluatedSpeaking(pronunciationIssue, "speaking-rep
   words: [],
 });
 assert.equal(improvedSpeech.mistakes["speaking-repeat-1"].timesCorrect, 1);
+assert.equal(dueReviewCounts(improvedSpeech, vocabularySeed).pronunciation, 1);
+const improvedWord = recordEvaluatedSpeaking(pronunciationIssue, "speaking-repeat-1", {
+  ...poorSpeech.speaking[0].feedback!,
+  accuracy: 90, fluency: 90, completeness: 95,
+  words: [{ text: "Hola", accuracy: 90, errorType: "None" }],
+});
+assert.equal(dueReviewCounts(improvedWord, vocabularySeed).pronunciation, 0);
 const recalledSpeech: StudyState = {
   ...pronunciationIssue,
   reviews: [
@@ -665,7 +739,7 @@ assert(
     (item) => item.id === "age-tener",
   )?.evidenceCount ?? 0) > 0,
 );
-assert.equal(vocabularyContext(vocabularySeed[6], "es").senses.length, 3);
+assert.equal(vocabularyContext(vocabularySeed[6], spanishResources.dictionary).senses.length, 3);
 assert(vocabularyOccurrences(course, vocabularySeed[6]).length > 0);
 
 const fortySeven = findNumberPrompt("47")!;
@@ -696,7 +770,7 @@ assert(recommend(numberIssue).some((item) => item.kind === "number" && item.id =
 const numberSuggestion = recommend(numberIssue).find(
   (item) => item.kind === "number" && item.id === "47",
 )!;
-assert.match(recommendationGuidance(course, numberIssue, numberSuggestion).explanation, /cuarenta y siete/);
+assert.match(recommendationGuidance(course, numberIssue, numberSuggestion, spanishResources).explanation, /cuarenta y siete/);
 const otherCourse = { ...course, id: "french-a1", languageCode: "fr" };
 assert.equal(
   buildLearningProfile(otherCourse, numberIssue, vocabularySeed, numberNow).concepts.find(

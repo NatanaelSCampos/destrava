@@ -31,24 +31,26 @@ function cloze(word: string, example: string, additionalForms: string[] = []) {
 }
 
 export function wordReviewCard(
-  word: { spanish: string; translation: string; example: string },
+  word: { term?: string; spanish?: string; translation: string; example: string },
   reviewCount: number,
-  options: { visual?: VisualCue; clozeForms?: string[] } = {},
+  options: { visual?: VisualCue; clozeForms?: string[]; languageLabel?: string } = {},
 ): WordCard {
+  const term = word.term ?? word.spanish ?? "";
+  const languageLabel = (options.languageLabel ?? "Idioma estudado").toUpperCase();
   const position = reviewCount % (options.visual ? 5 : 4);
   if (options.visual && (reviewCount === 0 || position === 4))
     return {
       front: "Que palavra ou expressão esta figura representa?",
-      back: `${word.spanish} · ${word.translation}`,
+      back: `${term} · ${word.translation}`,
       frontLabel: "FIGURA → TERMO",
-      backLabel: "ESPANHOL",
-      spokenText: word.spanish,
+      backLabel: languageLabel,
+      spokenText: term,
       example: word.example,
       presentation: "image",
       visual: options.visual,
     };
   if (reviewCount > 0 && position === 3) {
-    const found = cloze(word.spanish, word.example, options.clozeForms);
+    const found = cloze(term, word.example, options.clozeForms);
     if (found)
       return {
         front: found.sentence,
@@ -63,29 +65,29 @@ export function wordReviewCard(
   if (reviewCount > 0 && position === 1)
     return {
       front: word.translation,
-      back: word.spanish,
+      back: term,
       frontLabel: "PORTUGUÊS",
-      backLabel: "ESPANHOL",
-      spokenText: word.spanish,
+      backLabel: languageLabel,
+      spokenText: term,
       example: word.example,
       presentation: "reverse",
     };
   if (reviewCount > 0 && position === 2)
     return {
       front: "Ouça e tente reconhecer a palavra ou expressão.",
-      back: `${word.spanish} · ${word.translation}`,
+      back: `${term} · ${word.translation}`,
       frontLabel: "ESCUTA",
       backLabel: "RESPOSTA",
-      spokenText: word.spanish,
+      spokenText: term,
       example: word.example,
       presentation: "audio",
     };
   return {
-    front: word.spanish,
+    front: term,
     back: word.translation,
-    frontLabel: "ESPANHOL",
+    frontLabel: languageLabel,
     backLabel: "PORTUGUÊS",
-    spokenText: word.spanish,
+    spokenText: term,
     example: word.example,
     presentation: "standard",
   };

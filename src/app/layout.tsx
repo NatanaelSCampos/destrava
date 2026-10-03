@@ -4,7 +4,8 @@ import "./globals.css";
 import "./pages.css";
 import "./activities.css";
 import "./page-tour.css";
-import { frecuenciasA1, vocabularySeed } from "@/content/frecuencias-a1";
+import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { spanishResources } from "@/content/spanish-resources";
 import { publicCourse } from "@/content/public";
 import { StudyProvider } from "@/components/study-provider";
 import { AppShell } from "@/components/layout/app-shell";
@@ -17,13 +18,12 @@ export const metadata: Metadata = {
 };
 
 const course = publicCourse(frecuenciasA1);
-const vocabularyItems = vocabularySeed.map((item) => ({ ...item }));
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={inter.variable}>
       <body>
-        <StudyProvider course={course} vocabularyItems={vocabularyItems}>
+        <StudyProvider course={course} resources={spanishResources}>
           <AppShell>{children}</AppShell>
         </StudyProvider>
       </body>

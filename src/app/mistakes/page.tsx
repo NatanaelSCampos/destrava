@@ -7,6 +7,7 @@ import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { featureFlags } from "@/lib/feature-flags";
+import { mistakeHistory } from "@/domain/study/mistake-history";
 
 const skillNames: Record<string, string> = {
   grammar: "Gramática",
@@ -81,6 +82,10 @@ export default function MistakesPage() {
         <div className="mistake-list">
           {mistakes.map((item) => {
             const context = contexts.get(item.activityId);
+            const history = mistakeHistory(state, item.activityId);
+            const topic = course.learningConcepts.find(
+              (concept) => concept.id === (item.topicId ?? context?.activity.conceptIds[0]),
+            );
             return (
               <article className="mistake-card panel" key={item.id}>
                 <div className="mistake-card-header">
@@ -88,6 +93,7 @@ export default function MistakesPage() {
                   <span>{formatDate(item.lastMissedAt)}</span>
                 </div>
                 <h3>{context?.activity.title ?? "Atividade"}</h3>
+                <small>{course.title} · {course.languageCode.toUpperCase()}{topic ? ` · ${topic.label}` : ""}</small>
                 <div className="mistake-comparison">
                   <div>
                     <span>SUA RESPOSTA</span>
@@ -108,6 +114,21 @@ export default function MistakesPage() {
                   </span>
                   <span>Próxima revisão: {formatDate(item.schedule.nextReviewAt)}</span>
                 </div>
+                {history.length > 0 && (
+                  <details className="mistake-history">
+                    <summary>Ver tentativas anteriores ({history.length})</summary>
+                    <ol>
+                      {history.map((entry) => (
+                        <li key={entry.id}>
+                          <span>{formatDate(entry.at)} · {
+                            { exercise: "Exercício", writing: "Escrita", speaking: "Fala", review: "Revisão" }[entry.source]
+                          } · {entry.correct === null ? "Sem nota objetiva" : entry.correct ? "Acertou" : "Precisa rever"}</span>
+                          <p>{entry.answer}</p>
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
+                )}
                 {context && (
                   <div className="mistake-actions">
                     <Link href={context.href} className="text-link">

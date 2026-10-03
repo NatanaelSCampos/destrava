@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { findCourseBundle } from "@/content/course-registry";
 import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
-import type { Mistake, StudyState } from "@/domain/study/study-state";
+import type { Mistake } from "@/domain/study/study-state";
+import { readCourseState } from "@/domain/study/course-state-storage";
 import { featureFlags } from "@/lib/feature-flags";
 import { createSupabaseServerClient, isSupabaseConfigured } from "@/lib/supabase/server";
 
 const inputSchema = z.object({
+  courseId: z.string().min(1).max(80),
   activityId: z.string().min(1).max(120),
   localMistake: z
     .object({
@@ -27,7 +29,9 @@ export async function POST(request: Request) {
   const parsed = inputSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success)
     return NextResponse.json({ error: "Erro de estudo inválido." }, { status: 400 });
-  const activity = findActivity(frecuenciasA1, parsed.data.activityId);
+  const bundle = findCourseBundle(parsed.data.courseId);
+  if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
+  const activity = findActivity(bundle.course, parsed.data.activityId);
   if (!activity) return NextResponse.json({ error: "Atividade não encontrada." }, { status: 404 });
 
   let mistake: Pick<Mistake, "originalAnswer" | "correctAnswer" | "explanation"> | undefined;
@@ -35,13 +39,16 @@ export async function POST(request: Request) {
     const client = await createSupabaseServerClient();
     if (!client) return NextResponse.json({ error: "Progresso indisponível." }, { status: 503 });
     const { data, error } = await client
-      .from("user_study_state")
+      .from("user_course_state")
       .select("state")
       .eq("user_id", guard.userId)
+      .eq("course_id", bundle.course.id)
       .maybeSingle();
     if (error)
       return NextResponse.json({ error: "Não foi possível ler seu caderno." }, { status: 503 });
-    mistake = (data?.state as StudyState | undefined)?.mistakes?.[parsed.data.activityId];
+    mistake = data?.state
+      ? readCourseState(data.state, bundle.course.id, bundle.course.languageCode).mistakes[parsed.data.activityId]
+      : undefined;
   } else if (process.env.NODE_ENV === "development") {
     mistake = parsed.data.localMistake;
   }
@@ -53,8 +60,8 @@ export async function POST(request: Request) {
 
   try {
     const result = await getAIProvider().generateMicroLesson({
-      course: frecuenciasA1.title,
-      languageCode: frecuenciasA1.languageCode,
+      course: bundle.course.title,
+      languageCode: bundle.course.languageCode,
       activityTitle: activity.title,
       activityType: activity.type,
       activityPrompt: activity.prompt.slice(0, 400),

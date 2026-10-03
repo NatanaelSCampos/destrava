@@ -38,19 +38,20 @@ function currentStreak(dates: string[]) {
 }
 
 export default function DashboardPage() {
-  const { course, state, ready, updateProfile, vocabularyItems } = useStudy();
+  const { course, resources, state, ready, updateProfile, vocabularyItems } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems);
   const totalProgress = courseProgress(course, state);
-  const learningProfile = buildLearningProfile(course, state, vocabularyItems);
+  const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const focus = LearningRecommendationEngine.recommend(
     course,
     state,
     learningProfile,
     vocabularyItems,
+    resources,
     { includeReviews: featureFlags.SPACED_REPETITION },
   )[0];
-  const plan = buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems);
+  const plan = buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems, resources);
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + countedStudySeconds(session), 0) / 60,
   );
@@ -58,7 +59,7 @@ export default function DashboardPage() {
     words: dueWords,
     mistakes: dueErrors,
     structures: dueStructures,
-  } = dueReviewCounts(state, vocabularyItems);
+  } = dueReviewCounts(state, vocabularyItems, new Date(), undefined, resources.structures);
   const streak = currentStreak(
     state.sessions.filter((session) => session.finishedAt).map((session) => session.finishedAt!),
   );

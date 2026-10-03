@@ -1,9 +1,8 @@
 import type { PublicCourse } from "@/content/public";
 import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
-import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
+import type { LanguageResources } from "@/content/language-resources";
 import type { StudyState } from "./study-state";
-import { findReviewStructure } from "@/content/review-structures";
 import { buildLearningMemory } from "./learning-memory";
 
 export type LearningSkill = Skill | "pronunciation" | "fluency" | "comprehension";
@@ -82,7 +81,8 @@ function metric(id: string, label: string, evidence: Evidence[], now: Date): Mas
 export function buildLearningProfile(
   course: PublicCourse,
   state: StudyState,
-  vocabularyItems: ReadonlyArray<{ id: string; spanish: string; lessonId: string }>,
+  vocabularyItems: ReadonlyArray<{ id: string; term?: string; spanish?: string; lessonId: string }>,
+  resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures">,
   now = new Date(),
 ): LearningProfile {
   const activities = new Map(
@@ -120,8 +120,8 @@ export function buildLearningProfile(
   }
 
   for (const attempt of state.numberAttempts ?? []) {
-    const prompt = findNumberPrompt(attempt.promptId);
-    if (!prompt || !course.languageCode.startsWith("es")) continue;
+    const prompt = resources.numbers.find((entry) => entry.id === attempt.promptId);
+    if (!prompt) continue;
     const score = attempt.score;
     addEvidence(
       skillEvidence,
@@ -139,12 +139,12 @@ export function buildLearningProfile(
   for (const attempt of state.microLessonAttempts ?? [])
     addActivityScore(attempt.activityId, attempt.correct ? 100 : 0, attempt.createdAt);
 
-  if (course.languageCode.startsWith("es")) {
+  if (resources.structures.length) {
     const lessonIds = new Set(
       course.units.flatMap((unit) => unit.lessons.map((lesson) => lesson.id)),
     );
     for (const attempt of state.structureAttempts ?? []) {
-      const structure = findReviewStructure(attempt.structureId);
+      const structure = resources.structures.find((entry) => entry.id === attempt.structureId);
       if (!structure || !lessonIds.has(structure.lessonId)) continue;
       const score = attempt.correct ? 100 : 0;
       addEvidence(skillEvidence, "grammar", score, attempt.createdAt);
@@ -239,7 +239,7 @@ export function buildLearningProfile(
     ...vocabularyItems
       .filter((word) => itemEvidence.has(`word:${word.id}`))
       .map((word) =>
-        metric(`word:${word.id}`, word.spanish, itemEvidence.get(`word:${word.id}`) ?? [], now),
+        metric(`word:${word.id}`, word.term ?? word.spanish ?? word.id, itemEvidence.get(`word:${word.id}`) ?? [], now),
       ),
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("pronunciation:"))
@@ -247,10 +247,10 @@ export function buildLearningProfile(
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("number:"))
       .map(([id, evidence]) => {
-        const prompt = findNumberPrompt(id.slice("number:".length));
+        const prompt = resources.numbers.find((entry) => entry.id === id.slice("number:".length));
         return metric(
           id,
-          prompt ? `${numberCategoryLabels[prompt.category]} · ${prompt.display}` : id,
+          prompt ? `${resources.numberCategoryLabels[prompt.category] ?? prompt.category} · ${prompt.display}` : id,
           evidence,
           now,
         );
@@ -258,7 +258,12 @@ export function buildLearningProfile(
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("structure:"))
       .map(([id, evidence]) =>
-        metric(id, findReviewStructure(id.slice("structure:".length))?.title ?? id, evidence, now),
+        metric(
+          id,
+          resources.structures.find((entry) => entry.id === id.slice("structure:".length))?.title ?? id,
+          evidence,
+          now,
+        ),
       ),
   ];
 

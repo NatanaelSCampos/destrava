@@ -53,6 +53,7 @@ export function MicroLessonPractice({ activityId }: { activityId: string }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          courseId: course.id,
           activityId,
           localMistake: {
             originalAnswer: mistake.originalAnswer,

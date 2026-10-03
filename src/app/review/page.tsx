@@ -8,10 +8,9 @@ import { ReviewQueue } from "@/components/review/review-queue";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { currentUnit } from "@/domain/study/progress";
 import { featureFlags } from "@/lib/feature-flags";
-import { reviewStructures } from "@/content/review-structures";
 
 export default function ReviewPage() {
-  const { state, vocabularyItems, course } = useStudy();
+  const { state, vocabularyItems, course, resources } = useStudy();
   const unit = currentUnit(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>
@@ -22,12 +21,13 @@ export default function ReviewPage() {
     words: dueWords,
     mistakes: dueMistakes,
     structures: dueStructures,
+    pronunciation: duePronunciation,
     total: dueTotal,
-  } = dueReviewCounts(state, vocabularyItems, new Date(), activityIds);
+  } = dueReviewCounts(state, vocabularyItems, new Date(), activityIds, resources.structures);
   const newWords = vocabularyItems.filter((item) => !state.vocabulary[item.id]).length;
-  const newStructures = course.languageCode.startsWith("es")
-    ? reviewStructures.filter((item) => !state.structureReviews?.[item.id]).length
-    : 0;
+  const newStructures = resources.structures.filter(
+    (item) => !state.structureReviews?.[item.id],
+  ).length;
   const [mode, setMode] = useState<"due" | "new">(() =>
     dueTotal === 0 && newWords + newStructures > 0 ? "new" : "due",
   );
@@ -65,6 +65,11 @@ export default function ReviewPage() {
           <span>ESTRUTURAS PARA REVISAR</span>
           <strong>{dueStructures}</strong>
           <small>Frases para criar de memória</small>
+        </div>
+        <div className="panel">
+          <span>PRONÚNCIA PARA PRATICAR</span>
+          <strong>{duePronunciation}</strong>
+          <small>Palavras identificadas nas gravações</small>
         </div>
         <div className="panel">
           <span>CARTÕES NOVOS</span>

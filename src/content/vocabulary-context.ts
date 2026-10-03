@@ -1,5 +1,5 @@
 import type { PublicCourse } from "./public";
-import { regionalVocabularyNote, type SpanishRegion } from "./spanish-regions";
+import type { DictionaryEntry } from "./language-resources";
 
 export type VocabularySense = {
   meaning: string;
@@ -8,50 +8,22 @@ export type VocabularySense = {
 
 type Context = { className?: string; senses: VocabularySense[]; regionalNote?: string };
 
-const spanishContext: Record<string, Context> = {
-  tener: {
-    className: "Verbo",
-    senses: [
-      { meaning: "ter ou possuir", example: "Tengo un libro en casa." },
-      { meaning: "indicar idade", example: "Tengo 27 años." },
-      { meaning: "expressar necessidade ou sensação", example: "Tengo hambre." },
-    ],
-  },
-  vivir: {
-    className: "Verbo",
-    senses: [
-      { meaning: "morar em algum lugar", example: "Vivo en Lima." },
-      { meaning: "viver ou experimentar", example: "Vivimos un momento especial." },
-    ],
-  },
-  hablar: {
-    className: "Verbo",
-    senses: [
-      { meaning: "falar um idioma", example: "Hablo español y portugués." },
-      { meaning: "conversar com alguém", example: "Hablo con Ana por teléfono." },
-    ],
-  },
-  llamarse: {
-    className: "Verbo pronominal",
-    senses: [{ meaning: "chamar-se; dizer seu nome", example: "Me llamo Elena." }],
-  },
-};
+
 
 export function vocabularyContext(
   word: { id: string; translation: string; example: string },
-  languageCode: string,
-  region: SpanishRegion = "general",
+  dictionary: Record<string, DictionaryEntry>,
+  region = "general",
 ): Context {
-  const base =
-    languageCode === "es" && spanishContext[word.id]
-      ? spanishContext[word.id]
-      : { senses: [{ meaning: word.translation, example: word.example }] };
-  if (languageCode !== "es") return base;
-  const regionalNote =
-    word.id === "llamarse" && region === "argentina"
-      ? "Na Argentina, a pergunta informal costuma ser ‘¿Cómo te llamás vos?’. O curso apresenta ‘¿Cómo te llamas tú?’ como base."
-      : regionalVocabularyNote(word.id, region);
-  return { ...base, regionalNote };
+  const entry = dictionary[word.id];
+  if (!entry) return { senses: [{ meaning: word.translation, example: word.example }] };
+  return {
+    className: entry.className,
+    senses: entry.senses,
+    regionalNote: typeof entry.regionalNote === "string"
+      ? entry.regionalNote
+      : entry.regionalNote?.[region] ?? entry.regionalNote?.general,
+  };
 }
 
 function normalized(value: string) {
@@ -63,10 +35,10 @@ function normalized(value: string) {
 
 export function vocabularyOccurrences(
   course: PublicCourse,
-  word: { spanish: string; lessonId: string },
+  word: { term?: string; spanish?: string; lessonId: string },
 ): Array<{ title: string; href: string }> {
   const term = normalized(
-    word.spanish
+    (word.term ?? word.spanish ?? "")
       .split("/")[0]
       .replace(/[¿?¡!]/g, "")
       .trim(),

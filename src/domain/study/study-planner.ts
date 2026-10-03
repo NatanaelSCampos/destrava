@@ -4,7 +4,7 @@ import { buildLearningProfile } from "./learning-profile";
 import { LearningRecommendationEngine } from "./learning-recommendation-engine";
 import { featureFlags } from "@/lib/feature-flags";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
-import { reviewStructures } from "@/content/review-structures";
+import type { LanguageResources } from "@/content/language-resources";
 
 function reviewCandidates(
   course: PublicCourse,
@@ -12,6 +12,7 @@ function reviewCandidates(
   vocabularyItems: ReadonlyArray<{ id: string; lessonId: string }>,
   now: Date,
   mode: SessionMode,
+  resources: Pick<LanguageResources, "structures">,
 ): PlannedReviewItem[] {
   const activityIds = new Set(
     course.units.flatMap((unit) =>
@@ -58,8 +59,8 @@ function reviewCandidates(
       );
     })
     .map((word): PlannedReviewItem => ({ kind: "word", id: word.id }));
-  const structures = course.languageCode.startsWith("es")
-    ? reviewStructures
+  const structures = resources.structures.length
+    ? resources.structures
         .filter((item) => {
           const progress = state.structureReviews?.[item.id];
           return (
@@ -72,29 +73,42 @@ function reviewCandidates(
         })
         .map((item): PlannedReviewItem => ({ kind: "structure", id: item.id }))
     : [];
-  return [...mistakes, ...words, ...structures];
+  const pronunciation = Object.values(state.pronunciationReviews ?? {})
+    .filter((item) => activityIds.has(item.activityId) && ReviewScheduler.isDue(item.schedule, now))
+    .map((item): PlannedReviewItem => ({ kind: "pronunciation", id: item.id }));
+  return [...mistakes, ...pronunciation, ...words, ...structures];
 }
 
 export function buildStudyPlan(
   course: PublicCourse,
   state: StudyState,
   dailyMinutes: number,
-  vocabularyItems: ReadonlyArray<{ id: string; spanish: string; lessonId: string }> = [],
+  vocabularyItems: ReadonlyArray<{ id: string; term?: string; spanish?: string; lessonId: string }>,
+  resources: LanguageResources,
   now = new Date(),
   mode: SessionMode = "guided",
 ): PlannedItem[] {
-  const profile = buildLearningProfile(course, state, vocabularyItems, now);
+  const profile = buildLearningProfile(course, state, vocabularyItems, resources, now);
   const recommendations = LearningRecommendationEngine.recommend(
     course,
     state,
     profile,
     vocabularyItems,
+    resources,
     { now, includeReviews: false },
   );
   const plan: PlannedItem[] = [];
   const budget = Math.max(1, Math.round(dailyMinutes));
+  const focusedConversation = mode === "difficulties" && budget >= 10
+    ? resources.conversationScenarios.find((scenario) =>
+        scenario.focusConceptIds?.some((id) =>
+          profile.concepts.some((concept) => concept.id === id && concept.score !== null && concept.score < 75),
+        ),
+      ) ?? resources.conversationScenarios[0]
+    : undefined;
+  const activityBudget = budget - (focusedConversation ? 3 : 0);
   const candidates = featureFlags.SPACED_REPETITION
-    ? reviewCandidates(course, state, vocabularyItems, now, mode)
+    ? reviewCandidates(course, state, vocabularyItems, now, mode, resources)
     : [];
   if (candidates.length) {
     const count = Math.min(candidates.length, Math.max(1, Math.floor(budget / 3)), 5);
@@ -114,7 +128,7 @@ export function buildStudyPlan(
       plan[0].reviewItems?.some((item) => item.kind === "mistake" && item.id === recommendation.id)
     )
       continue;
-    if (plan.reduce((sum, item) => sum + item.minutes, 0) + recommendation.minutes > budget)
+    if (plan.reduce((sum, item) => sum + item.minutes, 0) + recommendation.minutes > activityBudget)
       continue;
     plan.push({
       kind: recommendation.kind,
@@ -123,6 +137,14 @@ export function buildStudyPlan(
       minutes: recommendation.minutes,
     });
     if (plan.length >= 7) break;
+  }
+  if (focusedConversation && plan.length > 0) {
+    plan.push({
+      kind: "conversation",
+      id: focusedConversation.id,
+      title: `Conversa curta: ${focusedConversation.title}`,
+      minutes: 3,
+    });
   }
   const review = plan.find((item) => item.kind === "review");
   if (review && review.reviewItems) {

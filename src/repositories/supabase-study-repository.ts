@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { PublicCourse } from "@/content/public";
 import type { VocabularyItem } from "@/components/study-provider";
 import type { StudyState } from "@/domain/study/study-state";
+import { readCourseState } from "@/domain/study/course-state-storage";
 import { skillProgress, unitProgress } from "@/domain/study/progress";
 import type { Skill } from "@/content/schema";
 
@@ -15,15 +16,23 @@ export class SupabaseStudyRepository {
     private userId: string,
   ) {}
 
-  async load(): Promise<StudyState | null> {
-    const { data, error } = await this.db
-      .from("user_study_state")
+  async load(courseId: string, languageCode: string): Promise<StudyState | null> {
+    const { data: courseData, error: courseError } = await this.db
+      .from("user_course_state")
       .select("state")
       .eq("user_id", this.userId)
+      .eq("course_id", courseId)
       .maybeSingle();
-    if (error) throw new Error(`Não foi possível carregar seu progresso: ${error.message}`);
-    if (!data?.state) return null;
-    const state = data.state as StudyState;
+    if (courseError) throw new Error(`Não foi possível carregar seu progresso: ${courseError.message}`);
+    let raw = courseData?.state;
+    if (!raw) {
+      const { data: legacy, error } = await this.db.from("user_study_state")
+        .select("state").eq("user_id", this.userId).maybeSingle();
+      if (error) throw new Error(`Não foi possível carregar seu progresso anterior: ${error.message}`);
+      raw = legacy?.state;
+    }
+    if (!raw) return null;
+    const state = readCourseState(raw, courseId, languageCode);
     const speaking = await Promise.all(
       (state.speaking ?? []).map(async (submission) => {
         if (!submission.audioPath) return submission;
@@ -44,10 +53,11 @@ export class SupabaseStudyRepository {
       ),
     };
     const { error } = await this.db
-      .from("user_study_state")
+      .from("user_course_state")
       .upsert(
-        { user_id: this.userId, state: remoteState, updated_at: new Date().toISOString() },
-        { onConflict: "user_id" },
+        { user_id: this.userId, course_id: course.id, language_code: course.languageCode,
+          state: remoteState, updated_at: new Date().toISOString() },
+        { onConflict: "user_id,course_id" },
       );
     if (error) throw new Error(`Não foi possível salvar seu progresso: ${error.message}`);
     await this.projectNormalizedData(remoteState, course, vocabularyItems);
@@ -194,6 +204,9 @@ export class SupabaseStudyRepository {
           id: mistake.id,
           user_id: uid,
           unit_id: activityToUnit.get(mistake.activityId),
+          course_id: course.id,
+          language_code: course.languageCode,
+          topic_id: mistake.topicId ?? null,
           activity_id: mistake.activityId,
           category: mistake.category,
           original_answer: mistake.originalAnswer,
@@ -203,6 +216,7 @@ export class SupabaseStudyRepository {
           times_correct: mistake.timesCorrect,
           last_missed_at: mistake.lastMissedAt,
           last_reviewed_at: mistake.lastReviewedAt,
+          last_correct_at: mistake.lastCorrectAt ?? null,
         })),
     );
     await this.upsert("review_schedules", [
@@ -231,6 +245,17 @@ export class SupabaseStudyRepository {
         consecutive_correct: item.schedule.consecutiveCorrect,
       })),
     ]);
+    await this.upsert("user_review_targets", [
+      ...Object.entries(state.structureReviews ?? {}).map(([targetId, item]) => ({
+        user_id: uid, course_id: course.id, target_kind: "structure", target_id: targetId,
+        payload: {}, schedule: item.schedule, updated_at: now,
+      })),
+      ...Object.entries(state.pronunciationReviews ?? {}).map(([targetId, item]) => ({
+        user_id: uid, course_id: course.id, target_kind: "pronunciation", target_id: targetId,
+        payload: { activityId: item.activityId, term: item.term, referenceText: item.referenceText,
+          lastAccuracy: item.lastAccuracy }, schedule: item.schedule, updated_at: now,
+      })),
+    ], "user_id,course_id,target_kind,target_id");
     await this.upsert(
       "reviews",
       (state.reviews ?? []).map((review) => ({

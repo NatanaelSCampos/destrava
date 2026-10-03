@@ -19,8 +19,7 @@ import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { PlannedReviewItem } from "@/domain/study/study-state";
 import { wordReviewCard } from "@/domain/review/review-card";
-import { findReviewStructure, reviewStructures } from "@/content/review-structures";
-import { reviewClozeForms, visualVocabulary, type VisualCue } from "@/content/visual-vocabulary";
+import type { VisualCue } from "@/content/visual-vocabulary";
 
 const visualIcons = {
   home: House,
@@ -32,7 +31,7 @@ const visualIcons = {
 };
 
 type ReviewItem = {
-  kind: "word" | "mistake" | "structure";
+  kind: "word" | "mistake" | "structure" | "pronunciation";
   id: string;
   front: string;
   back: string;
@@ -55,7 +54,7 @@ export function ReviewQueue({
   plannedItems?: PlannedReviewItem[];
   onComplete?: () => void;
 }) {
-  const { course, vocabularyItems, state, reviewWord, reviewError, reviewStructureCard } =
+  const { course, resources, vocabularyItems, state, reviewWord, reviewError, reviewStructureCard } =
     useStudy();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -85,8 +84,9 @@ export function ReviewQueue({
               kind: "word",
               id: word.id,
               ...wordReviewCard(word, state.vocabulary[id]?.schedule.reviewCount ?? 0, {
-                visual: course.languageCode.startsWith("es") ? visualVocabulary[id] : undefined,
-                clozeForms: course.languageCode.startsWith("es") ? reviewClozeForms[id] : undefined,
+                visual: resources.visualVocabulary[id],
+                clozeForms: resources.reviewClozeForms[id],
+                languageLabel: resources.languageLabel,
               }),
             },
           ]
@@ -113,8 +113,8 @@ export function ReviewQueue({
         : [];
     };
     const structureCard = (id: string): ReviewItem[] => {
-      const structure = findReviewStructure(id);
-      if (!structure || !course.languageCode.startsWith("es")) return [];
+      const structure = resources.structures.find((entry) => entry.id === id);
+      if (!structure) return [];
       return [
         {
           kind: "structure",
@@ -129,13 +129,29 @@ export function ReviewQueue({
         },
       ];
     };
+    const pronunciationCard = (id: string): ReviewItem[] => {
+      const target = state.pronunciationReviews?.[id];
+      const href = target && activityHref(target.activityId);
+      return target && href ? [{
+        kind: "pronunciation", id,
+        front: target.term,
+        back: target.referenceText,
+        example: target.lastAccuracy === null ? "Trecho não reconhecido" : `Última clareza: ${Math.round(target.lastAccuracy)}/100`,
+        frontLabel: "PRONÚNCIA PARA PRATICAR",
+        backLabel: "FRASE DA ATIVIDADE",
+        spokenText: target.referenceText,
+        activityHref: href,
+      }] : [];
+    };
     if (plannedItems) {
       return plannedItems.flatMap((selected): ReviewItem[] =>
         selected.kind === "word"
           ? wordCard(selected.id)
           : selected.kind === "structure"
             ? structureCard(selected.id)
-            : mistakeCard(selected.id),
+            : selected.kind === "pronunciation"
+              ? pronunciationCard(selected.id)
+              : mistakeCard(selected.id),
       );
     }
     const words = vocabularyItems
@@ -151,8 +167,8 @@ export function ReviewQueue({
         : Object.values(state.mistakes)
             .filter((item) => ReviewScheduler.isDue(item.schedule))
             .flatMap((item) => mistakeCard(item.activityId));
-    const structures = course.languageCode.startsWith("es")
-      ? reviewStructures
+    const structures = resources.structures.length
+      ? resources.structures
           .filter((entry) =>
             mode === "new"
               ? !state.structureReviews?.[entry.id]
@@ -161,15 +177,20 @@ export function ReviewQueue({
           )
           .flatMap((entry) => structureCard(entry.id))
       : [];
-    return [...mistakes, ...structures, ...words];
+    const pronunciation = mode === "new" ? [] : Object.values(state.pronunciationReviews ?? {})
+      .filter((entry) => ReviewScheduler.isDue(entry.schedule))
+      .flatMap((entry) => pronunciationCard(entry.id));
+    return [...mistakes, ...pronunciation, ...structures, ...words];
   }, [
     mode,
     plannedItems,
     state.vocabulary,
     state.mistakes,
     state.structureReviews,
+    state.pronunciationReviews,
     vocabularyItems,
     course,
+    resources,
   ]);
   const pending = items.filter((item) => !finishedIds.includes(`${item.kind}-${item.id}`));
   const item = pending[index] ?? pending[0];
@@ -211,6 +232,25 @@ export function ReviewQueue({
       </div>
     );
 
+  if (item.kind === "pronunciation")
+    return (
+      <div className="review-queue panel">
+        <span className="eyebrow">PRONÚNCIA · {finishedIds.length + 1} DE {items.length}</span>
+        <h2>{item.front}</h2>
+        <p>Ouça a frase e grave uma nova tentativa na atividade. A data da revisão muda somente depois da avaliação da gravação.</p>
+        <p lang={course.languageCode}>{item.back}</p>
+        <SpeakButton text={item.spokenText} label="Ouvir frase" withLabel />
+        <small>{item.example}</small>
+        <div className="flashcard-actions">
+          <Link href={item.activityHref ?? "#"} className="primary-button">Gravar nova tentativa <ArrowRight size={16} /></Link>
+          <button type="button" className="secondary-button" onClick={() => {
+            setFinishedIds((current) => [...current, `${item.kind}-${item.id}`]);
+            setIndex(0);
+          }}>Ver próximo item</button>
+        </div>
+      </div>
+    );
+
   return (
     <div className="review-queue">
       <div className="review-queue-top">
@@ -244,7 +284,7 @@ export function ReviewQueue({
           flipped) && (
           <SpeakButton
             text={item.spokenText}
-            label="Ouvir palavra ou frase em espanhol"
+            label={`Ouvir palavra ou frase em ${resources.languageLabel}`}
             withLabel
           />
         )}

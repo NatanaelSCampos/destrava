@@ -7,7 +7,7 @@ import type { Skill } from "@/content/schema";
 import { writingFeedbackSchema } from "@/domain/ai/schemas";
 import type { NumberMode } from "@/domain/numbers/number-practice";
 import type { SpanishRegion } from "@/content/spanish-regions";
-import { findReviewStructure } from "@/content/review-structures";
+import type { ReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 import type { AdaptiveAnswer } from "@/domain/study/adaptive-assessment";
@@ -38,8 +38,16 @@ export type VocabularyProgress = {
   schedule: ReviewSchedule;
 };
 export type SessionMode = "guided" | "difficulties";
-export type PlannedReviewItem = { kind: "word" | "mistake" | "structure"; id: string };
+export type PlannedReviewItem = { kind: "word" | "mistake" | "structure" | "pronunciation"; id: string };
 export type StructureReviewProgress = { id: string; schedule: ReviewSchedule };
+export type PronunciationReviewProgress = {
+  id: string;
+  activityId: string;
+  term: string;
+  referenceText: string;
+  lastAccuracy: number | null;
+  schedule: ReviewSchedule;
+};
 export type StructureReviewAttempt = {
   id: string;
   structureId: string;
@@ -47,7 +55,7 @@ export type StructureReviewAttempt = {
   createdAt: string;
 };
 export type PlannedItem = {
-  kind: "activity" | "review";
+  kind: "activity" | "review" | "conversation";
   id: string;
   title: string;
   minutes: number;
@@ -56,6 +64,9 @@ export type PlannedItem = {
 export type Mistake = {
   id: string;
   activityId: string;
+  courseId?: string;
+  languageCode?: string;
+  topicId?: string;
   category: Skill | "spelling";
   originalAnswer: string;
   correctAnswer: string;
@@ -64,6 +75,7 @@ export type Mistake = {
   timesCorrect: number;
   lastMissedAt: string;
   lastReviewedAt: string | null;
+  lastCorrectAt?: string | null;
   schedule: ReviewSchedule;
 };
 
@@ -166,11 +178,14 @@ export type AdaptiveAssessmentAttempt = {
 };
 
 export type StudyState = {
+  courseId?: string;
+  languageCode?: string;
   profile: StudentProfile;
   completedActivityIds: string[];
   attempts: Attempt[];
   vocabulary: Record<string, VocabularyProgress>;
   structureReviews: Record<string, StructureReviewProgress>;
+  pronunciationReviews: Record<string, PronunciationReviewProgress>;
   structureAttempts: StructureReviewAttempt[];
   mistakes: Record<string, Mistake>;
   sessions: StudySession[];
@@ -201,6 +216,7 @@ export const initialStudyState: StudyState = {
   attempts: [],
   vocabulary: {},
   structureReviews: {},
+  pronunciationReviews: {},
   structureAttempts: [],
   mistakes: {},
   sessions: [],
@@ -244,6 +260,9 @@ export function recordAdaptiveAssessment(
     mistakes[answer.activityId] = {
       id: previous?.id ?? crypto.randomUUID(),
       activityId: answer.activityId,
+      courseId: course.id,
+      languageCode: course.languageCode,
+      topicId: activity.conceptIds[0],
       category: activity.skill,
       originalAnswer: answer.answer,
       correctAnswer: answer.correctAnswer,
@@ -347,6 +366,9 @@ function updateEvaluatedMistake(
     ? {
         id: previous?.id ?? crypto.randomUUID(),
         activityId,
+        courseId: state.courseId,
+        languageCode: state.languageCode,
+        topicId: previous?.topicId,
         category,
         originalAnswer,
         correctAnswer,
@@ -355,6 +377,7 @@ function updateEvaluatedMistake(
         timesCorrect: previous?.timesCorrect ?? 0,
         lastMissedAt: now,
         lastReviewedAt: previous?.lastReviewedAt ?? null,
+        lastCorrectAt: previous?.lastCorrectAt ?? null,
         schedule: ReviewScheduler.afterAnswer(
           previous?.schedule ?? ReviewScheduler.initial(),
           false,
@@ -364,6 +387,7 @@ function updateEvaluatedMistake(
         ...previous!,
         timesCorrect: previous!.timesCorrect + 1,
         lastReviewedAt: now,
+        lastCorrectAt: now,
         schedule: ReviewScheduler.afterAnswer(previous!.schedule, true),
       };
   return { ...state, mistakes: { ...state.mistakes, [activityId]: next } };
@@ -399,7 +423,26 @@ export function recordEvaluatedSpeaking(
     (word) => word.errorType !== "None" || (word.accuracy !== null && word.accuracy < 75),
   );
   const failed = feedback.accuracy < 75 || feedback.fluency < 75 || feedback.completeness < 75;
-  return updateEvaluatedMistake(
+  const now = new Date();
+  const pronunciationReviews = { ...state.pronunciationReviews };
+  for (const word of feedback.words) {
+    const term = word.text.trim().toLocaleLowerCase();
+    if (!term) continue;
+    const id = `${activityId}:${term}`;
+    const previous = pronunciationReviews[id];
+    const correct = word.errorType === "None" && word.accuracy !== null && word.accuracy >= 75;
+    if (!previous && correct) continue;
+    const schedule = ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(now), correct, now);
+    pronunciationReviews[id] = {
+      id,
+      activityId,
+      term: word.text,
+      referenceText: feedback.referenceText,
+      lastAccuracy: word.accuracy,
+      schedule: correct ? schedule : { ...schedule, nextReviewAt: now.toISOString() },
+    };
+  }
+  const next = updateEvaluatedMistake(
     state,
     activityId,
     "speaking",
@@ -410,6 +453,7 @@ export function recordEvaluatedSpeaking(
       ? `Trechos para repetir: ${weakWords.map((word) => word.text).join(", ")}. Clareza ${Math.round(feedback.accuracy)}/100; fluência ${Math.round(feedback.fluency)}/100.`
       : `Clareza ${Math.round(feedback.accuracy)}/100; fluência ${Math.round(feedback.fluency)}/100.`,
   );
+  return { ...next, pronunciationReviews };
 }
 
 export function recordVocabularySignal(
@@ -484,6 +528,9 @@ export function recordAttempt(
     mistakes[activity.id] = {
       id: previous?.id ?? crypto.randomUUID(),
       activityId: activity.id,
+      courseId: state.courseId,
+      languageCode: state.languageCode,
+      topicId: activity.conceptIds[0],
       category: activity.skill,
       originalAnswer: answer,
       correctAnswer: result.correctAnswer,
@@ -492,6 +539,7 @@ export function recordAttempt(
       timesCorrect: previous?.timesCorrect ?? 0,
       lastMissedAt: createdAt,
       lastReviewedAt: previous?.lastReviewedAt ?? null,
+      lastCorrectAt: previous?.lastCorrectAt ?? null,
       schedule: ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(), false),
     };
   } else if (mistakes[activity.id]) {
@@ -500,6 +548,7 @@ export function recordAttempt(
       ...previous,
       timesCorrect: previous.timesCorrect + 1,
       lastReviewedAt: createdAt,
+      lastCorrectAt: createdAt,
       schedule: ReviewScheduler.afterAnswer(previous.schedule, true),
     };
   }
@@ -597,8 +646,9 @@ export function reviewStructure(
   state: StudyState,
   structureId: string,
   correct: boolean,
+  structures: ReadonlyArray<ReviewStructure>,
 ): StudyState {
-  if (!findReviewStructure(structureId)) return state;
+  if (!structures.some((item) => item.id === structureId)) return state;
   const current = state.structureReviews?.[structureId] ?? {
     id: crypto.randomUUID(),
     schedule: ReviewScheduler.initial(),
@@ -640,6 +690,7 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
         timesCorrect: mistake.timesCorrect + Number(correct),
         timesMissed: mistake.timesMissed + Number(!correct),
         lastReviewedAt: new Date().toISOString(),
+        lastCorrectAt: correct ? new Date().toISOString() : mistake.lastCorrectAt ?? null,
         schedule,
       },
     },

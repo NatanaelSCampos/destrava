@@ -14,7 +14,6 @@ import type { PublicActivity, PublicCourse } from "@/content/public";
 import type { GradeResult } from "@/domain/activities/grader";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import {
-  initialStudyState,
   markActivityComplete,
   recordAttempt,
   recordEvaluatedSpeaking,
@@ -48,18 +47,14 @@ import {
   type ConversationCorrectionCategory,
   type ConversationSession,
 } from "@/domain/conversation/conversation-session";
-import { findConversationScenario } from "@/content/conversation-scenarios";
+import { readCourseState } from "@/domain/study/course-state-storage";
+import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
 
-export type VocabularyItem = {
-  id: string;
-  spanish: string;
-  translation: string;
-  example: string;
-  lessonId: string;
-};
+export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
   course: PublicCourse;
+  resources: LanguageResources;
   vocabularyItems: VocabularyItem[];
   state: StudyState;
   ready: boolean;
@@ -124,14 +119,17 @@ const storageKey = "frecuencias-study:v1:demo";
 
 export function StudyProvider({
   course,
-  vocabularyItems,
+  resources,
   children,
 }: {
   course: PublicCourse;
-  vocabularyItems: VocabularyItem[];
+  resources: LanguageResources;
   children: ReactNode;
 }) {
-  const [state, setState] = useState<StudyState>(initialStudyState);
+  const vocabularyItems = resources.vocabulary;
+  const [state, setState] = useState<StudyState>(() =>
+    readCourseState(null, course.id, course.languageCode),
+  );
   const [ready, setReady] = useState(false);
   const [authUserId, setAuthUserId] = useState<string | null>(null);
   const [syncError, setSyncError] = useState("");
@@ -162,39 +160,18 @@ export function StudyProvider({
           const nextRepository = new SupabaseStudyRepository(client, accountId);
           repository.current = nextRepository;
           try {
-            const remote = await nextRepository.load();
+            const remote = await nextRepository.load(course.id, course.languageCode);
             if (cancelled) return;
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}`);
-            const source = remote ?? (cached ? (JSON.parse(cached) as StudyState) : null);
-            if (source)
-              setState({
-                ...initialStudyState,
-                ...source,
-                profile: { ...initialStudyState.profile, ...source.profile },
-                numberAttempts: source.numberAttempts ?? [],
-                microLessonAttempts: source.microLessonAttempts ?? [],
-                conversations: source.conversations ?? [],
-                imageDescriptions: source.imageDescriptions ?? [],
-                adaptiveAssessments: source.adaptiveAssessments ?? [],
-                structureReviews: source.structureReviews ?? {},
-                structureAttempts: source.structureAttempts ?? [],
-              });
+            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
+              ?? window.localStorage.getItem(`${storageKey}:${accountId}`);
+            if (remote || cached)
+              setState(remote ?? readCourseState(JSON.parse(cached!), course.id, course.languageCode));
           } catch (caught) {
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}`);
+            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
+              ?? window.localStorage.getItem(`${storageKey}:${accountId}`);
             if (cached) {
               try {
-                const source = JSON.parse(cached) as StudyState;
-                setState({
-                  ...initialStudyState,
-                  ...source,
-                  numberAttempts: source.numberAttempts ?? [],
-                  microLessonAttempts: source.microLessonAttempts ?? [],
-                  conversations: source.conversations ?? [],
-                  imageDescriptions: source.imageDescriptions ?? [],
-                  adaptiveAssessments: source.adaptiveAssessments ?? [],
-                  structureReviews: source.structureReviews ?? {},
-                  structureAttempts: source.structureAttempts ?? [],
-                });
+                setState(readCourseState(JSON.parse(cached), course.id, course.languageCode));
               } catch {
                 /* Keep fresh state. */
               }
@@ -209,21 +186,10 @@ export function StudyProvider({
           return;
         }
         try {
-          const saved = window.localStorage.getItem(storageKey);
+          const saved = window.localStorage.getItem(`${storageKey}:${course.id}`)
+            ?? window.localStorage.getItem(storageKey);
           if (saved) {
-            const parsed = JSON.parse(saved) as Partial<StudyState>;
-            setState({
-              ...initialStudyState,
-              ...parsed,
-              profile: { ...initialStudyState.profile, ...parsed.profile },
-              numberAttempts: parsed.numberAttempts ?? [],
-              microLessonAttempts: parsed.microLessonAttempts ?? [],
-              conversations: parsed.conversations ?? [],
-              imageDescriptions: parsed.imageDescriptions ?? [],
-              adaptiveAssessments: parsed.adaptiveAssessments ?? [],
-              structureReviews: parsed.structureReviews ?? {},
-              structureAttempts: parsed.structureAttempts ?? [],
-            });
+            setState(readCourseState(JSON.parse(saved), course.id, course.languageCode));
           }
         } catch {
           /* An invalid local draft should not prevent studying. */
@@ -235,11 +201,11 @@ export function StudyProvider({
       cancelled = true;
       window.clearTimeout(timeout);
     };
-  }, []);
+  }, [course.id, course.languageCode]);
 
   useEffect(() => {
     if (!ready) return;
-    const key = authUserId ? `${storageKey}:${authUserId}` : storageKey;
+    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
     window.localStorage.setItem(key, JSON.stringify(state));
     if (!repository.current) return;
     const timeout = window.setTimeout(() => {
@@ -379,8 +345,9 @@ export function StudyProvider({
     [],
   );
   const reviewStructureCard = useCallback(
-    (id: string, correct: boolean) => setState((current) => reviewStructure(current, id, correct)),
-    [],
+    (id: string, correct: boolean) =>
+      setState((current) => reviewStructure(current, id, correct, resources.structures)),
+    [resources.structures],
   );
   const recordVocabularySearch = useCallback(
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_search")),
@@ -489,7 +456,7 @@ export function StudyProvider({
           session,
           studentText,
           reply,
-          findConversationScenario(session.scenarioId)?.objectives.map((item) => item.id) ?? [],
+          resources.conversationScenarios.find((item) => item.id === session.scenarioId)?.objectives.map((item) => item.id) ?? [],
           inputMode,
         );
         if (updated === session) return current;
@@ -527,7 +494,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [],
+    [resources.conversationScenarios],
   );
   const completeConversation = useCallback(
     (sessionId: string) =>
@@ -667,6 +634,7 @@ export function StudyProvider({
   const value = useMemo(
     () => ({
       course,
+      resources,
       vocabularyItems,
       state,
       ready,
@@ -698,6 +666,7 @@ export function StudyProvider({
     }),
     [
       course,
+      resources,
       vocabularyItems,
       state,
       ready,

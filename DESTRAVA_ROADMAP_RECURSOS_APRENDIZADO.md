@@ -78,13 +78,13 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 
 | Item | Implementação | Evidência atual e principal lacuna |
 | --- | --- | --- |
-| 1. Perfil de domínio | **PARCIAL** | Habilidades, tópicos, conceitos e itens usam tentativas, escrita, fala, revisão e diagnóstico. Conversas e imagens têm contagens de prática separadas das notas; ainda falta domínio por curso/idioma e evidência calibrada para atribuir pontuação a essas produções livres. |
+| 1. Perfil de domínio | **IMPLEMENTADO** | O estado e o perfil são isolados por curso/idioma no Supabase; habilidades, tópicos, conceitos e itens recebem tentativas, avaliações e revisões do pacote do idioma. Conversas e imagens entram como evidência qualitativa, sem nota inventada. Uma escala numérica para produção livre dependerá de validação futura. |
 | 2. Motor adaptativo | **IMPLEMENTADO** | Prioriza revisões, erros, pronúncia/fluência, trilha, diagnóstico e sinais de conversa, imagem e comportamento. A aula e Estatísticas oferecem links para a próxima prática; produções livres orientam sugestões sem gerar nota. |
-| 3. Treinar minhas dificuldades | **PARCIAL** | Sessão focada usa erros, palavras difíceis e fala avaliada, com comparação ao terminar. Agora oferece microlição com exercícios gerados a partir de um erro antes e depois da sessão. A microconversa ainda não integra o roteiro da própria sessão. |
+| 3. Treinar minhas dificuldades | **IMPLEMENTADO** | Sessão focada combina revisões, atividades do histórico, microlição opcional e, quando há tempo suficiente, uma missão curta de três respostas dentro do roteiro. O resultado compara tentativas avaliadas; a composição muda com o tempo escolhido e o conteúdo do idioma. |
 | 4. Sessões rápidas | **IMPLEMENTADO** | Home e aula oferecem 5/15/30 minutos ou sessão completa; plano dinâmico e fila de cartões respeitam o orçamento estimado. |
-| 5. Caderno de erros | **PARCIAL** | **Meus erros** recebe exercícios objetivos, correções de escrita e dificuldades avaliadas de fala; guarda uma correção consolidada por atividade e ainda falta vínculo explícito com curso/idioma. |
-| 6. Revisão espaçada unificada | **PARCIAL** | `ReviewScheduler` agenda palavras, estruturas curadas, erros e frases no mesmo fluxo; estruturas têm calendário próprio no JSON do aluno. Pronúncia ainda não tem agendamento granular, e a projeção relacional das estruturas fica para migração futura. |
-| 7. Dicionário contextual | **PARCIAL** | **Vocabulário** mostra sentidos curados, ocorrências, buscas recentes, áudio e revisão automática; há nota regional para termos curados e `llamarse`, mas ainda faltam cobertura ampla e busca por variantes. |
+| 5. Caderno de erros | **IMPLEMENTADO** | **Meus erros** reúne respostas objetivas, escrita e fala avaliada por atividade, com curso, idioma, tópico, histórico de tentativas, acertos e calendário. A projeção relacional ganhou os campos de contexto; cada cartão consolida o erro recorrente da atividade. |
+| 6. Revisão espaçada unificada | **IMPLEMENTADO** | `ReviewScheduler` agenda palavras, estruturas, erros/frases e alvos granulares de pronúncia. Estruturas e pronúncia têm projeção relacional por curso; a data de pronúncia só muda após nova avaliação Azure, sem usar autorrelato como nota. |
+| 7. Dicionário contextual | **IMPLEMENTADO** | **Vocabulário** mostra sentidos, nível do curso, áudio, ocorrências, progresso e revisão por buscas repetidas. A busca inclui significados, exemplos, formas alternativas e variantes regionais; todos os termos da lista do curso têm uma entrada, com sentidos adicionais curados quando disponíveis. Expandir o catálogo é trabalho de conteúdo. |
 | 8. Números ativos | **PARCIAL** | **Fundamentos → Números** oferece catálogo com áudio e exemplos; a prática inclui ditado, ver e falar, ouvir e repetir, com dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
 | 9. Particularidades contextualizadas | **PARCIAL** | **Fundamentos → Variações regionais** compara exemplos de Espanha, México e Argentina com áudio e checagem curta; o professor IA recebe a preferência. Faltam mais categorias, exemplos e integração ao perfil de domínio. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
@@ -120,23 +120,30 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 
 | Frente | Itens | Trabalho restante |
 | --- | --- | --- |
-| Base multilíngua | 1, 5, 7, 8, 9, 29 e 31 | Separar todo o estado e conteúdo por curso/idioma, ampliar os catálogos e adaptar as instruções de IA além do espanhol A1. |
-| Conversação e personalização | 3, 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos; incorporar microconversas na sessão focada e ampliar o catálogo de missões. Exercícios gerados já podem ser acessados antes/depois da sessão por meio da microlição. |
-| Revisão e fala | 6, 10 e 20 | Revisão granular de pronúncia e evolução de produção livre; ritmo/prosódia e shadowing contínuo ainda não estão completos. |
+| Base multilíngua | 8, 9, 29 e 31 | Ampliar catálogos de fundamentos e região; adaptar os fluxos antigos de IA, áudio e telas ainda ligados ao espanhol. O motor de estudo, revisão e dicionário já consome um pacote por idioma. |
+| Conversação e personalização | 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos e ampliar o catálogo de missões. A sessão focada já inclui microconversa. |
+| Revisão e fala | 10 e 20 | Ritmo/prosódia, shadowing contínuo e séries numéricas de produção livre ainda dependem de avaliação confiável. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
 | Avaliação | 22 e 23 | Ampliar o banco adaptativo e a amostra por competência e avaliar escrita livre. O teste final atual continua fixo. |
 | Validação contínua | 33 | A entrega de cada recurso ainda deve passar por proposta, verificação, testes e documentação. |
 | Ainda não iniciado | 26 | AI Bridge: exportar/importar prática com outras IAs. |
 | Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
 
-**Concluídos no escopo descrito:** 2, 4, 11, 12, 15–19, 24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+**Concluídos no escopo descrito:** 1–7, 11, 12, 15–19, 24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
 
 ### Entrega de 2026-10-03 — dificuldades, microlição e recomendações
 
 - Foram reaproveitados o caderno de erros, o provedor de IA com resposta estruturada, a transcrição Azure já usada em conversas, o perfil de aprendizado e o motor de recomendações.
 - A microlição usa apenas o erro e a atividade do curso como contexto. A fala é prática livre, sem nota de pronúncia; as questões objetivas têm resultado e histórico por ponto.
 - O painel de Estatísticas explica também as recomendações de números, conversa e imagem usando o histórico do aluno e o conteúdo curado. A microlição aparece quando existe um erro concreto para fundamentá-la.
-- O treino focado indica a microlição antes e depois da sessão. Incorporar uma microconversa dentro da sessão ainda é a pendência do item 3.
+- O treino focado indica a microlição antes e depois da sessão e inclui uma microconversa no roteiro quando o tempo escolhido permite.
+
+### Entrega de 2026-10-03 — perfil, treino, erros, revisão e dicionário
+
+- Foram reaproveitados `StudyState`, `LearningProfile`, `LearningRecommendationEngine`, `ReviewScheduler`, a página **Meus erros**, o dicionário existente e as missões de conversa. O novo `LanguageResources` mantém palavras, sentidos, estruturas, números, cenários e exemplos próprios do idioma fora das regras de estudo.
+- As migrações `20261003000100`, `20261003000200` e `20261003000300` foram aplicadas no Supabase remoto. O progresso antigo do espanhol foi copiado para `user_course_state`; novas gravações usam uma linha por usuário e curso, com a mesma exigência MFA das tabelas antigas. O caderno passou a projetar curso, idioma, tópico e último acerto.
+- Pronúncia por palavra usa o resultado já fornecido pelo Azure. A revisão aponta a atividade para nova gravação e não altera o calendário ao apenas ouvir ou abrir o cartão. Conversas e descrições livres continuam sem nota numérica.
+- Um novo idioma exige cadastrar seu curso e um pacote de dados em `src/content/course-registry.ts`; os motores de planejamento, revisão e busca consomem as mesmas interfaces. Rotas e telas antigas ainda exclusivas do espanhol são pendência do item 31 e das frentes de fundamentos e região.
 
 ---
 

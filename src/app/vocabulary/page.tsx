@@ -7,20 +7,12 @@ import { useStudy } from "@/components/study-provider";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { vocabularyContext, vocabularyOccurrences } from "@/content/vocabulary-context";
-import { spanishRegion } from "@/content/spanish-regions";
-
-function normalizeSearch(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[¿?¡!]/g, "")
-    .trim()
-    .toLowerCase();
-}
+import { normalizeDictionaryQuery, searchDictionary } from "@/domain/vocabulary/dictionary-search";
 
 export default function VocabularyPage() {
   const {
     course,
+    resources,
     vocabularyItems,
     state,
     markVocabulary,
@@ -30,24 +22,22 @@ export default function VocabularyPage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   useEffect(() => {
-    const searched = normalizeSearch(query);
+    const searched = normalizeDictionaryQuery(query);
     const exact = vocabularyItems.find((word) =>
-      word.spanish.split("/").some((form) => normalizeSearch(form) === searched),
+      [word.term, ...(resources.dictionary[word.id]?.aliases ?? [])]
+        .some((form) => normalizeDictionaryQuery(form) === searched),
     );
     if (!searched || !exact) return;
     const timeout = window.setTimeout(() => recordVocabularySearch(exact.id), 900);
     return () => window.clearTimeout(timeout);
-  }, [query, vocabularyItems, recordVocabularySearch]);
+  }, [query, vocabularyItems, resources.dictionary, recordVocabularySearch]);
   const items = useMemo(
     () =>
-      vocabularyItems.filter((item) => {
+      searchDictionary(resources, query).filter((item) => {
         const status = state.vocabulary[item.id]?.status ?? "new";
-        return (
-          (filter === "all" || filter === status) &&
-          normalizeSearch(`${item.spanish} ${item.translation}`).includes(normalizeSearch(query))
-        );
+        return filter === "all" || (!item.catalogOnly && filter === status);
       }),
-    [vocabularyItems, state.vocabulary, query, filter],
+    [resources, state.vocabulary, query, filter],
   );
   const known = Object.values(state.vocabulary).filter((item) => item.status === "known").length;
   const difficult = Object.values(state.vocabulary).filter(
@@ -95,7 +85,7 @@ export default function VocabularyPage() {
           <Search size={17} />
           <input
             aria-label="Buscar palavra"
-            placeholder="Buscar palavra ou tradução…"
+            placeholder="Buscar palavra, significado ou variante…"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -124,8 +114,8 @@ export default function VocabularyPage() {
           <strong>Buscas recentes</strong>
           <div>
             {recentSearches.map((entry) => (
-              <button key={entry.id} onClick={() => setQuery(entry.word.spanish)}>
-                {entry.word.spanish} <small>{formatDate(entry.at)}</small>
+              <button key={entry.id} onClick={() => setQuery(entry.word.term)}>
+                {entry.word.term} <small>{formatDate(entry.at)}</small>
               </button>
             ))}
           </div>
@@ -135,11 +125,7 @@ export default function VocabularyPage() {
         {items.map((item) => {
           const progress = state.vocabulary[item.id];
           const status = progress?.status ?? "new";
-          const context = vocabularyContext(
-            item,
-            course.languageCode,
-            spanishRegion(state.profile.spanishRegion),
-          );
+          const context = vocabularyContext(item, resources.dictionary, state.profile.spanishRegion);
           const occurrences = vocabularyOccurrences(course, item);
           const unit = course.units.find((entry) =>
             entry.lessons.some((lesson) => lesson.id === item.lessonId),
@@ -170,13 +156,13 @@ export default function VocabularyPage() {
                   {unit ? `UNIDADE ${String(unit.number).padStart(2, "0")}` : course.level}
                 </span>
                 <SpeakButton
-                  text={item.spanish}
-                  label={`Ouvir ${item.spanish}`}
+                  text={item.term}
+                  label={`Ouvir ${item.term}`}
                   className="vocab-sound"
-                  onPlay={() => recordVocabularyAudio(item.id)}
+                  onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
                 />
               </div>
-              <h3 lang={course.languageCode}>{item.spanish}</h3>
+              <h3 lang={course.languageCode}>{item.term}</h3>
               <p className="vocab-translation">{item.translation}</p>
               <div className="text-audio-row vocab-example-row">
                 <p className="vocab-example" lang={course.languageCode}>
@@ -185,7 +171,7 @@ export default function VocabularyPage() {
                 <SpeakButton
                   text={item.example}
                   label="Ouvir frase de exemplo"
-                  onPlay={() => recordVocabularyAudio(item.id)}
+                  onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
                 />
               </div>
               <details className="vocab-context">
@@ -201,7 +187,7 @@ export default function VocabularyPage() {
                       <SpeakButton
                         text={sense.example}
                         label="Ouvir exemplo"
-                        onPlay={() => recordVocabularyAudio(item.id)}
+                        onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
                       />
                     </li>
                   ))}
@@ -209,7 +195,7 @@ export default function VocabularyPage() {
                 {context.regionalNote && (
                   <p>
                     {context.regionalNote}{" "}
-                    <Link href="/basics?topic=regions">Ver variações regionais</Link>
+                    {resources.regionalContentHref && <Link href={resources.regionalContentHref}>Ver variações regionais</Link>}
                   </p>
                 )}
                 {occurrences.length > 0 && (
@@ -234,7 +220,7 @@ export default function VocabularyPage() {
               </details>
               <div className="vocab-card-footer">
                 <span className={`vocab-status ${status}`}>
-                  {status === "new"
+                  {item.catalogOnly ? "Variante regional" : status === "new"
                     ? "Nova"
                     : status === "learning"
                       ? "Aprendendo"
@@ -242,22 +228,22 @@ export default function VocabularyPage() {
                         ? "Conhecida"
                         : "Difícil"}
                 </span>
-                <div>
+                {!item.catalogOnly && <div>
                   <button
-                    aria-label={`Marcar ${item.spanish} como difícil`}
+                    aria-label={`Marcar ${item.term} como difícil`}
                     title="Marcar como difícil"
                     onClick={() => markVocabulary(item.id, "difficult")}
                   >
                     <Star size={16} fill={status === "difficult" ? "currentColor" : "none"} />
                   </button>
                   <button
-                    aria-label={`Marcar ${item.spanish} como conhecida`}
+                    aria-label={`Marcar ${item.term} como conhecida`}
                     title="Marcar como conhecida"
                     onClick={() => markVocabulary(item.id, "known")}
                   >
                     <Check size={17} />
                   </button>
-                </div>
+                </div>}
               </div>
               {progress && (
                 <small className="vocab-due">

@@ -1,11 +1,9 @@
 import type { PublicCourse } from "@/content/public";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
-import { findNumberPrompt, numberCategoryLabels } from "@/domain/numbers/number-practice";
+import type { LanguageResources } from "@/content/language-resources";
 import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
-import { findConversationScenario } from "@/content/conversation-scenarios";
-import { findImageDescriptionScene } from "@/content/image-description-scenes";
 import { featureFlags } from "@/lib/feature-flags";
 
 type RecommendationBase = {
@@ -43,6 +41,7 @@ export class LearningRecommendationEngine {
     state: StudyState,
     profile: LearningProfile,
     vocabularyItems: ReadonlyArray<{ id: string }>,
+    resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "conversationScenarios" | "imageScenes">,
     options: { now?: Date; includeReviews?: boolean } = {},
   ): LearningRecommendation[] {
     const now = options.now ?? new Date();
@@ -73,6 +72,8 @@ export class LearningRecommendationEngine {
         },
         vocabularyItems,
         now,
+        undefined,
+        resources.structures,
       );
       if (due.total)
         add({
@@ -176,16 +177,16 @@ export class LearningRecommendationEngine {
       });
     }
 
-    if (course.languageCode.startsWith("es")) {
+    if (resources.numbers.length) {
       const numberGroups = new Map<string, NonNullable<StudyState["numberAttempts"]>>();
       for (const attempt of state.numberAttempts ?? []) {
-        if (!findNumberPrompt(attempt.promptId)) continue;
+        if (!resources.numbers.some((entry) => entry.id === attempt.promptId)) continue;
         const group = numberGroups.get(attempt.promptId) ?? [];
         group.push(attempt);
         numberGroups.set(attempt.promptId, group);
       }
       for (const [promptId, group] of numberGroups) {
-        const prompt = findNumberPrompt(promptId)!;
+        const prompt = resources.numbers.find((entry) => entry.id === promptId)!;
         const recent = group.sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3);
         if (recent[0].correct && recent.every((item) => item.correct)) continue;
         const misses = recent.filter((item) => !item.correct).length;
@@ -194,7 +195,7 @@ export class LearningRecommendationEngine {
           kind: "number",
           source: "number",
           id: promptId,
-          title: `${numberCategoryLabels[prompt.category]}: ${prompt.display}`,
+          title: `${resources.numberCategoryLabels[prompt.category] ?? prompt.category}: ${prompt.display}`,
           reason: `Você teve dificuldade em ${misses} das últimas ${recent.length} tentativas deste número.`,
           priority: 72 + misses * 6,
           minutes: 3,
@@ -202,7 +203,7 @@ export class LearningRecommendationEngine {
       }
     }
 
-    if (featureFlags.AI_TUTOR && course.languageCode.startsWith("es")) {
+    if (featureFlags.AI_TUTOR) {
       const recentSessions = (state.conversations ?? [])
         .filter(
           (session) =>
@@ -221,7 +222,7 @@ export class LearningRecommendationEngine {
       const repeated = [...categoryCounts.entries()].sort((a, b) => b[1] - a[1])[0];
       const latest = recentSessions[0];
       if (latest && repeated && repeated[1] >= 2) {
-        const scenario = findConversationScenario(latest.scenarioId);
+        const scenario = resources.conversationScenarios.find((entry) => entry.id === latest.scenarioId);
         add({
           kind: "conversation",
           source: "conversation",
@@ -246,7 +247,7 @@ export class LearningRecommendationEngine {
           session.turns.some((turn) => turn.role === "student"),
       );
       if (unfinished) {
-        const scenario = findConversationScenario(unfinished.scenarioId);
+        const scenario = resources.conversationScenarios.find((entry) => entry.id === unfinished.scenarioId);
         if (scenario)
           add({
             kind: "conversation",
@@ -298,7 +299,7 @@ export class LearningRecommendationEngine {
         if (attempt.feedback.correction?.trim())
           imageCorrections.set(attempt.sceneId, (imageCorrections.get(attempt.sceneId) ?? 0) + 1);
       for (const [sceneId, count] of imageCorrections) {
-        const scene = findImageDescriptionScene(sceneId);
+        const scene = resources.imageScenes.find((entry) => entry.id === sceneId);
         if (!scene || count < 2) continue;
         add({
           kind: "image",

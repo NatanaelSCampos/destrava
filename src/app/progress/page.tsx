@@ -50,7 +50,7 @@ function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[]
 }
 
 export default function ProgressPage() {
-  const { course, state, vocabularyItems, recordStudyEvent } = useStudy();
+  const { course, resources, state, vocabularyItems, recordStudyEvent } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems);
   const totalProgress = courseProgress(course, state);
@@ -59,7 +59,7 @@ export default function ProgressPage() {
     ...skillProgress(course, state, item.id),
   }));
   const weakSkills = skillData.filter((item) => item.performance !== null && item.performance < 80);
-  const learningProfile = buildLearningProfile(course, state, vocabularyItems);
+  const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const activityIds = new Set(
     course.units.flatMap((entry) =>
       entry.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
@@ -73,6 +73,7 @@ export default function ProgressPage() {
     state,
     learningProfile,
     vocabularyItems,
+    resources,
     { includeReviews: featureFlags.SPACED_REPETITION },
   )
     .filter((item) => item.source !== "curriculum")
@@ -157,7 +158,7 @@ export default function ProgressPage() {
         {improvements.length ? (
           <div className="improvement-list">
             {improvements.map((item, index) => {
-              const guidance = recommendationGuidance(course, state, item);
+              const guidance = recommendationGuidance(course, state, item, resources);
               const lessonActivityId = item.kind === "activity" && state.mistakes[item.id]
                 ? item.id
                 : item.kind === "review" ? firstDueMistake?.activityId : undefined;

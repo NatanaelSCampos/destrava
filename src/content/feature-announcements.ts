@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-perfil-e-revisao-por-idioma",
+    title: "Seu treino agora conecta erros, fala e vocabulário",
+    summary: "A aula focada inclui uma conversa curta e a revisão mostra pontos específicos de pronúncia.",
+    highlights: [
+      "Em Treinar dificuldades, pratique uma missão de três respostas dentro da sessão.",
+      "Em Revisar, encontre palavras que a avaliação de fala indicou para repetir.",
+      "No dicionário, busque por significado e variantes regionais; Meus erros mostra tentativas anteriores.",
+    ],
+    href: "/study?mode=difficulties",
+    linkLabel: "Abrir treino focado",
+  },
+  {
     id: "2026-10-microlicoes-em-etapas",
     title: "Microlições para treinar um erro até o fim",
     summary: "Seu erro agora vira uma sequência curta de explicação, exercícios e fala.",

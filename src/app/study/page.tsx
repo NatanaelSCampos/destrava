@@ -21,6 +21,7 @@ import { recommendationLink } from "@/lib/recommendation-link";
 import { currentUnit } from "@/domain/study/progress";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { ReviewQueue } from "@/components/review/review-queue";
+import { FocusedConversation } from "@/components/study/focused-conversation";
 import { formatMinutes } from "@/lib/utils";
 import { buildPracticeHistory, sessionComparisons } from "@/domain/study/practice-history";
 import type { SessionMode } from "@/domain/study/study-state";
@@ -47,6 +48,7 @@ function StudyContent() {
   const searchParams = useSearchParams();
   const {
     course,
+    resources,
     state,
     vocabularyItems,
     ready,
@@ -63,18 +65,18 @@ function StudyContent() {
   const targetMinutes = duration === "full" ? state.profile.dailyMinutes : duration;
   const unit = currentUnit(course, state)!;
   const planned = useMemo(
-    () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, new Date(), mode),
-    [course, state, targetMinutes, vocabularyItems, mode],
+    () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode),
+    [course, state, targetMinutes, vocabularyItems, resources, mode],
   );
   const focusedMistakeId = planned.find(
     (entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]),
   )?.id;
   const suggestedPractice = useMemo(() => {
-    const profile = buildLearningProfile(course, state, vocabularyItems);
-    return LearningRecommendationEngine.recommend(course, state, profile, vocabularyItems)
+    const profile = buildLearningProfile(course, state, vocabularyItems, resources);
+    return LearningRecommendationEngine.recommend(course, state, profile, vocabularyItems, resources)
       .filter((entry) => entry.kind === "conversation" || entry.kind === "image")
       .slice(0, 2);
-  }, [course, state, vocabularyItems]);
+  }, [course, state, vocabularyItems, resources]);
   const activeSession = state.sessions.find((session) => session.id === state.activeSessionId);
   const sessionUnit = course.units.find((entry) => entry.id === activeSession?.unitId) ?? unit;
   const plan = activeSession?.plan ?? planned;
@@ -420,6 +422,8 @@ function StudyContent() {
               plannedItems={item.reviewItems}
               onComplete={() => setIndex((current) => Math.min(current + 1, plan.length))}
             />
+          ) : item?.kind === "conversation" ? (
+            <FocusedConversation key={item.id} scenarioId={item.id} />
           ) : activity ? (
             <ActivityRenderer key={activity.id} activity={activity} />
           ) : (

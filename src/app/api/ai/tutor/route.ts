@@ -7,7 +7,7 @@ import { userSpanishRegion } from "@/lib/user-spanish-region";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { frecuenciasA1 } from "@/content/frecuencias-a1";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
-import type { StudyState } from "@/domain/study/study-state";
+import { readCourseState } from "@/domain/study/course-state-storage";
 
 const inputSchema = z.object({
   question: z.string().trim().min(3).max(500),
@@ -40,12 +40,13 @@ export async function POST(request: Request) {
     const client = guard.userId ? await createSupabaseServerClient() : null;
     const { data } = client
       ? await client
-          .from("user_study_state")
+          .from("user_course_state")
           .select("state")
           .eq("user_id", guard.userId)
+          .eq("course_id", frecuenciasA1.id)
           .maybeSingle()
       : { data: null };
-    const state = data?.state as StudyState | null | undefined;
+    const state = data?.state ? readCourseState(data.state, frecuenciasA1.id) : null;
     const relevantMistakes = state
       ? Object.values(state.mistakes ?? {})
           .sort(

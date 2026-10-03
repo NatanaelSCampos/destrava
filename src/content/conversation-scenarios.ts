@@ -1,6 +1,7 @@
 export type MissionObjective = { id: string; label: string; hint: string };
 export type ConversationScenario = {
   id: string;
+  focusConceptIds?: string[];
   title: string;
   setting: string;
   character: string;
@@ -11,6 +12,7 @@ export type ConversationScenario = {
 export const conversationScenarios: ConversationScenario[] = [
   {
     id: "new-colleague",
+    focusConceptIds: ["greetings", "residence", "profession", "personal-questions"],
     title: "Conheça um colega",
     setting: "Você chegou ao primeiro dia de trabalho e encontra uma pessoa da equipe.",
     character: "Alex, um colega simpático que está se apresentando.",
