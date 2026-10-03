@@ -30,7 +30,12 @@ function normalize(
     ...source,
     courseId,
     languageCode: languageCode || source.languageCode || (courseId === LEGACY_COURSE_ID ? "es" : ""),
-    profile: { ...initialStudyState.profile, ...source.profile },
+    profile: {
+      ...initialStudyState.profile,
+      ...source.profile,
+      variantId: source.profile?.variantId ??
+        ((source.profile as unknown as { spanishRegion?: string } | undefined)?.spanishRegion ?? "general"),
+    },
     completedActivityIds: source.completedActivityIds ?? [],
     attempts: source.attempts ?? [],
     vocabulary: source.vocabulary ?? {},

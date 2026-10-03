@@ -1,0 +1,6 @@
+[
+  { "letter": "M", "name": "eme", "word": "milo", "translation": "olá", "example": "Milo, mira!", "kind": "consonant" },
+  { "letter": "A", "name": "a", "word": "sava", "translation": "você", "example": "Sava mira.", "kind": "vowel" },
+  { "letter": "T", "name": "te", "word": "talo", "translation": "eu", "example": "Talo mira.", "kind": "consonant" },
+  { "letter": "O", "name": "o", "word": "nori", "translation": "obrigado", "example": "Nori, mira.", "kind": "vowel" }
+]

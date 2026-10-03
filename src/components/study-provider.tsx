@@ -49,17 +49,20 @@ import {
 } from "@/domain/conversation/conversation-session";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
+import type { LanguagePackage } from "@/content/contracts";
 
 export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
   course: PublicCourse;
   resources: LanguageResources;
+  language: LanguagePackage;
   vocabularyItems: VocabularyItem[];
   state: StudyState;
   ready: boolean;
   authUserId: string | null;
   syncError: string;
+  flushStudyState: () => Promise<void>;
   updateProfile: (profile: Partial<StudentProfile>) => void;
   completeActivity: (id: string) => void;
   submitAttempt: (activity: PublicActivity, answer: string, result: GradeResult) => void;
@@ -120,10 +123,12 @@ const storageKey = "frecuencias-study:v1:demo";
 export function StudyProvider({
   course,
   resources,
+  language,
   children,
 }: {
   course: PublicCourse;
   resources: LanguageResources;
+  language: LanguagePackage;
   children: ReactNode;
 }) {
   const vocabularyItems = resources.vocabulary;
@@ -223,6 +228,18 @@ export function StudyProvider({
     }, 700);
     return () => window.clearTimeout(timeout);
   }, [ready, state, authUserId, course, vocabularyItems]);
+
+  const flushStudyState = useCallback(async () => {
+    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
+    window.localStorage.setItem(key, JSON.stringify(state));
+    const currentRepository = repository.current;
+    if (!currentRepository) return;
+    saveQueue.current = saveQueue.current.catch(() => undefined).then(() =>
+      currentRepository.save(state, course, vocabularyItems),
+    );
+    await saveQueue.current;
+    setSyncError("");
+  }, [authUserId, course, state, vocabularyItems]);
 
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
@@ -635,11 +652,13 @@ export function StudyProvider({
     () => ({
       course,
       resources,
+      language,
       vocabularyItems,
       state,
       ready,
       authUserId,
       syncError,
+      flushStudyState,
       updateProfile,
       completeActivity,
       submitAttempt,
@@ -667,11 +686,13 @@ export function StudyProvider({
     [
       course,
       resources,
+      language,
       vocabularyItems,
       state,
       ready,
       authUserId,
       syncError,
+      flushStudyState,
       updateProfile,
       completeActivity,
       submitAttempt,

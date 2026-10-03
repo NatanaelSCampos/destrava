@@ -1,0 +1,3 @@
+[
+  { "id": "xx.mission.meet", "level": "A1", "scenario": "meet_friend", "objectives": ["say-hello", "ask-friend"], "recommendedConcepts": ["xx.greeting", "xx.question"], "title": "Conheça um amigo", "setting": "Você encontra alguém na praça.", "character": "Mira, uma pessoa amistosa.", "opening": "Milo! Sava mira?", "objectiveDetails": [{ "id": "say-hello", "label": "Cumprimentar", "hint": "Milo!" }, { "id": "ask-friend", "label": "Fazer uma pergunta", "hint": "Sava mira?" }] }
+]

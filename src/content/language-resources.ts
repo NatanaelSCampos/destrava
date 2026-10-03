@@ -3,6 +3,8 @@ import type { ConversationScenario } from "./conversation-scenarios";
 import type { NumberPrompt } from "@/domain/numbers/number-practice";
 import type { VisualCue } from "./visual-vocabulary";
 import type { ImageDescriptionScene } from "./image-description-scenes";
+import type { AlphabetLetter } from "./spanish-alphabet";
+import type { RegionalTopic } from "./spanish-regions";
 
 export type VocabularyItem = {
   id: string;
@@ -33,4 +35,6 @@ export type LanguageResources = {
   imageScenes: ImageDescriptionScene[];
   visualVocabulary: Record<string, VisualCue>;
   reviewClozeForms: Record<string, string[]>;
+  alphabet: ReadonlyArray<AlphabetLetter>;
+  regionalTopics: RegionalTopic[];
 };

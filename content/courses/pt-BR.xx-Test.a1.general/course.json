@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0",
+  "contentVersion": "1.0.0",
+  "id": "pt-BR.xx-Test.a1.general",
+  "slug": "testes-a1",
+  "sourceLanguage": "pt-BR",
+  "targetLanguage": "xx-Test",
+  "defaultVariant": "general",
+  "framework": { "name": "CEFR", "entryLevel": "A0", "exitLevel": "A1" },
+  "track": "fixture",
+  "title": "Testês A1",
+  "description": "Curso sintético para verificar a arquitetura multilíngua.",
+  "learningGoals": ["greet_person", "ask_identity"],
+  "provenance": { "origin": "human", "review": { "status": "approved" } }
+}

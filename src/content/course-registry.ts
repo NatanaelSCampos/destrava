@@ -1,10 +1,21 @@
-import { frecuenciasA1 } from "./frecuencias-a1";
-import { spanishResources } from "./spanish-resources";
+import { compiledPackages } from "./generated/registry";
+import { runtimeBundle } from "./runtime-package";
 
-// Server-side registration point. A new language supplies content and a resource pack;
-// the study, review and dictionary engines consume the same interfaces.
-const bundles = [{ course: frecuenciasA1, resources: spanishResources }];
+const bundles = compiledPackages.map(runtimeBundle);
+
+export const defaultCourseId = bundles[0]?.course.id;
+if (!defaultCourseId) throw new Error("No compiled courses are available.");
+
+export function allCourseBundles() {
+  return bundles;
+}
 
 export function findCourseBundle(courseId: string) {
   return bundles.find((bundle) => bundle.course.id === courseId);
+}
+
+export function requireCourseBundle(courseId: string) {
+  const bundle = findCourseBundle(courseId);
+  if (!bundle) throw new Error(`Course not found: ${courseId}`);
+  return bundle;
 }

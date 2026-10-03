@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 import "./pages.css";
 import "./activities.css";
 import "./page-tour.css";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
-import { spanishResources } from "@/content/spanish-resources";
+import { allCourseBundles, defaultCourseId, findCourseBundle } from "@/content/course-registry";
 import { publicCourse } from "@/content/public";
 import { StudyProvider } from "@/components/study-provider";
 import { AppShell } from "@/components/layout/app-shell";
@@ -17,14 +17,18 @@ export const metadata: Metadata = {
   description: "Aprenda espanhol no seu ritmo, pratique com confiança e destrave sua conversa.",
 };
 
-const course = publicCourse(frecuenciasA1);
-
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const activeId = (await cookies()).get("destrava-active-course")?.value ?? defaultCourseId;
+  const bundle = findCourseBundle(activeId) ?? findCourseBundle(defaultCourseId)!;
+  const course = publicCourse(bundle.course);
+  const courseOptions = allCourseBundles().map(({ course, language }) => ({
+    id: course.id, title: course.title, language: language.identity.nativeName,
+  }));
   return (
     <html lang="pt-BR" className={inter.variable}>
       <body>
-        <StudyProvider course={course} resources={spanishResources}>
-          <AppShell>{children}</AppShell>
+        <StudyProvider key={course.id} course={course} resources={bundle.resources} language={bundle.language}>
+          <AppShell courseOptions={courseOptions}>{children}</AppShell>
         </StudyProvider>
       </body>
     </html>

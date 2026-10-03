@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0",
+  "contentVersion": "1.0.0",
+  "id": "xx-Test",
+  "identity": { "name": "Testês", "nativeName": "Testês" },
+  "writingSystem": { "direction": "ltr", "scripts": ["Latin"], "caseSensitive": false },
+  "variants": [{ "id": "general", "name": "Testês geral", "default": true }],
+  "capabilities": {
+    "speechRecognition": false,
+    "textToSpeech": false,
+    "pronunciationAssessment": false,
+    "regionalVariants": false,
+    "romanization": false,
+    "tones": false,
+    "grammaticalGender": false
+  },
+  "speech": { "defaultVariant": "general", "providers": {} },
+  "normalization": {
+    "trimWhitespace": true,
+    "collapseWhitespace": true,
+    "caseInsensitive": true,
+    "ignoreTerminalPunctuation": true,
+    "ignoreDiacritics": false
+  },
+  "modules": { "alphabet": { "enabled": true, "source": "fundamentals/alphabet.json" } },
+  "strategies": { "textTokenizer": "latin-word-v1", "answerNormalizer": "default-latin-v1" }
+}

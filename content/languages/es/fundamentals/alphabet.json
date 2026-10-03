@@ -1,0 +1,226 @@
+[
+  {
+    "letter": "A",
+    "name": "a",
+    "word": "agua",
+    "translation": "água",
+    "example": "El agua está fría.",
+    "kind": "vowel"
+  },
+  {
+    "letter": "B",
+    "name": "be",
+    "word": "barco",
+    "translation": "barco",
+    "example": "El barco está en el puerto.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "C",
+    "name": "ce",
+    "word": "casa",
+    "translation": "casa",
+    "example": "La casa es pequeña.",
+    "kind": "consonant",
+    "note": "Antes de E e I, o C costuma soar como S na América Latina e como o TH de think em boa parte da Espanha."
+  },
+  {
+    "letter": "D",
+    "name": "de",
+    "word": "día",
+    "translation": "dia",
+    "example": "Hoy es un buen día.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "E",
+    "name": "e",
+    "word": "escuela",
+    "translation": "escola",
+    "example": "La escuela está cerca.",
+    "kind": "vowel"
+  },
+  {
+    "letter": "F",
+    "name": "efe",
+    "word": "familia",
+    "translation": "família",
+    "example": "Mi familia vive aquí.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "G",
+    "name": "ge",
+    "word": "gato",
+    "translation": "gato",
+    "example": "El gato duerme.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "H",
+    "name": "hache",
+    "word": "hola",
+    "translation": "olá",
+    "example": "Hola, ¿cómo estás?",
+    "kind": "consonant",
+    "note": "A letra H não tem som em palavras como hola."
+  },
+  {
+    "letter": "I",
+    "name": "i",
+    "word": "isla",
+    "translation": "ilha",
+    "example": "La isla es bonita.",
+    "kind": "vowel"
+  },
+  {
+    "letter": "J",
+    "name": "jota",
+    "word": "jardín",
+    "translation": "jardim",
+    "example": "El jardín tiene flores.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "K",
+    "name": "ka",
+    "word": "kilo",
+    "translation": "quilo",
+    "example": "Necesito un kilo de arroz.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "L",
+    "name": "ele",
+    "word": "libro",
+    "translation": "livro",
+    "example": "Este libro es interesante.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "M",
+    "name": "eme",
+    "word": "mesa",
+    "translation": "mesa",
+    "example": "La mesa está limpia.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "N",
+    "name": "ene",
+    "word": "noche",
+    "translation": "noite",
+    "example": "Buenas noches a todos.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "Ñ",
+    "name": "eñe",
+    "word": "ñandú",
+    "translation": "ema",
+    "example": "El ñandú corre rápido.",
+    "kind": "consonant",
+    "note": "O som de Ñ lembra o NH do português."
+  },
+  {
+    "letter": "O",
+    "name": "o",
+    "word": "ojo",
+    "translation": "olho",
+    "example": "Me duele un ojo.",
+    "kind": "vowel"
+  },
+  {
+    "letter": "P",
+    "name": "pe",
+    "word": "pan",
+    "translation": "pão",
+    "example": "Quiero pan, por favor.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "Q",
+    "name": "cu",
+    "word": "queso",
+    "translation": "queijo",
+    "example": "Me gusta el queso.",
+    "kind": "consonant",
+    "note": "Em que e qui, o U não é pronunciado."
+  },
+  {
+    "letter": "R",
+    "name": "erre",
+    "word": "río",
+    "translation": "rio",
+    "example": "El río es largo.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "S",
+    "name": "ese",
+    "word": "sol",
+    "translation": "sol",
+    "example": "Hoy hace sol.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "T",
+    "name": "te",
+    "word": "taza",
+    "translation": "xícara",
+    "example": "La taza está sobre la mesa.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "U",
+    "name": "u",
+    "word": "uno",
+    "translation": "um",
+    "example": "Uno más, por favor.",
+    "kind": "vowel"
+  },
+  {
+    "letter": "V",
+    "name": "uve",
+    "word": "vaca",
+    "translation": "vaca",
+    "example": "La vaca come hierba.",
+    "kind": "consonant",
+    "note": "Nas palavras, B e V normalmente têm o mesmo som."
+  },
+  {
+    "letter": "W",
+    "name": "uve doble",
+    "word": "web",
+    "translation": "site",
+    "example": "La web del museo es útil.",
+    "kind": "consonant",
+    "note": "Aparece sobretudo em palavras de origem estrangeira."
+  },
+  {
+    "letter": "X",
+    "name": "equis",
+    "word": "xilófono",
+    "translation": "xilofone",
+    "example": "El xilófono suena bien.",
+    "kind": "consonant"
+  },
+  {
+    "letter": "Y",
+    "name": "ye",
+    "word": "yo",
+    "translation": "eu",
+    "example": "Yo estudio español.",
+    "kind": "consonant",
+    "note": "I griega também é um nome usado para esta letra."
+  },
+  {
+    "letter": "Z",
+    "name": "zeta",
+    "word": "zapato",
+    "translation": "sapato",
+    "example": "El zapato es rojo.",
+    "kind": "consonant",
+    "note": "O som varia: em grande parte da América lembra S; em boa parte da Espanha, lembra o TH inglês."
+  }
+]

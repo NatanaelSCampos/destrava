@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizationRulesSchema } from "./contracts";
 
 export const skillSchema = z.enum([
   "vocabulary",
@@ -36,6 +37,7 @@ const activityBase = z.object({
   conceptIds: z.array(z.string().min(1)).default([]),
   minutes: z.number().positive(),
   explanation: z.string().optional(),
+  normalization: normalizationRulesSchema.optional(),
   source: z.object({ book: z.enum(["student", "workbook"]), pages: z.string() }).optional(),
   media: z
     .discriminatedUnion("kind", [
@@ -148,7 +150,7 @@ export const courseSchema = z.object({
   id: z.string(),
   slug: z.string(),
   title: z.string(),
-  languageCode: z.string().regex(/^[a-z]{2,3}(?:-[A-Z]{2})?$/),
+  languageCode: z.string().min(2),
   level: z.string(),
   description: z.string(),
   learningConcepts: z

@@ -1,35 +1,34 @@
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
-import { findActivity } from "@/content/schema";
-import { spanishRegions, type SpanishRegion } from "@/content/spanish-regions";
+import { findActivity, type Course } from "@/content/schema";
+import type { LanguagePackage } from "@/content/contracts";
+import { variantLabel } from "@/content/language-variant";
 
 export type RelevantMistake = { activityId: string; originalAnswer: string; correctAnswer: string };
 
 export class TutorContextBuilder {
   static build(
+    course: Course,
+    language: LanguagePackage,
     activityId: string | undefined,
     mistakes: RelevantMistake[],
-    region: SpanishRegion = "general",
+    variantId: string,
   ) {
-    const activity = activityId ? findActivity(frecuenciasA1, activityId) : undefined;
-    const lesson = frecuenciasA1.units
-      .flatMap((unit) => unit.lessons)
-      .find((item) => item.activities.some((entry) => entry.id === activityId));
+    const activity = activityId ? findActivity(course, activityId) : undefined;
+    const unit = course.units.find((item) => item.lessons.some((lesson) =>
+      lesson.activities.some((entry) => entry.id === activityId)));
+    const lesson = unit?.lessons.find((item) => item.activities.some((entry) => entry.id === activityId));
     return {
-      course: frecuenciasA1.title,
-      level: frecuenciasA1.level,
-      spanishRegion: spanishRegions.find((item) => item.id === region)?.label ?? "Geral",
-      unit:
-        frecuenciasA1.units.find((unit) => unit.lessons.some((item) => item.id === lesson?.id))
-          ?.title ?? "Unidade atual",
-      lesson: lesson?.title ?? "Curso A1",
-      activity: activity
-        ? {
-            title: activity.title,
-            prompt: activity.prompt,
-            correctAnswer: "answer" in activity ? activity.answer : null,
-            explanation: activity.explanation ?? null,
-          }
-        : null,
+      course: course.title,
+      level: course.level,
+      language: language.identity.nativeName,
+      variant: variantLabel(language, variantId),
+      unit: unit?.title ?? "Unidade atual",
+      lesson: lesson?.title ?? "Curso",
+      activity: activity ? {
+        title: activity.title,
+        prompt: activity.prompt,
+        correctAnswer: "answer" in activity ? activity.answer : null,
+        explanation: activity.explanation ?? null,
+      } : null,
       mistakes: mistakes.slice(0, 3).map((item) => ({
         originalAnswer: item.originalAnswer.slice(0, 150),
         correctAnswer: item.correctAnswer.slice(0, 150),

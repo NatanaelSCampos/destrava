@@ -1,0 +1,106 @@
+[
+  {
+    "id": "roleplay.new-colleague",
+    "scenario": "new-colleague",
+    "level": "A1",
+    "character": {
+      "role": "Alex, um colega simpático que está se apresentando."
+    },
+    "objectives": [
+      "say-name",
+      "say-city",
+      "say-profession",
+      "ask-name"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  },
+  {
+    "id": "roleplay.cafe",
+    "scenario": "cafe",
+    "level": "A1",
+    "character": {
+      "role": "Uma pessoa que atende no balcão."
+    },
+    "objectives": [
+      "greet",
+      "order",
+      "ask-price",
+      "thank"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  },
+  {
+    "id": "roleplay.directions",
+    "scenario": "directions",
+    "level": "A1",
+    "character": {
+      "role": "Lucía, uma moradora disposta a ajudar."
+    },
+    "objectives": [
+      "ask-station",
+      "ask-distance",
+      "thank-directions"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  },
+  {
+    "id": "roleplay.market",
+    "scenario": "market",
+    "level": "A1",
+    "character": {
+      "role": "Diego, vendedor de frutas."
+    },
+    "objectives": [
+      "request-fruit",
+      "ask-market-price",
+      "finish-purchase"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  },
+  {
+    "id": "roleplay.hotel",
+    "scenario": "hotel",
+    "level": "A1",
+    "character": {
+      "role": "Sofía, recepcionista do hotel."
+    },
+    "objectives": [
+      "confirm-reservation",
+      "say-reservation-name",
+      "ask-room"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  },
+  {
+    "id": "roleplay.restaurant",
+    "scenario": "restaurant",
+    "level": "A1",
+    "character": {
+      "role": "Mateo, atendente do restaurante."
+    },
+    "objectives": [
+      "request-table",
+      "ask-menu",
+      "order-dinner"
+    ],
+    "constraints": {
+      "maxVocabularyLevel": "A1",
+      "allowHints": true
+    }
+  }
+]

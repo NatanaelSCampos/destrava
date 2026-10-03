@@ -105,18 +105,20 @@ export class SupabaseStudyRepository {
       ),
     );
 
-    await this.upsert("profiles", [
+    await this.upsert("user_course_profiles", [
       {
-        id: uid,
+        user_id: uid,
+        course_id: course.id,
         goal: state.profile.goal,
         daily_minutes: state.profile.dailyMinutes,
         days_per_week: state.profile.daysPerWeek,
         current_level: state.profile.level,
         prior_knowledge: state.profile.priorKnowledge,
+        variant_id: state.profile.variantId,
         onboarding_completed_at: state.profile.onboarded ? now : null,
         updated_at: now,
       },
-    ]);
+    ], "user_id,course_id");
     await this.upsert(
       "user_activity_progress",
       state.completedActivityIds.map((activityId) => ({ user_id: uid, activity_id: activityId })),

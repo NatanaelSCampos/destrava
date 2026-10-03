@@ -1,0 +1,3 @@
+[
+  { "id": "xx.roleplay.meet", "scenario": "meet_friend", "level": "A1", "character": { "role": "friend" }, "objectives": ["say-hello", "ask-friend"], "constraints": { "maxVocabularyLevel": "A1", "allowHints": true } }
+]

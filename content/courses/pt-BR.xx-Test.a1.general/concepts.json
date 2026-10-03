@@ -1,0 +1,4 @@
+[
+  { "id": "xx.greeting", "language": "xx-Test", "type": "communication", "name": "Cumprimentos" },
+  { "id": "xx.question", "language": "xx-Test", "type": "grammar", "name": "Perguntas simples", "prerequisites": ["xx.greeting"] }
+]

@@ -7,6 +7,7 @@ import { reviewClozeForms, visualVocabulary } from "./visual-vocabulary";
 import { regionalTopics, regionalVocabularyNote } from "./spanish-regions";
 import { spanishDictionary } from "./spanish-dictionary";
 import { imageDescriptionScenes } from "./image-description-scenes";
+import { spanishAlphabet } from "./spanish-alphabet";
 
 export const spanishResources: LanguageResources = {
   courseId: "frecuencias-a1",
@@ -45,4 +46,6 @@ export const spanishResources: LanguageResources = {
   imageScenes: imageDescriptionScenes,
   visualVocabulary,
   reviewClozeForms,
+  alphabet: spanishAlphabet,
+  regionalTopics,
 };

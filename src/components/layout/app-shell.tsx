@@ -58,10 +58,15 @@ function isNavActive(href: string, pathname: string) {
   return pathname.startsWith(href) && (href !== "/dashboard" || pathname === href);
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, courseOptions }: {
+  children: ReactNode;
+  courseOptions: Array<{ id: string; title: string; language: string }>;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const { course, resources, state, vocabularyItems, ready, authUserId } = useStudy();
+  const { course, resources, language, state, vocabularyItems, ready, authUserId, flushStudyState } = useStudy();
+  const [switchingCourse, setSwitchingCourse] = useState(false);
+  const [courseError, setCourseError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
   const [tourOpen, setTourOpen] = useState(false);
@@ -136,7 +141,8 @@ export function AppShell({ children }: { children: ReactNode }) {
     (item) =>
       (item.href !== "/speaking" || featureFlags.SPEAKING) &&
       (item.href !== "/conversation" || featureFlags.AI_TUTOR) &&
-      (item.href !== "/describe" || featureFlags.AI_TUTOR),
+      (item.href !== "/describe" || (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
+      (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled)),
   );
   const studyNavCount = 6 + Number(featureFlags.SPEAKING) + 2 * Number(featureFlags.AI_TUTOR);
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
@@ -181,6 +187,32 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
             <ChevronDown size={15} />
           </div>
+          {courseOptions.length > 1 && (
+            <label className="course-switcher">
+              Trocar curso
+              <select value={course.id} disabled={switchingCourse} onChange={async (event) => {
+                const courseId = event.target.value;
+                if (courseId === course.id) return;
+                setSwitchingCourse(true);
+                setCourseError("");
+                try {
+                  await flushStudyState();
+                  const response = await fetch("/api/course/active", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ courseId }),
+                  });
+                  if (!response.ok) throw new Error("Não foi possível trocar de curso.");
+                  window.location.assign("/dashboard");
+                } catch (error) {
+                  setCourseError(error instanceof Error ? error.message : "Falha ao trocar de curso.");
+                  setSwitchingCourse(false);
+                }
+              }}>
+                {courseOptions.map((option) => <option key={option.id} value={option.id}>{option.title} · {option.language}</option>)}
+              </select>
+              {courseError && <small role="alert">{courseError}</small>}
+            </label>
+          )}
           <div className="sidebar-course-progress">
             <span>Seu progresso</span>
             <strong>{progress}%</strong>

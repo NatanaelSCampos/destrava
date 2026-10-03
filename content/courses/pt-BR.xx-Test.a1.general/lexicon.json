@@ -1,0 +1,7 @@
+[
+  { "id": "xx.lex.milo", "language": "xx-Test", "lemma": "milo", "lessonId": "xx.l01", "meanings": [{ "id": "greet", "translations": { "pt-BR": ["olá"] } }], "examples": [{ "target": "Milo, mira!", "translations": { "pt-BR": "Olá, amigo!" } }] },
+  { "id": "xx.lex.mira", "language": "xx-Test", "lemma": "mira", "lessonId": "xx.l01", "meanings": [{ "id": "friend", "translations": { "pt-BR": ["amigo"] } }], "examples": [{ "target": "Mira, milo!", "translations": { "pt-BR": "Amigo, olá!" } }] },
+  { "id": "xx.lex.talo", "language": "xx-Test", "lemma": "talo", "lessonId": "xx.l02", "meanings": [{ "id": "i", "translations": { "pt-BR": ["eu"] } }], "examples": [{ "target": "Talo mira.", "translations": { "pt-BR": "Eu sou amigo." } }] },
+  { "id": "xx.lex.sava", "language": "xx-Test", "lemma": "sava", "lessonId": "xx.l02", "meanings": [{ "id": "you", "translations": { "pt-BR": ["você"] } }], "examples": [{ "target": "Sava mira?", "translations": { "pt-BR": "Você é amigo?" } }] },
+  { "id": "xx.lex.nori", "language": "xx-Test", "lemma": "nori", "lessonId": "xx.l02", "meanings": [{ "id": "thanks", "translations": { "pt-BR": ["obrigado"] } }], "examples": [{ "target": "Nori, mira.", "translations": { "pt-BR": "Obrigado, amigo." } }] }
+]

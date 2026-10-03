@@ -1,0 +1,3453 @@
+{
+  "course": {
+    "schemaVersion": "1.0",
+    "contentVersion": "1.0.0",
+    "id": "frecuencias-a1",
+    "slug": "frecuencias-a1",
+    "sourceLanguage": "pt-BR",
+    "targetLanguage": "es",
+    "defaultVariant": "general",
+    "framework": {
+      "name": "CEFR",
+      "entryLevel": "A0",
+      "exitLevel": "A1"
+    },
+    "track": "general",
+    "title": "Frecuencias A1",
+    "description": "Um caminho guiado para começar a conversar em espanhol com segurança.",
+    "learningGoals": [
+      "basic_communication",
+      "daily_life"
+    ],
+    "units": [
+      {
+        "id": "nos-presentamos",
+        "slug": "nos-presentamos",
+        "order": 1,
+        "title": "Nos presentamos",
+        "objectives": [
+          "Cumprimentar e despedir-se",
+          "Apresentar-se e apresentar outra pessoa",
+          "Informar nome, origem, idade, profissão e residência",
+          "Fazer perguntas pessoais simples",
+          "Soletrar e usar números básicos"
+        ],
+        "skills": [
+          "reading",
+          "vocabulary",
+          "grammar",
+          "listening",
+          "writing",
+          "speaking"
+        ],
+        "introduces": {
+          "concepts": [
+            "greetings",
+            "nationality",
+            "numbers",
+            "profession",
+            "age-tener",
+            "residence",
+            "personal-questions",
+            "origin"
+          ],
+          "vocabulary": [
+            "hola",
+            "buenos-dias",
+            "buenas-tardes",
+            "hasta-luego",
+            "hasta-manana",
+            "llamarse",
+            "tener",
+            "vivir",
+            "trabajar",
+            "brasileno",
+            "argentino",
+            "profesor",
+            "medico",
+            "treinta",
+            "donde",
+            "de-donde",
+            "cuantos",
+            "hablar"
+          ]
+        },
+        "lessons": [
+          {
+            "id": "l-intro",
+            "slug": "introduccion",
+            "title": "Boas-vindas",
+            "order": 1,
+            "objectives": [
+              "Sua primeira conversa começa aqui."
+            ],
+            "activities": [
+              {
+                "id": "intro-1",
+                "type": "lesson_content",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [],
+                "title": "¡Hola!",
+                "prompt": "Um primeiro encontro",
+                "minutes": 4,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "4–5"
+                  },
+                  "body": "Imagine que você chega a uma turma nova em Madri. Antes de falar de viagens ou trabalho, precisa dizer quem é e perguntar quem está à sua frente. Esta unidade constrói exatamente essa conversa, passo a passo.\n\nVocê vai observar modelos curtos, praticar as estruturas, escrever uma apresentação própria e terminar com um pequeno teste. Pode repetir qualquer atividade quando quiser.",
+                  "highlights": [
+                    "¡Hola!",
+                    "Me llamo…",
+                    "¿Y tú?"
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:4–5"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Introdução",
+            "description": "Sua primeira conversa começa aqui.",
+            "minutes": 4,
+            "active": true
+          },
+          {
+            "id": "l-objectives",
+            "slug": "objetivos",
+            "title": "O que você vai aprender",
+            "order": 2,
+            "objectives": [
+              "Veja o que conseguirá dizer ao final."
+            ],
+            "activities": [
+              {
+                "id": "objectives-1",
+                "type": "lesson_content",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [],
+                "title": "Uma apresentação completa",
+                "prompt": "Metas da unidade",
+                "minutes": 4,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "4–5"
+                  },
+                  "body": "Ao final, você poderá iniciar uma conversa com uma saudação, dizer seu nome, origem, idade, profissão e cidade, além de perguntar essas informações a outra pessoa.\n\nA estrutura da conversa será simples: saudação → nome → origem → idade → trabalho/estudo → cidade → despedida. Não é preciso memorizar tudo de uma vez: cada etapa aparece novamente nos exercícios e nas revisões.",
+                  "highlights": [
+                    "¿Cómo te llamas?",
+                    "¿De dónde eres?",
+                    "¿Dónde vives?"
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:4–5"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Seu roteiro",
+            "description": "Veja o que conseguirá dizer ao final.",
+            "minutes": 4,
+            "active": true
+          },
+          {
+            "id": "l-vocab",
+            "slug": "vocabulario",
+            "title": "Palavras para se apresentar",
+            "order": 3,
+            "objectives": [
+              "Saudações, países, números e profissões."
+            ],
+            "activities": [
+              {
+                "id": "vocab-1",
+                "type": "lesson_content",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "greetings"
+                ],
+                "title": "Cumprimentos e dados pessoais",
+                "prompt": "Palavras em contexto",
+                "minutes": 4,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "6–7, 12–13"
+                  },
+                  "body": "Use hola em qualquer momento informal. Buenos días combina com a manhã; buenas tardes, com a tarde; buenas noches, com a noite. Para encerrar, até logo é hasta luego e até amanhã é hasta mañana.\n\nPara descrever pessoas, repare na concordância: brasileiro é brasileño; brasileira é brasileña. Algumas nacionalidades não mudam com o gênero, como canadiense. Para falar de profissão, a estrutura comum é soy + profissão: Soy profesora.",
+                  "highlights": [
+                    "Buenos días",
+                    "Hasta luego",
+                    "Soy brasileña"
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:6–7, 12–13"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "vocab-2",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "greetings"
+                ],
+                "title": "Uma despedida",
+                "prompt": "Qual expressão você usaria para dizer ‘até amanhã’?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Hasta mañana indica que você espera ver a pessoa no dia seguinte.",
+                  "options": [
+                    "Buenos días",
+                    "Hasta mañana",
+                    "¿Qué tal?"
+                  ],
+                  "answer": "Hasta mañana"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "vocab-3",
+                "type": "fill_blank",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "nationality"
+                ],
+                "title": "Nacionalidade",
+                "prompt": "María es de Brasil. Ella es ___ .",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Com ella, o adjetivo de nacionalidade fica no feminino: brasileña.",
+                  "answer": "brasileña",
+                  "accepted": [
+                    "brasilena"
+                  ],
+                  "fullAnswers": [
+                    "Ella es brasileña.",
+                    "María es de Brasil. Ella es brasileña."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "vocab-4",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "numbers"
+                ],
+                "title": "Números",
+                "prompt": "Como se diz 31 em espanhol?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Depois de treinta, usamos y para ligar a unidade: treinta y uno.",
+                  "options": [
+                    "treinta y uno",
+                    "trece y uno",
+                    "tres y uno"
+                  ],
+                  "answer": "treinta y uno"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "vocab-5",
+                "type": "short_answer",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "profession"
+                ],
+                "title": "Uma profissão",
+                "prompt": "Complete em espanhol: ‘Eu sou professora.’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Soy é a forma de ser para yo. O pronome yo pode ser omitido.",
+                  "answer": "Soy profesora",
+                  "accepted": [
+                    "Yo soy profesora",
+                    "Soy profesor",
+                    "Yo soy profesor"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Vocabulário",
+            "description": "Saudações, países, números e profissões.",
+            "minutes": 12,
+            "active": true
+          },
+          {
+            "id": "l-grammar",
+            "slug": "gramatica",
+            "title": "A gramática da apresentação",
+            "order": 4,
+            "objectives": [
+              "Ser, tener, llamarse, vivir e trabalhar."
+            ],
+            "activities": [
+              {
+                "id": "grammar-1",
+                "type": "lesson_content",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Cinco verbos essenciais",
+                "prompt": "Escolha o verbo pela informação",
+                "minutes": 5,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "8–9"
+                  },
+                  "body": "Nome: Me llamo Ana ou Soy Ana. Origem/nacionalidade e profissão: Soy peruana. Soy médica. Idade: Tengo 29 años. Residência: Vivo en Lima. Trabalho: Trabajo en una clínica.\n\nAo perguntar, use ¿cómo? para o nome, ¿de dónde? para a origem, ¿cuántos años? para a idade e ¿dónde? para a cidade. Em espanhol, a idade usa tener, mesmo que em português digamos ‘tenho’.\n\nFormas úteis: yo soy / tú eres / él es; yo tengo / tú tienes / ella tiene; yo vivo / tú vives / él vive. Em llamarse, o pronome acompanha a pessoa: me llamo, te llamas, se llama.",
+                  "highlights": [
+                    "Me llamo Ana",
+                    "Tengo 29 años",
+                    "Vivo en Lima"
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:8–9"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "grammar-2",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "nationality"
+                ],
+                "title": "Ser ou tener?",
+                "prompt": "Yo ___ brasileño.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Para indicar nacionalidade, use ser: soy brasileño.",
+                  "options": [
+                    "tengo",
+                    "soy",
+                    "vivo"
+                  ],
+                  "answer": "soy"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "grammar-3",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "age-tener"
+                ],
+                "title": "Falando a idade",
+                "prompt": "Ana ___ 26 años.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Idade usa tener. Para Ana/ella, a forma é tiene.",
+                  "answer": "tiene",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "Ana tiene 26 años."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "grammar-4",
+                "type": "ordering",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "residence"
+                ],
+                "title": "Organize a frase",
+                "prompt": "Monte uma frase para dizer onde você mora.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Para residência, use vivir + en + lugar.",
+                  "words": [
+                    "en",
+                    "Vivo",
+                    "São Paulo"
+                  ],
+                  "answer": "Vivo en São Paulo"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "grammar-5",
+                "type": "short_answer",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "personal-questions"
+                ],
+                "title": "Pergunte o nome",
+                "prompt": "Como você pergunta informalmente ‘Como você se chama?’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Use cómo + te llamas para perguntar o nome a tú.",
+                  "answer": "¿Cómo te llamas?",
+                  "accepted": [
+                    "Cómo te llamas",
+                    "¿Cómo te llamas"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "grammar-6",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "origin",
+                  "personal-questions"
+                ],
+                "title": "Origem",
+                "prompt": "Qual pergunta combina com ‘Soy de Bogotá’?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "De dónde pergunta a origem de alguém.",
+                  "options": [
+                    "¿Cuántos años tienes?",
+                    "¿De dónde eres?",
+                    "¿Dónde trabajas?"
+                  ],
+                  "answer": "¿De dónde eres?"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Gramática",
+            "description": "Ser, tener, llamarse, vivir e trabalhar.",
+            "minutes": 15,
+            "active": true
+          },
+          {
+            "id": "l-listening",
+            "slug": "escucha",
+            "title": "Escute uma apresentação",
+            "order": 5,
+            "objectives": [
+              "Uma fala curta para treinar a escuta."
+            ],
+            "activities": [
+              {
+                "id": "listening-1",
+                "type": "listening",
+                "skills": [
+                  "listening"
+                ],
+                "concepts": [],
+                "title": "Quem está falando?",
+                "prompt": "Ouça e escolha onde a pessoa mora.",
+                "minutes": 7,
+                "payload": {
+                  "explanation": "Lucía diz vivo en Santiago. A transcrição aparece depois da sua tentativa.",
+                  "source": {
+                    "book": "student",
+                    "pages": "10–13 (objetivos de escuta)"
+                  },
+                  "media": {
+                    "kind": "tts",
+                    "language": "es-ES"
+                  },
+                  "transcript": "Hola. Me llamo Lucía. Soy argentina y vivo en Santiago. Tengo veintisiete años y trabajo en una escuela.",
+                  "options": [
+                    "Buenos Aires",
+                    "Santiago",
+                    "Madrid"
+                  ],
+                  "answer": "Santiago"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:10–13 (objetivos de escuta)"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Listening",
+            "description": "Uma fala curta para treinar a escuta.",
+            "minutes": 7,
+            "active": true
+          },
+          {
+            "id": "l-guided",
+            "slug": "practica-guiada",
+            "title": "Prática guiada",
+            "order": 6,
+            "objectives": [
+              "Transforme modelos em frases suas."
+            ],
+            "activities": [
+              {
+                "id": "guided-1",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Apresentar alguém",
+                "prompt": "Como dizer ‘Esta é minha amiga Clara’?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Esta acompanha amiga, substantivo feminino.",
+                  "options": [
+                    "Este es mi amiga Clara",
+                    "Esta es mi amiga Clara",
+                    "Tengo mi amiga Clara"
+                  ],
+                  "answer": "Esta es mi amiga Clara"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "guided-2",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Nome",
+                "prompt": "¿Cómo te ___? Me llamo Diego.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Para tú, a forma é te llamas.",
+                  "answer": "llamas",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "¿Cómo te llamas?",
+                    "¿Cómo te llamas? Me llamo Diego."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "guided-3",
+                "type": "ordering",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "personal-questions"
+                ],
+                "title": "Uma pergunta",
+                "prompt": "Organize as palavras para perguntar a idade.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "A pergunta completa é ¿Cuántos años tienes?",
+                  "words": [
+                    "tienes",
+                    "años",
+                    "¿Cuántos"
+                  ],
+                  "answer": "¿Cuántos años tienes?"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "guided-4",
+                "type": "short_answer",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [
+                  "residence"
+                ],
+                "title": "Sua cidade",
+                "prompt": "Escreva ‘Eu moro em Recife’ em espanhol.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Use vivo en + cidade. Yo é opcional.",
+                  "answer": "Vivo en Recife",
+                  "accepted": [
+                    "Yo vivo en Recife"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "guided-5",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "profession"
+                ],
+                "title": "Profissão",
+                "prompt": "Pablo ___ ingeniero.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Para profissão, usamos ser: Pablo es ingeniero.",
+                  "options": [
+                    "tiene",
+                    "vive",
+                    "es"
+                  ],
+                  "answer": "es"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "guided-6",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Trabalho",
+                "prompt": "Nosotros ___ en una oficina.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Trabajamos é a forma para nosotros.",
+                  "answer": "trabajamos",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "Nosotros trabajamos en una oficina."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Exercícios",
+            "description": "Transforme modelos em frases suas.",
+            "minutes": 12,
+            "active": true
+          },
+          {
+            "id": "l-workbook",
+            "slug": "practica-complementaria",
+            "title": "Prática complementar",
+            "order": 7,
+            "objectives": [
+              "Mais números, perguntas e concordância."
+            ],
+            "activities": [
+              {
+                "id": "workbook-1",
+                "type": "lesson_content",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [],
+                "title": "Uma segunda rodada",
+                "prompt": "Pratique com autonomia",
+                "minutes": 2,
+                "payload": {
+                  "source": {
+                    "book": "workbook",
+                    "pages": "4–9"
+                  },
+                  "body": "O livro de exercícios retoma números, nacionalidades, profissões e perguntas pessoais. A proposta aqui é praticar os mesmos objetivos com situações novas. Faça os itens sem consultar a explicação; depois observe o feedback.",
+                  "highlights": [
+                    "Números",
+                    "Nacionalidades",
+                    "Perguntas"
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "workbook:4–9"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "workbook-2",
+                "type": "fill_blank",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "numbers"
+                ],
+                "title": "O número por extenso",
+                "prompt": "Escreva 42 por extenso em espanhol: ___",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "De 31 a 99, use dezena + y + unidade.",
+                  "answer": "cuarenta y dos",
+                  "accepted": [],
+                  "fullAnswers": []
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "workbook-3",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Concordância",
+                "prompt": "Elena y Marta son de México. Ellas son ___ .",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Ellas pede feminino plural: mexicanas.",
+                  "options": [
+                    "mexicano",
+                    "mexicana",
+                    "mexicanas"
+                  ],
+                  "answer": "mexicanas"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "workbook-4",
+                "type": "ordering",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "origin"
+                ],
+                "title": "Origem de outra pessoa",
+                "prompt": "Monte a pergunta ‘De onde ela é?’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "A expressão de dónde pergunta a origem; es concorda com ella.",
+                  "words": [
+                    "es",
+                    "¿De",
+                    "dónde",
+                    "ella?"
+                  ],
+                  "answer": "¿De dónde es ella?"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "workbook-5",
+                "type": "short_answer",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [],
+                "title": "Idiomas",
+                "prompt": "Traduza: ‘Eu falo espanhol e português.’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Hablo é a forma de hablar para yo.",
+                  "answer": "Hablo español y portugués",
+                  "accepted": [
+                    "Yo hablo español y portugués"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Livro de exercícios",
+            "description": "Mais números, perguntas e concordância.",
+            "minutes": 10,
+            "active": true
+          },
+          {
+            "id": "l-writing",
+            "slug": "escritura",
+            "title": "Escreva sua apresentação",
+            "order": 8,
+            "objectives": [
+              "Escreva um texto curto sobre você."
+            ],
+            "activities": [
+              {
+                "id": "writing-1",
+                "type": "writing",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [],
+                "title": "Mi presentación",
+                "prompt": "Apresente-se em espanhol com 5 a 8 frases. Inclua nome, origem, idade, cidade, trabalho ou estudo e um idioma que você fala.",
+                "minutes": 10,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "10–13 (produção pessoal)"
+                  },
+                  "guidance": [
+                    "Comece com Hola, me llamo…",
+                    "Use tengo para idade e vivo en para cidade.",
+                    "Termine com uma frase de despedida."
+                  ],
+                  "minWords": 20
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:10–13 (produção pessoal)"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Writing",
+            "description": "Escreva um texto curto sobre você.",
+            "minutes": 10,
+            "active": true
+          },
+          {
+            "id": "l-speaking",
+            "slug": "conversacion",
+            "title": "Fale em voz alta",
+            "order": 9,
+            "objectives": [
+              "Repita uma frase e grave uma apresentação curta."
+            ],
+            "activities": [
+              {
+                "id": "speaking-1",
+                "type": "speaking",
+                "skills": [
+                  "speaking"
+                ],
+                "concepts": [],
+                "title": "¿Cómo te presentas?",
+                "prompt": "Grave uma resposta à pergunta: ¿Cómo te llamas y de dónde eres?",
+                "minutes": 6,
+                "payload": {
+                  "source": {
+                    "book": "student",
+                    "pages": "4–5, 10–13 (interação oral)"
+                  },
+                  "guidance": [
+                    "Fale seu nome e sua origem.",
+                    "Acrescente sua cidade ou profissão se quiser.",
+                    "Ouça a gravação e digite o que você disse."
+                  ]
+                },
+                "provenance": {
+                  "origin": "adapted",
+                  "sources": [
+                    {
+                      "type": "book",
+                      "reference": "student:4–5, 10–13 (interação oral)"
+                    }
+                  ],
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "speaking-repeat-1",
+                "type": "speaking",
+                "skills": [
+                  "speaking"
+                ],
+                "concepts": [],
+                "title": "Repita uma frase",
+                "prompt": "Escute e repita: Hola, me llamo Lucía y vivo en Madrid.",
+                "minutes": 3,
+                "payload": {
+                  "guidance": [
+                    "Ouça a frase em espanhol antes de gravar.",
+                    "Fale a frase inteira com sua voz natural.",
+                    "Veja os indicadores de pronúncia e tente novamente se quiser."
+                  ],
+                  "referenceText": "Hola, me llamo Lucía y vivo en Madrid."
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Speaking",
+            "description": "Repita uma frase e grave uma apresentação curta.",
+            "minutes": 9,
+            "active": true
+          },
+          {
+            "id": "l-review",
+            "slug": "revision",
+            "title": "Revisão da unidade",
+            "order": 10,
+            "objectives": [
+              "Recupere as estruturas mais importantes."
+            ],
+            "activities": [
+              {
+                "id": "review-1",
+                "type": "review",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Revise: fale sobre você",
+                "prompt": "Monte uma apresentação curta sobre você usando os modelos abaixo.",
+                "minutes": 5,
+                "payload": {
+                  "body": "Os exemplos são modelos. Troque os dados pelos seus; não precisa escrever nem enviar uma resposta nesta atividade.",
+                  "steps": [
+                    "Leia cada modelo e toque no áudio para ouvir a pronúncia.",
+                    "Diga uma frase verdadeira sobre você para cada assunto, em voz alta.",
+                    "Sem olhar os cartões, diga três frases sobre você e faça uma pergunta. Então avance para a revisão rápida."
+                  ],
+                  "cards": [
+                    {
+                      "label": "Nome",
+                      "structure": "Me llamo… / Soy…",
+                      "examples": [
+                        "Me llamo Ana.",
+                        "Soy Ana."
+                      ],
+                      "practice": "Diga seu nome."
+                    },
+                    {
+                      "label": "Idade",
+                      "structure": "Tengo … años.",
+                      "examples": [
+                        "Tengo 25 años."
+                      ],
+                      "practice": "Diga sua idade."
+                    },
+                    {
+                      "label": "Origem",
+                      "structure": "Soy de…",
+                      "examples": [
+                        "Soy de Brasil.",
+                        "Soy brasileña."
+                      ],
+                      "practice": "Diga seu país. Para a nacionalidade, você também pode dizer ‘Soy brasileño’ ou ‘Soy brasileña’."
+                    },
+                    {
+                      "label": "Cidade",
+                      "structure": "Vivo en…",
+                      "examples": [
+                        "Vivo en Recife."
+                      ],
+                      "practice": "Diga onde você mora."
+                    },
+                    {
+                      "label": "Profissão",
+                      "structure": "Soy… / Trabajo en…",
+                      "examples": [
+                        "Soy profesor.",
+                        "Trabajo en una escuela.",
+                        "Soy estudiante."
+                      ],
+                      "practice": "Diga sua profissão. Se ainda estuda, use ‘Soy estudiante’."
+                    },
+                    {
+                      "label": "Perguntas",
+                      "examples": [
+                        "¿Cómo te llamas?",
+                        "¿De dónde eres?",
+                        "¿Dónde vives?",
+                        "¿Cuántos años tienes?"
+                      ],
+                      "practice": "Escolha uma pergunta e fale como se estivesse conversando com alguém."
+                    }
+                  ]
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "review-2",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [],
+                "title": "Revisão rápida",
+                "prompt": "Qual frase está correta?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "A idade é expressa com tener.",
+                  "options": [
+                    "Soy 25 años",
+                    "Tengo 25 años",
+                    "Vivo 25 años"
+                  ],
+                  "answer": "Tengo 25 años"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "review-3",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "origin"
+                ],
+                "title": "Sua origem",
+                "prompt": "Soy ___ Colombia.",
+                "minutes": 1,
+                "payload": {
+                  "explanation": "Para indicar lugar de origem: ser de + lugar.",
+                  "answer": "de",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "Soy de Colombia."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "review-4",
+                "type": "short_answer",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "personal-questions"
+                ],
+                "title": "Pergunta útil",
+                "prompt": "Como perguntar ‘Onde você mora?’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Dónde pergunta um lugar; vives é a forma para tú.",
+                  "answer": "¿Dónde vives?",
+                  "accepted": [
+                    "Dónde vives",
+                    "¿Dónde vives"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Revisão",
+            "description": "Recupere as estruturas mais importantes.",
+            "minutes": 10,
+            "active": true
+          },
+          {
+            "id": "l-assessment",
+            "slug": "evaluacion-final",
+            "title": "Avaliação final",
+            "order": 11,
+            "objectives": [
+              "Confira o que já consegue fazer."
+            ],
+            "activities": [
+              {
+                "id": "assessment-intro",
+                "type": "quiz",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [],
+                "title": "Antes de começar",
+                "prompt": "Responda sem consultar as lições. Seu resultado mostrará pontos fortes e o que revisar.",
+                "minutes": 1,
+                "payload": {
+                  "body": "O teste combina vocabulário, gramática, leitura e uma produção escrita breve. Você pode repetir depois de revisar seus pontos fracos."
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-1",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "greetings"
+                ],
+                "title": "1 · Saudação",
+                "prompt": "Qual expressão é uma saudação?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Buenos días é uma saudação usada pela manhã.",
+                  "options": [
+                    "Hasta luego",
+                    "Buenos días",
+                    "Adiós"
+                  ],
+                  "answer": "Buenos días"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-2",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "age-tener"
+                ],
+                "title": "2 · Idade",
+                "prompt": "Yo ___ 30 años.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Tener expressa idade; para yo, a forma é tengo.",
+                  "answer": "tengo",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "Yo tengo 30 años."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-3",
+                "type": "multiple_choice",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "nationality"
+                ],
+                "title": "3 · Nacionalidade",
+                "prompt": "Camila es de Argentina. Ella es ___ .",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Ella pede adjetivo feminino singular.",
+                  "options": [
+                    "argentino",
+                    "argentina",
+                    "argentinos"
+                  ],
+                  "answer": "argentina"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-4",
+                "type": "short_answer",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [],
+                "title": "4 · Nome",
+                "prompt": "Escreva em espanhol: ‘Meu nome é Luis.’",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Me llamo Luis e Soy Luis apresentam seu nome.",
+                  "answer": "Me llamo Luis",
+                  "accepted": [
+                    "Soy Luis",
+                    "Yo me llamo Luis"
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-5",
+                "type": "multiple_choice",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [
+                  "residence"
+                ],
+                "title": "5 · Leitura",
+                "prompt": "Leia: ‘Soy médica y vivo en Quito.’ O que sabemos?",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "Vivo en indica residência, não origem ou local de trabalho.",
+                  "options": [
+                    "Ela trabalha em Quito",
+                    "Ela mora em Quito",
+                    "Ela nasceu em Quito"
+                  ],
+                  "answer": "Ela mora em Quito"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-6",
+                "type": "ordering",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "origin",
+                  "personal-questions"
+                ],
+                "title": "6 · Pergunta",
+                "prompt": "Monte uma pergunta sobre origem.",
+                "minutes": 2,
+                "payload": {
+                  "explanation": "A pergunta sobre origem é ¿De dónde eres?",
+                  "words": [
+                    "eres?",
+                    "dónde",
+                    "¿De"
+                  ],
+                  "answer": "¿De dónde eres?"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              },
+              {
+                "id": "assessment-writing",
+                "type": "writing",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [],
+                "title": "7 · Produção",
+                "prompt": "Escreva três frases em espanhol para apresentar uma pessoa fictícia. Inclua nome, origem e cidade.",
+                "minutes": 4,
+                "payload": {
+                  "guidance": [
+                    "Use se llama para o nome.",
+                    "Use es de para a origem.",
+                    "Use vive en para a cidade."
+                  ],
+                  "minWords": 12
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
+              }
+            ],
+            "eyebrow": "Teste",
+            "description": "Confira o que já consegue fazer.",
+            "minutes": 15,
+            "active": true
+          }
+        ],
+        "assessmentId": "frecuencias-a1.nos-presentamos.diagnostic",
+        "description": "Aprenda a cumprimentar, falar de você e conhecer alguém em espanhol.",
+        "active": true
+      }
+    ],
+    "concepts": [
+      {
+        "id": "greetings",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Cumprimentos"
+      },
+      {
+        "id": "numbers",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Números"
+      },
+      {
+        "id": "nationality",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Nacionalidades"
+      },
+      {
+        "id": "age-tener",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Tener para idade"
+      },
+      {
+        "id": "personal-questions",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Perguntas pessoais"
+      },
+      {
+        "id": "origin",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Origem"
+      },
+      {
+        "id": "residence",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Onde mora"
+      },
+      {
+        "id": "profession",
+        "language": "es",
+        "type": "course_concept",
+        "name": "Profissões"
+      }
+    ],
+    "lexicon": [
+      {
+        "id": "hola",
+        "language": "es",
+        "lemma": "hola",
+        "meanings": [
+          {
+            "id": "hola.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "olá"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Hola, ¿qué tal?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "hola"
+        ],
+        "surface": "hola",
+        "regionalNote": {}
+      },
+      {
+        "id": "buenos-dias",
+        "language": "es",
+        "lemma": "buenos días",
+        "meanings": [
+          {
+            "id": "buenos-dias.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "bom dia"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Buenos días, Marta.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "buenos días"
+        ],
+        "surface": "buenos días",
+        "regionalNote": {}
+      },
+      {
+        "id": "buenas-tardes",
+        "language": "es",
+        "lemma": "buenas tardes",
+        "meanings": [
+          {
+            "id": "buenas-tardes.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "boa tarde"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Buenas tardes, señor Ruiz.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "buenas tardes"
+        ],
+        "surface": "buenas tardes",
+        "regionalNote": {}
+      },
+      {
+        "id": "hasta-luego",
+        "language": "es",
+        "lemma": "hasta luego",
+        "meanings": [
+          {
+            "id": "hasta-luego.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "até logo"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Nos vemos. ¡Hasta luego!",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "hasta luego"
+        ],
+        "surface": "hasta luego",
+        "regionalNote": {}
+      },
+      {
+        "id": "hasta-manana",
+        "language": "es",
+        "lemma": "hasta mañana",
+        "meanings": [
+          {
+            "id": "hasta-manana.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "até amanhã"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Adiós, hasta mañana.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "hasta mañana"
+        ],
+        "surface": "hasta mañana",
+        "regionalNote": {}
+      },
+      {
+        "id": "llamarse",
+        "language": "es",
+        "lemma": "llamarse",
+        "meanings": [
+          {
+            "id": "llamarse.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "chamar-se; dizer seu nome"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Me llamo Elena.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "surface": "llamarse",
+        "className": "Verbo pronominal",
+        "regionalNote": {
+          "argentina": "Na Argentina, a pergunta informal costuma ser ‘¿Cómo te llamás vos?’."
+        },
+        "clozeForms": [
+          "me llamo"
+        ]
+      },
+      {
+        "id": "tener",
+        "language": "es",
+        "lemma": "tener",
+        "meanings": [
+          {
+            "id": "tener.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "ter ou possuir"
+              ]
+            }
+          },
+          {
+            "id": "tener.meaning.2",
+            "translations": {
+              "pt-BR": [
+                "indicar idade"
+              ]
+            }
+          },
+          {
+            "id": "tener.meaning.3",
+            "translations": {
+              "pt-BR": [
+                "expressar necessidade ou sensação"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Tengo un libro en casa.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          },
+          {
+            "target": "Tengo 27 años.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          },
+          {
+            "target": "Tengo hambre.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "surface": "tener",
+        "className": "Verbo",
+        "clozeForms": [
+          "tengo"
+        ]
+      },
+      {
+        "id": "vivir",
+        "language": "es",
+        "lemma": "vivir",
+        "meanings": [
+          {
+            "id": "vivir.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "morar em algum lugar"
+              ]
+            }
+          },
+          {
+            "id": "vivir.meaning.2",
+            "translations": {
+              "pt-BR": [
+                "viver ou experimentar"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Vivo en Lima.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          },
+          {
+            "target": "Vivimos un momento especial.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "surface": "vivir",
+        "className": "Verbo",
+        "visualCue": {
+          "icon": "home",
+          "alt": "Desenho de uma casa"
+        },
+        "clozeForms": [
+          "vivo"
+        ]
+      },
+      {
+        "id": "trabajar",
+        "language": "es",
+        "lemma": "trabajar",
+        "meanings": [
+          {
+            "id": "trabajar.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "trabalhar"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Trabajo en una escuela.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "aliases": [
+          "trabajar"
+        ],
+        "surface": "trabajar",
+        "regionalNote": {},
+        "visualCue": {
+          "icon": "work",
+          "alt": "Desenho de uma maleta de trabalho"
+        },
+        "clozeForms": [
+          "trabajo"
+        ]
+      },
+      {
+        "id": "brasileno",
+        "language": "es",
+        "lemma": "brasileño",
+        "meanings": [
+          {
+            "id": "brasileno.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "brasileiro / brasileira"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Ella es brasileña.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "brasileño",
+          "brasileña"
+        ],
+        "surface": "brasileño / brasileña",
+        "regionalNote": {}
+      },
+      {
+        "id": "argentino",
+        "language": "es",
+        "lemma": "argentino",
+        "meanings": [
+          {
+            "id": "argentino.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "argentino / argentina"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Él es argentino.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "argentino",
+          "argentina"
+        ],
+        "surface": "argentino / argentina",
+        "regionalNote": {}
+      },
+      {
+        "id": "profesor",
+        "language": "es",
+        "lemma": "profesor",
+        "meanings": [
+          {
+            "id": "profesor.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "professor / professora"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Soy profesora de español.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "profesor",
+          "profesora"
+        ],
+        "surface": "profesor / profesora",
+        "regionalNote": {},
+        "visualCue": {
+          "icon": "teacher",
+          "alt": "Desenho de uma pessoa ensinando"
+        }
+      },
+      {
+        "id": "medico",
+        "language": "es",
+        "lemma": "médico",
+        "meanings": [
+          {
+            "id": "medico.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "médico / médica"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Mi hermana es médica.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "médico",
+          "médica"
+        ],
+        "surface": "médico / médica",
+        "regionalNote": {},
+        "visualCue": {
+          "icon": "doctor",
+          "alt": "Desenho de um estetoscópio"
+        }
+      },
+      {
+        "id": "treinta",
+        "language": "es",
+        "lemma": "treinta",
+        "meanings": [
+          {
+            "id": "treinta.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "trinta"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Tengo treinta años.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-vocab",
+        "aliases": [
+          "treinta"
+        ],
+        "surface": "treinta",
+        "regionalNote": {}
+      },
+      {
+        "id": "donde",
+        "language": "es",
+        "lemma": "¿dónde?",
+        "meanings": [
+          {
+            "id": "donde.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "onde?"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Dónde vives?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "aliases": [
+          "¿dónde?"
+        ],
+        "surface": "¿dónde?",
+        "regionalNote": {},
+        "visualCue": {
+          "icon": "location",
+          "alt": "Desenho de um marcador de localização"
+        }
+      },
+      {
+        "id": "de-donde",
+        "language": "es",
+        "lemma": "¿de dónde?",
+        "meanings": [
+          {
+            "id": "de-donde.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "de onde?"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿De dónde eres?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "aliases": [
+          "¿de dónde?"
+        ],
+        "surface": "¿de dónde?",
+        "regionalNote": {}
+      },
+      {
+        "id": "cuantos",
+        "language": "es",
+        "lemma": "¿cuántos?",
+        "meanings": [
+          {
+            "id": "cuantos.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "quantos?"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Cuántos años tienes?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-grammar",
+        "aliases": [
+          "¿cuántos?"
+        ],
+        "surface": "¿cuántos?",
+        "regionalNote": {}
+      },
+      {
+        "id": "hablar",
+        "language": "es",
+        "lemma": "hablar",
+        "meanings": [
+          {
+            "id": "hablar.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "falar um idioma"
+              ]
+            }
+          },
+          {
+            "id": "hablar.meaning.2",
+            "translations": {
+              "pt-BR": [
+                "conversar com alguém"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Hablo español y portugués.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          },
+          {
+            "target": "Hablo con Ana por teléfono.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "lessonId": "l-workbook",
+        "surface": "hablar",
+        "className": "Verbo",
+        "visualCue": {
+          "icon": "talk",
+          "alt": "Desenho de um balão de conversa"
+        },
+        "clozeForms": [
+          "hablo"
+        ]
+      },
+      {
+        "id": "ordenador",
+        "language": "es",
+        "lemma": "ordenador",
+        "meanings": [
+          {
+            "id": "ordenador.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "computador"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Mi ordenador está en casa.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "ordenador",
+          "computadora",
+          "computadora"
+        ],
+        "surface": "ordenador",
+        "regionalNote": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos."
+      },
+      {
+        "id": "computadora",
+        "language": "es",
+        "lemma": "computadora",
+        "meanings": [
+          {
+            "id": "computadora.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "computador"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "Mi computadora está en casa.",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "ordenador",
+          "computadora",
+          "computadora"
+        ],
+        "surface": "computadora",
+        "regionalNote": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos."
+      },
+      {
+        "id": "móvil",
+        "language": "es",
+        "lemma": "móvil",
+        "meanings": [
+          {
+            "id": "móvil.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "telefone celular"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Dónde está mi móvil?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "móvil",
+          "celular",
+          "celular"
+        ],
+        "surface": "móvil",
+        "regionalNote": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum."
+      },
+      {
+        "id": "celular",
+        "language": "es",
+        "lemma": "celular",
+        "meanings": [
+          {
+            "id": "celular.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "telefone celular"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Dónde está mi celular?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "móvil",
+          "celular",
+          "celular"
+        ],
+        "surface": "celular",
+        "regionalNote": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum."
+      },
+      {
+        "id": "tú",
+        "language": "es",
+        "lemma": "tú",
+        "meanings": [
+          {
+            "id": "tú.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "você (singular)"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Cómo te llamas tú?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "tú",
+          "tú",
+          "vos"
+        ],
+        "surface": "tú",
+        "regionalNote": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente."
+      },
+      {
+        "id": "vos",
+        "language": "es",
+        "lemma": "vos",
+        "meanings": [
+          {
+            "id": "vos.meaning.1",
+            "translations": {
+              "pt-BR": [
+                "você (singular)"
+              ]
+            }
+          }
+        ],
+        "examples": [
+          {
+            "target": "¿Cómo te llamás vos?",
+            "translations": {
+              "pt-BR": "Exemplo em espanhol"
+            }
+          }
+        ],
+        "aliases": [
+          "tú",
+          "tú",
+          "vos"
+        ],
+        "surface": "vos",
+        "regionalNote": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente."
+      }
+    ],
+    "missions": [
+      {
+        "id": "new-colleague",
+        "level": "A1",
+        "scenario": "new-colleague",
+        "objectives": [
+          "say-name",
+          "say-city",
+          "say-profession",
+          "ask-name"
+        ],
+        "recommendedConcepts": [
+          "greetings",
+          "residence",
+          "profession",
+          "personal-questions"
+        ],
+        "title": "Conheça um colega",
+        "setting": "Você chegou ao primeiro dia de trabalho e encontra uma pessoa da equipe.",
+        "character": "Alex, um colega simpático que está se apresentando.",
+        "opening": "¡Hola! Soy Alex. ¿Cómo te llamas?",
+        "objectiveDetails": [
+          {
+            "id": "say-name",
+            "label": "Dizer seu nome",
+            "hint": "Me llamo..."
+          },
+          {
+            "id": "say-city",
+            "label": "Dizer onde mora",
+            "hint": "Vivo en..."
+          },
+          {
+            "id": "say-profession",
+            "label": "Dizer sua profissão",
+            "hint": "Soy... / Trabajo como..."
+          },
+          {
+            "id": "ask-name",
+            "label": "Perguntar o nome",
+            "hint": "¿Cómo te llamas?"
+          }
+        ]
+      },
+      {
+        "id": "cafe",
+        "level": "A1",
+        "scenario": "cafe",
+        "objectives": [
+          "greet",
+          "order",
+          "ask-price",
+          "thank"
+        ],
+        "recommendedConcepts": [],
+        "title": "Peça em um café",
+        "setting": "Você entrou em um café e quer fazer um pedido simples.",
+        "character": "Uma pessoa que atende no balcão.",
+        "opening": "¡Buenos días! ¿Qué te gustaría pedir?",
+        "objectiveDetails": [
+          {
+            "id": "greet",
+            "label": "Cumprimentar",
+            "hint": "Buenos días / Hola"
+          },
+          {
+            "id": "order",
+            "label": "Pedir bebida ou comida",
+            "hint": "Quiero un café, por favor."
+          },
+          {
+            "id": "ask-price",
+            "label": "Perguntar o preço",
+            "hint": "¿Cuánto cuesta?"
+          },
+          {
+            "id": "thank",
+            "label": "Agradecer",
+            "hint": "Gracias"
+          }
+        ]
+      },
+      {
+        "id": "directions",
+        "level": "A1",
+        "scenario": "directions",
+        "objectives": [
+          "ask-station",
+          "ask-distance",
+          "thank-directions"
+        ],
+        "recommendedConcepts": [],
+        "title": "Peça informações na rua",
+        "setting": "Você está em uma cidade nova e procura a estação de metrô.",
+        "character": "Lucía, uma moradora disposta a ajudar.",
+        "opening": "¡Hola! ¿Necesitas ayuda para encontrar algún lugar?",
+        "objectiveDetails": [
+          {
+            "id": "ask-station",
+            "label": "Perguntar onde fica a estação",
+            "hint": "¿Dónde está la estación?"
+          },
+          {
+            "id": "ask-distance",
+            "label": "Perguntar se fica longe",
+            "hint": "¿Está lejos?"
+          },
+          {
+            "id": "thank-directions",
+            "label": "Agradecer a ajuda",
+            "hint": "Muchas gracias."
+          }
+        ]
+      },
+      {
+        "id": "market",
+        "level": "A1",
+        "scenario": "market",
+        "objectives": [
+          "request-fruit",
+          "ask-market-price",
+          "finish-purchase"
+        ],
+        "recommendedConcepts": [],
+        "title": "Compre no mercado",
+        "setting": "Você quer comprar frutas em um pequeno mercado.",
+        "character": "Diego, vendedor de frutas.",
+        "opening": "¡Buenos días! Tenemos frutas frescas. ¿Qué buscas?",
+        "objectiveDetails": [
+          {
+            "id": "request-fruit",
+            "label": "Pedir uma fruta",
+            "hint": "Quiero dos manzanas, por favor."
+          },
+          {
+            "id": "ask-market-price",
+            "label": "Perguntar o preço",
+            "hint": "¿Cuánto cuestan?"
+          },
+          {
+            "id": "finish-purchase",
+            "label": "Encerrar a compra",
+            "hint": "Eso es todo, gracias."
+          }
+        ]
+      },
+      {
+        "id": "hotel",
+        "level": "A1",
+        "scenario": "hotel",
+        "objectives": [
+          "confirm-reservation",
+          "say-reservation-name",
+          "ask-room"
+        ],
+        "recommendedConcepts": [],
+        "title": "Faça check-in no hotel",
+        "setting": "Você chega ao hotel e informa sua reserva na recepção.",
+        "character": "Sofía, recepcionista do hotel.",
+        "opening": "¡Buenas tardes! Bienvenido al hotel. ¿Tiene una reserva?",
+        "objectiveDetails": [
+          {
+            "id": "confirm-reservation",
+            "label": "Confirmar que tem reserva",
+            "hint": "Sí, tengo una reserva."
+          },
+          {
+            "id": "say-reservation-name",
+            "label": "Informar o nome da reserva",
+            "hint": "Está a nombre de..."
+          },
+          {
+            "id": "ask-room",
+            "label": "Perguntar pelo quarto",
+            "hint": "¿Cuál es mi habitación?"
+          }
+        ]
+      },
+      {
+        "id": "restaurant",
+        "level": "A1",
+        "scenario": "restaurant",
+        "objectives": [
+          "request-table",
+          "ask-menu",
+          "order-dinner"
+        ],
+        "recommendedConcepts": [],
+        "title": "Jante em um restaurante",
+        "setting": "Você entra em um restaurante e conversa com o atendente.",
+        "character": "Mateo, atendente do restaurante.",
+        "opening": "¡Buenas noches! ¿Tiene una mesa reservada?",
+        "objectiveDetails": [
+          {
+            "id": "request-table",
+            "label": "Pedir uma mesa",
+            "hint": "Una mesa para dos, por favor."
+          },
+          {
+            "id": "ask-menu",
+            "label": "Pedir o cardápio",
+            "hint": "¿Me trae el menú?"
+          },
+          {
+            "id": "order-dinner",
+            "label": "Pedir uma refeição",
+            "hint": "Quisiera..., por favor."
+          }
+        ]
+      }
+    ],
+    "roleplays": [
+      {
+        "id": "roleplay.new-colleague",
+        "scenario": "new-colleague",
+        "level": "A1",
+        "character": {
+          "role": "Alex, um colega simpático que está se apresentando."
+        },
+        "objectives": [
+          "say-name",
+          "say-city",
+          "say-profession",
+          "ask-name"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      },
+      {
+        "id": "roleplay.cafe",
+        "scenario": "cafe",
+        "level": "A1",
+        "character": {
+          "role": "Uma pessoa que atende no balcão."
+        },
+        "objectives": [
+          "greet",
+          "order",
+          "ask-price",
+          "thank"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      },
+      {
+        "id": "roleplay.directions",
+        "scenario": "directions",
+        "level": "A1",
+        "character": {
+          "role": "Lucía, uma moradora disposta a ajudar."
+        },
+        "objectives": [
+          "ask-station",
+          "ask-distance",
+          "thank-directions"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      },
+      {
+        "id": "roleplay.market",
+        "scenario": "market",
+        "level": "A1",
+        "character": {
+          "role": "Diego, vendedor de frutas."
+        },
+        "objectives": [
+          "request-fruit",
+          "ask-market-price",
+          "finish-purchase"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      },
+      {
+        "id": "roleplay.hotel",
+        "scenario": "hotel",
+        "level": "A1",
+        "character": {
+          "role": "Sofía, recepcionista do hotel."
+        },
+        "objectives": [
+          "confirm-reservation",
+          "say-reservation-name",
+          "ask-room"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      },
+      {
+        "id": "roleplay.restaurant",
+        "scenario": "restaurant",
+        "level": "A1",
+        "character": {
+          "role": "Mateo, atendente do restaurante."
+        },
+        "objectives": [
+          "request-table",
+          "ask-menu",
+          "order-dinner"
+        ],
+        "constraints": {
+          "maxVocabularyLevel": "A1",
+          "allowHints": true
+        }
+      }
+    ],
+    "assessments": [
+      {
+        "id": "frecuencias-a1.nos-presentamos.diagnostic",
+        "type": "adaptive_diagnostic",
+        "unitId": "nos-presentamos",
+        "skillWeights": {
+          "vocabulary": 0.16666666666666666,
+          "grammar": 0.3333333333333333,
+          "listening": 0.16666666666666666,
+          "writing": 0.16666666666666666,
+          "reading": 0.16666666666666666
+        },
+        "passingPolicy": {
+          "overall": 0.75,
+          "minimumBySkill": {
+            "vocabulary": 0.6,
+            "grammar": 0.6,
+            "listening": 0.6,
+            "writing": 0.6,
+            "reading": 0.6
+          }
+        },
+        "skillPlan": [
+          "vocabulary",
+          "grammar",
+          "listening",
+          "writing",
+          "grammar",
+          "reading"
+        ],
+        "bank": [
+          {
+            "activityId": "assessment-1",
+            "skill": "vocabulary",
+            "difficulty": 1
+          },
+          {
+            "activityId": "vocab-2",
+            "skill": "vocabulary",
+            "difficulty": 1
+          },
+          {
+            "activityId": "vocab-3",
+            "skill": "vocabulary",
+            "difficulty": 2
+          },
+          {
+            "activityId": "vocab-4",
+            "skill": "vocabulary",
+            "difficulty": 2
+          },
+          {
+            "activityId": "vocab-5",
+            "skill": "vocabulary",
+            "difficulty": 3
+          },
+          {
+            "activityId": "workbook-5",
+            "skill": "vocabulary",
+            "difficulty": 3
+          },
+          {
+            "activityId": "grammar-2",
+            "skill": "grammar",
+            "difficulty": 1
+          },
+          {
+            "activityId": "guided-2",
+            "skill": "grammar",
+            "difficulty": 1
+          },
+          {
+            "activityId": "assessment-2",
+            "skill": "grammar",
+            "difficulty": 2
+          },
+          {
+            "activityId": "assessment-3",
+            "skill": "grammar",
+            "difficulty": 2
+          },
+          {
+            "activityId": "review-3",
+            "skill": "grammar",
+            "difficulty": 2
+          },
+          {
+            "activityId": "assessment-6",
+            "skill": "grammar",
+            "difficulty": 3
+          },
+          {
+            "activityId": "guided-3",
+            "skill": "grammar",
+            "difficulty": 3
+          },
+          {
+            "activityId": "workbook-4",
+            "skill": "grammar",
+            "difficulty": 3
+          },
+          {
+            "activityId": "listening-1",
+            "skill": "listening",
+            "difficulty": 1
+          },
+          {
+            "activityId": "assessment-4",
+            "skill": "writing",
+            "difficulty": 2
+          },
+          {
+            "activityId": "guided-4",
+            "skill": "writing",
+            "difficulty": 3
+          },
+          {
+            "activityId": "assessment-5",
+            "skill": "reading",
+            "difficulty": 2
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "media": [
+      {
+        "id": "kitchen",
+        "type": "image",
+        "src": "/images/description/cozinha.png",
+        "metadata": {
+          "title": "Na cozinha",
+          "alt": "Uma mulher e uma criança em uma cozinha com maçãs e um gato.",
+          "prompt": "O que você vê? Quem está lá e o que estão fazendo?",
+          "facts": [
+            "cozinha ensolarada",
+            "mulher cortando maçã",
+            "criança segurando maçã",
+            "gato no chão",
+            "maçãs sobre a mesa",
+            "janela grande"
+          ]
+        }
+      },
+      {
+        "id": "cafe",
+        "type": "image",
+        "src": "/images/description/cafe.png",
+        "metadata": {
+          "title": "No café",
+          "alt": "Um garçom e uma cliente na mesa de um café, perto de uma bicicleta.",
+          "prompt": "Descreva as pessoas, o lugar e os objetos que você observa.",
+          "facts": [
+            "terraço de café",
+            "garçom com avental",
+            "mulher tomando café",
+            "xícara branca",
+            "bicicleta estacionada",
+            "plantas",
+            "toldo vermelho"
+          ]
+        }
+      }
+    ],
+    "practice": {
+      "reviewStructures": [
+        {
+          "id": "introduce-name",
+          "lessonId": "l-grammar",
+          "conceptId": "personal-questions",
+          "title": "Dizer seu nome",
+          "prompt": "Crie uma frase para dizer seu nome usando me llamo.",
+          "answer": "Me llamo Elena.",
+          "explanation": "Me llamo + nome apresenta a própria pessoa. Troque Elena pelo seu nome."
+        },
+        {
+          "id": "say-age",
+          "lessonId": "l-grammar",
+          "conceptId": "age-tener",
+          "title": "Dizer a idade",
+          "prompt": "Como você diria que tem 27 anos usando tener?",
+          "answer": "Tengo 27 años.",
+          "explanation": "Em espanhol, a idade usa tener: tengo + número + años."
+        },
+        {
+          "id": "ask-origin",
+          "lessonId": "l-grammar",
+          "conceptId": "origin",
+          "title": "Perguntar a origem",
+          "prompt": "Pergunte de onde a outra pessoa é.",
+          "answer": "¿De dónde eres?",
+          "explanation": "De dónde pergunta a origem; eres é a forma de ser para tú."
+        },
+        {
+          "id": "say-residence",
+          "lessonId": "l-grammar",
+          "conceptId": "residence",
+          "title": "Dizer onde mora",
+          "prompt": "Diga que mora em Lima usando vivir.",
+          "answer": "Vivo en Lima.",
+          "explanation": "Vivo en + lugar indica onde você mora."
+        }
+      ]
+    },
+    "provenance": {
+      "origin": "adapted",
+      "review": {
+        "status": "approved"
+      }
+    }
+  },
+  "language": {
+    "schemaVersion": "1.0",
+    "contentVersion": "1.0.0",
+    "id": "es",
+    "identity": {
+      "name": "Spanish",
+      "nativeName": "Español",
+      "iso639_1": "es"
+    },
+    "writingSystem": {
+      "direction": "ltr",
+      "scripts": [
+        "Latin"
+      ],
+      "caseSensitive": false
+    },
+    "variants": [
+      {
+        "id": "general",
+        "name": "Espanhol geral",
+        "default": true
+      },
+      {
+        "id": "spain",
+        "name": "Espanha"
+      },
+      {
+        "id": "mexico",
+        "name": "México"
+      },
+      {
+        "id": "argentina",
+        "name": "Argentina"
+      }
+    ],
+    "capabilities": {
+      "speechRecognition": true,
+      "textToSpeech": true,
+      "pronunciationAssessment": true,
+      "regionalVariants": true,
+      "romanization": false,
+      "tones": false,
+      "grammaticalGender": true
+    },
+    "speech": {
+      "defaultVariant": "general",
+      "providers": {
+        "azure": {
+          "general": {
+            "recognitionLocale": "es-ES",
+            "assessmentLocale": "es-ES",
+            "ttsLocale": "es-ES"
+          },
+          "spain": {
+            "recognitionLocale": "es-ES",
+            "assessmentLocale": "es-ES",
+            "ttsLocale": "es-ES"
+          },
+          "mexico": {
+            "recognitionLocale": "es-MX",
+            "assessmentLocale": "es-MX",
+            "ttsLocale": "es-MX"
+          },
+          "argentina": {
+            "recognitionLocale": "es-AR",
+            "assessmentLocale": null,
+            "ttsLocale": "es-AR"
+          }
+        }
+      }
+    },
+    "normalization": {
+      "trimWhitespace": true,
+      "collapseWhitespace": true,
+      "caseInsensitive": true,
+      "ignoreTerminalPunctuation": true,
+      "ignoreDiacritics": false
+    },
+    "modules": {
+      "alphabet": {
+        "enabled": true,
+        "source": "fundamentals/alphabet.json"
+      },
+      "numbers": {
+        "enabled": true,
+        "source": "fundamentals/numbers.json"
+      },
+      "regionalVariants": {
+        "enabled": true,
+        "source": "fundamentals/regional-variants.json"
+      }
+    },
+    "strategies": {
+      "textTokenizer": "latin-word-v1",
+      "answerNormalizer": "default-latin-v1",
+      "numberParser": "spanish-numbers-v1"
+    }
+  },
+  "moduleData": {
+    "alphabet": [
+      {
+        "letter": "A",
+        "name": "a",
+        "word": "agua",
+        "translation": "água",
+        "example": "El agua está fría.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "B",
+        "name": "be",
+        "word": "barco",
+        "translation": "barco",
+        "example": "El barco está en el puerto.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "C",
+        "name": "ce",
+        "word": "casa",
+        "translation": "casa",
+        "example": "La casa es pequeña.",
+        "kind": "consonant",
+        "note": "Antes de E e I, o C costuma soar como S na América Latina e como o TH de think em boa parte da Espanha."
+      },
+      {
+        "letter": "D",
+        "name": "de",
+        "word": "día",
+        "translation": "dia",
+        "example": "Hoy es un buen día.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "E",
+        "name": "e",
+        "word": "escuela",
+        "translation": "escola",
+        "example": "La escuela está cerca.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "F",
+        "name": "efe",
+        "word": "familia",
+        "translation": "família",
+        "example": "Mi familia vive aquí.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "G",
+        "name": "ge",
+        "word": "gato",
+        "translation": "gato",
+        "example": "El gato duerme.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "H",
+        "name": "hache",
+        "word": "hola",
+        "translation": "olá",
+        "example": "Hola, ¿cómo estás?",
+        "kind": "consonant",
+        "note": "A letra H não tem som em palavras como hola."
+      },
+      {
+        "letter": "I",
+        "name": "i",
+        "word": "isla",
+        "translation": "ilha",
+        "example": "La isla es bonita.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "J",
+        "name": "jota",
+        "word": "jardín",
+        "translation": "jardim",
+        "example": "El jardín tiene flores.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "K",
+        "name": "ka",
+        "word": "kilo",
+        "translation": "quilo",
+        "example": "Necesito un kilo de arroz.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "L",
+        "name": "ele",
+        "word": "libro",
+        "translation": "livro",
+        "example": "Este libro es interesante.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "M",
+        "name": "eme",
+        "word": "mesa",
+        "translation": "mesa",
+        "example": "La mesa está limpia.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "N",
+        "name": "ene",
+        "word": "noche",
+        "translation": "noite",
+        "example": "Buenas noches a todos.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "Ñ",
+        "name": "eñe",
+        "word": "ñandú",
+        "translation": "ema",
+        "example": "El ñandú corre rápido.",
+        "kind": "consonant",
+        "note": "O som de Ñ lembra o NH do português."
+      },
+      {
+        "letter": "O",
+        "name": "o",
+        "word": "ojo",
+        "translation": "olho",
+        "example": "Me duele un ojo.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "P",
+        "name": "pe",
+        "word": "pan",
+        "translation": "pão",
+        "example": "Quiero pan, por favor.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "Q",
+        "name": "cu",
+        "word": "queso",
+        "translation": "queijo",
+        "example": "Me gusta el queso.",
+        "kind": "consonant",
+        "note": "Em que e qui, o U não é pronunciado."
+      },
+      {
+        "letter": "R",
+        "name": "erre",
+        "word": "río",
+        "translation": "rio",
+        "example": "El río es largo.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "S",
+        "name": "ese",
+        "word": "sol",
+        "translation": "sol",
+        "example": "Hoy hace sol.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "T",
+        "name": "te",
+        "word": "taza",
+        "translation": "xícara",
+        "example": "La taza está sobre la mesa.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "U",
+        "name": "u",
+        "word": "uno",
+        "translation": "um",
+        "example": "Uno más, por favor.",
+        "kind": "vowel"
+      },
+      {
+        "letter": "V",
+        "name": "uve",
+        "word": "vaca",
+        "translation": "vaca",
+        "example": "La vaca come hierba.",
+        "kind": "consonant",
+        "note": "Nas palavras, B e V normalmente têm o mesmo som."
+      },
+      {
+        "letter": "W",
+        "name": "uve doble",
+        "word": "web",
+        "translation": "site",
+        "example": "La web del museo es útil.",
+        "kind": "consonant",
+        "note": "Aparece sobretudo em palavras de origem estrangeira."
+      },
+      {
+        "letter": "X",
+        "name": "equis",
+        "word": "xilófono",
+        "translation": "xilofone",
+        "example": "El xilófono suena bien.",
+        "kind": "consonant"
+      },
+      {
+        "letter": "Y",
+        "name": "ye",
+        "word": "yo",
+        "translation": "eu",
+        "example": "Yo estudio español.",
+        "kind": "consonant",
+        "note": "I griega também é um nome usado para esta letra."
+      },
+      {
+        "letter": "Z",
+        "name": "zeta",
+        "word": "zapato",
+        "translation": "sapato",
+        "example": "El zapato es rojo.",
+        "kind": "consonant",
+        "note": "O som varia: em grande parte da América lembra S; em boa parte da Espanha, lembra o TH inglês."
+      }
+    ],
+    "numbers": {
+      "prompts": [
+        {
+          "id": "17",
+          "category": "basic",
+          "display": "17",
+          "spoken": "diecisiete",
+          "example": "¿Tienes diecisiete años?",
+          "exampleTranslation": "Você tem dezessete anos?"
+        },
+        {
+          "id": "47",
+          "category": "basic",
+          "display": "47",
+          "spoken": "cuarenta y siete",
+          "example": "La respuesta está en la página cuarenta y siete.",
+          "exampleTranslation": "A resposta está na página quarenta e sete."
+        },
+        {
+          "id": "70",
+          "category": "basic",
+          "display": "70",
+          "spoken": "setenta",
+          "example": "Hay setenta estudiantes.",
+          "exampleTranslation": "Há setenta estudantes."
+        },
+        {
+          "id": "money-12-50",
+          "category": "money",
+          "display": "12,50 €",
+          "spoken": "doce euros con cincuenta céntimos",
+          "example": "El billete cuesta doce euros con cincuenta céntimos.",
+          "exampleTranslation": "A passagem custa doze euros e cinquenta centavos."
+        },
+        {
+          "id": "money-35",
+          "category": "money",
+          "display": "35 €",
+          "spoken": "treinta y cinco euros",
+          "example": "La entrada cuesta treinta y cinco euros.",
+          "exampleTranslation": "O ingresso custa trinta e cinco euros."
+        },
+        {
+          "id": "date-12-05",
+          "category": "date",
+          "display": "12/05",
+          "spoken": "el doce de mayo",
+          "example": "Hoy es el doce de mayo.",
+          "exampleTranslation": "Hoje é doze de maio."
+        },
+        {
+          "id": "date-21-09",
+          "category": "date",
+          "display": "21/09",
+          "spoken": "el veintiuno de septiembre",
+          "example": "La fiesta es el veintiuno de septiembre.",
+          "exampleTranslation": "A festa é em vinte e um de setembro."
+        },
+        {
+          "id": "time-08-15",
+          "category": "time",
+          "display": "08:15",
+          "spoken": "son las ocho y cuarto",
+          "example": "La clase empieza a las ocho y cuarto.",
+          "exampleTranslation": "A aula começa às oito e quinze.",
+          "accepted": [
+            "8:15"
+          ]
+        },
+        {
+          "id": "time-02-30",
+          "category": "time",
+          "display": "02:30",
+          "spoken": "son las dos y media",
+          "example": "Nos vemos a las dos y media.",
+          "exampleTranslation": "Nos vemos às duas e meia.",
+          "accepted": [
+            "2:30"
+          ]
+        },
+        {
+          "id": "phone-612",
+          "category": "phone",
+          "display": "612 34 56 78",
+          "spoken": "seis uno dos, tres cuatro, cinco seis, siete ocho",
+          "example": "Mi teléfono es seis uno dos, tres cuatro, cinco seis, siete ocho.",
+          "exampleTranslation": "Meu telefone é 612 34 56 78."
+        },
+        {
+          "id": "large-1250",
+          "category": "large",
+          "display": "1.250",
+          "spoken": "mil doscientos cincuenta",
+          "example": "El pueblo tiene mil doscientos cincuenta habitantes.",
+          "exampleTranslation": "A cidade tem mil duzentos e cinquenta habitantes."
+        },
+        {
+          "id": "ordinal-1",
+          "category": "ordinal",
+          "display": "1.º",
+          "spoken": "primero",
+          "example": "Llegó primero a la meta.",
+          "exampleTranslation": "Chegou em primeiro à meta."
+        },
+        {
+          "id": "ordinal-3",
+          "category": "ordinal",
+          "display": "3.º",
+          "spoken": "tercero",
+          "example": "Terminó tercero en la carrera.",
+          "exampleTranslation": "Terminou em terceiro na corrida."
+        }
+      ],
+      "categoryLabels": {
+        "basic": "Números",
+        "money": "Dinheiro",
+        "date": "Datas",
+        "time": "Horários",
+        "phone": "Telefone",
+        "large": "Números grandes",
+        "ordinal": "Ordinais"
+      }
+    },
+    "regionalVariants": [
+      {
+        "id": "computer",
+        "title": "Computador",
+        "meaning": "computador",
+        "note": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos.",
+        "variants": [
+          {
+            "region": "spain",
+            "term": "ordenador",
+            "example": "Mi ordenador está en casa."
+          },
+          {
+            "region": "mexico",
+            "term": "computadora",
+            "example": "Mi computadora está en casa."
+          },
+          {
+            "region": "argentina",
+            "term": "computadora",
+            "example": "Mi computadora está en casa."
+          }
+        ],
+        "checkPrompt": "Em qual destes exemplos aparece 'ordenador'?",
+        "checkRegion": "spain",
+        "sources": [
+          {
+            "label": "RAE: ordenador",
+            "url": "https://dle.rae.es/ordenador"
+          }
+        ]
+      },
+      {
+        "id": "phone",
+        "title": "Telefone portátil",
+        "meaning": "telefone celular",
+        "note": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum.",
+        "variants": [
+          {
+            "region": "spain",
+            "term": "móvil",
+            "example": "¿Dónde está mi móvil?"
+          },
+          {
+            "region": "mexico",
+            "term": "celular",
+            "example": "¿Dónde está mi celular?"
+          },
+          {
+            "region": "argentina",
+            "term": "celular",
+            "example": "¿Dónde está mi celular?"
+          }
+        ],
+        "checkPrompt": "Em qual destes exemplos aparece 'móvil'?",
+        "checkRegion": "spain",
+        "sources": [
+          {
+            "label": "RAE: móvil",
+            "url": "https://dle.rae.es/m%C3%B3vil"
+          },
+          {
+            "label": "ASALE: celular",
+            "url": "https://www.asale.org/damer/celular"
+          }
+        ]
+      },
+      {
+        "id": "informal-you",
+        "title": "Tratamento informal",
+        "meaning": "você (singular)",
+        "note": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente.",
+        "variants": [
+          {
+            "region": "spain",
+            "term": "tú",
+            "example": "¿Cómo te llamas tú?"
+          },
+          {
+            "region": "mexico",
+            "term": "tú",
+            "example": "¿Cómo te llamas tú?"
+          },
+          {
+            "region": "argentina",
+            "term": "vos",
+            "example": "¿Cómo te llamás vos?"
+          }
+        ],
+        "checkPrompt": "Em qual destes exemplos aparece 'vos' com 'llamás'?",
+        "checkRegion": "argentina",
+        "sources": [
+          {
+            "label": "RAE/ASALE: vos",
+            "url": "https://www.rae.es/dpd/vos"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,794 @@
+[
+  {
+    "id": "hola",
+    "language": "es",
+    "lemma": "hola",
+    "meanings": [
+      {
+        "id": "hola.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "olá"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Hola, ¿qué tal?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "hola"
+    ],
+    "surface": "hola",
+    "regionalNote": {}
+  },
+  {
+    "id": "buenos-dias",
+    "language": "es",
+    "lemma": "buenos días",
+    "meanings": [
+      {
+        "id": "buenos-dias.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "bom dia"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Buenos días, Marta.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "buenos días"
+    ],
+    "surface": "buenos días",
+    "regionalNote": {}
+  },
+  {
+    "id": "buenas-tardes",
+    "language": "es",
+    "lemma": "buenas tardes",
+    "meanings": [
+      {
+        "id": "buenas-tardes.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "boa tarde"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Buenas tardes, señor Ruiz.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "buenas tardes"
+    ],
+    "surface": "buenas tardes",
+    "regionalNote": {}
+  },
+  {
+    "id": "hasta-luego",
+    "language": "es",
+    "lemma": "hasta luego",
+    "meanings": [
+      {
+        "id": "hasta-luego.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "até logo"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Nos vemos. ¡Hasta luego!",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "hasta luego"
+    ],
+    "surface": "hasta luego",
+    "regionalNote": {}
+  },
+  {
+    "id": "hasta-manana",
+    "language": "es",
+    "lemma": "hasta mañana",
+    "meanings": [
+      {
+        "id": "hasta-manana.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "até amanhã"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Adiós, hasta mañana.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "hasta mañana"
+    ],
+    "surface": "hasta mañana",
+    "regionalNote": {}
+  },
+  {
+    "id": "llamarse",
+    "language": "es",
+    "lemma": "llamarse",
+    "meanings": [
+      {
+        "id": "llamarse.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "chamar-se; dizer seu nome"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Me llamo Elena.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "surface": "llamarse",
+    "className": "Verbo pronominal",
+    "regionalNote": {
+      "argentina": "Na Argentina, a pergunta informal costuma ser ‘¿Cómo te llamás vos?’."
+    },
+    "clozeForms": [
+      "me llamo"
+    ]
+  },
+  {
+    "id": "tener",
+    "language": "es",
+    "lemma": "tener",
+    "meanings": [
+      {
+        "id": "tener.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "ter ou possuir"
+          ]
+        }
+      },
+      {
+        "id": "tener.meaning.2",
+        "translations": {
+          "pt-BR": [
+            "indicar idade"
+          ]
+        }
+      },
+      {
+        "id": "tener.meaning.3",
+        "translations": {
+          "pt-BR": [
+            "expressar necessidade ou sensação"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Tengo un libro en casa.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      },
+      {
+        "target": "Tengo 27 años.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      },
+      {
+        "target": "Tengo hambre.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "surface": "tener",
+    "className": "Verbo",
+    "clozeForms": [
+      "tengo"
+    ]
+  },
+  {
+    "id": "vivir",
+    "language": "es",
+    "lemma": "vivir",
+    "meanings": [
+      {
+        "id": "vivir.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "morar em algum lugar"
+          ]
+        }
+      },
+      {
+        "id": "vivir.meaning.2",
+        "translations": {
+          "pt-BR": [
+            "viver ou experimentar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Vivo en Lima.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      },
+      {
+        "target": "Vivimos un momento especial.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "surface": "vivir",
+    "className": "Verbo",
+    "visualCue": {
+      "icon": "home",
+      "alt": "Desenho de uma casa"
+    },
+    "clozeForms": [
+      "vivo"
+    ]
+  },
+  {
+    "id": "trabajar",
+    "language": "es",
+    "lemma": "trabajar",
+    "meanings": [
+      {
+        "id": "trabajar.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "trabalhar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Trabajo en una escuela.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "aliases": [
+      "trabajar"
+    ],
+    "surface": "trabajar",
+    "regionalNote": {},
+    "visualCue": {
+      "icon": "work",
+      "alt": "Desenho de uma maleta de trabalho"
+    },
+    "clozeForms": [
+      "trabajo"
+    ]
+  },
+  {
+    "id": "brasileno",
+    "language": "es",
+    "lemma": "brasileño",
+    "meanings": [
+      {
+        "id": "brasileno.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "brasileiro / brasileira"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Ella es brasileña.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "brasileño",
+      "brasileña"
+    ],
+    "surface": "brasileño / brasileña",
+    "regionalNote": {}
+  },
+  {
+    "id": "argentino",
+    "language": "es",
+    "lemma": "argentino",
+    "meanings": [
+      {
+        "id": "argentino.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "argentino / argentina"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Él es argentino.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "argentino",
+      "argentina"
+    ],
+    "surface": "argentino / argentina",
+    "regionalNote": {}
+  },
+  {
+    "id": "profesor",
+    "language": "es",
+    "lemma": "profesor",
+    "meanings": [
+      {
+        "id": "profesor.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "professor / professora"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Soy profesora de español.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "profesor",
+      "profesora"
+    ],
+    "surface": "profesor / profesora",
+    "regionalNote": {},
+    "visualCue": {
+      "icon": "teacher",
+      "alt": "Desenho de uma pessoa ensinando"
+    }
+  },
+  {
+    "id": "medico",
+    "language": "es",
+    "lemma": "médico",
+    "meanings": [
+      {
+        "id": "medico.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "médico / médica"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Mi hermana es médica.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "médico",
+      "médica"
+    ],
+    "surface": "médico / médica",
+    "regionalNote": {},
+    "visualCue": {
+      "icon": "doctor",
+      "alt": "Desenho de um estetoscópio"
+    }
+  },
+  {
+    "id": "treinta",
+    "language": "es",
+    "lemma": "treinta",
+    "meanings": [
+      {
+        "id": "treinta.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "trinta"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Tengo treinta años.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-vocab",
+    "aliases": [
+      "treinta"
+    ],
+    "surface": "treinta",
+    "regionalNote": {}
+  },
+  {
+    "id": "donde",
+    "language": "es",
+    "lemma": "¿dónde?",
+    "meanings": [
+      {
+        "id": "donde.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "onde?"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Dónde vives?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "aliases": [
+      "¿dónde?"
+    ],
+    "surface": "¿dónde?",
+    "regionalNote": {},
+    "visualCue": {
+      "icon": "location",
+      "alt": "Desenho de um marcador de localização"
+    }
+  },
+  {
+    "id": "de-donde",
+    "language": "es",
+    "lemma": "¿de dónde?",
+    "meanings": [
+      {
+        "id": "de-donde.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "de onde?"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿De dónde eres?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "aliases": [
+      "¿de dónde?"
+    ],
+    "surface": "¿de dónde?",
+    "regionalNote": {}
+  },
+  {
+    "id": "cuantos",
+    "language": "es",
+    "lemma": "¿cuántos?",
+    "meanings": [
+      {
+        "id": "cuantos.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "quantos?"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Cuántos años tienes?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-grammar",
+    "aliases": [
+      "¿cuántos?"
+    ],
+    "surface": "¿cuántos?",
+    "regionalNote": {}
+  },
+  {
+    "id": "hablar",
+    "language": "es",
+    "lemma": "hablar",
+    "meanings": [
+      {
+        "id": "hablar.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "falar um idioma"
+          ]
+        }
+      },
+      {
+        "id": "hablar.meaning.2",
+        "translations": {
+          "pt-BR": [
+            "conversar com alguém"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Hablo español y portugués.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      },
+      {
+        "target": "Hablo con Ana por teléfono.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "lessonId": "l-workbook",
+    "surface": "hablar",
+    "className": "Verbo",
+    "visualCue": {
+      "icon": "talk",
+      "alt": "Desenho de um balão de conversa"
+    },
+    "clozeForms": [
+      "hablo"
+    ]
+  },
+  {
+    "id": "ordenador",
+    "language": "es",
+    "lemma": "ordenador",
+    "meanings": [
+      {
+        "id": "ordenador.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "computador"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Mi ordenador está en casa.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "ordenador",
+      "computadora",
+      "computadora"
+    ],
+    "surface": "ordenador",
+    "regionalNote": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos."
+  },
+  {
+    "id": "computadora",
+    "language": "es",
+    "lemma": "computadora",
+    "meanings": [
+      {
+        "id": "computadora.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "computador"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Mi computadora está en casa.",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "ordenador",
+      "computadora",
+      "computadora"
+    ],
+    "surface": "computadora",
+    "regionalNote": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos."
+  },
+  {
+    "id": "móvil",
+    "language": "es",
+    "lemma": "móvil",
+    "meanings": [
+      {
+        "id": "móvil.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "telefone celular"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Dónde está mi móvil?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "móvil",
+      "celular",
+      "celular"
+    ],
+    "surface": "móvil",
+    "regionalNote": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum."
+  },
+  {
+    "id": "celular",
+    "language": "es",
+    "lemma": "celular",
+    "meanings": [
+      {
+        "id": "celular.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "telefone celular"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Dónde está mi celular?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "móvil",
+      "celular",
+      "celular"
+    ],
+    "surface": "celular",
+    "regionalNote": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum."
+  },
+  {
+    "id": "tú",
+    "language": "es",
+    "lemma": "tú",
+    "meanings": [
+      {
+        "id": "tú.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "você (singular)"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Cómo te llamas tú?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "tú",
+      "tú",
+      "vos"
+    ],
+    "surface": "tú",
+    "regionalNote": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente."
+  },
+  {
+    "id": "vos",
+    "language": "es",
+    "lemma": "vos",
+    "meanings": [
+      {
+        "id": "vos.meaning.1",
+        "translations": {
+          "pt-BR": [
+            "você (singular)"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Cómo te llamás vos?",
+        "translations": {
+          "pt-BR": "Exemplo em espanhol"
+        }
+      }
+    ],
+    "aliases": [
+      "tú",
+      "tú",
+      "vos"
+    ],
+    "surface": "vos",
+    "regionalNote": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente."
+  }
+]

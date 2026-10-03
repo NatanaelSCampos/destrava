@@ -1,0 +1,3 @@
+[
+  { "id": "xx.u01.diagnostic", "type": "adaptive_diagnostic", "unitId": "xx.u01", "skillWeights": { "vocabulary": 0.34, "grammar": 0.33, "reading": 0.33 }, "passingPolicy": { "overall": 0.67, "minimumBySkill": {} }, "skillPlan": ["vocabulary", "grammar", "reading"], "bank": [{ "activityId": "xx.act.choice", "skill": "vocabulary", "difficulty": 1 }, { "activityId": "xx.act.fill", "skill": "grammar", "difficulty": 2 }, { "activityId": "xx.act.short", "skill": "reading", "difficulty": 3 }], "activities": [] }
+]

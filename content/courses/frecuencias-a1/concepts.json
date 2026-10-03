@@ -1,0 +1,50 @@
+[
+  {
+    "id": "greetings",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Cumprimentos"
+  },
+  {
+    "id": "numbers",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Números"
+  },
+  {
+    "id": "nationality",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Nacionalidades"
+  },
+  {
+    "id": "age-tener",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Tener para idade"
+  },
+  {
+    "id": "personal-questions",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Perguntas pessoais"
+  },
+  {
+    "id": "origin",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Origem"
+  },
+  {
+    "id": "residence",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Onde mora"
+  },
+  {
+    "id": "profession",
+    "language": "es",
+    "type": "course_concept",
+    "name": "Profissões"
+  }
+]

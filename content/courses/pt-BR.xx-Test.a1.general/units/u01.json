@@ -1,0 +1,34 @@
+{
+  "id": "xx.u01",
+  "slug": "primeiros-passos",
+  "order": 1,
+  "title": "Primeiros passos",
+  "description": "Cumprimente e faça uma pergunta em testês.",
+  "objectives": ["Cumprimentar", "Perguntar se alguém é amigo"],
+  "skills": ["reading", "vocabulary", "grammar"],
+  "introduces": { "concepts": ["xx.greeting", "xx.question"], "vocabulary": ["xx.lex.milo", "xx.lex.mira", "xx.lex.talo", "xx.lex.sava", "xx.lex.nori"] },
+  "assessmentId": "xx.u01.diagnostic",
+  "lessons": [
+    {
+      "id": "xx.l01", "slug": "cumprimentos", "title": "Cumprimentos", "order": 1,
+      "objectives": ["Reconhecer milo e mira"], "description": "Duas palavras para começar.",
+      "eyebrow": "Vocabulário", "minutes": 5,
+      "activities": [
+        { "id": "xx.act.intro", "type": "lesson_content", "skills": ["reading"], "concepts": ["xx.greeting"], "title": "Milo!", "prompt": "Primeiro contato", "minutes": 2, "payload": { "body": "Testês é um idioma fictício de teste. Milo significa olá; mira significa amigo. Leia, escute se houver voz disponível e pratique.", "highlights": ["Milo, mira!"] } },
+        { "id": "xx.act.choice", "type": "multiple_choice", "skills": ["vocabulary", "reading"], "concepts": ["xx.greeting"], "difficulty": 0.2, "title": "O que significa milo?", "prompt": "Escolha a tradução de milo.", "minutes": 1, "payload": { "options": ["olá", "obrigado", "você"], "answer": "olá" }, "evaluation": { "strategy": "exact-normalized" } },
+        { "id": "xx.act.flash", "type": "flashcard", "skills": ["vocabulary"], "concepts": ["xx.greeting"], "title": "Uma palavra amiga", "prompt": "Leia e recorde.", "minutes": 1, "payload": { "front": "mira", "back": "amigo", "example": "Milo, mira!" } }
+      ]
+    },
+    {
+      "id": "xx.l02", "slug": "perguntas", "title": "Perguntas", "order": 2,
+      "objectives": ["Usar talo e sava", "Responder uma pergunta curta"],
+      "description": "Pratique uma frase e uma pergunta.", "eyebrow": "Prática", "minutes": 6,
+      "activities": [
+        { "id": "xx.act.rule", "type": "lesson_content", "skills": ["reading", "grammar"], "concepts": ["xx.question"], "title": "Talo e sava", "prompt": "Eu e você", "minutes": 2, "payload": { "body": "Talo quer dizer eu; sava quer dizer você. A pergunta Sava mira? significa Você é amigo? Nori quer dizer obrigado.", "highlights": ["Sava mira?", "Nori, mira."] } },
+        { "id": "xx.act.fill", "type": "fill_blank", "skills": ["grammar", "writing"], "concepts": ["xx.question"], "difficulty": 0.4, "title": "Complete a frase", "prompt": "___ mira? (Você é amigo?)", "minutes": 2, "payload": { "answer": "sava", "accepted": [], "fullAnswers": ["Sava mira?"] }, "evaluation": { "strategy": "exact-normalized" } },
+        { "id": "xx.act.short", "type": "short_answer", "skills": ["reading"], "concepts": ["xx.question"], "difficulty": 0.6, "title": "Como dizer obrigado?", "prompt": "Escreva a palavra testesa para obrigado.", "minutes": 1, "payload": { "answer": "nori", "accepted": [] }, "evaluation": { "strategy": "exact-normalized" } },
+        { "id": "xx.act.quiz", "type": "quiz", "skills": ["reading"], "concepts": ["xx.greeting", "xx.question"], "title": "Você já consegue conversar", "prompt": "Hora de testar", "minutes": 1, "payload": { "body": "Revise os cartões e faça o diagnóstico desta unidade." } }
+      ]
+    }
+  ]
+}

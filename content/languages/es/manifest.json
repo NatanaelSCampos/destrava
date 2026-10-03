@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "1.0",
+  "contentVersion": "1.0.0",
+  "id": "es",
+  "identity": {
+    "name": "Spanish",
+    "nativeName": "Español",
+    "iso639_1": "es"
+  },
+  "writingSystem": {
+    "direction": "ltr",
+    "scripts": [
+      "Latin"
+    ],
+    "caseSensitive": false
+  },
+  "variants": [
+    {
+      "id": "general",
+      "name": "Espanhol geral",
+      "default": true
+    },
+    {
+      "id": "spain",
+      "name": "Espanha"
+    },
+    {
+      "id": "mexico",
+      "name": "México"
+    },
+    {
+      "id": "argentina",
+      "name": "Argentina"
+    }
+  ],
+  "capabilities": {
+    "speechRecognition": true,
+    "textToSpeech": true,
+    "pronunciationAssessment": true,
+    "regionalVariants": true,
+    "romanization": false,
+    "tones": false,
+    "grammaticalGender": true
+  },
+  "speech": {
+    "defaultVariant": "general",
+    "providers": {
+      "azure": {
+        "general": {
+          "recognitionLocale": "es-ES",
+          "assessmentLocale": "es-ES",
+          "ttsLocale": "es-ES"
+        },
+        "spain": {
+          "recognitionLocale": "es-ES",
+          "assessmentLocale": "es-ES",
+          "ttsLocale": "es-ES"
+        },
+        "mexico": {
+          "recognitionLocale": "es-MX",
+          "assessmentLocale": "es-MX",
+          "ttsLocale": "es-MX"
+        },
+        "argentina": {
+          "recognitionLocale": "es-AR",
+          "assessmentLocale": null,
+          "ttsLocale": "es-AR"
+        }
+      }
+    }
+  },
+  "normalization": {
+    "trimWhitespace": true,
+    "collapseWhitespace": true,
+    "caseInsensitive": true,
+    "ignoreTerminalPunctuation": true,
+    "ignoreDiacritics": false
+  },
+  "modules": {
+    "alphabet": {
+      "enabled": true,
+      "source": "fundamentals/alphabet.json"
+    },
+    "numbers": {
+      "enabled": true,
+      "source": "fundamentals/numbers.json"
+    },
+    "regionalVariants": {
+      "enabled": true,
+      "source": "fundamentals/regional-variants.json"
+    }
+  },
+  "strategies": {
+    "textTokenizer": "latin-word-v1",
+    "answerNormalizer": "default-latin-v1",
+    "numberParser": "spanish-numbers-v1"
+  }
+}

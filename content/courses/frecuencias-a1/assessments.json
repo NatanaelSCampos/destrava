@@ -1,0 +1,125 @@
+[
+  {
+    "id": "frecuencias-a1.nos-presentamos.diagnostic",
+    "type": "adaptive_diagnostic",
+    "unitId": "nos-presentamos",
+    "skillWeights": {
+      "vocabulary": 0.16666666666666666,
+      "grammar": 0.3333333333333333,
+      "listening": 0.16666666666666666,
+      "writing": 0.16666666666666666,
+      "reading": 0.16666666666666666
+    },
+    "passingPolicy": {
+      "overall": 0.75,
+      "minimumBySkill": {
+        "vocabulary": 0.6,
+        "grammar": 0.6,
+        "listening": 0.6,
+        "writing": 0.6,
+        "reading": 0.6
+      }
+    },
+    "skillPlan": [
+      "vocabulary",
+      "grammar",
+      "listening",
+      "writing",
+      "grammar",
+      "reading"
+    ],
+    "bank": [
+      {
+        "activityId": "assessment-1",
+        "skill": "vocabulary",
+        "difficulty": 1
+      },
+      {
+        "activityId": "vocab-2",
+        "skill": "vocabulary",
+        "difficulty": 1
+      },
+      {
+        "activityId": "vocab-3",
+        "skill": "vocabulary",
+        "difficulty": 2
+      },
+      {
+        "activityId": "vocab-4",
+        "skill": "vocabulary",
+        "difficulty": 2
+      },
+      {
+        "activityId": "vocab-5",
+        "skill": "vocabulary",
+        "difficulty": 3
+      },
+      {
+        "activityId": "workbook-5",
+        "skill": "vocabulary",
+        "difficulty": 3
+      },
+      {
+        "activityId": "grammar-2",
+        "skill": "grammar",
+        "difficulty": 1
+      },
+      {
+        "activityId": "guided-2",
+        "skill": "grammar",
+        "difficulty": 1
+      },
+      {
+        "activityId": "assessment-2",
+        "skill": "grammar",
+        "difficulty": 2
+      },
+      {
+        "activityId": "assessment-3",
+        "skill": "grammar",
+        "difficulty": 2
+      },
+      {
+        "activityId": "review-3",
+        "skill": "grammar",
+        "difficulty": 2
+      },
+      {
+        "activityId": "assessment-6",
+        "skill": "grammar",
+        "difficulty": 3
+      },
+      {
+        "activityId": "guided-3",
+        "skill": "grammar",
+        "difficulty": 3
+      },
+      {
+        "activityId": "workbook-4",
+        "skill": "grammar",
+        "difficulty": 3
+      },
+      {
+        "activityId": "listening-1",
+        "skill": "listening",
+        "difficulty": 1
+      },
+      {
+        "activityId": "assessment-4",
+        "skill": "writing",
+        "difficulty": 2
+      },
+      {
+        "activityId": "guided-4",
+        "skill": "writing",
+        "difficulty": 3
+      },
+      {
+        "activityId": "assessment-5",
+        "skill": "reading",
+        "difficulty": 2
+      }
+    ],
+    "activities": []
+  }
+]

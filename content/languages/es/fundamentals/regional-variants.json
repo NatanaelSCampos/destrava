@@ -1,0 +1,99 @@
+[
+  {
+    "id": "computer",
+    "title": "Computador",
+    "meaning": "computador",
+    "note": "'Ordenador' é marcado como uso da Espanha no dicionário acadêmico. 'Computadora' é uma opção frequente nos exemplos americanos.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "ordenador",
+        "example": "Mi ordenador está en casa."
+      },
+      {
+        "region": "mexico",
+        "term": "computadora",
+        "example": "Mi computadora está en casa."
+      },
+      {
+        "region": "argentina",
+        "term": "computadora",
+        "example": "Mi computadora está en casa."
+      }
+    ],
+    "checkPrompt": "Em qual destes exemplos aparece 'ordenador'?",
+    "checkRegion": "spain",
+    "sources": [
+      {
+        "label": "RAE: ordenador",
+        "url": "https://dle.rae.es/ordenador"
+      }
+    ]
+  },
+  {
+    "id": "phone",
+    "title": "Telefone portátil",
+    "meaning": "telefone celular",
+    "note": "As palavras mudam conforme o país; as duas são compreensíveis. No espanhol da Espanha, 'móvil' é muito comum.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "móvil",
+        "example": "¿Dónde está mi móvil?"
+      },
+      {
+        "region": "mexico",
+        "term": "celular",
+        "example": "¿Dónde está mi celular?"
+      },
+      {
+        "region": "argentina",
+        "term": "celular",
+        "example": "¿Dónde está mi celular?"
+      }
+    ],
+    "checkPrompt": "Em qual destes exemplos aparece 'móvil'?",
+    "checkRegion": "spain",
+    "sources": [
+      {
+        "label": "RAE: móvil",
+        "url": "https://dle.rae.es/m%C3%B3vil"
+      },
+      {
+        "label": "ASALE: celular",
+        "url": "https://www.asale.org/damer/celular"
+      }
+    ]
+  },
+  {
+    "id": "informal-you",
+    "title": "Tratamento informal",
+    "meaning": "você (singular)",
+    "note": "Na Argentina, 'vos' costuma ser usado informalmente com uma conjugação própria. 'Usted' é uma forma de tratamento diferente.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "tú",
+        "example": "¿Cómo te llamas tú?"
+      },
+      {
+        "region": "mexico",
+        "term": "tú",
+        "example": "¿Cómo te llamas tú?"
+      },
+      {
+        "region": "argentina",
+        "term": "vos",
+        "example": "¿Cómo te llamás vos?"
+      }
+    ],
+    "checkPrompt": "Em qual destes exemplos aparece 'vos' com 'llamás'?",
+    "checkRegion": "argentina",
+    "sources": [
+      {
+        "label": "RAE/ASALE: vos",
+        "url": "https://www.rae.es/dpd/vos"
+      }
+    ]
+  }
+]
