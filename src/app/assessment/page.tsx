@@ -112,7 +112,7 @@ export default function AssessmentPage() {
           </p>
         </div>
       </div>
-      {!startedAt && (
+      {!startedAt && !latest && (
         <section className="panel adaptive-intro">
           <h2>Pronto para começar?</h2>
           <p>
@@ -158,29 +158,18 @@ export default function AssessmentPage() {
       )}
       {showReport && (
         <section className="panel adaptive-report">
-          <span className="eyebrow">RELATÓRIO POR COMPETÊNCIAS</span>
-          <h2>
-            {report.score}% de acertos · {report.passed ? "Meta alcançada" : "Revisão recomendada"}
-          </h2>
-          <p>
-            Meta inicial: 75% geral e pelo menos 60% em competências com duas ou mais questões. O
-            resultado orienta estudos e não substitui a avaliação final da unidade.
-          </p>
-          <div className="adaptive-skill-grid">
-            {report.bySkill.map((item) => (
-              <div key={item.skill}>
-                <span>{labels[item.skill]}</span>
-                <strong>{item.score === null ? "Não avaliada" : `${item.score}%`}</strong>
-                <small>
-                  {item.correct}/{item.answered} acertos
-                </small>
-              </div>
-            ))}
+          <div className="adaptive-report-head">
+            <div>
+              <span className="eyebrow">SEU RESULTADO</span>
+              <h2>{report.passed ? "Meta alcançada" : "Revisão recomendada"}</h2>
+              <p>Veja o próximo passo e continue praticando.</p>
+            </div>
+            <strong aria-label={`${report.score}% de acertos`}>{report.score}%</strong>
           </div>
-          <h3>Seu plano depois do teste</h3>
+          <h3>Seu próximo passo</h3>
           {report.wrong.length ? (
             <ol className="adaptive-plan">
-              {report.wrong.map((item) => {
+              {report.wrong.map((item, index) => {
                 const entry = activities.get(item.activityId);
                 if (!entry) return null;
                 return (
@@ -192,7 +181,7 @@ export default function AssessmentPage() {
                       <p>Revise a explicação e pratique esta habilidade novamente.</p>
                     </div>
                     <Link
-                      className="secondary-button"
+                      className={index === 0 ? "primary-button" : "secondary-button"}
                       href={`/course/${course.slug}/unit/${entry.unit.number}/lesson/${entry.lesson.slug}?activity=${entry.activity.id}`}
                     >
                       Praticar <ArrowRight size={15} />
@@ -207,6 +196,18 @@ export default function AssessmentPage() {
               ritmo.
             </p>
           )}
+          <h3>Resultado por competência</h3>
+          <div className="adaptive-skill-grid">
+            {report.bySkill.map((item) => (
+              <div key={item.skill}>
+                <span>{labels[item.skill]}</span>
+                <strong>{item.score === null ? "Não avaliada" : `${item.score}%`}</strong>
+                <small>
+                  {item.correct}/{item.answered} acertos
+                </small>
+              </div>
+            ))}
+          </div>
           <div className="adaptive-report-actions">
             <button type="button" className="secondary-button" onClick={begin}>
               <RotateCcw size={16} /> Refazer diagnóstico
@@ -218,10 +219,14 @@ export default function AssessmentPage() {
               Praticar fala <ArrowRight size={16} />
             </Link>
           </div>
-          <p className="helper-note">
-            Cada resposta entra no seu perfil de aprendizado. Questões erradas entram na fila de
-            revisão. Uma resposta certa na prova não apaga dificuldades anteriores.
-          </p>
+          <details className="adaptive-report-method">
+            <summary>Como este resultado funciona</summary>
+            <p>
+              A meta inicial é 75% geral e pelo menos 60% nas competências com duas ou mais questões.
+              O resultado orienta os estudos e não substitui a avaliação final da unidade. Cada
+              resposta entra no perfil de aprendizado; questões erradas entram na revisão.
+            </p>
+          </details>
         </section>
       )}
     </div>

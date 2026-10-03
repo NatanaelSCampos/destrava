@@ -347,7 +347,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Escolha o modo",
         description: "Selecione uma missão com objetivo definido ou pratique livremente.",
-        target: ".conversation-mode-grid",
+        target: ".conversation-mode-tabs",
       },
       {
         title: "Escolha uma situação",

@@ -334,81 +334,116 @@ export default function ConversationPage() {
         <div className="conversation-layout">
           <section className="panel conversation-setup">
             <span className="eyebrow">ESCOLHA COMO PRATICAR</span>
-            <div className="conversation-mode-grid">
+            <div className="conversation-mode-tabs" role="tablist" aria-label="Tipo de conversa">
               <button
                 type="button"
+                role="tab"
+                id="conversation-mission-tab"
+                aria-controls="conversation-mode-panel"
+                aria-selected={mode === "mission"}
                 className={mode === "mission" ? "active" : ""}
-                onClick={() => setMode("mission")}
+                onClick={() => {
+                  setMode("mission");
+                  setError("");
+                }}
               >
-                <strong>Missão guiada</strong>
-                <span>Uma situação real com objetivos simples.</span>
+                Missão guiada
               </button>
               <button
                 type="button"
+                role="tab"
+                id="conversation-free-tab"
+                aria-controls="conversation-mode-panel"
+                aria-selected={mode === "free"}
                 className={mode === "free" ? "active" : ""}
-                onClick={() => setMode("free")}
+                onClick={() => {
+                  setMode("free");
+                  setError("");
+                }}
               >
-                <strong>Conversa livre</strong>
-                <span>Escolha o assunto e siga conversando.</span>
+                Conversa livre
               </button>
             </div>
-            {mode === "mission" ? (
-              <div className="conversation-scenario-grid">
-                {conversationScenarios.map((item) => (
-                  <button
-                    type="button"
-                    key={item.id}
-                    className={scenarioId === item.id ? "active" : ""}
-                    onClick={() => setScenarioId(item.id)}
+            <section
+              className="conversation-mode-panel"
+              id="conversation-mode-panel"
+              role="tabpanel"
+              aria-labelledby={mode === "mission" ? "conversation-mission-tab" : "conversation-free-tab"}
+            >
+              <h2>{mode === "mission" ? "Escolha uma missão" : "Escolha o assunto"}</h2>
+              <p>
+                {mode === "mission"
+                  ? "Uma situação e objetivos para guiar sua conversa."
+                  : "Comece com um assunto seu e converse livremente."}
+              </p>
+              {mode === "mission" ? (
+                <div className="conversation-scenario-grid">
+                  {conversationScenarios.map((item) => (
+                    <button
+                      type="button"
+                      key={item.id}
+                      aria-pressed={scenarioId === item.id}
+                      className={scenarioId === item.id ? "active" : ""}
+                      onClick={() => setScenarioId(item.id)}
+                    >
+                      <strong>{item.title}</strong>
+                      <span>{item.setting}</span>
+                      <small>{item.objectives.length} objetivos</small>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="field">
+                  <label htmlFor="conversation-topic">Sobre o que quer conversar?</label>
+                  <input
+                    id="conversation-topic"
+                    value={topic}
+                    onChange={(event) => setTopic(event.target.value)}
+                    maxLength={80}
+                    placeholder="Ex.: música, rotina, viagem"
+                  />
+                </div>
+              )}
+            </section>
+            <details className="conversation-options">
+              <summary>
+                Ajustar ritmo e correção
+                <small>
+                  {paceOptions.find((item) => item.id === pace)?.label} ·{" "}
+                  {correctionOptions.find((item) => item.id === correction)?.label}
+                </small>
+              </summary>
+              <div className="settings-form-row">
+                <div className="field">
+                  <label htmlFor="conversation-pace">Ritmo</label>
+                  <select
+                    id="conversation-pace"
+                    value={pace}
+                    onChange={(event) => setPace(event.target.value as ConversationPace)}
                   >
-                    <strong>{item.title}</strong>
-                    <span>{item.setting}</span>
-                    <small>{item.objectives.length} objetivos</small>
-                  </button>
-                ))}
+                    {paceOptions.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.label} — {item.detail}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="field">
+                  <label htmlFor="conversation-correction">Quando corrigir</label>
+                  <select
+                    id="conversation-correction"
+                    value={correction}
+                    onChange={(event) => setCorrection(event.target.value as ConversationCorrection)}
+                  >
+                    {correctionOptions.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            ) : (
-              <div className="field">
-                <label htmlFor="conversation-topic">Sobre o que quer conversar?</label>
-                <input
-                  id="conversation-topic"
-                  value={topic}
-                  onChange={(event) => setTopic(event.target.value)}
-                  maxLength={80}
-                  placeholder="Ex.: música, rotina, viagem"
-                />
-              </div>
-            )}
-            <div className="settings-form-row">
-              <div className="field">
-                <label htmlFor="conversation-pace">Ritmo</label>
-                <select
-                  id="conversation-pace"
-                  value={pace}
-                  onChange={(event) => setPace(event.target.value as ConversationPace)}
-                >
-                  {paceOptions.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label} — {item.detail}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="field">
-                <label htmlFor="conversation-correction">Quando corrigir</label>
-                <select
-                  id="conversation-correction"
-                  value={correction}
-                  onChange={(event) => setCorrection(event.target.value as ConversationCorrection)}
-                >
-                  {correctionOptions.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            </details>
             <button type="button" className="primary-button" onClick={begin}>
               <MessageCircle size={16} /> Começar conversa
             </button>
@@ -419,8 +454,8 @@ export default function ConversationPage() {
             )}
           </section>
           <aside className="conversation-side">
-            <div className="panel conversation-history">
-              <span className="eyebrow">CONVERSAS RECENTES</span>
+            <details className="panel conversation-history">
+              <summary>Conversas recentes ({sessions.length})</summary>
               {sessions.length === 0 ? (
                 <p>Suas conversas aparecerão aqui.</p>
               ) : (
@@ -443,7 +478,7 @@ export default function ConversationPage() {
                   </button>
                 ))
               )}
-            </div>
+            </details>
           </aside>
         </div>
       )}

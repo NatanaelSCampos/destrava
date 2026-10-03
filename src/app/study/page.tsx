@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -24,6 +24,12 @@ import { ReviewQueue } from "@/components/review/review-queue";
 import { formatMinutes } from "@/lib/utils";
 import { buildPracticeHistory, sessionComparisons } from "@/domain/study/practice-history";
 import type { SessionMode } from "@/domain/study/study-state";
+import {
+  advanceActiveStudySeconds,
+  countedStudySeconds,
+  MAX_STUDY_SESSION_SECONDS,
+  sessionTimeNeedsCorrection,
+} from "@/domain/study/session-time";
 
 type Duration = 5 | 15 | 30 | "full";
 const durationOptions: Array<{ value: Duration; label: string }> = [
@@ -39,7 +45,15 @@ function studyHref(duration: Duration, mode: SessionMode) {
 
 function StudyContent() {
   const searchParams = useSearchParams();
-  const { course, state, vocabularyItems, ready, startSession, finishSession } = useStudy();
+  const {
+    course,
+    state,
+    vocabularyItems,
+    ready,
+    startSession,
+    updateActiveSessionDuration,
+    finishSession,
+  } = useStudy();
   const mode: SessionMode = searchParams.get("mode") === "difficulties" ? "difficulties" : "guided";
   const durationValue = searchParams.get("duration");
   const duration: Duration =
@@ -63,16 +77,63 @@ function StudyContent() {
   const plan = activeSession?.plan ?? planned;
   const [index, setIndex] = useState(0);
   const [elapsed, setElapsed] = useState(0);
+  const elapsedRef = useRef(0);
+  const activeSessionId = activeSession?.id;
+  const savedSeconds = activeSession?.durationSeconds ?? 0;
   useEffect(() => {
-    if (!activeSession) return;
-    const update = () =>
-      setElapsed(
-        Math.max(0, Math.floor((Date.now() - new Date(activeSession.startedAt).getTime()) / 1000)),
-      );
-    update();
-    const interval = window.setInterval(update, 1000);
-    return () => window.clearInterval(interval);
-  }, [activeSession]);
+    if (!activeSessionId) return;
+    let seconds = savedSeconds;
+    let lastSaved = Math.floor(seconds);
+    let lastTick = performance.now();
+    let lastInteraction = lastTick;
+    elapsedRef.current = seconds;
+    const initial = window.setTimeout(() => setElapsed(Math.floor(seconds)), 0);
+    const checkpoint = () => {
+      const wholeSeconds = Math.floor(seconds);
+      if (wholeSeconds > lastSaved) {
+        updateActiveSessionDuration(activeSessionId, wholeSeconds);
+        lastSaved = wholeSeconds;
+      }
+    };
+    const tick = () => {
+      const now = performance.now();
+      if (document.visibilityState === "visible" && seconds < MAX_STUDY_SESSION_SECONDS) {
+        seconds = advanceActiveStudySeconds(seconds, lastTick, now, lastInteraction, true);
+        elapsedRef.current = seconds;
+        setElapsed(Math.floor(seconds));
+        if (seconds - lastSaved >= 30) checkpoint();
+      }
+      lastTick = now;
+    };
+    const markActivity = () => {
+      lastInteraction = performance.now();
+      lastTick = lastInteraction;
+    };
+    const visibilityChanged = () => {
+      if (document.visibilityState === "hidden") checkpoint();
+      else markActivity();
+      lastTick = performance.now();
+    };
+    const pageHidden = () => checkpoint();
+    const interval = window.setInterval(tick, 1000);
+    document.addEventListener("pointerdown", markActivity);
+    document.addEventListener("keydown", markActivity);
+    document.addEventListener("wheel", markActivity, { passive: true });
+    document.addEventListener("visibilitychange", visibilityChanged);
+    window.addEventListener("pagehide", pageHidden);
+    return () => {
+      window.clearTimeout(initial);
+      window.clearInterval(interval);
+      document.removeEventListener("pointerdown", markActivity);
+      document.removeEventListener("keydown", markActivity);
+      document.removeEventListener("wheel", markActivity);
+      document.removeEventListener("visibilitychange", visibilityChanged);
+      window.removeEventListener("pagehide", pageHidden);
+      checkpoint();
+    };
+    // The persisted duration is the starting point for this session. Checkpoints must not restart the timer.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSessionId, updateActiveSessionDuration]);
   const item = plan[index];
   const activity =
     item?.kind === "activity"
@@ -245,7 +306,9 @@ function StudyContent() {
           {lastSession ? (
             <>
               <p>
-                {formatMinutes(lastSession.durationSeconds / 60)} estudados · {lastSession.correct}{" "}
+                {sessionTimeNeedsCorrection(lastSession)
+                  ? "Tempo a corrigir"
+                  : `${formatMinutes(countedStudySeconds(lastSession) / 60)} estudados`} · {lastSession.correct}{" "}
                 acertos · {lastSession.wrong} erros
               </p>
               {comparisons.length ? (
@@ -300,9 +363,22 @@ function StudyContent() {
             · meta de {activeSession.targetMinutes ?? state.profile.dailyMinutes} min
           </p>
         </div>
-        <div className="study-timer">
-          <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
-          {String(elapsed % 60).padStart(2, "0")}
+        <div className="study-session-meta">
+          <div className="study-timer">
+            <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
+            {String(elapsed % 60).padStart(2, "0")}
+          </div>
+          <small>O tempo pausa ao sair ou após 5 min sem interação.</small>
+          <button
+            type="button"
+            className="text-link"
+            onClick={() => {
+              finishSession(elapsedRef.current);
+              setIndex(0);
+            }}
+          >
+            Encerrar sessão agora
+          </button>
         </div>
       </div>
       <div className="study-running-grid">
@@ -349,7 +425,7 @@ function StudyContent() {
               <button
                 className="primary-button"
                 onClick={() => {
-                  finishSession();
+                  finishSession(elapsedRef.current);
                   setIndex(0);
                 }}
               >

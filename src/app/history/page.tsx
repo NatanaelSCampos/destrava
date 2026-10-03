@@ -6,10 +6,13 @@ import { ArrowRight, CalendarDays, Check, Clock3, History, RotateCcw, X } from "
 import { useStudy } from "@/components/study-provider";
 import { formatDate, formatMinutes } from "@/lib/utils";
 import { buildPracticeHistory } from "@/domain/study/practice-history";
+import { countedStudySeconds, sessionTimeNeedsCorrection } from "@/domain/study/session-time";
 
 export default function HistoryPage() {
-  const { state, course, vocabularyItems } = useStudy();
+  const { state, course, vocabularyItems, correctSessionDuration } = useStudy();
   const [showAllSeries, setShowAllSeries] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [correctedMinutes, setCorrectedMinutes] = useState("");
   const practiceHistory = useMemo(
     () => buildPracticeHistory(course, state, vocabularyItems),
     [course, state, vocabularyItems],
@@ -18,7 +21,8 @@ export default function HistoryPage() {
   const sessions = state.sessions
     .filter((item) => item.finishedAt)
     .sort((a, b) => b.startedAt.localeCompare(a.startedAt));
-  const totalMinutes = sessions.reduce((sum, item) => sum + item.durationSeconds / 60, 0);
+  const totalMinutes = sessions.reduce((sum, item) => sum + countedStudySeconds(item) / 60, 0);
+  const sessionsToCorrect = sessions.filter(sessionTimeNeedsCorrection).length;
   const totalActivities = sessions.reduce((sum, item) => sum + item.activityIds.length, 0);
   const days = Array.from({ length: 7 }, (_, index) => {
     const date = new Date();
@@ -33,7 +37,7 @@ export default function HistoryPage() {
     minutes: Math.round(
       sessions
         .filter((session) => new Date(session.startedAt).toLocaleDateString("en-CA") === day.key)
-        .reduce((sum, session) => sum + session.durationSeconds / 60, 0),
+        .reduce((sum, session) => sum + countedStudySeconds(session) / 60, 0),
     ),
   }));
   const max = Math.max(20, ...daily.map((item) => item.minutes));
@@ -96,7 +100,10 @@ export default function HistoryPage() {
                         "Estudo de espanhol"}
                     </h3>
                     <p>
-                      <Clock3 size={14} /> {formatMinutes(session.durationSeconds / 60)}{" "}
+                      <Clock3 size={14} />{" "}
+                      {sessionTimeNeedsCorrection(session)
+                        ? "Tempo a corrigir"
+                        : formatMinutes(countedStudySeconds(session) / 60)}{" "}
                       <span>·</span> {session.activityIds.length} atividades
                     </p>
                     <div>
@@ -110,6 +117,59 @@ export default function HistoryPage() {
                         <RotateCcw size={14} /> {session.wordsReviewed} palavras revistas
                       </span>
                     </div>
+                    {sessionTimeNeedsCorrection(session) && (
+                      <div className="session-time-correction">
+                        <p>
+                          Este registro indica um tempo incomum. Ele não entra nas estatísticas até
+                          você informar quantos minutos realmente estudou.
+                        </p>
+                        {editingSessionId === session.id ? (
+                          <div className="session-time-form">
+                            <label htmlFor={`correct-session-${session.id}`}>
+                              Minutos realmente estudados
+                            </label>
+                            <input
+                              id={`correct-session-${session.id}`}
+                              type="number"
+                              inputMode="numeric"
+                              min={0}
+                              max={240}
+                              step={1}
+                              value={correctedMinutes}
+                              onChange={(event) => setCorrectedMinutes(event.target.value)}
+                            />
+                            <button
+                              type="button"
+                              className="secondary-button"
+                              disabled={
+                                correctedMinutes.trim() === "" ||
+                                !Number.isInteger(Number(correctedMinutes)) ||
+                                Number(correctedMinutes) < 0 ||
+                                Number(correctedMinutes) > 240
+                              }
+                              onClick={() => {
+                                correctSessionDuration(session.id, Number(correctedMinutes));
+                                setEditingSessionId(null);
+                                setCorrectedMinutes("");
+                              }}
+                            >
+                              Salvar tempo
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            className="text-link"
+                            onClick={() => {
+                              setEditingSessionId(session.id);
+                              setCorrectedMinutes("");
+                            }}
+                          >
+                            Corrigir tempo
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <span className="session-full-date">{formatDate(session.startedAt)}</span>
                 </article>
@@ -129,6 +189,12 @@ export default function HistoryPage() {
         <aside className="panel weekly-panel">
           <span className="eyebrow">ÚLTIMOS 7 DIAS</span>
           <h3>Tempo de estudo</h3>
+          {sessionsToCorrect > 0 && (
+            <p className="weekly-time-warning">
+              {sessionsToCorrect} {sessionsToCorrect === 1 ? "sessão precisa" : "sessões precisam"} de
+              correção na linha do tempo. O tempo delas foi desconsiderado.
+            </p>
+          )}
           <div
             className="weekly-chart"
             role="img"

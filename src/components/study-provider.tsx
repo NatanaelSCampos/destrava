@@ -38,6 +38,7 @@ import {
   type AdaptiveAssessmentAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { boundedStudySeconds } from "@/domain/study/session-time";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { SupabaseStudyRepository } from "@/repositories/supabase-study-repository";
@@ -113,7 +114,9 @@ type StudyContextValue = {
     mode: SessionMode,
     targetMinutes: number,
   ) => void;
-  finishSession: () => void;
+  updateActiveSessionDuration: (sessionId: string, seconds: number) => void;
+  finishSession: (seconds?: number) => void;
+  correctSessionDuration: (sessionId: string, minutes: number) => void;
 };
 
 const StudyContext = createContext<StudyContextValue | null>(null);
@@ -596,8 +599,24 @@ export function StudyProvider({
       }),
     [course.id],
   );
+  const updateActiveSessionDuration = useCallback(
+    (sessionId: string, seconds: number) =>
+      setState((current) => {
+        if (current.activeSessionId !== sessionId) return current;
+        const measured = boundedStudySeconds(seconds);
+        const sessions = current.sessions.map((session) =>
+          session.id === sessionId && !session.finishedAt && measured > session.durationSeconds
+            ? { ...session, durationSeconds: measured }
+            : session,
+        );
+        return sessions.every((session, index) => session === current.sessions[index])
+          ? current
+          : { ...current, sessions };
+      }),
+    [],
+  );
   const finishSession = useCallback(
-    () =>
+    (seconds = 0) =>
       setState((current) => {
         if (!current.activeSessionId) return current;
         const now = new Date();
@@ -609,9 +628,8 @@ export function StudyProvider({
               ? {
                   ...session,
                   finishedAt: now.toISOString(),
-                  durationSeconds: Math.max(
-                    1,
-                    Math.round((now.getTime() - new Date(session.startedAt).getTime()) / 1000),
+                  durationSeconds: boundedStudySeconds(
+                    Math.max(session.durationSeconds, seconds),
                   ),
                 }
               : session,
@@ -629,6 +647,21 @@ export function StudyProvider({
         };
       }),
     [course.id],
+  );
+  const correctSessionDuration = useCallback(
+    (sessionId: string, minutes: number) =>
+      setState((current) => {
+        if (!Number.isInteger(minutes) || minutes < 0 || minutes > 240) return current;
+        const sessions = current.sessions.map((session) =>
+          session.id === sessionId && session.finishedAt
+            ? { ...session, durationSeconds: minutes * 60 }
+            : session,
+        );
+        return sessions.every((session, index) => session === current.sessions[index])
+          ? current
+          : { ...current, sessions };
+      }),
+    [],
   );
 
   const value = useMemo(
@@ -659,7 +692,9 @@ export function StudyProvider({
       completeConversation,
       recordStudyEvent,
       startSession,
+      updateActiveSessionDuration,
       finishSession,
+      correctSessionDuration,
     }),
     [
       course,
@@ -688,7 +723,9 @@ export function StudyProvider({
       completeConversation,
       recordStudyEvent,
       startSession,
+      updateActiveSessionDuration,
       finishSession,
+      correctSessionDuration,
     ],
   );
   return <StudyContext.Provider value={value}>{children}</StudyContext.Provider>;

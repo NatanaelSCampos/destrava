@@ -284,6 +284,29 @@ export function AppShell({ children }: { children: ReactNode }) {
         </header>
         <main className="main-content">{children}</main>
       </div>
+      <nav className="mobile-primary-nav" aria-label="Atalhos de estudo">
+        <Link href="/dashboard" aria-current={pathname === "/dashboard" ? "page" : undefined}>
+          <House size={20} /> <span>Hoje</span>
+        </Link>
+        <Link href="/study" aria-current={pathname === "/study" ? "page" : undefined}>
+          <Play size={20} /> <span>Aula</span>
+        </Link>
+        <Link href="/review" aria-current={pathname === "/review" ? "page" : undefined}>
+          <RotateCcw size={20} /> <span>Revisar</span>
+        </Link>
+        {featureFlags.AI_TUTOR ? (
+          <Link href="/conversation" aria-current={pathname === "/conversation" ? "page" : undefined}>
+            <MessageCircle size={20} /> <span>Conversar</span>
+          </Link>
+        ) : (
+          <Link href={`/course/${course.slug}`} aria-current={pathname.startsWith("/course") ? "page" : undefined}>
+            <BookOpen size={20} /> <span>Curso</span>
+          </Link>
+        )}
+        <button type="button" aria-label="Abrir todos os recursos" onClick={() => setMenuOpen(true)}>
+          <Menu size={20} /> <span>Mais</span>
+        </button>
+      </nav>
       {featureFlags.AI_TUTOR && (
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}

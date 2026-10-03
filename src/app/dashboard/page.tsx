@@ -21,6 +21,7 @@ import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { buildLearningProfile } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import { formatMinutes } from "@/lib/utils";
+import { countedStudySeconds } from "@/domain/study/session-time";
 import { featureFlags } from "@/lib/feature-flags";
 import { recommendationLink } from "@/lib/recommendation-link";
 
@@ -51,7 +52,7 @@ export default function DashboardPage() {
   )[0];
   const plan = buildStudyPlan(course, state, state.profile.dailyMinutes, vocabularyItems);
   const minutes = Math.round(
-    state.sessions.reduce((sum, session) => sum + session.durationSeconds, 0) / 60,
+    state.sessions.reduce((sum, session) => sum + countedStudySeconds(session), 0) / 60,
   );
   const {
     words: dueWords,

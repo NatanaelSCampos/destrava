@@ -11,6 +11,30 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-tempo-de-estudo-ativo",
+    title: "Seu tempo de estudo ficou mais preciso",
+    summary: "A sessão agora pausa fora da aula ou após cinco minutos sem interação.",
+    highlights: [
+      "Encerre uma sessão quando quiser, mesmo antes de concluir todas as atividades.",
+      "Registros antigos com tempo muito alto deixam de inflar suas estatísticas.",
+      "No Histórico, informe os minutos realmente estudados para corrigir esses registros.",
+    ],
+    href: "/history",
+    linkLabel: "Ver meu histórico",
+  },
+  {
+    id: "2026-10-jornada-mobile",
+    title: "Estudar pelo celular ficou mais simples",
+    summary: "Os principais caminhos estão sempre à mão e cada tela mostra primeiro o próximo passo.",
+    highlights: [
+      "Use a barra inferior para abrir Aula, Revisar e Conversar rapidamente.",
+      "Na conversa, escolha entre missão guiada e assunto livre em áreas separadas.",
+      "O diagnóstico destaca a prática recomendada e resume os resultados no celular.",
+    ],
+    href: "/dashboard",
+    linkLabel: "Explorar melhorias",
+  },
+  {
     id: "2026-10-vozes-espanhol",
     title: "Escolha a voz do seu áudio de estudo",
     summary: "Agora você pode ouvir e escolher uma voz espanhola disponível no seu dispositivo.",
