@@ -81,7 +81,7 @@ function metric(id: string, label: string, evidence: Evidence[], now: Date): Mas
 export function buildLearningProfile(
   course: PublicCourse,
   state: StudyState,
-  vocabularyItems: ReadonlyArray<{ id: string; term?: string; spanish?: string; lessonId: string }>,
+  vocabularyItems: ReadonlyArray<{ id: string; term: string; lessonId: string }>,
   resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures">,
   now = new Date(),
 ): LearningProfile {
@@ -239,7 +239,7 @@ export function buildLearningProfile(
     ...vocabularyItems
       .filter((word) => itemEvidence.has(`word:${word.id}`))
       .map((word) =>
-        metric(`word:${word.id}`, word.term ?? word.spanish ?? word.id, itemEvidence.get(`word:${word.id}`) ?? [], now),
+        metric(`word:${word.id}`, word.term, itemEvidence.get(`word:${word.id}`) ?? [], now),
       ),
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("pronunciation:"))

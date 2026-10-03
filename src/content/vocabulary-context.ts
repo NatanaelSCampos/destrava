@@ -35,10 +35,10 @@ function normalized(value: string) {
 
 export function vocabularyOccurrences(
   course: PublicCourse,
-  word: { term?: string; spanish?: string; lessonId: string },
+  word: { term: string; lessonId: string },
 ): Array<{ title: string; href: string }> {
   const term = normalized(
-    (word.term ?? word.spanish ?? "")
+    word.term
       .split("/")[0]
       .replace(/[¿?¡!]/g, "")
       .trim(),

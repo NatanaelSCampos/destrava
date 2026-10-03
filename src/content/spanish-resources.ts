@@ -2,7 +2,7 @@ import type { LanguageResources } from "./language-resources";
 import { vocabularySeed } from "./frecuencias-a1";
 import { reviewStructures } from "./review-structures";
 import { conversationScenarios } from "./conversation-scenarios";
-import { numberPrompts, numberCategoryLabels } from "@/domain/numbers/number-practice";
+import { spanishNumberPrompts, spanishNumberCategoryLabels } from "./spanish-numbers";
 import { reviewClozeForms, visualVocabulary } from "./visual-vocabulary";
 import { regionalTopics, regionalVocabularyNote } from "./spanish-regions";
 import { spanishDictionary } from "./spanish-dictionary";
@@ -40,8 +40,8 @@ export const spanishResources: LanguageResources = {
     )),
   },
   structures: reviewStructures,
-  numbers: numberPrompts,
-  numberCategoryLabels,
+  numbers: spanishNumberPrompts,
+  numberCategoryLabels: spanishNumberCategoryLabels,
   conversationScenarios,
   imageScenes: imageDescriptionScenes,
   visualVocabulary,

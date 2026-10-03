@@ -4,15 +4,10 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Hash, Search } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
-import {
-  numberCategoryLabels,
-  numberPracticeLink,
-  numberPrompts,
-  type NumberCategory,
-} from "@/domain/numbers/number-practice";
+import { numberPracticeLink } from "@/domain/numbers/number-practice";
+import { useStudy } from "@/components/study-provider";
 
-type CategoryFilter = NumberCategory | "all";
-const categories = Object.keys(numberCategoryLabels) as NumberCategory[];
+type CategoryFilter = string;
 
 function normalize(value: string) {
   return value
@@ -22,6 +17,10 @@ function normalize(value: string) {
 }
 
 export function NumberGuide() {
+  const { resources, language } = useStudy();
+  const numberPrompts = resources.numbers;
+  const numberCategoryLabels = resources.numberCategoryLabels;
+  const categories = Object.keys(numberCategoryLabels);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<CategoryFilter>("all");
   const examples = useMemo(() => {
@@ -35,14 +34,14 @@ export function NumberGuide() {
         ).includes(search);
       return matchesCategory && matchesSearch;
     });
-  }, [query, filter]);
+  }, [query, filter, numberPrompts, numberCategoryLabels]);
 
   return (
     <section className="number-guide" aria-labelledby="number-guide-title">
       <div className="section-head basics-section-head">
         <div>
           <span className="eyebrow">
-            <Hash size={13} /> NÚMEROS EM ESPANHOL
+            <Hash size={13} /> NÚMEROS · {language.identity.nativeName.toUpperCase()}
           </span>
           <h2 className="section-title" id="number-guide-title">
             Um número em cada situação.
@@ -110,7 +109,7 @@ export function NumberGuide() {
             <article className="panel basics-number-card" key={item.id}>
               <div className="alphabet-card-top">
                 <span className="pill gray">
-                  {numberCategoryLabels[item.category].toUpperCase()}
+                  {(numberCategoryLabels[item.category] ?? item.category).toUpperCase()}
                 </span>
                 <span className="alphabet-position">
                   {String(numberPrompts.indexOf(item) + 1).padStart(2, "0")} /{" "}
@@ -119,16 +118,16 @@ export function NumberGuide() {
               </div>
               <div className="basics-number-value">
                 <strong>{item.display}</strong>
-                <SpeakButton text={item.spoken} label={`Ouvir ${item.display} em espanhol`} />
+                <SpeakButton text={item.spoken} label={`Ouvir ${item.display} em ${language.identity.nativeName}`} />
               </div>
               <div className="basics-number-name">
                 <span>POR EXTENSO</span>
-                <strong lang="es">{item.spoken}</strong>
+                <strong lang={language.id}>{item.spoken}</strong>
               </div>
               <div className="basics-number-example">
                 <span>EM UMA FRASE</span>
                 <div>
-                  <p lang="es">“{item.example}”</p>
+                  <p lang={language.id}>“{item.example}”</p>
                   <SpeakButton text={item.example} label={`Ouvir exemplo de ${item.display}`} />
                 </div>
                 <small>{item.exampleTranslation}</small>

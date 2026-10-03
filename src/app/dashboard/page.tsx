@@ -156,7 +156,7 @@ export default function DashboardPage() {
                 <span /> SEU CURSO ATUAL
               </span>
               <h2>
-                Aprenda espanhol
+                Aprenda {resources.languageLabel}
                 <br />
                 <em>com direção.</em>
               </h2>

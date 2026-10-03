@@ -3,13 +3,14 @@ import { z } from "zod";
 import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
-import { userSpanishRegion } from "@/lib/user-spanish-region";
+import { userCourseVariant } from "@/lib/user-course-variant";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { findCourseBundle } from "@/content/course-registry";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
 import { readCourseState } from "@/domain/study/course-state-storage";
 
 const inputSchema = z.object({
+  courseId: z.string().min(1),
   question: z.string().trim().min(3).max(500),
   activityId: z.string().optional(),
   mistakes: z
@@ -35,18 +36,20 @@ export async function POST(request: Request) {
       { error: "Faça uma pergunta de até 500 caracteres." },
       { status: 400 },
     );
+  const bundle = findCourseBundle(parsed.data.courseId);
+  if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
   try {
-    const region = await userSpanishRegion(guard.userId ?? null);
+    const variantId = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
     const client = guard.userId ? await createSupabaseServerClient() : null;
     const { data } = client
       ? await client
           .from("user_course_state")
           .select("state")
           .eq("user_id", guard.userId)
-          .eq("course_id", frecuenciasA1.id)
+          .eq("course_id", bundle.course.id)
           .maybeSingle()
       : { data: null };
-    const state = data?.state ? readCourseState(data.state, frecuenciasA1.id) : null;
+    const state = data?.state ? readCourseState(data.state, bundle.course.id) : null;
     const relevantMistakes = state
       ? Object.values(state.mistakes ?? {})
           .sort(
@@ -63,12 +66,16 @@ export async function POST(request: Request) {
       : parsed.data.mistakes;
     const result = await getAIProvider().tutor({
       ...parsed.data,
+      course: bundle.course,
+      coursePackage: bundle.coursePackage,
+      language: bundle.language,
+      sourceLanguage: bundle.coursePackage.sourceLanguage,
+      variantId,
       mistakes: relevantMistakes,
-      region,
-      memory: state ? buildLearningMemory(state, frecuenciasA1.id) : undefined,
+      memory: state ? buildLearningMemory(state, bundle.course.id) : undefined,
       studentContext: state
         ? {
-            goal: (state.profile?.goal ?? "Praticar espanhol").slice(0, 120),
+            goal: (state.profile?.goal ?? `Praticar ${bundle.language.identity.nativeName}`).slice(0, 120),
             knownWords: Object.values(state.vocabulary ?? {}).filter(
               (item) => item.status === "known",
             ).length,

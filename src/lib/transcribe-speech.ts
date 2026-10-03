@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { speechEndpoint, validWav } from "@/lib/azure-speech";
-import { userSpanishRegion } from "@/lib/user-spanish-region";
+import { findCourseBundle } from "@/content/course-registry";
+import { userCourseVariant } from "@/lib/user-course-variant";
+import { speechLocale } from "@/content/language-variant";
 
 const azureSchema = z.object({
   RecognitionStatus: z.string(),
@@ -17,7 +19,13 @@ export class SpeechTranscriptionError extends Error {
   }
 }
 
-export async function transcribeSpanishWav(file: File, userId: string | null): Promise<string> {
+export async function transcribeWav(file: File, userId: string | null, courseId: string): Promise<string> {
+  const bundle = findCourseBundle(courseId);
+  if (!bundle) throw new SpeechTranscriptionError("Curso não encontrado.", 404);
+  const variant = await userCourseVariant(userId, courseId, bundle.language);
+  const locale = speechLocale(bundle.language, variant, "recognitionLocale");
+  if (!bundle.language.capabilities.speechRecognition || !locale)
+    throw new SpeechTranscriptionError("Transcrição indisponível para este idioma.", 503);
   const endpoint = speechEndpoint();
   const key = process.env.AZURE_SPEECH_KEY;
   if (!endpoint || !key)
@@ -27,15 +35,6 @@ export async function transcribeSpanishWav(file: File, userId: string | null): P
   const audio = Buffer.from(await file.arrayBuffer());
   if (!validWav(audio))
     throw new SpeechTranscriptionError("Gravação inválida. Grave novamente.", 400);
-  const region = await userSpanishRegion(userId);
-  const locale =
-    region === "mexico"
-      ? "es-MX"
-      : region === "spain"
-        ? "es-ES"
-        : process.env.AZURE_SPEECH_LOCALE === "es-MX"
-          ? "es-MX"
-          : "es-ES";
   endpoint.searchParams.set("language", locale);
   endpoint.searchParams.set("format", "detailed");
   let response: Response;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SpeakButton } from "./speak-button";
+import { useStudy } from "@/components/study-provider";
 
 function selectedText() {
   const active = document.activeElement;
@@ -17,6 +18,7 @@ function selectedText() {
 }
 
 export function SelectionAudio() {
+  const { language } = useStudy();
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -25,11 +27,11 @@ export function SelectionAudio() {
     return () => document.removeEventListener("selectionchange", update);
   }, []);
 
-  if (!text) return null;
+  if (!text || !language.capabilities.textToSpeech) return null;
 
   return (
     <div className="selection-audio" onPointerDown={(event) => event.preventDefault()}>
-      <SpeakButton text={text} label="Ouvir texto selecionado em espanhol" withLabel />
+      <SpeakButton text={text} label={`Ouvir texto selecionado em ${language.identity.nativeName}`} withLabel />
     </div>
   );
 }

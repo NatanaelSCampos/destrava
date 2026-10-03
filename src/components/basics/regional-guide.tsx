@@ -5,17 +5,13 @@ import Link from "next/link";
 import { CheckCircle2, Globe2 } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { useStudy } from "@/components/study-provider";
-import {
-  regionalTopics,
-  spanishRegion,
-  spanishRegions,
-  type SpanishRegion,
-} from "@/content/spanish-regions";
+import { resolveVariant, textToSpeechLocale, variantLabel } from "@/content/language-variant";
 
 export function RegionalGuide() {
-  const { state } = useStudy();
-  const region = spanishRegion(state.profile.spanishRegion);
-  const [answers, setAnswers] = useState<Record<string, SpanishRegion>>({});
+  const { state, language, resources } = useStudy();
+  const region = resolveVariant(language, state.profile.variantId);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const regionalTopics = resources.regionalTopics;
 
   return (
     <section className="regional-guide panel" aria-labelledby="regional-title">
@@ -25,7 +21,7 @@ export function RegionalGuide() {
       <h2 id="regional-title">Um idioma, várias formas de falar.</h2>
       <p>
         Compare frases do cotidiano. Sua preferência atual é{" "}
-        <strong>{spanishRegions.find((item) => item.id === region)?.label}</strong>. A escolha muda
+        <strong>{variantLabel(language, region)}</strong>. A escolha muda
         exemplos e orienta o professor, sem substituir o conteúdo do curso.
       </p>
       <Link href="/settings" className="secondary-button">
@@ -47,17 +43,15 @@ export function RegionalGuide() {
                     key={variant.region}
                   >
                     <small>
-                      {spanishRegions.find((item) => item.id === variant.region)?.label}
+                      {variantLabel(language, variant.region)}
                     </small>
-                    <strong lang="es">{variant.term}</strong>
+                    <strong lang={language.id}>{variant.term}</strong>
                     <div className="text-audio-row">
-                      <span lang="es">{variant.example}</span>
+                      <span lang={language.id}>{variant.example}</span>
                       <SpeakButton
                         text={variant.example}
-                        locale={
-                          { spain: "es-ES", mexico: "es-MX", argentina: "es-AR" }[variant.region]
-                        }
-                        label={`Ouvir exemplo da ${spanishRegions.find((item) => item.id === variant.region)?.label}`}
+                        locale={textToSpeechLocale(language, variant.region) ?? undefined}
+                        label={`Ouvir exemplo da ${variantLabel(language, variant.region)}`}
                       />
                     </div>
                   </div>
@@ -76,17 +70,14 @@ export function RegionalGuide() {
                         setAnswers((current) => ({ ...current, [topic.id]: variant.region }))
                       }
                     >
-                      {spanishRegions.find((item) => item.id === variant.region)?.label}
+                      {variantLabel(language, variant.region)}
                     </button>
                   ))}
                 </div>
                 {selected && (
                   <p role="status" className={correct ? "inline-success" : "inline-error"}>
                     {correct ? <CheckCircle2 size={16} /> : null}
-                    {correct ? "Isso!" : "Compare as frases acima e tente outra região."}{" "}
-                    {topic.id === "informal-you"
-                      ? "Observe também a conjugação do verbo."
-                      : "As palavras podem ser compreendidas em outros países."}
+                    {correct ? "Isso!" : "Compare as frases acima e tente outra região."}
                   </p>
                 )}
               </div>

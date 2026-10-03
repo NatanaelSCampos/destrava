@@ -83,7 +83,7 @@ export function buildStudyPlan(
   course: PublicCourse,
   state: StudyState,
   dailyMinutes: number,
-  vocabularyItems: ReadonlyArray<{ id: string; term?: string; spanish?: string; lessonId: string }>,
+  vocabularyItems: ReadonlyArray<{ id: string; term: string; lessonId: string }>,
   resources: LanguageResources,
   now = new Date(),
   mode: SessionMode = "guided",

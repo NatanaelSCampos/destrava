@@ -8,25 +8,33 @@ import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { SpeakingRecorder } from "@/components/activities/speaking-recorder";
 import {
-  findNumberPrompt,
   gradeNumberDictation,
-  numberCategoryLabels,
-  numberPrompts,
   numberSpeechScore,
   type NumberCategory,
   type NumberMode,
 } from "@/domain/numbers/number-practice";
 
 type Speaking = Extract<PublicActivity, { type: "speaking" }>;
-const categories = Object.keys(numberCategoryLabels) as NumberCategory[];
-const modes: { id: NumberMode; title: string; detail: string }[] = [
+const modeDefinitions: { id: NumberMode; title: string; detail: string }[] = [
   { id: "dictation", title: "Ouvir e digitar", detail: "Escute e escreva os algarismos." },
-  { id: "speaking", title: "Ver e falar", detail: "Leia os algarismos e fale em espanhol." },
+  { id: "speaking", title: "Ver e falar", detail: "Leia os algarismos e fale no idioma estudado." },
   { id: "repetition", title: "Ouvir e repetir", detail: "Escute, repita e compare sua fala." },
 ];
 
 export function NumberPractice({ initialPromptId }: { initialPromptId?: string }) {
-  const { course, state, recordNumberPractice } = useStudy();
+  const { resources, language } = useStudy();
+  if (!resources.numbers.length) return <div className="empty-state panel">A prática de números ainda não está disponível para este curso.</div>;
+  if (!language.capabilities.textToSpeech) return <div className="empty-state panel">A prática de números com áudio ainda não está disponível para este idioma.</div>;
+  return <NumberPracticeContent initialPromptId={initialPromptId} />;
+}
+
+function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }) {
+  const { course, language, resources, state, recordNumberPractice } = useStudy();
+  const numberPrompts = resources.numbers;
+  const numberCategoryLabels = resources.numberCategoryLabels;
+  const categories = Object.keys(numberCategoryLabels) as NumberCategory[];
+  const modes = modeDefinitions.filter((item) => item.id === "dictation" || language.capabilities.pronunciationAssessment);
+  const findNumberPrompt = (id: string) => numberPrompts.find((item) => item.id === id);
   const initial = findNumberPrompt(initialPromptId ?? "") ?? numberPrompts[0];
   const [category, setCategory] = useState<NumberCategory>(initial.category);
   const [promptId, setPromptId] = useState(initial.id);
@@ -53,13 +61,13 @@ export function NumberPractice({ initialPromptId }: { initialPromptId?: string }
     id: `number-${prompt.id}`,
     type: "speaking",
     title: `${numberCategoryLabels[prompt.category]}: ${prompt.display}`,
-    prompt: `Fale ${prompt.display} em espanhol.`,
+    prompt: `Fale ${prompt.display} em ${language.identity.nativeName}.`,
     skill: "speaking",
     conceptIds: ["numbers"],
     minutes: 2,
     guidance: [
       mode === "speaking"
-        ? `Leia ${prompt.display} e diga o número por extenso em espanhol.`
+        ? `Leia ${prompt.display} e diga o número por extenso em ${language.identity.nativeName}.`
         : "Escute o modelo e tente repetir com clareza.",
     ],
     referenceText: prompt.spoken,
@@ -87,20 +95,6 @@ export function NumberPractice({ initialPromptId }: { initialPromptId?: string }
     });
     setResult(correct);
   }
-
-  if (!course.languageCode.startsWith("es"))
-    return (
-      <div className="empty-state panel">
-        <Hash size={28} />
-        <strong>A prática de números ainda não tem conteúdo para este idioma.</strong>
-        <span>
-          As atividades de números em espanhol continuam disponíveis no curso correspondente.
-        </span>
-        <Link href="/dashboard" className="secondary-button">
-          Voltar à visão geral
-        </Link>
-      </div>
-    );
 
   return (
     <div className="numbers-page">
@@ -172,7 +166,7 @@ export function NumberPractice({ initialPromptId }: { initialPromptId?: string }
             <>
               <h2>Que número você ouviu?</h2>
               <p>Ouça quantas vezes precisar e digite usando algarismos.</p>
-              <SpeakButton text={prompt.spoken} label="Ouvir número em espanhol" withLabel />
+              <SpeakButton text={prompt.spoken} label={`Ouvir número em ${language.identity.nativeName}`} withLabel />
               <form onSubmit={submitDictation} className="number-answer-form">
                 <label htmlFor="number-answer">Sua resposta</label>
                 <input
@@ -206,7 +200,7 @@ export function NumberPractice({ initialPromptId }: { initialPromptId?: string }
           ) : (
             <>
               <h2>
-                {mode === "speaking" ? `Fale ${prompt.display} em espanhol` : "Escute e repita"}
+                {mode === "speaking" ? `Fale ${prompt.display} em ${language.identity.nativeName}` : "Escute e repita"}
               </h2>
               {mode === "speaking" && <p className="number-display">{prompt.display}</p>}
               <SpeakingRecorder

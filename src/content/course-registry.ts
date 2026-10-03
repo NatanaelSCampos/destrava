@@ -3,8 +3,9 @@ import { runtimeBundle } from "./runtime-package";
 
 const bundles = compiledPackages.map(runtimeBundle);
 
-export const defaultCourseId = bundles[0]?.course.id;
-if (!defaultCourseId) throw new Error("No compiled courses are available.");
+const defaultBundle = bundles.find((bundle) => bundle.coursePackage.isDefault);
+if (!defaultBundle) throw new Error("No default course is available.");
+export const defaultCourseId = defaultBundle.course.id;
 
 export function allCourseBundles() {
   return bundles;

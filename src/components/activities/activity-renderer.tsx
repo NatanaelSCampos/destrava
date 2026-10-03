@@ -10,7 +10,7 @@ import { SpeakingRecorder } from "./speaking-recorder";
 import { SpeakButton } from "@/components/audio/speak-button";
 
 export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
-  const { state, completeActivity } = useStudy();
+  const { course, language, state, completeActivity } = useStudy();
   const done = state.completedActivityIds.includes(activity.id);
   return (
     <article className="activity-panel panel">
@@ -21,7 +21,7 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
           </span>
           <h2>{activity.title}</h2>
           <p>{activity.prompt}</p>
-          {!(activity.type === "review" && activity.cards.length > 0) && (
+          {language.capabilities.textToSpeech && !(activity.type === "review" && activity.cards.length > 0) && (
             <small className="audio-selection-hint">
               Selecione uma palavra ou frase para ouvir.
             </small>
@@ -61,7 +61,7 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
                         </small>
                         {card.examples.map((example) => (
                           <div className="text-audio-row" key={example}>
-                            <p lang="es">{example}</p>
+                            <p lang={course.languageCode}>{example}</p>
                             <SpeakButton text={example} label={`Ouvir exemplo: ${example}`} />
                           </div>
                         ))}
@@ -84,7 +84,7 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
               <div className="phrase-strip">
                 {activity.highlights.map((phrase) => (
                   <span className="phrase-audio-item" key={phrase}>
-                    <span lang="es">{phrase}</span>
+                    <span lang={course.languageCode}>{phrase}</span>
                     <SpeakButton text={phrase} label={`Ouvir ${phrase}`} />
                   </span>
                 ))}
@@ -127,7 +127,7 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
         )}
         {activity.type === "writing" && <WritingEditor key={activity.id} activity={activity} />}
         {activity.type === "speaking" &&
-          (featureFlags.SPEAKING ? (
+          (featureFlags.SPEAKING && language.capabilities.speechRecognition ? (
             <SpeakingRecorder key={activity.id} activity={activity} />
           ) : (
             <p className="muted">A prática oral está temporariamente indisponível.</p>
@@ -136,13 +136,13 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
           <div className="lesson-body">
             <div className="phrase-strip">
               <span className="phrase-audio-item">
-                <span lang="es">{activity.front}</span>
+                <span lang={course.languageCode}>{activity.front}</span>
                 <SpeakButton text={activity.front} label={`Ouvir ${activity.front}`} />
               </span>
               <span>{activity.back}</span>
             </div>
             <div className="text-audio-row">
-              <p lang="es">{activity.example}</p>
+              <p lang={course.languageCode}>{activity.example}</p>
               <SpeakButton text={activity.example} label="Ouvir frase de exemplo" />
             </div>
             <button className="primary-button" onClick={() => completeActivity(activity.id)}>
@@ -150,14 +150,11 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
             </button>
           </div>
         )}
-        {activity.type === "matching" && (
-          <p className="muted">Esta atividade ficará disponível na próxima atualização.</p>
-        )}
       </div>
       {activity.source && (
         <div className="activity-source">
           Base pedagógica:{" "}
-          {activity.source.book === "student" ? "Libro del estudiante" : "Libro de ejercicios"}, p.{" "}
+          {activity.source.book === "student" ? "Livro do estudante" : "Livro de exercícios"}, p.{" "}
           {activity.source.pages}. Conteúdo desta atividade é original.
         </div>
       )}

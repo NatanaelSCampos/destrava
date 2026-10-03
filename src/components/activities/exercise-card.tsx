@@ -23,7 +23,7 @@ export function ExerciseCard({
   activity: Exercise;
   onAssessed?: (answer: string, result: GradeResult) => void;
 }) {
-  const { submitAttempt } = useStudy();
+  const { course, language, submitAttempt } = useStudy();
   const [answer, setAnswer] = useState("");
   const [ordered, setOrdered] = useState<string[]>([]);
   const [result, setResult] = useState<GradeResult | null>(null);
@@ -39,7 +39,7 @@ export function ExerciseCard({
       const response = await fetch("/api/grade", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activityId: activity.id, answer: selectedAnswer }),
+        body: JSON.stringify({ courseId: course.id, activityId: activity.id, answer: selectedAnswer }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
@@ -119,7 +119,7 @@ export function ExerciseCard({
             placeholder={
               activity.type === "fill_blank"
                 ? "Digite o trecho que falta…"
-                : "Escreva a resposta em espanhol…"
+                : `Escreva a resposta em ${language.identity.nativeName}…`
             }
             autoComplete="off"
           />

@@ -128,7 +128,7 @@ export default function LoginPage() {
         </Link>
         <div>
           <span className="eyebrow">UM CAMINHO MAIS CLARO</span>
-          <h1>Seu espanhol começa com uma conversa.</h1>
+          <h1>Seu aprendizado começa com uma conversa.</h1>
           <p>Aprenda no seu ritmo, pratique com intenção e veja cada passo do seu progresso.</p>
           <div className="login-art-words">
             <span>¡Hola!</span>
@@ -136,7 +136,7 @@ export default function LoginPage() {
             <span>Mucho gusto.</span>
           </div>
         </div>
-        <small>Destrava · Aprenda espanhol no seu ritmo</small>
+        <small>Destrava · Aprenda idiomas no seu ritmo</small>
       </div>
       <div className="login-main">
         <div className="login-card">

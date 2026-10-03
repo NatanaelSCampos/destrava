@@ -17,7 +17,7 @@ type WritingFeedback = {
 };
 
 export function WritingEditor({ activity }: { activity: Writing }) {
-  const { state, saveWriting } = useStudy();
+  const { course, language, state, saveWriting } = useStudy();
   const previous = state.writing.find((submission) => submission.activityId === activity.id);
   const [text, setText] = useState(previous?.text ?? "");
   const [saved, setSaved] = useState(false);
@@ -40,7 +40,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
       const response = await fetch("/api/ai/writing", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ activityId: activity.id, text }),
+        body: JSON.stringify({ courseId: course.id, activityId: activity.id, text }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
@@ -65,7 +65,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
         </ul>
       </div>
       <div className="field">
-        <label htmlFor={`writing-${activity.id}`}>Sua apresentação</label>
+        <label htmlFor={`writing-${activity.id}`}>{activity.title}</label>
         <textarea
           id={`writing-${activity.id}`}
           value={text}
@@ -73,12 +73,12 @@ export function WritingEditor({ activity }: { activity: Writing }) {
             setText(event.target.value);
             setSaved(false);
           }}
-          placeholder="Hola, me llamo…"
+          placeholder="Escreva seu texto aqui…"
           rows={8}
           maxLength={3000}
         />
       </div>
-      {text.trim() && <SpeakButton text={text} label="Ouvir seu texto em espanhol" withLabel />}
+      {text.trim() && <SpeakButton text={text} label={`Ouvir seu texto em ${language.identity.nativeName}`} withLabel />}
       <div className="writing-footer">
         <span className={wordCount < activity.minWords ? "muted" : "word-count-ok"}>
           {wordCount} palavras · mínimo {activity.minWords}

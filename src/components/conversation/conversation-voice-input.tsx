@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Mic, Square } from "lucide-react";
 import { audioToWav } from "@/lib/audio-to-wav";
+import { useStudy } from "@/components/study-provider";
 
 export function ConversationVoiceInput({
   disabled,
@@ -11,6 +12,7 @@ export function ConversationVoiceInput({
   disabled: boolean;
   onTranscript: (text: string) => void;
 }) {
+  const { course, language } = useStudy();
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
   const [recording, setRecording] = useState(false);
@@ -57,6 +59,7 @@ export function ConversationVoiceInput({
     setTranscribing(true);
     try {
       const form = new FormData();
+      form.append("courseId", course.id);
       form.append("audio", await audioToWav(blob), "conversation.wav");
       const response = await fetch("/api/ai/conversation/transcribe", {
         method: "POST",
@@ -77,7 +80,7 @@ export function ConversationVoiceInput({
       <button
         type="button"
         className="secondary-button"
-        disabled={!recording && (disabled || transcribing)}
+        disabled={!recording && (disabled || transcribing || !language.capabilities.speechRecognition)}
         onClick={() => (recording ? recorder.current?.stop() : void start())}
       >
         {recording ? <Square size={16} /> : <Mic size={16} />}

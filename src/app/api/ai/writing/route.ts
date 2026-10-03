@@ -3,10 +3,12 @@ import { z } from "zod";
 import { featureFlags } from "@/lib/feature-flags";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { findCourseBundle } from "@/content/course-registry";
+import { userCourseVariant } from "@/lib/user-course-variant";
 import { findActivity } from "@/content/schema";
 
 const inputSchema = z.object({
+  courseId: z.string().min(1),
   activityId: z.string().min(1),
   text: z.string().trim().min(20).max(3000),
 });
@@ -22,11 +24,14 @@ export async function POST(request: Request) {
       { error: "Escreva um texto entre 20 e 3000 caracteres." },
       { status: 400 },
     );
-  const activity = findActivity(frecuenciasA1, parsed.data.activityId);
+  const bundle = findCourseBundle(parsed.data.courseId);
+  if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
+  const activity = findActivity(bundle.course, parsed.data.activityId);
   if (activity?.type !== "writing")
     return NextResponse.json({ error: "Atividade de escrita não encontrada." }, { status: 404 });
   try {
-    const result = await getAIProvider().correctWriting(parsed.data);
+    const variantId = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
+    const result = await getAIProvider().correctWriting({ ...parsed.data, course: bundle.course, language: bundle.language, sourceLanguage: bundle.coursePackage.sourceLanguage, variantId });
     await logAIRequest("writing", result.usage, guard.reservationId ?? null);
     return NextResponse.json(result);
   } catch {

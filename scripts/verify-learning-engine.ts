@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { frecuenciasA1, vocabularySeed } from "../src/content/frecuencias-a1";
+import { frecuenciasA1, vocabularySeed as legacyVocabularySeed } from "../src/content/frecuencias-a1";
 import { publicCourse } from "../src/content/public";
 import { findActivity } from "../src/content/schema";
 import { gradeActivity } from "../src/domain/activities/grader";
@@ -37,7 +37,7 @@ import {
 import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
 import { reviewStructures } from "../src/content/review-structures";
 import { conversationScenarios } from "../src/content/conversation-scenarios";
-import { adaptiveAssessmentBank } from "../src/content/adaptive-assessment-bank";
+import { adaptiveAssessmentBank, adaptiveSkillPlan } from "../src/content/adaptive-assessment-bank";
 import {
   adaptiveAssessmentReport,
   nextAdaptiveItem,
@@ -49,11 +49,11 @@ import {
   startConversation,
 } from "../src/domain/conversation/conversation-session";
 import {
-  findNumberPrompt,
   gradeNumberDictation,
   numberSpeechScore,
 } from "../src/domain/numbers/number-practice";
 
+const vocabularySeed = legacyVocabularySeed.map((item) => ({ ...item, term: item.spanish }));
 const course = publicCourse(frecuenciasA1);
 const otherResources = {
   ...spanishResources,
@@ -159,7 +159,7 @@ const adaptivePassed = recordAdaptiveAssessment(adaptiveReview, course, {
   ],
 });
 assert(adaptivePassed.mistakes["assessment-2"]);
-const firstAdaptive = nextAdaptiveItem(adaptiveAssessmentBank, []);
+const firstAdaptive = nextAdaptiveItem(adaptiveAssessmentBank, [], adaptiveSkillPlan);
 assert.equal(firstAdaptive?.skill, "vocabulary");
 assert.equal(firstAdaptive?.difficulty, 2);
 const wrongAdaptive: AdaptiveAnswer = {
@@ -169,7 +169,7 @@ const wrongAdaptive: AdaptiveAnswer = {
   correct: false,
   answer: "erro",
 };
-assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, [wrongAdaptive])?.difficulty, 1);
+assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, [wrongAdaptive], adaptiveSkillPlan)?.difficulty, 1);
 const adaptiveAnswers: AdaptiveAnswer[] = [
   wrongAdaptive,
   { activityId: "grammar-2", skill: "grammar", difficulty: 1, correct: true, answer: "soy" },
@@ -196,9 +196,10 @@ const adaptiveAnswers: AdaptiveAnswer[] = [
     answer: "Ela mora em Quito",
   },
 ];
-assert.equal(adaptiveAssessmentReport(adaptiveAnswers).score, 83);
-assert.equal(adaptiveAssessmentReport(adaptiveAnswers).wrong.length, 1);
-assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, adaptiveAnswers), null);
+const adaptiveWeights = Object.fromEntries([...new Set(adaptiveSkillPlan)].map((skill) => [skill, adaptiveSkillPlan.filter((item) => item === skill).length / adaptiveSkillPlan.length]));
+assert.equal(adaptiveAssessmentReport(adaptiveAnswers, adaptiveSkillPlan, { overall: 0.75, minimumBySkill: { grammar: 0.6 } }, adaptiveWeights).score, 83);
+assert.equal(adaptiveAssessmentReport(adaptiveAnswers, adaptiveSkillPlan, { overall: 0.75, minimumBySkill: { grammar: 0.6 } }, adaptiveWeights).wrong.length, 1);
+assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, adaptiveAnswers, adaptiveSkillPlan), null);
 const adaptiveState: StudyState = {
   ...initialStudyState,
   adaptiveAssessments: [
@@ -259,7 +260,16 @@ assert.match(
   ).regionalNote ?? "",
   /llamás/,
 );
-assert.equal(TutorContextBuilder.build(undefined, [], "mexico").spanishRegion, "México");
+assert.equal(TutorContextBuilder.build(frecuenciasA1, {
+  schemaVersion: "1.0", contentVersion: "1.0.0", id: "es",
+  identity: { name: "Spanish", nativeName: "Español" },
+  writingSystem: { direction: "ltr", scripts: ["Latin"], caseSensitive: false },
+  variants: [{ id: "general", name: "Geral" }, { id: "mexico", name: "México" }],
+  capabilities: { speechRecognition: true, textToSpeech: true, pronunciationAssessment: true, regionalVariants: true, romanization: false, tones: false, grammaticalGender: true },
+  speech: { defaultVariant: "general", providers: {} },
+  normalization: { trimWhitespace: true, collapseWhitespace: true, caseInsensitive: true, ignoreTerminalPunctuation: true, ignoreDiacritics: false },
+  modules: {},
+}, undefined, [], "mexico").variant, "México");
 const now = new Date("2026-10-01T12:00:00.000Z");
 const yesterday = "2026-09-30T12:00:00.000Z";
 
@@ -742,6 +752,7 @@ assert(
 assert.equal(vocabularyContext(vocabularySeed[6], spanishResources.dictionary).senses.length, 3);
 assert(vocabularyOccurrences(course, vocabularySeed[6]).length > 0);
 
+const findNumberPrompt = (id: string) => spanishResources.numbers.find((item) => item.id === id);
 const fortySeven = findNumberPrompt("47")!;
 assert(gradeNumberDictation(fortySeven, "47"));
 assert(!gradeNumberDictation(fortySeven, "70"));

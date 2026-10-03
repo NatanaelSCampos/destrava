@@ -31,11 +31,11 @@ function cloze(word: string, example: string, additionalForms: string[] = []) {
 }
 
 export function wordReviewCard(
-  word: { term?: string; spanish?: string; translation: string; example: string },
+  word: { term: string; translation: string; example: string },
   reviewCount: number,
   options: { visual?: VisualCue; clozeForms?: string[]; languageLabel?: string } = {},
 ): WordCard {
-  const term = word.term ?? word.spanish ?? "";
+  const term = word.term;
   const languageLabel = (options.languageLabel ?? "Idioma estudado").toUpperCase();
   const position = reviewCount % (options.visual ? 5 : 4);
   if (options.visual && (reviewCount === 0 || position === 4))

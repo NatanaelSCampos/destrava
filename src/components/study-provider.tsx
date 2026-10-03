@@ -49,7 +49,7 @@ import {
 } from "@/domain/conversation/conversation-session";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
-import type { LanguagePackage } from "@/content/contracts";
+import type { LanguagePackage, PublicAssessment } from "@/content/contracts";
 
 export type { VocabularyItem } from "@/content/language-resources";
 
@@ -57,6 +57,7 @@ type StudyContextValue = {
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
+  assessments: PublicAssessment[];
   vocabularyItems: VocabularyItem[];
   state: StudyState;
   ready: boolean;
@@ -118,17 +119,20 @@ type StudyContextValue = {
 };
 
 const StudyContext = createContext<StudyContextValue | null>(null);
-const storageKey = "frecuencias-study:v1:demo";
+const storageKey = "destrava-study:v2:demo";
+const legacyStorageKey = "frecuencias-study:v1:demo";
 
 export function StudyProvider({
   course,
   resources,
   language,
+  assessments,
   children,
 }: {
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
+  assessments: PublicAssessment[];
   children: ReactNode;
 }) {
   const vocabularyItems = resources.vocabulary;
@@ -168,12 +172,14 @@ export function StudyProvider({
             const remote = await nextRepository.load(course.id, course.languageCode);
             if (cancelled) return;
             const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${storageKey}:${accountId}`);
+              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
+              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
             if (remote || cached)
               setState(remote ?? readCourseState(JSON.parse(cached!), course.id, course.languageCode));
           } catch (caught) {
             const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${storageKey}:${accountId}`);
+              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
+              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
             if (cached) {
               try {
                 setState(readCourseState(JSON.parse(cached), course.id, course.languageCode));
@@ -192,7 +198,8 @@ export function StudyProvider({
         }
         try {
           const saved = window.localStorage.getItem(`${storageKey}:${course.id}`)
-            ?? window.localStorage.getItem(storageKey);
+            ?? window.localStorage.getItem(`${legacyStorageKey}:${course.id}`)
+            ?? window.localStorage.getItem(legacyStorageKey);
           if (saved) {
             setState(readCourseState(JSON.parse(saved), course.id, course.languageCode));
           }
@@ -653,6 +660,7 @@ export function StudyProvider({
       course,
       resources,
       language,
+      assessments,
       vocabularyItems,
       state,
       ready,
@@ -687,6 +695,7 @@ export function StudyProvider({
       course,
       resources,
       language,
+      assessments,
       vocabularyItems,
       state,
       ready,

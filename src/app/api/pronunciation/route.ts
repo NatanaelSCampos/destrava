@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { frecuenciasA1 } from "@/content/frecuencias-a1";
+import { findCourseBundle } from "@/content/course-registry";
+import { speechLocale } from "@/content/language-variant";
 import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
-import { findNumberPrompt } from "@/domain/numbers/number-practice";
-import { userSpanishRegion } from "@/lib/user-spanish-region";
+import { userCourseVariant } from "@/lib/user-course-variant";
 import { speechEndpoint, validWav } from "@/lib/azure-speech";
 
 const azureResultSchema = z.object({
@@ -44,6 +44,9 @@ export async function POST(request: Request) {
   if (guard.error) return guard.error;
 
   const form = await request.formData().catch(() => null);
+  const courseId = form?.get("courseId");
+  const bundle = typeof courseId === "string" ? findCourseBundle(courseId) : null;
+  if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
   const activityId = form?.get("activityId");
   const numberPromptId = form?.get("numberPromptId");
   const file = form?.get("audio");
@@ -53,8 +56,8 @@ export async function POST(request: Request) {
   )
     return NextResponse.json({ error: "Envie a gravação da atividade." }, { status: 400 });
 
-  const activity = typeof activityId === "string" ? findActivity(frecuenciasA1, activityId) : null;
-  const numberPrompt = typeof numberPromptId === "string" ? findNumberPrompt(numberPromptId) : null;
+  const activity = typeof activityId === "string" ? findActivity(bundle.course, activityId) : null;
+  const numberPrompt = typeof numberPromptId === "string" ? bundle.resources.numbers.find((item) => item.id === numberPromptId) : null;
   const referenceText =
     numberPrompt?.spoken ?? (activity?.type === "speaking" ? activity.referenceText : undefined);
   if (!referenceText)
@@ -66,15 +69,10 @@ export async function POST(request: Request) {
   if (!validWav(audio))
     return NextResponse.json({ error: "Gravação inválida. Grave novamente." }, { status: 400 });
 
-  const preferredRegion = await userSpanishRegion(guard.userId ?? null);
-  const locale =
-    preferredRegion === "mexico"
-      ? "es-MX"
-      : preferredRegion === "spain"
-        ? "es-ES"
-        : process.env.AZURE_SPEECH_LOCALE === "es-MX"
-          ? "es-MX"
-          : "es-ES";
+  const variant = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
+  const locale = speechLocale(bundle.language, variant, "assessmentLocale");
+  if (!bundle.language.capabilities.pronunciationAssessment || !locale)
+    return NextResponse.json({ error: "Avaliação de pronúncia indisponível para este idioma." }, { status: 503 });
   endpoint.searchParams.set("language", locale);
   endpoint.searchParams.set("format", "detailed");
   const config = Buffer.from(

@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { normalizationRulesSchema } from "./contracts";
+import { activityTypeSchema, normalizationRulesSchema } from "./contracts";
+export { activityTypeSchema } from "./contracts";
 
 export const skillSchema = z.enum([
   "vocabulary",
@@ -11,21 +12,6 @@ export const skillSchema = z.enum([
 ]);
 export type Skill = z.infer<typeof skillSchema>;
 
-export const activityTypeSchema = z.enum([
-  "lesson_content",
-  "multiple_choice",
-  "true_false",
-  "fill_blank",
-  "matching",
-  "ordering",
-  "short_answer",
-  "writing",
-  "listening",
-  "speaking",
-  "flashcard",
-  "review",
-  "quiz",
-]);
 export type ActivityType = z.infer<typeof activityTypeSchema>;
 
 const activityBase = z.object({
@@ -41,7 +27,7 @@ const activityBase = z.object({
   source: z.object({ book: z.enum(["student", "workbook"]), pages: z.string() }).optional(),
   media: z
     .discriminatedUnion("kind", [
-      z.object({ kind: z.literal("tts"), language: z.string().default("es-ES") }),
+      z.object({ kind: z.literal("tts"), language: z.string().min(2) }),
       z.object({
         kind: z.literal("audio"),
         url: z.string().min(1),
@@ -68,10 +54,6 @@ export const activitySchema = z.discriminatedUnion("type", [
     answer: z.string(),
     accepted: z.array(z.string()).default([]),
     fullAnswers: z.array(z.string()).default([]),
-  }),
-  activityBase.extend({
-    type: z.literal("matching"),
-    pairs: z.array(z.tuple([z.string(), z.string()])),
   }),
   activityBase.extend({
     type: z.literal("ordering"),

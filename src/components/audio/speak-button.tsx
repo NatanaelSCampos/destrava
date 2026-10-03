@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Volume2 } from "lucide-react";
-import { speakSpanish } from "@/lib/speak-spanish";
-import { spanishSpeechLocale, spanishRegion } from "@/content/spanish-regions";
+import { speakText } from "@/lib/speak-text";
+import { textToSpeechLocale } from "@/content/language-variant";
 import { useStudy } from "@/components/study-provider";
 
 export function SpeakButton({
@@ -23,9 +23,11 @@ export function SpeakButton({
   locale?: string;
   rate?: number;
 }) {
-  const { state } = useStudy();
+  const { state, language } = useStudy();
   const [error, setError] = useState("");
-  const description = label ?? `Ouvir em espanhol: ${text.slice(0, 70)}`;
+  const description = label ?? `Ouvir em ${language.identity.nativeName}: ${text.slice(0, 70)}`;
+  const selectedLocale = locale ?? textToSpeechLocale(language, state.profile.variantId);
+  if (!language.capabilities.textToSpeech || !selectedLocale) return null;
 
   return (
     <>
@@ -39,12 +41,7 @@ export function SpeakButton({
           event.stopPropagation();
           setError("");
           if (
-            !speakSpanish(
-              text,
-              () => setError("Não foi possível reproduzir o áudio."),
-              locale ?? spanishSpeechLocale(spanishRegion(state.profile.spanishRegion)),
-              rate,
-            )
+            !speakText(text, selectedLocale, () => setError("Não foi possível reproduzir o áudio."), rate)
           )
             setError("Seu navegador não oferece reprodução por voz.");
           else onPlay?.();

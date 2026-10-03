@@ -5,7 +5,7 @@ import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
 import { findCourseBundle } from "@/content/course-registry";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
+import { variantLabel } from "@/content/language-variant";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
 
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   const input = parsed.data;
   const bundle = findCourseBundle(input.courseId);
   if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
-  const { course, resources } = bundle;
+  const { course, resources, language, coursePackage } = bundle;
   const scenario =
     input.mode === "mission" ? resources.conversationScenarios.find((item) => item.id === input.scenarioId) : undefined;
   if ((input.mode === "mission" && !scenario) || (input.mode === "free" && input.topic.length < 3))
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
           .maybeSingle()
       : { data: null };
     const state = data?.state ? readCourseState(data.state, course.id, course.languageCode) : null;
-    const region = spanishRegion(state?.profile?.spanishRegion);
+    const region = variantLabel(language, state?.profile?.variantId);
     const currentUnit = course.units.find((unit) =>
       unit.lessons.some((lesson) =>
         lesson.activities.some((activity) => !state?.completedActivityIds?.includes(activity.id)),
@@ -64,6 +64,7 @@ export async function POST(request: Request) {
       context: {
         course: course.title,
         language: resources.languageLabel,
+        sourceLanguage: coursePackage.sourceLanguage,
         level: course.level,
         unit: currentUnit?.title ?? course.units.at(-1)?.title ?? "Curso",
         goal: (state?.profile?.goal ?? "Praticar conversação").slice(0, 120),
@@ -73,8 +74,12 @@ export async function POST(request: Request) {
           .sort((a, b) => b.timesMissed - a.timesMissed)
           .slice(0, 3)
           .map((item) => item.correctAnswer.slice(0, 100)),
-        region: course.languageCode === "es" ? spanishRegions.find((item) => item.id === region)?.label ?? "Geral" : "Geral",
+        region,
         memory: state ? buildLearningMemory(state, course.id) : undefined,
+        referenceVocabulary: coursePackage.lexicon.slice(0, 15).map((entry) => ({
+          term: entry.surface ?? entry.lemma,
+          meaning: entry.meanings[0].translations[coursePackage.sourceLanguage]?.[0] ?? "",
+        })),
       },
     });
     const allowed = new Set(scenario?.objectives.map((item) => item.id) ?? []);

@@ -4,6 +4,7 @@
     "contentVersion": "1.0.0",
     "id": "pt-BR.xx-Test.a1.general",
     "slug": "testes-a1",
+    "isDefault": false,
     "sourceLanguage": "pt-BR",
     "targetLanguage": "xx-Test",
     "defaultVariant": "general",

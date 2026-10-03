@@ -4,10 +4,9 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CaseUpper, Search } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
-import { spanishAlphabet } from "@/content/spanish-alphabet";
+import { useStudy } from "@/components/study-provider";
 
 type LetterFilter = "all" | "vowel" | "consonant";
-const vowelCount = spanishAlphabet.filter((item) => item.kind === "vowel").length;
 
 function normalizeSearch(value: string) {
   return value
@@ -17,11 +16,14 @@ function normalizeSearch(value: string) {
 }
 
 export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
+  const { resources, language } = useStudy();
+  const alphabet = resources.alphabet;
+  const vowelCount = alphabet.filter((item) => item.kind === "vowel").length;
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<LetterFilter>("all");
   const letters = useMemo(() => {
     const search = normalizeSearch(query.trim());
-    return spanishAlphabet.filter((item) => {
+    return alphabet.filter((item) => {
       const matchesFilter = filter === "all" || item.kind === filter;
       const matchesSearch =
         !search ||
@@ -30,7 +32,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
         );
       return matchesFilter && matchesSearch;
     });
-  }, [query, filter]);
+  }, [query, filter, alphabet]);
 
   return (
     <div className="alphabet-page">
@@ -38,7 +40,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
         <div className="section-head basics-section-head">
           <div>
             <span className="eyebrow">
-              <CaseUpper size={13} /> ALFABETO ESPANHOL
+              <CaseUpper size={13} /> ALFABETO · {language.identity.nativeName.toUpperCase()}
             </span>
             <h2 className="section-title">Uma letra de cada vez.</h2>
             <p className="section-subtitle">
@@ -53,7 +55,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
         <div className="page-heading">
           <div>
             <span className="eyebrow">
-              <CaseUpper size={13} /> ALFABETO ESPANHOL
+              <CaseUpper size={13} /> ALFABETO · {language.identity.nativeName.toUpperCase()}
             </span>
             <h1 className="page-title">Uma letra de cada vez.</h1>
             <p className="page-subtitle">
@@ -68,7 +70,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
 
       <div className="alphabet-summary">
         <div className="panel">
-          <strong>{spanishAlphabet.length}</strong>
+          <strong>{alphabet.length}</strong>
           <span>letras</span>
         </div>
         <div className="panel">
@@ -76,15 +78,13 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
           <span>vogais</span>
         </div>
         <div className="panel">
-          <strong>{spanishAlphabet.length - vowelCount}</strong>
+          <strong>{alphabet.length - vowelCount}</strong>
           <span>consoantes</span>
         </div>
       </div>
 
       <p className="alphabet-note">
-        A letra Ñ faz parte do alfabeto. CH e LL continuam nas palavras, mas são combinações de duas
-        letras. C e Z podem soar diferentes na Espanha e na América Latina. Você pode escolher a voz
-        disponível neste dispositivo em{" "}
+        Confira as observações de cada letra e escolha a voz disponível neste dispositivo em{" "}
         <Link href="/settings">Configurações → Áudio de estudo</Link>.
       </p>
 
@@ -123,20 +123,20 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             <div className="alphabet-card-top">
               <span className="pill gray">{item.kind === "vowel" ? "VOGAL" : "CONSOANTE"}</span>
               <span className="alphabet-position">
-                {String(spanishAlphabet.indexOf(item) + 1).padStart(2, "0")} /{" "}
-                {spanishAlphabet.length}
+                {String(alphabet.indexOf(item) + 1).padStart(2, "0")} /{" "}
+                {alphabet.length}
               </span>
             </div>
             <div className="alphabet-letter-row">
-              <div className="alphabet-symbol" lang="es">
+              <div className="alphabet-symbol" lang={language.id}>
                 {item.letter}
                 <span>{item.letter.toLowerCase()}</span>
               </div>
               <div className="alphabet-name">
                 <span>NOME DA LETRA</span>
-                <strong lang="es">{item.name}</strong>
+                <strong lang={language.id}>{item.name}</strong>
                 <SpeakButton
-                  text={`La letra ${item.name}.`}
+                  text={item.name}
                   label={`Ouvir o nome da letra ${item.letter}`}
                   withLabel
                 />
@@ -145,13 +145,13 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             <div className="alphabet-word-row">
               <div>
                 <span>EXEMPLO</span>
-                <strong lang="es">{item.word}</strong>
+                <strong lang={language.id}>{item.word}</strong>
                 <small>{item.translation}</small>
               </div>
               <SpeakButton text={item.word} label={`Ouvir a palavra ${item.word}`} />
             </div>
             <div className="alphabet-example-row">
-              <p lang="es">“{item.example}”</p>
+              <p lang={language.id}>“{item.example}”</p>
               <SpeakButton text={item.example} label={`Ouvir a frase ${item.example}`} />
             </div>
             {item.note && <p className="alphabet-tip">{item.note}</p>}

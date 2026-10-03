@@ -108,7 +108,7 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 28. Controle de correção em conversas | **PARCIAL** | Correção a cada resposta, apenas erros importantes, no final ou desligada; ainda falta avaliação da consistência das correções. |
 | 29. Perfil regional | **PARCIAL** | A preferência por aluno (geral, Espanha, México, Argentina) é salva no estado, orienta exemplos, TTS do navegador e professor IA. Configurações permite escolher e testar uma voz espanhola instalada para a variante neste dispositivo. A avaliação Azure usa es-ES/es-MX quando disponíveis; es-AR não existe para essa avaliação. Faltam áudio uniforme entre dispositivos e cobertura regional maior no curso. |
 | 30. O que preciso melhorar? | **IMPLEMENTADO** | **Estatísticas** traduz prioridades do histórico em prática direta e explicação contextual para revisão, atividades, números, conversas e imagens. Quando há erro de atividade, oferece microlição; nos demais casos, usa o treino específico da fonte em vez de gerar conteúdo artificial. |
-| 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto e resposta validada; o tutor ainda depende do curso espanhol e faltam as demais operações sugeridas. |
+| 31. Regra geral de IA | **PARCIAL** | Há provedor no servidor, contexto curto, resposta validada e tutor/conversa resolvidos pelo pacote do curso e da língua, com léxico do curso como referência. As demais operações pedagógicas sugeridas continuam pendentes. |
 | 32. Telemetria pedagógica | **IMPLEMENTADO** | Eventos por aluno registram turnos, voz, categorias de correção, objetivos, áudios repetidos, uso do professor, descrições de imagem e explicações abertas, além das tentativas existentes. Os sinais alimentam o motor adaptativo sem misturar analytics de marketing. |
 | 33. Regras para todas as features | **EM ANDAMENTO** | A auditoria e o registro foram aplicados a esta entrega; cada novo recurso ainda precisa passar pelas etapas de proposta, validação e documentação. |
 
@@ -120,7 +120,7 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 
 | Frente | Itens | Trabalho restante |
 | --- | --- | --- |
-| Base multilíngua | 8, 9, 29 e 31 | Ampliar catálogos de fundamentos e região; adaptar os fluxos antigos de IA, áudio e telas ainda ligados ao espanhol. O motor de estudo, revisão e dicionário já consome um pacote por idioma. |
+| Base multilíngua | 8, 9, 29 e 31 | A arquitetura agora resolve curso, língua, fundamentos, áudio, IA e avaliação por pacotes; resta ampliar catálogos de números e regiões, calibrar áudio entre dispositivos e concluir operações pedagógicas de IA. |
 | Conversação e personalização | 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos e ampliar o catálogo de missões. A sessão focada já inclui microconversa. |
 | Revisão e fala | 10 e 20 | Ritmo/prosódia, shadowing contínuo e séries numéricas de produção livre ainda dependem de avaliação confiável. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
@@ -130,6 +130,13 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 | Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
 
 **Concluídos no escopo descrito:** 1–7, 11, 12, 15–19, 24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+
+### Entrega de 2026-10-03 — arquitetura multilíngua v1
+
+- `LanguagePackage` e `CoursePackage` agora são contratos Zod compilados para o runtime. Curso ativo, vocabulário, fundamentos, avaliações, IA, fala e normalização são resolvidos por pacote. O curso inicial é marcado no conteúdo, sem depender da ordem dos arquivos.
+- O mesmo usuário pode alternar espanhol e `xx-Test`; progresso, erros, revisão, domínio, histórico e preferências pedagógicas são guardados por curso. O pacote sintético não declara speech e oculta as ações dependentes dessa capacidade.
+- O pipeline inclui validação estrutural, revisão pedagógica, preview, compilação e verificação de acoplamento. Migrações `20261003000400` a `20261003000600` preservam dados antigos enquanto generalizam perfil, vocabulário e eventos de estudo.
+- A refatoração arquitetural não altera o status **PARCIAL** dos itens 8, 9, 29 e 31: suas lacunas de cobertura de conteúdo, uniformidade de áudio e operações de IA seguem descritas na tabela. Detalhes técnicos e limites estão em `DESTRAVA_ARQUITETURA_MULTILINGUA.md`.
 
 ### Entrega de 2026-10-03 — dificuldades, microlição e recomendações
 

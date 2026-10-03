@@ -4,6 +4,7 @@
     "contentVersion": "1.0.0",
     "id": "frecuencias-a1",
     "slug": "frecuencias-a1",
+    "isDefault": true,
     "sourceLanguage": "pt-BR",
     "targetLanguage": "es",
     "defaultVariant": "general",

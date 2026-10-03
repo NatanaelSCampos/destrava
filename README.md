@@ -616,11 +616,11 @@ Operações esperadas incluem:
 
 ---
 
-# Arquitetura multilíngua em refatoração
+# Arquitetura multilíngua
 
 A arquitetura original cresceu a partir do primeiro curso de espanhol.
 
-Está em andamento uma refatoração para formalizar:
+O runtime usa contratos executáveis para:
 
 ```text
 LanguagePackage
@@ -639,7 +639,9 @@ Objetivos da refatoração:
 - permitir novos idiomas através de conteúdo;
 - criar validação e compilação de pacotes.
 
-A validação final dessa arquitetura inclui um idioma sintético de teste antes da entrada de um segundo idioma real.
+O registro compilado contém o curso espanhol e o curso sintético **xx-Test**. A seleção do curso fica no cookie `destrava-active-course`; o estado pedagógico é separado por usuário e `courseId`. O pacote de língua define variantes, normalização, módulos e recursos de voz. O pacote de curso define currículo, léxico, missões e avaliações. O motor recebe esses pacotes pelo registro de cursos, sem importar conteúdo espanhol.
+
+Veja [DESTRAVA_ARQUITETURA_MULTILINGUA.md](DESTRAVA_ARQUITETURA_MULTILINGUA.md) para os contratos, o processo de autoria e as limitações verificadas.
 
 ---
 
@@ -771,7 +773,7 @@ AZURE_SPEECH_KEY
 AZURE_SPEECH_LOCALE
 ```
 
-A configuração de locale está migrando para o `LanguagePackage`, para que o Core não tome decisões específicas de idioma.
+Os locales de reconhecimento e avaliação são resolvidos pelo `LanguagePackage` e pela variante escolhida. A reprodução no navegador usa um locale TTS declarado por um provedor no pacote; idiomas sem essa capacidade ocultam os controles de áudio.
 
 ---
 
@@ -815,11 +817,17 @@ Execute antes de considerar uma entrega concluída:
 npm.cmd run typecheck
 npm.cmd run lint
 npm.cmd run content:validate
+npm.cmd run content:pedagogy
+npm.cmd run content:compile
+npm.cmd run content:preview -- --course pt-BR.xx-Test.a1.general
 npm.cmd run learning:verify
+npm.cmd run multilingual:verify
+npm.cmd run architecture:check
+npm.cmd run session:verify
 npm.cmd run build
 ```
 
-Novos comandos ligados ao pipeline multilíngua serão adicionados durante a refatoração, incluindo validação pedagógica e compilação de conteúdo.
+`predev` e `prebuild` compilam os pacotes automaticamente. Após aplicar as migrações e executar `npm.cmd run db:seed`, use `npm.cmd run db:verify:remote` para conferir o conteúdo no Supabase remoto. A revisão pedagógica emite avisos que exigem decisão editorial, mesmo quando a validação estrutural passa.
 
 ---
 

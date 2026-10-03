@@ -76,7 +76,9 @@ export function writeCourseState(
   const courses: Record<string, StudyState> = isCourseStorage(raw)
     ? { ...raw.courses }
     : raw && typeof raw === "object"
-      ? { [LEGACY_COURSE_ID]: normalize(raw as Partial<StudyState>, LEGACY_COURSE_ID) }
+      ? { [("courseId" in raw && typeof raw.courseId === "string") ? raw.courseId : LEGACY_COURSE_ID]:
+          normalize(raw as Partial<StudyState>,
+            ("courseId" in raw && typeof raw.courseId === "string") ? raw.courseId : LEGACY_COURSE_ID) }
       : {};
   courses[courseId] = normalize(state, courseId, state.languageCode);
   return { schemaVersion: 2, courses };

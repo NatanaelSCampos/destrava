@@ -72,6 +72,24 @@ export const languagePackageSchema = z.object({
 });
 export type LanguagePackage = z.infer<typeof languagePackageSchema>;
 
+export const alphabetModuleSchema = z.array(z.object({
+  letter: id, name: id, word: id, translation: id, example: id,
+  kind: z.enum(["vowel", "consonant"]), note: z.string().optional(),
+})).min(1);
+export const numbersModuleSchema = z.object({
+  prompts: z.array(z.object({
+    id, category: id, display: id, spoken: id, example: id,
+    exampleTranslation: id, accepted: z.array(id).optional(),
+  })).min(1),
+  categoryLabels: z.record(z.string(), id),
+});
+export const regionalVariantsModuleSchema = z.array(z.object({
+  id, title: id, meaning: id, note: id,
+  variants: z.array(z.object({ region: id, term: id, example: id })).min(1),
+  checkPrompt: id, checkRegion: id,
+  sources: z.array(z.object({ label: id, url: z.url() })),
+}));
+
 export const provenanceSchema = z.object({
   origin: z.enum(["human", "ai_generated", "adapted", "imported"]),
   generator: z.object({ name: id, version: z.string().optional() }).optional(),
@@ -181,7 +199,7 @@ export const assessmentSchema = z.object({
   activities: z.array(activitySchema).default([]),
 });
 export const coursePackageSchema = z.object({
-  schemaVersion: version, contentVersion: version, id, slug: id,
+  schemaVersion: version, contentVersion: version, id, slug: id, isDefault: z.boolean().default(false),
   sourceLanguage: id, targetLanguage: id, defaultVariant: z.string().optional(),
   framework: z.object({ name: id, entryLevel: z.string().optional(), exitLevel: id }),
   track: id, title: id, description: z.string().default(""),
@@ -195,4 +213,5 @@ export const coursePackageSchema = z.object({
   provenance: provenanceSchema.optional(),
 });
 export type CoursePackage = z.infer<typeof coursePackageSchema>;
+export type PublicAssessment = Pick<CoursePackage["assessments"][number], "id" | "unitId" | "skillWeights" | "passingPolicy" | "skillPlan" | "bank">;
 export type ActivityContract = z.infer<typeof activitySchema>;

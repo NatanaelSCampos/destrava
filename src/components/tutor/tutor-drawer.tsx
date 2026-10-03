@@ -5,12 +5,12 @@ import { Send, Sparkles, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { nextActivity } from "@/domain/study/study-planner";
 import { SpeakButton } from "@/components/audio/speak-button";
-import { spanishRegion, spanishRegions } from "@/content/spanish-regions";
+import { variantLabel } from "@/content/language-variant";
 
 type TutorFeedback = { answer: string; example: string; quickCheck: string };
 
 export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { course, state, recordStudyEvent } = useStudy();
+  const { course, language, state, recordStudyEvent } = useStudy();
   const [question, setQuestion] = useState("");
   const [feedback, setFeedback] = useState<TutorFeedback | null>(null);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
       const response = await fetch("/api/ai/tutor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, activityId: activity?.id, mistakes }),
+        body: JSON.stringify({ courseId: course.id, question, activityId: activity?.id, mistakes }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Não foi possível responder agora.");
@@ -79,11 +79,7 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
               {course.title} <span>·</span> {unit?.title ?? "Curso"} <span>·</span>{" "}
               {activity?.title ?? "Revisão"}
               <span> · </span>
-              {
-                spanishRegions.find(
-                  (item) => item.id === spanishRegion(state.profile.spanishRegion),
-                )?.label
-              }
+              {variantLabel(language, state.profile.variantId)}
             </div>
           </div>
           {feedback && (
@@ -95,8 +91,8 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
               <div>
                 <strong>Exemplo</strong>
                 <div className="text-audio-row">
-                  <p lang="es">{feedback.example}</p>
-                  <SpeakButton text={feedback.example} label="Ouvir exemplo em espanhol" />
+                  <p lang={language.id}>{feedback.example}</p>
+                  <SpeakButton text={feedback.example} label={`Ouvir exemplo em ${language.identity.nativeName}`} />
                 </div>
               </div>
               <div>

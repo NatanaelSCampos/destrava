@@ -33,6 +33,7 @@ export default function ConversationPage() {
   const {
     course,
     resources,
+    language,
     state,
     ready,
     saveConversation,
@@ -192,7 +193,7 @@ export default function ConversationPage() {
             <div className="conversation-messages" aria-live="polite">
               {selected.turns.length === 0 && (
                 <p className="conversation-empty">
-                  Escreva a primeira mensagem em espanhol para começar.
+                  Escreva a primeira mensagem em {language.identity.nativeName} para começar.
                 </p>
               )}
               {selected.turns.map((turn) => (
@@ -208,7 +209,7 @@ export default function ConversationPage() {
                     {turn.role === "partner" && (
                       <SpeakButton
                         text={turn.text}
-                        label="Ouvir resposta em espanhol"
+                        label={`Ouvir resposta em ${language.identity.nativeName}`}
                         rate={{ beginner: 0.75, intermediate: 0.86, natural: 1 }[selected.pace]}
                         onPlay={() =>
                           recordStudyEvent("conversation_partner_audio", turn.id, {

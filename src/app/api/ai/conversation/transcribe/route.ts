@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { featureFlags } from "@/lib/feature-flags";
-import { SpeechTranscriptionError, transcribeSpanishWav } from "@/lib/transcribe-speech";
+import { SpeechTranscriptionError, transcribeWav } from "@/lib/transcribe-speech";
 
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
@@ -10,10 +10,13 @@ export async function POST(request: Request) {
   if (guard.error) return guard.error;
   const form = await request.formData().catch(() => null);
   const file = form?.get("audio");
+  const courseId = form?.get("courseId");
+  if (typeof courseId !== "string")
+    return NextResponse.json({ error: "Informe o curso." }, { status: 400 });
   if (!(file instanceof File))
     return NextResponse.json({ error: "Envie uma gravação válida." }, { status: 400 });
   try {
-    const transcript = await transcribeSpanishWav(file, guard.userId ?? null);
+    const transcript = await transcribeWav(file, guard.userId ?? null, courseId);
     if (transcript.length > 400)
       return NextResponse.json(
         { error: "A fala ficou longa. Grave uma resposta mais curta." },

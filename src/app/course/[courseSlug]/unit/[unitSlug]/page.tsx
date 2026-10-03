@@ -26,7 +26,7 @@ export default function UnitPage() {
       <div className="unit-hero">
         <div>
           <span className="eyebrow">
-            UNIDADE {String(unit.number).padStart(2, "0")} · FRECUENCIAS A1
+            UNIDADE {String(unit.number).padStart(2, "0")} · {course.title}
           </span>
           <h1>{unit.title}</h1>
           <p>{unit.description}</p>

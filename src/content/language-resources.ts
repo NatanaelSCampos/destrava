@@ -3,8 +3,7 @@ import type { ConversationScenario } from "./conversation-scenarios";
 import type { NumberPrompt } from "@/domain/numbers/number-practice";
 import type { VisualCue } from "./visual-vocabulary";
 import type { ImageDescriptionScene } from "./image-description-scenes";
-import type { AlphabetLetter } from "./spanish-alphabet";
-import type { RegionalTopic } from "./spanish-regions";
+import type { AlphabetLetter, RegionalTopic } from "./fundamentals-types";
 
 export type VocabularyItem = {
   id: string;

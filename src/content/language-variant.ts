@@ -19,3 +19,8 @@ export function speechLocale(
   const variant = resolveVariant(language, value);
   return language.speech.providers[provider]?.[variant]?.[capability] ?? null;
 }
+
+export function textToSpeechLocale(language: LanguagePackage, value: unknown) {
+  const variant = resolveVariant(language, value);
+  return Object.values(language.speech.providers).map((provider) => provider[variant]?.ttsLocale).find(Boolean) ?? null;
+}

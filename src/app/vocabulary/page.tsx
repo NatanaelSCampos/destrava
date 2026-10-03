@@ -125,7 +125,7 @@ export default function VocabularyPage() {
         {items.map((item) => {
           const progress = state.vocabulary[item.id];
           const status = progress?.status ?? "new";
-          const context = vocabularyContext(item, resources.dictionary, state.profile.spanishRegion);
+          const context = vocabularyContext(item, resources.dictionary, state.profile.variantId);
           const occurrences = vocabularyOccurrences(course, item);
           const unit = course.units.find((entry) =>
             entry.lessons.some((lesson) => lesson.id === item.lessonId),

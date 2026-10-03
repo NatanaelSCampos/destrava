@@ -3,14 +3,21 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Image as ImageIcon, Mic, Square, Sparkles } from "lucide-react";
-import { imageDescriptionScenes } from "@/content/image-description-scenes";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { audioToWav } from "@/lib/audio-to-wav";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 
 export default function DescribePage() {
-  const { course, state, saveImageDescription } = useStudy();
+  const { resources } = useStudy();
+  if (!resources.imageScenes.length)
+    return <div className="empty-state panel">Este curso ainda não inclui descrição de imagens.</div>;
+  return <DescribeContent />;
+}
+
+function DescribeContent() {
+  const { course, language, resources, state, saveImageDescription } = useStudy();
+  const imageDescriptionScenes = resources.imageScenes;
   const [sceneId, setSceneId] = useState(imageDescriptionScenes[0].id);
   const [draft, setDraft] = useState("");
   const [recording, setRecording] = useState(false);
@@ -33,7 +40,7 @@ export default function DescribePage() {
         setSceneId(suggested);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [imageDescriptionScenes]);
   const history = (state.imageDescriptions ?? []).filter(
     (item) => item.courseId === course.id && item.sceneId === sceneId,
   );
@@ -104,6 +111,7 @@ export default function DescribePage() {
     setError("");
     try {
       const form = new FormData();
+      form.append("courseId", course.id);
       form.append("sceneId", scene.id);
       if (mode === "speech" && audioBlob)
         form.append("audio", await audioToWav(audioBlob), "description.wav");
@@ -135,7 +143,7 @@ export default function DescribePage() {
           </span>
           <h1 className="page-title">Olhe. Fale. Destrave.</h1>
           <p className="page-subtitle">
-            Descreva a cena em espanhol. Você pode falar ou escrever e receber dicas para melhorar.
+            Descreva a cena em {language.identity.nativeName}. Escreva sua resposta e receba dicas para melhorar.
           </p>
         </div>
       </div>
@@ -158,7 +166,7 @@ export default function DescribePage() {
           </div>
           <h2>{scene.title}</h2>
           <p>{scene.prompt}</p>
-          <div className="describe-actions">
+          {language.capabilities.speechRecognition && <div className="describe-actions">
             {recording ? (
               <button type="button" className="secondary-button" onClick={stop}>
                 <Square size={16} /> Parar gravação
@@ -186,20 +194,20 @@ export default function DescribePage() {
                 {loading ? "Analisando…" : "Analisar minha fala"}
               </button>
             )}
-          </div>
-          <p className="helper-note">
+          </div>}
+          {language.capabilities.speechRecognition && <p className="helper-note">
             Grave até 20 segundos. O áudio é enviado para transcrição, mas apenas o texto e as dicas
             ficam no histórico.
-          </p>
+          </p>}
           <div className="field">
-            <label htmlFor="describe-draft">Ou escreva sua descrição em espanhol</label>
+            <label htmlFor="describe-draft">Ou escreva sua descrição em {language.identity.nativeName}</label>
             <textarea
               id="describe-draft"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               maxLength={600}
               rows={3}
-              placeholder="Veo una mujer y un gato…"
+              placeholder="Descreva o que você vê…"
             />
           </div>
           <button

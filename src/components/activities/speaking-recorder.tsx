@@ -136,6 +136,7 @@ export function SpeakingRecorder({
     try {
       const wav = await audioToWav(audioBlob);
       const form = new FormData();
+      form.append("courseId", course.id);
       form.append(numberPromptId ? "numberPromptId" : "activityId", numberPromptId ?? activity.id);
       form.append("audio", wav, "pronunciation.wav");
       const response = await fetch("/api/pronunciation", { method: "POST", body: form });

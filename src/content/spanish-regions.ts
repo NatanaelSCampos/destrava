@@ -21,16 +21,7 @@ export type RegionalExample = {
   example: string;
 };
 
-export type RegionalTopic = {
-  id: string;
-  title: string;
-  meaning: string;
-  note: string;
-  variants: RegionalExample[];
-  checkPrompt: string;
-  checkRegion: Exclude<SpanishRegion, "general">;
-  sources: Array<{ label: string; url: string }>;
-};
+import type { RegionalTopic } from "./fundamentals-types";
 
 export const regionalTopics: RegionalTopic[] = [
   {

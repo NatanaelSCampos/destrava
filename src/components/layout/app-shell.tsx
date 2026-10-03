@@ -139,12 +139,12 @@ export function AppShell({ children, courseOptions }: {
   ).total;
   const navItems = navigation(course.slug).filter(
     (item) =>
-      (item.href !== "/speaking" || featureFlags.SPEAKING) &&
+      (item.href !== "/speaking" || (featureFlags.SPEAKING && language.capabilities.speechRecognition)) &&
       (item.href !== "/conversation" || featureFlags.AI_TUTOR) &&
       (item.href !== "/describe" || (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
       (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled)),
   );
-  const studyNavCount = 6 + Number(featureFlags.SPEAKING) + 2 * Number(featureFlags.AI_TUTOR);
+  const studyNavCount = navItems.findIndex((item) => item.href === "/vocabulary");
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
   const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
 
@@ -202,6 +202,8 @@ export function AppShell({ children, courseOptions }: {
                     body: JSON.stringify({ courseId }),
                   });
                   if (!response.ok) throw new Error("Não foi possível trocar de curso.");
+                  // Reload so the server layout resolves the new course cookie.
+                  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
                   window.location.assign("/dashboard");
                 } catch (error) {
                   setCourseError(error instanceof Error ? error.message : "Falha ao trocar de curso.");
@@ -295,7 +297,7 @@ export function AppShell({ children, courseOptions }: {
             </strong>
           </div>
           <div className="topbar-right">
-            <span className="level-pill">NÍVEL A1</span>
+            <span className="level-pill">NÍVEL {course.level}</span>
             {hasPageTour && (
               <button
                 type="button"

@@ -1,6 +1,7 @@
 import type { Skill } from "@/content/schema";
 
 export type AdaptiveBankItem = { activityId: string; skill: Skill; difficulty: 1 | 2 | 3 };
+export const adaptiveSkillPlan: Skill[] = ["vocabulary", "grammar", "listening", "writing", "grammar", "reading"];
 
 // Questions already curated in the active A1 course. Level 3 asks for application in context,
 // but remains inside this unit's learning objectives.

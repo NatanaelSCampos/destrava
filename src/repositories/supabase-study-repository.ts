@@ -320,6 +320,7 @@ export class SupabaseStudyRepository {
       state.events.map((item) => ({
         id: item.id,
         user_id: uid,
+        course_id: course.id,
         event_type: item.type,
         activity_id: item.activityId ?? null,
         metadata: { ...(item.itemId ? { itemId: item.itemId } : {}), ...item.metadata },

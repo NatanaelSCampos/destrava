@@ -7,6 +7,11 @@ export type ConversationScenario = {
   character: string;
   opening: string;
   objectives: MissionObjective[];
+  roleplay?: {
+    characterRole: string;
+    maxVocabularyLevel?: string;
+    allowHints?: boolean;
+  };
 };
 
 export const conversationScenarios: ConversationScenario[] = [

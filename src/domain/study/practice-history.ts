@@ -28,7 +28,7 @@ export type SessionComparison = {
 export function buildPracticeHistory(
   course: PublicCourse,
   state: StudyState,
-  vocabularyItems: ReadonlyArray<{ id: string; term?: string; spanish?: string; lessonId: string }>,
+  vocabularyItems: ReadonlyArray<{ id: string; term: string; lessonId: string }>,
 ): PracticeSeries[] {
   const activities = new Map(
     course.units.flatMap((unit) =>
@@ -127,7 +127,7 @@ export function buildPracticeHistory(
     if (word)
       reviewedTarget.set(progress.schedule.id, {
         id: `word:${id}`,
-        title: word.term ?? word.spanish ?? word.id,
+        title: word.term,
         measure: "Recordação",
         href: "/vocabulary",
       });

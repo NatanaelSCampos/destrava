@@ -1,10 +1,10 @@
 import {
   normalizedVoiceLocale,
-  readSpanishVoicePreference,
-  spanishVoiceId,
+  readVoicePreference,
+  voiceId,
 } from "@/lib/speech-voice-preference";
 
-export function speakSpanish(text: string, onError?: () => void, locale = "es-ES", rate = 0.86) {
+export function speakText(text: string, locale: string, onError?: () => void, rate = 0.86) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
 
   const spokenText = text.trim().replace(/\s*\/\s*/g, ", ");
@@ -15,15 +15,15 @@ export function speakSpanish(text: string, onError?: () => void, locale = "es-ES
   utterance.lang = locale;
   utterance.rate = rate;
   const voices = window.speechSynthesis.getVoices();
-  const preferredId = readSpanishVoicePreference(locale);
+  const preferredId = readVoicePreference(locale);
   const voice =
     voices.find(
       (item) =>
-        preferredId === spanishVoiceId(item) &&
+        preferredId === voiceId(item) &&
         normalizedVoiceLocale(item.lang) === normalizedVoiceLocale(locale),
     ) ??
     voices.find((item) => normalizedVoiceLocale(item.lang) === normalizedVoiceLocale(locale)) ??
-    voices.find((item) => normalizedVoiceLocale(item.lang).startsWith("es-"));
+    voices.find((item) => normalizedVoiceLocale(item.lang).startsWith(`${normalizedVoiceLocale(locale).split("-")[0]}-`));
   if (voice) {
     utterance.voice = voice;
     utterance.lang = voice.lang;

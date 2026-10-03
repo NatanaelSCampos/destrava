@@ -3,21 +3,18 @@
 import Link from "next/link";
 import { BookOpen, CaseUpper, Globe2, Hash } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
-import { spanishAlphabet } from "@/content/spanish-alphabet";
-import { numberPrompts } from "@/domain/numbers/number-practice";
 import { AlphabetGuide } from "./alphabet-guide";
 import { NumberGuide } from "./number-guide";
 import { RegionalGuide } from "./regional-guide";
-import { regionalTopics } from "@/content/spanish-regions";
 
 type BasicsTopic = "alphabet" | "numbers" | "regions";
 
-const topics = [
+const topicDefinitions = [
   {
     id: "alphabet" as const,
     title: "Alfabeto",
     description: "Letras, nomes e palavras com áudio.",
-    count: spanishAlphabet.length,
+    countKey: "alphabet",
     countLabel: "letras",
     icon: CaseUpper,
   },
@@ -25,7 +22,7 @@ const topics = [
     id: "numbers" as const,
     title: "Números",
     description: "Números do cotidiano, exemplos e prática.",
-    count: numberPrompts.length,
+    countKey: "numbers",
     countLabel: "exemplos",
     icon: Hash,
   },
@@ -33,15 +30,17 @@ const topics = [
     id: "regions" as const,
     title: "Variações regionais",
     description: "Expressões, exemplos e formas de tratamento.",
-    count: regionalTopics.length,
+    countKey: "regionalTopics",
     countLabel: "comparações",
     icon: Globe2,
   },
 ];
 
 export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
-  const { course } = useStudy();
-  const supported = course.languageCode.startsWith("es");
+  const { resources } = useStudy();
+  const counts: Record<string, number> = { alphabet: resources.alphabet.length, numbers: resources.numbers.length, regionalTopics: resources.regionalTopics.length };
+  const topics = topicDefinitions.filter((item) => counts[item.countKey] > 0).map((item) => ({ ...item, count: counts[item.countKey] }));
+  const supported = topics.length > 0;
 
   return (
     <div className="basics-page">
@@ -62,7 +61,7 @@ export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
         <div className="empty-state panel">
           <BookOpen size={28} />
           <strong>Os fundamentos deste idioma estão em preparação.</strong>
-          <span>O conteúdo disponível agora é o do curso de espanhol.</span>
+          <span>Este curso ainda não inclui módulos de fundamentos.</span>
           <Link href="/dashboard" className="secondary-button">
             Voltar à visão geral
           </Link>
@@ -96,10 +95,10 @@ export function BasicsLibrary({ topic }: { topic: BasicsTopic }) {
               );
             })}
           </nav>
-          <div className="basics-selected" aria-labelledby={`basics-tab-${topic}`}>
-            {topic === "alphabet" ? (
+          <div className="basics-selected" aria-labelledby={`basics-tab-${topics.some((item) => item.id === topic) ? topic : topics[0].id}`}>
+            {(topics.some((item) => item.id === topic) ? topic : topics[0].id) === "alphabet" ? (
               <AlphabetGuide embedded />
-            ) : topic === "numbers" ? (
+            ) : (topics.some((item) => item.id === topic) ? topic : topics[0].id) === "numbers" ? (
               <NumberGuide />
             ) : (
               <RegionalGuide />

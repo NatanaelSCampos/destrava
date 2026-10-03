@@ -62,6 +62,7 @@ export async function POST(request: Request) {
     const result = await getAIProvider().generateMicroLesson({
       course: bundle.course.title,
       languageCode: bundle.course.languageCode,
+      sourceLanguage: bundle.coursePackage.sourceLanguage,
       activityTitle: activity.title,
       activityType: activity.type,
       activityPrompt: activity.prompt.slice(0, 400),

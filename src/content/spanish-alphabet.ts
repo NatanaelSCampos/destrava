@@ -1,12 +1,4 @@
-export type AlphabetLetter = {
-  letter: string;
-  name: string;
-  word: string;
-  translation: string;
-  example: string;
-  kind: "vowel" | "consonant";
-  note?: string;
-};
+import type { AlphabetLetter } from "./fundamentals-types";
 
 export const spanishAlphabet: ReadonlyArray<AlphabetLetter> = [
   {

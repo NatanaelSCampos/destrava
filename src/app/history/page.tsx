@@ -97,7 +97,7 @@ export default function HistoryPage() {
                   <div className="session-main">
                     <h3>
                       {course.units.find((unit) => unit.id === session.unitId)?.title ??
-                        "Estudo de espanhol"}
+                        `Estudo de ${course.title}`}
                     </h3>
                     <p>
                       <Clock3 size={14} />{" "}

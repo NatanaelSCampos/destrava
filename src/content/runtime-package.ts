@@ -1,9 +1,8 @@
 import { coursePackageSchema, languagePackageSchema, type CoursePackage, type LanguagePackage } from "./contracts";
 import { courseSchema, type Course, type Skill } from "./schema";
 import type { LanguageResources, DictionaryEntry, VocabularyItem } from "./language-resources";
-import type { AlphabetLetter } from "./spanish-alphabet";
+import type { AlphabetLetter, RegionalTopic } from "./fundamentals-types";
 import type { NumberPrompt } from "@/domain/numbers/number-practice";
-import type { RegionalTopic } from "./spanish-regions";
 import type { ConversationScenario } from "./conversation-scenarios";
 import type { ImageDescriptionScene } from "./image-description-scenes";
 import type { VisualCue } from "./visual-vocabulary";
@@ -69,14 +68,23 @@ export function runtimeBundle(raw: CompiledPackage) {
       regionalNote: entry.regionalNote,
     }]),
   );
-  const conversationScenarios: ConversationScenario[] = coursePackage.missions.map((mission) => ({
-    id: mission.id, focusConceptIds: mission.recommendedConcepts,
-    title: mission.title ?? mission.scenario, setting: mission.setting ?? mission.scenario,
-    character: mission.character ?? "Colega", opening: mission.opening ?? "Olá!",
-    objectives: mission.objectiveDetails ?? mission.objectives.map((objective) => ({
-      id: objective, label: objective, hint: "",
-    })),
-  }));
+  const conversationScenarios: ConversationScenario[] = coursePackage.missions.map((mission) => {
+    const roleplay = coursePackage.roleplays.find((entry) => entry.scenario === mission.scenario);
+    return {
+      id: mission.id, focusConceptIds: mission.recommendedConcepts,
+      title: mission.title ?? mission.scenario, setting: mission.setting ?? mission.scenario,
+      character: mission.character ?? roleplay?.character.role ?? "Colega",
+      opening: mission.opening ?? "Olá!",
+      objectives: mission.objectiveDetails ?? mission.objectives.map((objective) => ({
+        id: objective, label: objective, hint: "",
+      })),
+      roleplay: roleplay ? {
+        characterRole: roleplay.character.role,
+        maxVocabularyLevel: roleplay.constraints?.maxVocabularyLevel,
+        allowHints: roleplay.constraints?.allowHints,
+      } : undefined,
+    };
+  });
   const imageScenes: ImageDescriptionScene[] = coursePackage.media
     .filter((item) => item.type === "image" && Array.isArray(item.metadata?.facts))
     .map((item) => ({

@@ -234,6 +234,30 @@ select:focus-visible {
 .sidebar-course-head > svg {
   color: #a2a2a7;
 }
+.course-switcher {
+  display: grid;
+  gap: 6px;
+  margin-top: 13px;
+  color: #c2c2c6;
+  font-size: 11px;
+}
+.course-switcher select {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #525258;
+  border-radius: 8px;
+  background: #1c1c20;
+  color: #fff;
+  font: inherit;
+}
+.course-switcher select:focus-visible {
+  outline: 2px solid #e7a8b2;
+  outline-offset: 2px;
+}
+.course-switcher small {
+  color: #ffd2d8;
+}
 .sidebar-course-progress {
   display: flex;
   justify-content: space-between;

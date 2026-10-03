@@ -1,9 +1,10 @@
-import type { Skill } from "@/content/schema";
-import type { AdaptiveBankItem } from "@/content/adaptive-assessment-bank";
+import type { CoursePackage } from "@/content/contracts";
+type AssessmentSkill = CoursePackage["assessments"][number]["skillPlan"][number];
+export type AdaptiveBankItem = { activityId: string; skill: AssessmentSkill; difficulty: 1 | 2 | 3 };
 
 export type AdaptiveAnswer = {
   activityId: string;
-  skill: Skill;
+  skill: AssessmentSkill;
   difficulty: 1 | 2 | 3;
   correct: boolean;
   answer: string;
@@ -11,18 +12,8 @@ export type AdaptiveAnswer = {
   explanation?: string;
 };
 
-export const adaptiveSkillPlan: Skill[] = [
-  "vocabulary",
-  "grammar",
-  "listening",
-  "writing",
-  "grammar",
-  "reading",
-];
-export const adaptiveAssessmentPolicy = { targetScore: 75, criticalSkillMinimum: 60 };
-
-export function nextAdaptiveItem(bank: AdaptiveBankItem[], answers: AdaptiveAnswer[]) {
-  const skill = adaptiveSkillPlan[answers.length];
+export function nextAdaptiveItem(bank: AdaptiveBankItem[], answers: AdaptiveAnswer[], skillPlan: AssessmentSkill[]) {
+  const skill = skillPlan[answers.length];
   if (!skill) return null;
   const used = new Set(answers.map((answer) => answer.activityId));
   const recent = answers.slice(-2);
@@ -40,8 +31,12 @@ export function nextAdaptiveItem(bank: AdaptiveBankItem[], answers: AdaptiveAnsw
   );
 }
 
-export function adaptiveAssessmentReport(answers: AdaptiveAnswer[]) {
-  const bySkill = [...new Set(adaptiveSkillPlan)].map((skill) => {
+export function adaptiveAssessmentReport(
+  answers: AdaptiveAnswer[], skillPlan: AssessmentSkill[],
+  passingPolicy: { overall: number; minimumBySkill?: Partial<Record<AssessmentSkill, number>> },
+  skillWeights: Partial<Record<AssessmentSkill, number>>,
+) {
+  const bySkill = [...new Set(skillPlan)].map((skill) => {
     const items = answers.filter((item) => item.skill === skill);
     return {
       skill,
@@ -52,13 +47,16 @@ export function adaptiveAssessmentReport(answers: AdaptiveAnswer[]) {
         : null,
     };
   });
-  const score = answers.length
-    ? Math.round((100 * answers.filter((answer) => answer.correct).length) / answers.length)
+  const weighted = bySkill.filter((item) => item.score !== null).map((item) => ({
+    score: item.score!, weight: skillWeights[item.skill] ?? 0,
+  }));
+  const totalWeight = weighted.reduce((sum, item) => sum + item.weight, 0);
+  const score = totalWeight > 0
+    ? Math.round(weighted.reduce((sum, item) => sum + item.score * item.weight, 0) / totalWeight)
     : 0;
-  const critical = bySkill.filter((item) => item.answered >= 2);
   const passed =
-    answers.length === adaptiveSkillPlan.length &&
-    score >= adaptiveAssessmentPolicy.targetScore &&
-    critical.every((item) => (item.score ?? 0) >= adaptiveAssessmentPolicy.criticalSkillMinimum);
+    answers.length === skillPlan.length &&
+    score >= passingPolicy.overall * 100 &&
+    bySkill.every((item) => item.answered === 0 || (item.score ?? 0) >= (passingPolicy.minimumBySkill?.[item.skill] ?? 0) * 100);
   return { score, bySkill, passed, wrong: answers.filter((item) => !item.correct) };
 }
