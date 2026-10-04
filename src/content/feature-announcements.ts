@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-numeros-regioes-missoes-diagnostico",
+    title: "Mais prática para cada passo",
+    summary: "Números, variações regionais, missões e diagnóstico receberam novos exemplos e verificações.",
+    highlights: [
+      "Pratique números em situações de dinheiro, datas, horários e telefone.",
+      "Compare formas de falar por região; suas respostas agora entram no perfil de aprendizado.",
+      "O diagnóstico usa mais perguntas por habilidade e deixa claro quando ainda faltam respostas para avaliar.",
+    ],
+    href: "/basics",
+    linkLabel: "Explorar fundamentos",
+  },
+  {
     id: "2026-10-onboarding-pedagogico-v1",
     title: "Seu plano agora acompanha seus objetivos",
     summary: "Ao começar um novo curso, escolha objetivo, prioridades e tempo. As aulas e missões se ajustam ao seu percurso.",

@@ -85,11 +85,13 @@ export const numbersModuleSchema = z.object({
   categoryLabels: z.record(z.string(), id),
 });
 export const regionalVariantsModuleSchema = z.array(z.object({
-  id, title: id, meaning: id, note: id,
+  id, title: id, meaning: id, note: id, category: id.optional(),
   variants: z.array(z.object({ region: id, term: id, example: id })).min(1),
-  checkPrompt: id, checkRegion: id,
+  checkPrompt: id, checkRegion: id.optional(),
+  checkOptions: z.array(id).min(2).optional(), checkAnswer: id.optional(),
   sources: z.array(z.object({ label: id, url: z.url() })),
-}));
+}).refine((topic) => topic.checkRegion || (topic.checkOptions?.includes(topic.checkAnswer ?? "") ?? false),
+  "Regional check needs a region or a valid answer"));
 
 export const provenanceSchema = z.object({
   origin: z.enum(["human", "ai_generated", "adapted", "imported"]),
@@ -199,7 +201,7 @@ export const assessmentSchema = z.object({
     minimumBySkill: z.partialRecord(skillIdSchema, z.number().min(0).max(1)).optional(),
   }),
   skillPlan: z.array(skillIdSchema).min(1),
-  bank: z.array(z.object({ activityId: id, skill: skillIdSchema, difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]) })).min(1),
+  bank: z.array(z.object({ activityId: id, skill: skillIdSchema, difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]), ceiling: z.boolean().optional() })).min(1),
   activities: z.array(activitySchema).default([]),
 });
 export const coursePackageSchema = z.object({

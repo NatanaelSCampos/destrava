@@ -21,6 +21,7 @@ import {
   recordEvaluatedWriting,
   recordVocabularySignal,
   recordNumberAttempt,
+  recordRegionalAttempt,
   recordMicroLessonAttempt,
   recordAdaptiveAssessment,
   reviewVocabulary,
@@ -52,6 +53,7 @@ import {
   gradeNumberDictation,
   numberSpeechScore,
 } from "../src/domain/numbers/number-practice";
+import { validatedObjectiveIds } from "../src/domain/conversation/objective-evidence";
 
 const vocabularySeed = legacyVocabularySeed.map((item) => ({ ...item, term: item.spanish }));
 const course = publicCourse(frecuenciasA1);
@@ -169,7 +171,7 @@ const wrongAdaptive: AdaptiveAnswer = {
   correct: false,
   answer: "erro",
 };
-assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, [wrongAdaptive], adaptiveSkillPlan)?.difficulty, 1);
+assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, [wrongAdaptive], adaptiveSkillPlan)?.difficulty, 2);
 const adaptiveAnswers: AdaptiveAnswer[] = [
   wrongAdaptive,
   { activityId: "grammar-2", skill: "grammar", difficulty: 1, correct: true, answer: "soy" },
@@ -197,9 +199,28 @@ const adaptiveAnswers: AdaptiveAnswer[] = [
   },
 ];
 const adaptiveWeights = Object.fromEntries([...new Set(adaptiveSkillPlan)].map((skill) => [skill, adaptiveSkillPlan.filter((item) => item === skill).length / adaptiveSkillPlan.length]));
-assert.equal(adaptiveAssessmentReport(adaptiveAnswers, adaptiveSkillPlan, { overall: 0.75, minimumBySkill: { grammar: 0.6 } }, adaptiveWeights).score, 83);
+const legacyDiagnostic = adaptiveAssessmentReport(adaptiveAnswers, adaptiveSkillPlan, { overall: 0.75, minimumBySkill: { grammar: 0.6 } }, adaptiveWeights);
+assert.equal(legacyDiagnostic.bySkill.find((item) => item.skill === "vocabulary")?.status, "insufficient");
+assert.equal(legacyDiagnostic.passed, false);
 assert.equal(adaptiveAssessmentReport(adaptiveAnswers, adaptiveSkillPlan, { overall: 0.75, minimumBySkill: { grammar: 0.6 } }, adaptiveWeights).wrong.length, 1);
 assert.equal(nextAdaptiveItem(adaptiveAssessmentBank, adaptiveAnswers, adaptiveSkillPlan), null);
+const skillSpecificBank = [
+  { activityId: "v1", skill: "vocabulary" as const, difficulty: 2 as const },
+  { activityId: "v2", skill: "vocabulary" as const, difficulty: 1 as const },
+  { activityId: "g1", skill: "grammar" as const, difficulty: 2 as const },
+];
+assert.equal(nextAdaptiveItem(skillSpecificBank, [
+  { activityId: "v1", skill: "vocabulary", difficulty: 2, answer: "", correct: false },
+  { activityId: "g1", skill: "grammar", difficulty: 2, answer: "", correct: true },
+], ["vocabulary", "grammar", "vocabulary"])?.activityId, "v2");
+assert.deepEqual(validatedObjectiveIds(["say-name"], "Me llamo Ana.", [
+  { id: "say-name", quote: "Me llamo Ana" },
+  { id: "unknown", quote: "Me llamo Ana" },
+  { id: "say-name", quote: "Invented text" },
+]), ["say-name"]);
+assert.deepEqual(validatedObjectiveIds(["say-name"], "Hola", [
+  { id: "say-name", quote: "Me llamo Ana" },
+]), []);
 const adaptiveState: StudyState = {
   ...initialStudyState,
   adaptiveAssessments: [
@@ -758,7 +779,15 @@ assert(gradeNumberDictation(fortySeven, "47"));
 assert(!gradeNumberDictation(fortySeven, "70"));
 assert(!gradeNumberDictation(fortySeven, "abc47"));
 assert(gradeNumberDictation(findNumberPrompt("money-12-50")!, "12.50"));
+assert(!gradeNumberDictation(findNumberPrompt("money-12-50")!, "1250"));
 assert(gradeNumberDictation(findNumberPrompt("time-08-15")!, "8:15"));
+const regionalIssue = recordRegionalAttempt(initialStudyState, {
+  topicId: "computer", selectedAnswer: "mexico", correct: false,
+});
+assert.equal(regionalIssue.regionalAttempts.length, 1);
+assert.equal(buildLearningProfile(course, regionalIssue, vocabularySeed).items.find(
+  (item) => item.id === "region:computer",
+)?.evidenceCount, 1);
 assert.deepEqual(
   numberSpeechScore({ ...poorSpeech.speaking[0].feedback!, accuracy: 80, completeness: 80 }),
   { score: 80, correct: true },

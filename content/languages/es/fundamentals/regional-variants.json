@@ -28,7 +28,8 @@
         "label": "RAE: ordenador",
         "url": "https://dle.rae.es/ordenador"
       }
-    ]
+    ],
+    "category": "vocabulary"
   },
   {
     "id": "phone",
@@ -63,7 +64,8 @@
         "label": "ASALE: celular",
         "url": "https://www.asale.org/damer/celular"
       }
-    ]
+    ],
+    "category": "vocabulary"
   },
   {
     "id": "informal-you",
@@ -93,6 +95,278 @@
       {
         "label": "RAE/ASALE: vos",
         "url": "https://www.rae.es/dpd/vos"
+      }
+    ],
+    "category": "address"
+  },
+  {
+    "id": "bus",
+    "category": "vocabulary",
+    "title": "Ônibus",
+    "meaning": "transporte público",
+    "note": "Os nomes de ônibus variam entre países. São exemplos comuns, não a única forma possível.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "autobús",
+        "example": "Voy al centro en autobús."
+      },
+      {
+        "region": "mexico",
+        "term": "camión",
+        "example": "Voy al centro en camión."
+      },
+      {
+        "region": "argentina",
+        "term": "colectivo",
+        "example": "Voy al centro en colectivo."
+      }
+    ],
+    "checkPrompt": "Em qual exemplo 'camión' significa ônibus?",
+    "checkRegion": "mexico",
+    "sources": [
+      {
+        "label": "ASALE: camión",
+        "url": "https://www.asale.org/damer/cami%C3%B3n"
+      }
+    ]
+  },
+  {
+    "id": "plural-you",
+    "category": "address",
+    "title": "Vocês",
+    "meaning": "grupo de pessoas",
+    "note": "Na maior parte da Espanha, vosotros é um tratamento informal plural; no México e na Argentina, usa-se ustedes.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "vosotros",
+        "example": "Vosotros sois estudiantes."
+      },
+      {
+        "region": "mexico",
+        "term": "ustedes",
+        "example": "Ustedes son estudiantes."
+      },
+      {
+        "region": "argentina",
+        "term": "ustedes",
+        "example": "Ustedes son estudiantes."
+      }
+    ],
+    "checkPrompt": "Em qual exemplo aparece 'vosotros'?",
+    "checkRegion": "spain",
+    "sources": [
+      {
+        "label": "RAE: conjugação espanhola",
+        "url": "https://www.rae.es/buen-uso-espa%C3%B1ol/conjugaci%C3%B3n-espa%C3%B1ola"
+      }
+    ]
+  },
+  {
+    "id": "c-z-sound",
+    "category": "pronunciation",
+    "title": "Som de C e Z",
+    "meaning": "pronúncia de ce, ci e z",
+    "note": "Na maior parte da Espanha, ce, ci e z têm o som /θ/; no México e na Argentina, o seseo usa /s/. As duas pronúncias são corretas.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "cena",
+        "example": "La cena está lista."
+      },
+      {
+        "region": "mexico",
+        "term": "cena",
+        "example": "La cena está lista."
+      },
+      {
+        "region": "argentina",
+        "term": "cena",
+        "example": "La cena está lista."
+      }
+    ],
+    "checkPrompt": "Em qual região este exemplo pode ter o som /θ/ em cena?",
+    "checkRegion": "spain",
+    "sources": [
+      {
+        "label": "RAE: seseo e ceceo",
+        "url": "https://www.rae.es/buen-uso-espa%C3%B1ol/el-seseo-y-el-ceceo"
+      }
+    ]
+  },
+  {
+    "id": "voseo-conjugation",
+    "category": "expression",
+    "title": "Como você se chama?",
+    "meaning": "pergunta informal",
+    "note": "O voseo argentino muda também a forma verbal: vos te llamás. Isso não torna tú te llamas incorreto em outros lugares.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "te llamas",
+        "example": "¿Cómo te llamas?"
+      },
+      {
+        "region": "mexico",
+        "term": "te llamas",
+        "example": "¿Cómo te llamas?"
+      },
+      {
+        "region": "argentina",
+        "term": "te llamás",
+        "example": "¿Cómo te llamás?"
+      }
+    ],
+    "checkPrompt": "Em qual exemplo aparece 'llamás'?",
+    "checkRegion": "argentina",
+    "sources": [
+      {
+        "label": "RAE/ASALE: vos",
+        "url": "https://www.rae.es/dpd/vos"
+      }
+    ]
+  },
+  {
+    "id": "coger-tomar",
+    "category": "false_friend",
+    "title": "Pegar ou tomar",
+    "meaning": "verbo de movimento",
+    "note": "Na Espanha, coger el autobús é comum. Em partes da América, coger pode ter um sentido vulgar; tomar evita o mal-entendido.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "coger",
+        "example": "Voy a coger el autobús."
+      },
+      {
+        "region": "mexico",
+        "term": "tomar",
+        "example": "Voy a tomar el camión."
+      },
+      {
+        "region": "argentina",
+        "term": "tomar",
+        "example": "Voy a tomar el colectivo."
+      }
+    ],
+    "checkPrompt": "Em qual exemplo aparece 'coger'?",
+    "checkRegion": "spain",
+    "sources": [
+      {
+        "label": "RAE: coger",
+        "url": "https://dle.rae.es/coger"
+      }
+    ]
+  },
+  {
+    "id": "formal-usted",
+    "category": "formality",
+    "title": "Falar com respeito",
+    "meaning": "tratamento formal",
+    "note": "Usted é uma forma de tratamento de cortesia. A escolha depende da relação e da situação; não existe uma regra única para todos os países.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "usted",
+        "example": "¿Cómo se llama usted?"
+      },
+      {
+        "region": "mexico",
+        "term": "usted",
+        "example": "¿Cómo se llama usted?"
+      },
+      {
+        "region": "argentina",
+        "term": "usted",
+        "example": "¿Cómo se llama usted?"
+      }
+    ],
+    "checkPrompt": "Qual palavra pode indicar tratamento formal?",
+    "checkOptions": [
+      "usted",
+      "tú",
+      "vos"
+    ],
+    "checkAnswer": "usted",
+    "sources": [
+      {
+        "label": "RAE: usted",
+        "url": "https://dle.rae.es/usted"
+      }
+    ]
+  },
+  {
+    "id": "false-friend-embarazada",
+    "category": "false_friend",
+    "title": "Embarazada",
+    "meaning": "falso cognato",
+    "note": "Em contexto cotidiano, embarazada significa grávida. O dicionário registra também um sentido de constrangimento, mas não trate a palavra como tradução automática de embaraçada.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "embarazada",
+        "example": "Ella está embarazada."
+      },
+      {
+        "region": "mexico",
+        "term": "embarazada",
+        "example": "Ella está embarazada."
+      },
+      {
+        "region": "argentina",
+        "term": "embarazada",
+        "example": "Ella está embarazada."
+      }
+    ],
+    "checkPrompt": "No exemplo, qual é o sentido de embarazada?",
+    "checkOptions": [
+      "grávida",
+      "embaraçada",
+      "cansada"
+    ],
+    "checkAnswer": "grávida",
+    "sources": [
+      {
+        "label": "RAE: embarazada",
+        "url": "https://dle.rae.es/embarazado"
+      }
+    ]
+  },
+  {
+    "id": "portuguese-trap-muy",
+    "category": "portuguese_trap",
+    "title": "Muito cansado",
+    "meaning": "erro frequente para falantes de português",
+    "note": "Antes de um adjetivo como cansado, use muy. Mucho modifica outras estruturas, como trabalho mucho. São funções diferentes.",
+    "variants": [
+      {
+        "region": "spain",
+        "term": "muy",
+        "example": "Estoy muy cansado."
+      },
+      {
+        "region": "mexico",
+        "term": "muy",
+        "example": "Estoy muy cansado."
+      },
+      {
+        "region": "argentina",
+        "term": "muy",
+        "example": "Estoy muy cansado."
+      }
+    ],
+    "checkPrompt": "Qual frase diz Estou muito cansado?",
+    "checkOptions": [
+      "Estoy muy cansado.",
+      "Estoy mucho cansado.",
+      "Soy mucho cansado."
+    ],
+    "checkAnswer": "Estoy muy cansado.",
+    "sources": [
+      {
+        "label": "RAE: grupos adjetivais",
+        "url": "https://www.rae.es/gram%C3%A1tica-b%C3%A1sica/la-gram%C3%A1tica/la-sintaxis/los-grupos-sint%C3%A1cticos-sus-clases"
       }
     ]
   }

@@ -152,6 +152,14 @@ export type NumberAttempt = {
   createdAt: string;
 };
 
+export type RegionalAttempt = {
+  id: string;
+  topicId: string;
+  selectedAnswer: string;
+  correct: boolean;
+  createdAt: string;
+};
+
 export type MicroLessonAttempt = {
   id: string;
   activityId: string;
@@ -198,6 +206,7 @@ export type StudyState = {
   writing: WritingSubmission[];
   speaking: SpeakingSubmission[];
   numberAttempts: NumberAttempt[];
+  regionalAttempts: RegionalAttempt[];
   microLessonAttempts: MicroLessonAttempt[];
   conversations: ConversationSession[];
   imageDescriptions: ImageDescriptionAttempt[];
@@ -232,6 +241,7 @@ export const initialStudyState: StudyState = {
   writing: [],
   speaking: [],
   numberAttempts: [],
+  regionalAttempts: [],
   microLessonAttempts: [],
   conversations: [],
   imageDescriptions: [],
@@ -257,6 +267,7 @@ export function recordAdaptiveAssessment(
   const mistakes = { ...state.mistakes };
   const reviewEvents: StudyEvent[] = [];
   for (const answer of input.answers) {
+    if (answer.ceiling) continue;
     const activity = activities.get(answer.activityId);
     if (answer.correct || !activity || !answer.correctAnswer?.trim()) continue;
     const previous = mistakes[answer.activityId];
@@ -326,6 +337,27 @@ export function recordNumberAttempt(
       },
       ...state.events,
     ],
+  };
+}
+
+export function recordRegionalAttempt(
+  state: StudyState,
+  input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">,
+): StudyState {
+  const createdAt = new Date().toISOString();
+  return {
+    ...state,
+    regionalAttempts: [
+      { ...input, id: crypto.randomUUID(), createdAt },
+      ...(state.regionalAttempts ?? []),
+    ].slice(0, 200),
+    events: [{
+      id: crypto.randomUUID(),
+      type: input.correct ? "regional_check_correct" : "regional_check_wrong",
+      itemId: input.topicId,
+      metadata: { selectedAnswer: input.selectedAnswer },
+      createdAt,
+    }, ...state.events],
   };
 }
 

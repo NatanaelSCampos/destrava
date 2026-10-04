@@ -84,6 +84,7 @@ export default function AssessmentPage() {
         activityId: current.id,
         skill: next.skill,
         difficulty: next.difficulty,
+        ceiling: next.ceiling,
         correct: result.correct,
         answer,
         correctAnswer: result.correctAnswer,
@@ -166,10 +167,13 @@ export default function AssessmentPage() {
           <div className="adaptive-report-head">
             <div>
               <span className="eyebrow">SEU RESULTADO</span>
-              <h2>{report.passed ? "Meta alcançada" : "Revisão recomendada"}</h2>
+              <h2>{report.bySkill.some((item) => item.status === "insufficient")
+                ? "Mais respostas para avaliar" : report.passed ? "Meta alcançada" : "Revisão recomendada"}</h2>
               <p>Veja o próximo passo e continue praticando.</p>
             </div>
-            <strong aria-label={`${report.score}% de acertos`}>{report.score}%</strong>
+            <strong aria-label={report.bySkill.some((item) => item.status === "insufficient") ? "Amostra insuficiente" : `${report.score}% de acertos`}>
+              {report.bySkill.some((item) => item.status === "insufficient") ? "—" : `${report.score}%`}
+            </strong>
           </div>
           <h3>Seu próximo passo</h3>
           {report.wrong.length ? (
@@ -205,13 +209,23 @@ export default function AssessmentPage() {
             {report.bySkill.map((item) => (
               <div key={item.skill}>
                 <span>{labels[item.skill] ?? item.skill}</span>
-                <strong>{item.score === null ? "Não avaliada" : `${item.score}%`}</strong>
+                <strong>{item.status === "not_assessed" ? "Não avaliada"
+                  : item.status === "insufficient" ? "Amostra pequena" : `${item.score}%`}</strong>
                 <small>
-                  {item.correct}/{item.answered} acertos
+                  {item.correct}/{item.answered} acertos · {item.status === "approved" ? "meta atingida"
+                    : item.status === "review" ? "revisar" : item.status === "insufficient" ? "precisa de mais questões" : "sem evidência"}
                 </small>
               </div>
             ))}
+            {["Fala espontânea", "Pronúncia", "Fluência", "Escrita livre"].map((label) => (
+              <div key={label}>
+                <span>{label}</span>
+                <strong>Não avaliada</strong>
+                <small>Este diagnóstico usa apenas respostas objetivas.</small>
+              </div>
+            ))}
           </div>
+          <p className="helper-note">Fala, pronúncia e escrita livre não são medidas neste teste objetivo. Uma competência com menos de duas respostas não recebe classificação.</p>
           <div className="adaptive-report-actions">
             <button type="button" className="secondary-button" onClick={begin}>
               <RotateCcw size={16} /> Refazer diagnóstico
@@ -227,6 +241,7 @@ export default function AssessmentPage() {
             <summary>Como este resultado funciona</summary>
             <p>
               A meta deste curso é {Math.round(assessment.passingPolicy.overall * 100)}% geral.
+              Cada habilidade precisa de pelo menos duas respostas; o piso por habilidade vem da configuração do curso.
               O resultado orienta os estudos e não substitui a avaliação final da unidade. Cada
               resposta entra no perfil de aprendizado; questões erradas entram na revisão.
             </p>

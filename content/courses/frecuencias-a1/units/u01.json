@@ -1252,6 +1252,129 @@
               "status": "approved"
             }
           }
+        },
+        {
+          "id": "diagnostic-listen-2",
+          "type": "listening",
+          "skills": [
+            "listening"
+          ],
+          "concepts": [
+            "residence"
+          ],
+          "difficulty": 0.2,
+          "title": "Escute a cidade",
+          "prompt": "Ouça e escolha a cidade mencionada.",
+          "minutes": 1,
+          "payload": {
+            "transcript": "Vivo en Madrid.",
+            "options": [
+              "Madrid",
+              "Lima",
+              "Quito"
+            ],
+            "answer": "Madrid"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "diagnostic-listen-3",
+          "type": "listening",
+          "skills": [
+            "listening"
+          ],
+          "concepts": [
+            "profession"
+          ],
+          "difficulty": 0.8,
+          "title": "Escute a profissão",
+          "prompt": "Ouça e identifique a profissão.",
+          "minutes": 1,
+          "payload": {
+            "transcript": "Hola, soy Marta y trabajo como profesora.",
+            "options": [
+              "Professora",
+              "Médica",
+              "Estudante"
+            ],
+            "answer": "Professora"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "diagnostic-read-2",
+          "type": "multiple_choice",
+          "skills": [
+            "reading"
+          ],
+          "concepts": [
+            "origin"
+          ],
+          "difficulty": 0.2,
+          "title": "Leia a origem",
+          "prompt": "Leia: Soy de México y vivo en España. Onde a pessoa mora?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "Na Espanha",
+              "No México",
+              "Na Argentina"
+            ],
+            "answer": "Na Espanha"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "diagnostic-read-3",
+          "type": "multiple_choice",
+          "skills": [
+            "reading"
+          ],
+          "concepts": [
+            "profession"
+          ],
+          "difficulty": 0.8,
+          "title": "Leia a apresentação",
+          "prompt": "Leia: Soy Ana. Vivo en Lima y trabajo como médica. Qual é a profissão?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "Médica",
+              "Professora",
+              "Estudante"
+            ],
+            "answer": "Médica"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "diagnostic-write-3",
+          "type": "short_answer",
+          "skills": [
+            "writing"
+          ],
+          "concepts": [
+            "residence"
+          ],
+          "difficulty": 0.2,
+          "title": "Escreva onde mora",
+          "prompt": "Escreva em espanhol: Moro em Lima.",
+          "minutes": 1,
+          "payload": {
+            "answer": "Vivo en Lima.",
+            "accepted": []
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         }
       ],
       "eyebrow": "Revisão",

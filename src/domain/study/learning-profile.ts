@@ -82,7 +82,7 @@ export function buildLearningProfile(
   course: PublicCourse,
   state: StudyState,
   vocabularyItems: ReadonlyArray<{ id: string; term: string; lessonId: string }>,
-  resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures">,
+  resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "regionalTopics">,
   now = new Date(),
 ): LearningProfile {
   const activities = new Map(
@@ -120,7 +120,8 @@ export function buildLearningProfile(
   for (const assessment of state.adaptiveAssessments ?? []) {
     if (assessment.courseId !== course.id) continue;
     for (const answer of assessment.answers)
-      addActivityScore(answer.activityId, answer.correct ? 100 : 0, assessment.finishedAt);
+      if (!answer.ceiling)
+        addActivityScore(answer.activityId, answer.correct ? 100 : 0, assessment.finishedAt);
   }
 
   for (const attempt of state.numberAttempts ?? []) {
@@ -138,6 +139,15 @@ export function buildLearningProfile(
     else addEvidence(skillEvidence, "pronunciation", score, attempt.createdAt);
     addEvidence(conceptEvidence, "numbers", score, attempt.createdAt);
     addEvidence(itemEvidence, `number:${prompt.id}`, score, attempt.createdAt);
+  }
+
+  for (const attempt of state.regionalAttempts ?? []) {
+    const topic = resources.regionalTopics.find((entry) => entry.id === attempt.topicId);
+    if (!topic) continue;
+    const score = attempt.correct ? 100 : 0;
+    addEvidence(skillEvidence, "comprehension", score, attempt.createdAt);
+    addEvidence(conceptEvidence, "regional-variants", score, attempt.createdAt);
+    addEvidence(itemEvidence, `region:${topic.id}`, score, attempt.createdAt);
   }
 
   for (const attempt of state.microLessonAttempts ?? [])
@@ -236,9 +246,13 @@ export function buildLearningProfile(
       metric(lesson.id, lesson.title, topicEvidence.get(lesson.id) ?? [], now),
     ),
   );
-  const conceptMetrics = course.learningConcepts.map(({ id, label }) =>
-    metric(id, label, conceptEvidence.get(id) ?? [], now),
-  );
+  const conceptMetrics = [
+    ...course.learningConcepts.map(({ id, label }) =>
+      metric(id, label, conceptEvidence.get(id) ?? [], now)),
+    ...(conceptEvidence.has("regional-variants") ? [metric(
+      "regional-variants", "Variações regionais", conceptEvidence.get("regional-variants") ?? [], now,
+    )] : []),
+  ];
   const itemMetrics = [
     ...vocabularyItems
       .filter((word) => itemEvidence.has(`word:${word.id}`))
@@ -259,6 +273,14 @@ export function buildLearningProfile(
           now,
         );
       }),
+    ...[...itemEvidence.entries()]
+      .filter(([id]) => id.startsWith("region:"))
+      .map(([id, evidence]) => metric(
+        id,
+        resources.regionalTopics.find((entry) => entry.id === id.slice("region:".length))?.title ?? id,
+        evidence,
+        now,
+      )),
     ...[...itemEvidence.entries()]
       .filter(([id]) => id.startsWith("structure:"))
       .map(([id, evidence]) =>

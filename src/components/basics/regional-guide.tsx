@@ -8,10 +8,19 @@ import { useStudy } from "@/components/study-provider";
 import { resolveVariant, textToSpeechLocale, variantLabel } from "@/content/language-variant";
 
 export function RegionalGuide() {
-  const { state, language, resources } = useStudy();
+  const { state, language, resources, recordRegionalCheck } = useStudy();
   const region = resolveVariant(language, state.profile.variantId);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const regionalTopics = resources.regionalTopics;
+  const categoryLabels: Record<string, string> = {
+    vocabulary: "Palavras do cotidiano",
+    address: "Formas de tratamento",
+    pronunciation: "Pronúncia",
+    expression: "Expressões e construções",
+    false_friend: "Falsos amigos",
+    formality: "Formalidade",
+    portuguese_trap: "Atenção para quem fala português",
+  };
 
   return (
     <section className="regional-guide panel" aria-labelledby="regional-title">
@@ -30,9 +39,11 @@ export function RegionalGuide() {
       <div className="regional-topic-list">
         {regionalTopics.map((topic) => {
           const selected = answers[topic.id];
-          const correct = selected === topic.checkRegion;
+          const correct = selected === (topic.checkAnswer ?? topic.checkRegion);
+          const options = topic.checkOptions ?? topic.variants.map((variant) => variant.region);
           return (
             <article key={topic.id} className="regional-topic">
+              {topic.category && <span className="pill">{categoryLabels[topic.category] ?? topic.category}</span>}
               <span className="eyebrow">{topic.meaning}</span>
               <h3>{topic.title}</h3>
               <p>{topic.note}</p>
@@ -60,17 +71,24 @@ export function RegionalGuide() {
               <div className="regional-check">
                 <strong>{topic.checkPrompt}</strong>
                 <div>
-                  {topic.variants.map((variant) => (
+                  {options.map((option) => (
                     <button
-                      key={variant.region}
+                      key={option}
                       type="button"
-                      aria-pressed={selected === variant.region}
-                      className={`secondary-button ${selected === variant.region ? "selected" : ""}`}
-                      onClick={() =>
-                        setAnswers((current) => ({ ...current, [topic.id]: variant.region }))
-                      }
+                      aria-pressed={selected === option}
+                      className={`secondary-button ${selected === option ? "selected" : ""}`}
+                      onClick={() => {
+                        if (selected !== option) {
+                          recordRegionalCheck({
+                            topicId: topic.id,
+                            selectedAnswer: option,
+                            correct: option === (topic.checkAnswer ?? topic.checkRegion),
+                          });
+                        }
+                        setAnswers((current) => ({ ...current, [topic.id]: option }));
+                      }}
                     >
-                      {variantLabel(language, variant.region)}
+                      {topic.checkOptions ? option : variantLabel(language, option)}
                     </button>
                   ))}
                 </div>

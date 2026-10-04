@@ -25,6 +25,7 @@ export const conversationReplySchema = z.object({
   correction: z.string(),
   correctionCategory: z.enum(["none", "grammar", "vocabulary", "clarity", "other"]),
   completedObjectiveIds: z.array(z.string()),
+  objectiveEvidence: z.array(z.object({ id: z.string(), quote: z.string() })),
 });
 
 export const imageDescriptionFeedbackSchema = z.object({

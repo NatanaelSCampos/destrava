@@ -72,7 +72,7 @@ Tudo isso deve contribuir para decidir:
 - **APROVADO** → pode ser planejado e desenvolvido.
 - **EM ANÁLISE** → não desenvolver a versão final ainda; pode preparar arquitetura, interfaces e provas de conceito sem integrar definitivamente ao fluxo principal.
 
-## Implementação no produto — auditoria atualizada em 2026-10-03
+## Implementação no produto — auditoria atualizada em 2026-10-04
 
 O status acima indica **decisão de produto**. A coluna abaixo indica **o que existe no código**. **IMPLEMENTADO** indica que o fluxo principal atende ao item; **PARCIAL** significa que há uma base funcional, mas ainda faltam requisitos descritos no próprio item; **PENDENTE** significa que o fluxo proposto ainda não foi criado; **ADIADO** indica que a decisão final continua em análise.
 
@@ -85,13 +85,13 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 5. Caderno de erros | **IMPLEMENTADO** | **Meus erros** reúne respostas objetivas, escrita e fala avaliada por atividade, com curso, idioma, tópico, histórico de tentativas, acertos e calendário. A projeção relacional ganhou os campos de contexto; cada cartão consolida o erro recorrente da atividade. |
 | 6. Revisão espaçada unificada | **IMPLEMENTADO** | `ReviewScheduler` agenda palavras, estruturas, erros/frases e alvos granulares de pronúncia. Estruturas e pronúncia têm projeção relacional por curso; a data de pronúncia só muda após nova avaliação Azure, sem usar autorrelato como nota. |
 | 7. Dicionário contextual | **IMPLEMENTADO** | **Vocabulário** mostra sentidos, nível do curso, áudio, ocorrências, progresso e revisão por buscas repetidas. A busca inclui significados, exemplos, formas alternativas e variantes regionais; todos os termos da lista do curso têm uma entrada, com sentidos adicionais curados quando disponíveis. Expandir o catálogo é trabalho de conteúdo. |
-| 8. Números ativos | **PARCIAL** | **Fundamentos → Números** oferece catálogo com áudio e exemplos; a prática inclui ditado, ver e falar, ouvir e repetir, com dinheiro, datas, horários, telefone, números grandes e ordinais. As tentativas alimentam o perfil e as recomendações; o banco de exemplos ainda é curado e limitado. |
-| 9. Particularidades contextualizadas | **PARCIAL** | **Fundamentos → Variações regionais** compara exemplos de Espanha, México e Argentina com áudio e checagem curta; o professor IA recebe a preferência. Faltam mais categorias, exemplos e integração ao perfil de domínio. |
+| 8. Números ativos | **IMPLEMENTADO** | **Fundamentos → Números** oferece catálogo e prática por ditado, fala e repetição, com dinheiro, datas, horários, telefone, números grandes e ordinais. Os pacotes de espanhol e inglês ganharam novos exemplos; as tentativas alimentam domínio e recomendações. O catálogo pode crescer por idioma sem alterar o motor. |
+| 9. Particularidades contextualizadas | **IMPLEMENTADO** | **Fundamentos → Variações regionais** reúne vocabulário, pronúncia, tratamento, formalidade, construções, falsos cognatos e armadilhas para falantes de português, com fonte, áudio e checagem. Respostas entram no perfil de domínio; a variante escolhida orienta o professor IA. A cobertura editorial continua expansível por idioma. |
 | 10. Shadowing | **PARCIAL** | **Praticar fala** permite repetir, avaliar, ver palavras fracas e comparar tentativas; ritmo/prosódia específicos e modo contínuo ainda dependem de evolução. |
 | 11. Fale sem ler | **IMPLEMENTADO** | Fluxo em três etapas: imitar com texto, reproduzir só com áudio e criar uma fala própria; as duas primeiras usam avaliação Azure e a fala livre é salva sem nota automática. |
 | 12. Flashcards ligados ao domínio | **IMPLEMENTADO** | A mesma fila alterna palavra→significado, significado→palavra, áudio→palavra, lacuna com forma flexionada curada, figura→termo e estrutura→exemplo. Vocabulário visual tem seis figuras vetoriais curadas; respostas “lembrei”, “não lembrei” e “difícil” atualizam domínio e calendário com prazos distintos. Ampliar a cobertura visual é expansão de conteúdo. |
 | 13. Explicar imagem | **PARCIAL** | **Explicar imagem** oferece duas cenas A1, gravação ou texto, transcrição Azure e retorno qualitativo por IA. A IA usa fatos cadastrados para cada cena, sem analisar seus pixels por tentativa; faltam mais cenas, cobertura de detalhes verdadeiros não cadastrados, variantes por idioma e calibração pedagógica. |
-| 14. Missões comunicativas | **PARCIAL** | Seis missões A1 acompanham objetivos indicados pela IA e guardam o histórico; a validação pedagógica sistemática dos objetivos ainda falta. |
+| 14. Missões comunicativas | **IMPLEMENTADO** | As missões guardam histórico e objetivos concluídos. O pacote valida a descrição de cada objetivo; a IA deve citar um trecho literal da resposta atual e o servidor só aceita objetivos cadastrados com evidência presente na fala do aluno. A interpretação semântica da IA ainda merece observação pedagógica em uso real. |
 | 15. Role-play com IA | **IMPLEMENTADO** | Seis cenários com personagem, abertura, objetivos, ritmo e correções; o aluno pode falar ou digitar, revisar a transcrição e ouvir respostas. A IA permanece orientada ao papel e ao nível A1. |
 | 16. Conversação livre adaptativa | **IMPLEMENTADO** | Assunto livre, voz ou texto, turnos persistidos, contexto do aluno e correção configurável. Ajustes e modos de entrada alimentam a memória; a prática não recebe nota oficial. |
 | 17. Tutor persistente | **IMPLEMENTADO** | Professor e conversas recebem contexto curto do curso, unidade, meta, região, vocabulário conhecido, erros e padrões de correção extraídos das sessões recentes. O histórico inteiro não é enviado ao modelo. |
@@ -99,8 +99,8 @@ O status acima indica **decisão de produto**. A coluna abaixo indica **o que ex
 | 19. Memória ativa de comportamento | **IMPLEMENTADO** | Busca/áudio repetido de palavras, repetição de falas, explicações abertas, missões deixadas incompletas e correções de conversa geram sinais. Eles aumentam prioridades ou indicam prática direta; não alteram uma nota sem avaliação confiável. |
 | 20. Evolução por tentativa | **PARCIAL** | Histórico e **Praticar fala** mostram tentativas de shadowing e pronúncia; produção própria sem nota e futuras avaliações conversacionais não geram séries numéricas. |
 | 21. Três modos de conversa | **PARCIAL** | Prática livre e role-play têm fluxos separados. A avaliação oral oficial segue em análise no item 25. |
-| 22. Prova adaptativa escrita/objetiva | **PARCIAL** | **Diagnóstico** de seis questões ajusta a complexidade da próxima questão pelas respostas, usando conteúdo A1 curado. O teste final da unidade continua fixo e separado. |
-| 23. Relatório por competências | **PARCIAL** | O diagnóstico mostra acertos por vocabulário, gramática, escuta, frase escrita e leitura, com meta geral e piso para competências com amostra suficiente; fala, pronúncia e escrita livre não são medidas. |
+| 22. Prova adaptativa escrita/objetiva | **IMPLEMENTADO** | **Diagnóstico** de dez questões em espanhol e inglês ajusta a dificuldade a partir do histórico da habilidade avaliada, com três níveis de itens A1 quando disponíveis. Questões marcadas como teto não entram na pontuação. O teste final da unidade permanece separado e fixo. |
+| 23. Relatório por competências | **IMPLEMENTADO** | O diagnóstico mostra pontuação, amostra e meta por vocabulário, gramática, escuta, frase escrita e leitura. Habilidades com menos de duas respostas não recebem classificação; fala, pronúncia, fluência e escrita livre aparecem como não avaliadas. Limiares são configurados no pacote do curso. |
 | 24. Feedback pós-avaliação | **IMPLEMENTADO** | Erros da avaliação final e do diagnóstico alimentam o caderno e a fila de revisão; o diagnóstico agenda imediatamente os itens errados e o relatório aponta a atividade exata para praticar. Acertos posteriores não apagam dificuldades anteriores. Exercícios inéditos gerados por IA ficam como expansão futura. |
 | 25. Avaliação oral conversacional | **ADIADO** | A versão oficial continua **EM ANÁLISE** no próprio roadmap. |
 | 26. AI Bridge | **PENDENTE** | Não há fluxo de exportação/importação de prática com outras IAs. |
@@ -120,16 +120,24 @@ Os itens marcados como **PARCIAL** já têm uma versão utilizável; a terceira 
 
 | Frente | Itens | Trabalho restante |
 | --- | --- | --- |
-| Base multilíngua | 8, 9, 29 e 31 | A arquitetura agora resolve curso, língua, fundamentos, áudio, IA e avaliação por pacotes; resta ampliar catálogos de números e regiões, calibrar áudio entre dispositivos e concluir operações pedagógicas de IA. |
-| Conversação e personalização | 14, 21, 27 e 28 | Validar objetivos, ritmo e correções com mais alunos e ampliar o catálogo de missões. A sessão focada já inclui microconversa. |
+| Base multilíngua | 29 e 31 | A arquitetura resolve curso, língua, fundamentos, áudio, IA e avaliação por pacotes; resta calibrar áudio entre dispositivos e concluir operações pedagógicas de IA. Os catálogos de números e regiões continuam expansíveis. |
+| Conversação e personalização | 21, 27 e 28 | Calibrar ritmo e correções com mais alunos e ampliar o catálogo de missões. A sessão focada já inclui microconversa. |
 | Revisão e fala | 10 e 20 | Ritmo/prosódia, shadowing contínuo e séries numéricas de produção livre ainda dependem de avaliação confiável. |
 | Imagens | 13 | Ampliar cenas e fatos curados; estudar análise visual prévia por cena para reconhecer detalhes que a lista atual não cobre, sem reanalisar a imagem em cada tentativa. |
-| Avaliação | 22 e 23 | Ampliar o banco adaptativo e a amostra por competência e avaliar escrita livre. O teste final atual continua fixo. |
+| Avaliação | — | O diagnóstico objetivo adaptativo usa duas respostas por competência em espanhol e inglês. Escrita livre e fala não recebem nota neste teste; o teste final da unidade continua fixo. |
 | Validação contínua | 33 | A entrega de cada recurso ainda deve passar por proposta, verificação, testes e documentação. |
 | Ainda não iniciado | 26 | AI Bridge: exportar/importar prática com outras IAs. |
 | Decisão de produto pendente | 25 | Avaliação oral conversacional oficial permanece **EM ANÁLISE**; a versão definitiva depende dessa decisão. |
 
-**Concluídos no escopo descrito:** 1–7, 11, 12, 15–19, 24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+**Concluídos no escopo descrito:** 1–9, 11, 12, 14–19, 22–24, 30 e 32. Os demais itens da tabela devem ser lidos como parciais, pendentes, adiados ou em andamento, mesmo quando já aparecem no produto.
+
+### Entrega de 2026-10-04 — itens 8, 9, 14, 22 e 23
+
+- **Números:** o banco em espanhol passou de 13 para 40 exemplos; o inglês passou de 7 para 26 e ganhou as mesmas categorias de prática. O ditado de dinheiro agora distingue `12,50` de `1250`, e os ordinais ingleses aceitam formas como `1st`.
+- **Particularidades:** o espanhol ganhou oito tópicos contextualizados, além dos três anteriores. Há perguntas de região e de significado/uso; cada resposta fica no estado do curso e entra no perfil de domínio. Os exemplos têm links para RAE ou ASALE. O conteúdo é introdutório, não pretende descrever todos os usos de cada país.
+- **Missões:** todos os pacotes exigem descrição completa e identificador único para cada objetivo. O modelo devolve uma citação da resposta atual para cada objetivo que julga cumprido; o servidor verifica a citação e o identificador. Isso reduz marcações sem evidência textual, mas não transforma a conversa em avaliação oficial.
+- **Diagnóstico e relatório:** espanhol e inglês têm dez questões, duas por habilidade, com caminhos de dificuldade testados para todas as sequências de acertos/erros. O relatório separa meta atingida, revisão, amostra pequena e habilidade não avaliada; itens futuros marcados como teto ficam fora da nota. O pacote sintético `xx-Test` continua com três questões para testar a arquitetura e exibe amostra insuficiente de forma explícita.
+- **Verificação:** validação estrutural e pedagógica, compilação, teste de 2.056 caminhos de resposta e build de produção. Novas atividades precisam ser importadas para o Supabase antes da publicação para evitar referências ausentes.
 
 ### Entrega de 2026-10-03 — arquitetura multilíngua v1
 

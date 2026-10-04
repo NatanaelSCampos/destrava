@@ -20,6 +20,7 @@ import {
   recordEvaluatedWriting,
   recordMicroLessonAttempt,
   recordNumberAttempt,
+  recordRegionalAttempt,
   recordAdaptiveAssessment,
   recordVocabularySignal,
   reconcileAssessments,
@@ -32,6 +33,7 @@ import {
   type PlannedItem,
   type SpeakingSubmission,
   type NumberAttempt,
+  type RegionalAttempt,
   type MicroLessonAttempt,
   type ImageDescriptionAttempt,
   type AdaptiveAssessmentAttempt,
@@ -80,6 +82,7 @@ type StudyContextValue = {
   recordNumberPractice: (
     input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
   ) => void;
+  recordRegionalCheck: (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) => void;
   recordMicroLesson: (
     input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
   ) => void;
@@ -386,6 +389,11 @@ export function StudyProvider({
       setState((current) => recordNumberAttempt(current, input)),
     [],
   );
+  const recordRegionalCheck = useCallback(
+    (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) =>
+      setState((current) => recordRegionalAttempt(current, input)),
+    [],
+  );
   const recordMicroLesson = useCallback(
     (input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">) =>
       setState((current) => recordMicroLessonAttempt(current, input)),
@@ -679,6 +687,7 @@ export function StudyProvider({
       recordVocabularySearch,
       recordVocabularyAudio,
       recordNumberPractice,
+      recordRegionalCheck,
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
@@ -714,6 +723,7 @@ export function StudyProvider({
       recordVocabularySearch,
       recordVocabularyAudio,
       recordNumberPractice,
+      recordRegionalCheck,
       recordMicroLesson,
       saveConversation,
       saveImageDescription,

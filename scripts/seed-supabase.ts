@@ -14,6 +14,33 @@ async function upsert(table: string, rows: Record<string, unknown>[], conflict =
   if (error) throw new Error(`${table}: ${error.message}`);
 }
 
+async function syncAssessmentItems(assessmentId: string, activityIds: string[]) {
+  const { data: existing, error: readError } = await db.from("assessment_items")
+    .select("activity_id,position").eq("assessment_id", assessmentId);
+  if (readError) throw new Error(`assessment_items: ${readError.message}`);
+  const rows = existing ?? [];
+  if (JSON.stringify([...rows].sort((a, b) => a.position - b.position).map((row) => row.activity_id)) ===
+      JSON.stringify(activityIds)) return;
+  const maxPosition = Math.max(activityIds.length, 0, ...rows.map((row) => row.position));
+  // The table also has a unique (assessment_id, position) constraint. Move
+  // existing rows out of the way before reordering by activity id.
+  for (const [index, row] of rows.entries()) {
+    const { error } = await db.from("assessment_items")
+      .update({ position: maxPosition + rows.length + index + 1 })
+      .eq("assessment_id", assessmentId).eq("activity_id", row.activity_id);
+    if (error) throw new Error(`assessment_items: ${error.message}`);
+  }
+  await upsert("assessment_items", activityIds.map((activityId, index) => ({
+    assessment_id: assessmentId, activity_id: activityId, position: index + 1,
+  })), "assessment_id,activity_id");
+  const wanted = new Set(activityIds);
+  for (const row of rows.filter((row) => !wanted.has(row.activity_id))) {
+    const { error } = await db.from("assessment_items").delete()
+      .eq("assessment_id", assessmentId).eq("activity_id", row.activity_id);
+    if (error) throw new Error(`assessment_items: ${error.message}`);
+  }
+}
+
 async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
   const { course, coursePackage, resources } = runtimeBundle(raw);
   await upsert("courses", [{
@@ -77,9 +104,7 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
       title: `Diagnóstico · ${course.units.find((unit) => unit.id === assessment.unitId)?.title ?? course.title}`,
       passing_score: Math.round(assessment.passingPolicy.overall * 100), active: true,
     }]);
-    await upsert("assessment_items", assessment.bank.map((item, index) => ({
-      assessment_id: assessment.id, activity_id: item.activityId, position: index + 1,
-    })), "assessment_id,activity_id");
+    await syncAssessmentItems(assessment.id, assessment.bank.map((item) => item.activityId));
   }
   for (const unit of course.units) {
     const finalLesson = unit.lessons.find((lesson) => lesson.activities.some((activity) => activity.type === "quiz"));

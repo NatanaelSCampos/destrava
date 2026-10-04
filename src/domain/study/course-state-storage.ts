@@ -57,6 +57,7 @@ function normalize(
     writing: source.writing ?? [],
     speaking: source.speaking ?? [],
     numberAttempts: source.numberAttempts ?? [],
+    regionalAttempts: source.regionalAttempts ?? [],
     microLessonAttempts: source.microLessonAttempts ?? [],
     conversations: source.conversations ?? [],
     imageDescriptions: source.imageDescriptions ?? [],

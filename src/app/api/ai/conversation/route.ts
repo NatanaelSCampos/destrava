@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { variantLabel } from "@/content/language-variant";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
+import { validatedObjectiveIds } from "@/domain/conversation/objective-evidence";
 
 const inputSchema = z.object({
   courseId: z.string().min(1).max(80),
@@ -84,7 +85,11 @@ export async function POST(request: Request) {
         })),
       },
     });
-    const allowed = new Set(scenario?.objectives.map((item) => item.id) ?? []);
+    const completedObjectiveIds = validatedObjectiveIds(
+      scenario?.objectives.map((item) => item.id) ?? [],
+      input.message,
+      result.feedback.objectiveEvidence,
+    );
     await logAIRequest("conversation", result.usage, guard.reservationId ?? null);
     return NextResponse.json({
       reply: result.feedback.reply.trim().slice(0, 800),
@@ -93,7 +98,7 @@ export async function POST(request: Request) {
         input.correction === "off" || !result.feedback.correction.trim()
           ? "none"
           : result.feedback.correctionCategory,
-      completedObjectiveIds: result.feedback.completedObjectiveIds.filter((id) => allowed.has(id)),
+      completedObjectiveIds,
     });
   } catch {
     return NextResponse.json(

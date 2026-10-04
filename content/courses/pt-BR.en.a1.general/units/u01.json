@@ -4,126 +4,649 @@
   "order": 1,
   "title": "Primeiros encontros",
   "description": "Cumprimente, apresente-se e faça perguntas pessoais simples.",
-  "objectives": ["Cumprimentar e dizer o nome", "Dizer origem e residência", "Falar de profissão e entender perguntas pessoais"],
-  "skills": ["reading", "vocabulary", "grammar", "listening", "writing", "speaking"],
+  "objectives": [
+    "Cumprimentar e dizer o nome",
+    "Dizer origem e residência",
+    "Falar de profissão e entender perguntas pessoais"
+  ],
+  "skills": [
+    "reading",
+    "vocabulary",
+    "grammar",
+    "listening",
+    "writing",
+    "speaking"
+  ],
   "introduces": {
-    "concepts": ["en.greetings", "en.be.name", "en.be.origin", "en.live.location", "en.work.profession", "en.personal.questions"],
-    "vocabulary": ["en.lex.hello", "en.lex.name", "en.lex.my", "en.lex.is", "en.lex.your", "en.lex.meet", "en.lex.from", "en.lex.am", "en.lex.brazil", "en.lex.live", "en.lex.where", "en.lex.teacher", "en.lex.student", "en.lex.work", "en.lex.what", "en.lex.you"]
+    "concepts": [
+      "en.greetings",
+      "en.be.name",
+      "en.be.origin",
+      "en.live.location",
+      "en.work.profession",
+      "en.personal.questions"
+    ],
+    "vocabulary": [
+      "en.lex.hello",
+      "en.lex.name",
+      "en.lex.my",
+      "en.lex.is",
+      "en.lex.your",
+      "en.lex.meet",
+      "en.lex.from",
+      "en.lex.am",
+      "en.lex.brazil",
+      "en.lex.live",
+      "en.lex.where",
+      "en.lex.teacher",
+      "en.lex.student",
+      "en.lex.work",
+      "en.lex.what",
+      "en.lex.you"
+    ]
   },
   "assessmentId": "en.u01.diagnostic",
   "lessons": [
     {
-      "id": "en.l01", "slug": "nome-e-cumprimentos", "title": "Olá! Qual é seu nome?", "order": 1,
-      "objectives": ["Cumprimentar", "Dizer e perguntar o nome"],
-      "description": "Primeiro contato com Hello e My name is.", "eyebrow": "Apresentação", "minutes": 9,
+      "id": "en.l01",
+      "slug": "nome-e-cumprimentos",
+      "title": "Olá! Qual é seu nome?",
+      "order": 1,
+      "objectives": [
+        "Cumprimentar",
+        "Dizer e perguntar o nome"
+      ],
+      "description": "Primeiro contato com Hello e My name is.",
+      "eyebrow": "Apresentação",
+      "minutes": 9,
       "activities": [
         {
-          "id": "en.act.01.intro", "type": "lesson_content", "skills": ["reading", "grammar"], "concepts": ["en.greetings", "en.be.name"],
-          "title": "Comece a conversa", "prompt": "Leia e escute as duas frases.", "minutes": 2,
-          "payload": { "body": "Para cumprimentar, diga Hello. Para dizer seu nome, use My name is + nome. Para perguntar, use What is your name? Em Nice to meet you, você diz que foi um prazer conhecer a pessoa.", "highlights": ["Hello! My name is Ana.", "What is your name?", "Nice to meet you."] }
+          "id": "en.act.01.intro",
+          "type": "lesson_content",
+          "skills": [
+            "reading",
+            "grammar"
+          ],
+          "concepts": [
+            "en.greetings",
+            "en.be.name"
+          ],
+          "title": "Comece a conversa",
+          "prompt": "Leia e escute as duas frases.",
+          "minutes": 2,
+          "payload": {
+            "body": "Para cumprimentar, diga Hello. Para dizer seu nome, use My name is + nome. Para perguntar, use What is your name? Em Nice to meet you, você diz que foi um prazer conhecer a pessoa.",
+            "highlights": [
+              "Hello! My name is Ana.",
+              "What is your name?",
+              "Nice to meet you."
+            ]
+          }
         },
         {
-          "id": "en.act.02.greeting", "type": "multiple_choice", "skills": ["vocabulary", "reading"], "concepts": ["en.greetings"], "difficulty": 0.2,
-          "title": "Cumprimente em inglês", "prompt": "Qual palavra serve para dizer olá?", "minutes": 1,
-          "payload": { "options": ["Hello", "Goodbye", "Please"], "answer": "Hello" }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.02.greeting",
+          "type": "multiple_choice",
+          "skills": [
+            "vocabulary",
+            "reading"
+          ],
+          "concepts": [
+            "en.greetings"
+          ],
+          "difficulty": 0.2,
+          "title": "Cumprimente em inglês",
+          "prompt": "Qual palavra serve para dizer olá?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "Hello",
+              "Goodbye",
+              "Please"
+            ],
+            "answer": "Hello"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.03.name-fill", "type": "fill_blank", "skills": ["grammar", "writing"], "concepts": ["en.be.name"], "difficulty": 0.3,
-          "title": "Diga seu nome", "prompt": "My ___ is Ana. Escreva só a palavra que falta; a frase completa também é aceita.", "minutes": 1,
-          "payload": { "answer": "name", "accepted": [], "fullAnswers": ["My name is Ana."] }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.03.name-fill",
+          "type": "fill_blank",
+          "skills": [
+            "grammar",
+            "writing"
+          ],
+          "concepts": [
+            "en.be.name"
+          ],
+          "difficulty": 0.3,
+          "title": "Diga seu nome",
+          "prompt": "My ___ is Ana. Escreva só a palavra que falta; a frase completa também é aceita.",
+          "minutes": 1,
+          "payload": {
+            "answer": "name",
+            "accepted": [],
+            "fullAnswers": [
+              "My name is Ana."
+            ]
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.04.name-question", "type": "ordering", "skills": ["grammar", "reading"], "concepts": ["en.personal.questions", "en.be.name"], "difficulty": 0.4,
-          "title": "Pergunte o nome", "prompt": "Organize as palavras para perguntar: Qual é o seu nome?", "minutes": 2,
-          "payload": { "words": ["your", "name", "What", "is"], "answer": "What is your name" }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.04.name-question",
+          "type": "ordering",
+          "skills": [
+            "grammar",
+            "reading"
+          ],
+          "concepts": [
+            "en.personal.questions",
+            "en.be.name"
+          ],
+          "difficulty": 0.4,
+          "title": "Pergunte o nome",
+          "prompt": "Organize as palavras para perguntar: Qual é o seu nome?",
+          "minutes": 2,
+          "payload": {
+            "words": [
+              "your",
+              "name",
+              "What",
+              "is"
+            ],
+            "answer": "What is your name"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.05.name-speak", "type": "speaking", "skills": ["speaking", "pronunciation"], "concepts": ["en.be.name"],
-          "title": "Fale seu nome", "prompt": "Ouça e repita a frase modelo.", "minutes": 2,
-          "payload": { "guidance": ["Ouça antes de gravar.", "Fale cada palavra com calma."], "referenceText": "My name is Ana." }
+          "id": "en.act.05.name-speak",
+          "type": "speaking",
+          "skills": [
+            "speaking",
+            "pronunciation"
+          ],
+          "concepts": [
+            "en.be.name"
+          ],
+          "title": "Fale seu nome",
+          "prompt": "Ouça e repita a frase modelo.",
+          "minutes": 2,
+          "payload": {
+            "guidance": [
+              "Ouça antes de gravar.",
+              "Fale cada palavra com calma."
+            ],
+            "referenceText": "My name is Ana."
+          }
         },
         {
-          "id": "en.act.06.name-card", "type": "flashcard", "skills": ["vocabulary"], "concepts": ["en.be.name"],
-          "title": "Lembre-se de name", "prompt": "Leia a frente e tente recordar a tradução.", "minutes": 1,
-          "payload": { "front": "name", "back": "nome", "example": "My name is Ana." }
+          "id": "en.act.06.name-card",
+          "type": "flashcard",
+          "skills": [
+            "vocabulary"
+          ],
+          "concepts": [
+            "en.be.name"
+          ],
+          "title": "Lembre-se de name",
+          "prompt": "Leia a frente e tente recordar a tradução.",
+          "minutes": 1,
+          "payload": {
+            "front": "name",
+            "back": "nome",
+            "example": "My name is Ana."
+          }
         }
       ]
     },
     {
-      "id": "en.l02", "slug": "origem-e-moradia", "title": "De onde você é?", "order": 2,
-      "objectives": ["Dizer de onde é", "Dizer onde mora", "Entender uma pergunta sobre residência"],
-      "description": "Use I am from e I live in para dar duas informações sobre você.", "eyebrow": "Origem e lugar", "minutes": 10,
+      "id": "en.l02",
+      "slug": "origem-e-moradia",
+      "title": "De onde você é?",
+      "order": 2,
+      "objectives": [
+        "Dizer de onde é",
+        "Dizer onde mora",
+        "Entender uma pergunta sobre residência"
+      ],
+      "description": "Use I am from e I live in para dar duas informações sobre você.",
+      "eyebrow": "Origem e lugar",
+      "minutes": 10,
       "activities": [
         {
-          "id": "en.act.07.origin-intro", "type": "lesson_content", "skills": ["reading", "grammar"], "concepts": ["en.be.origin", "en.live.location"],
-          "title": "Origem e residência", "prompt": "Compare as duas estruturas.", "minutes": 2,
-          "payload": { "body": "I am from indica origem: I am from Brazil. I live in indica onde você mora: I live in Rio. Pergunte Where are you from? ou Where do you live?", "highlights": ["I am from Brazil.", "I live in Rio.", "Where do you live?"] }
+          "id": "en.act.07.origin-intro",
+          "type": "lesson_content",
+          "skills": [
+            "reading",
+            "grammar"
+          ],
+          "concepts": [
+            "en.be.origin",
+            "en.live.location"
+          ],
+          "title": "Origem e residência",
+          "prompt": "Compare as duas estruturas.",
+          "minutes": 2,
+          "payload": {
+            "body": "I am from indica origem: I am from Brazil. I live in indica onde você mora: I live in Rio. Pergunte Where are you from? ou Where do you live?",
+            "highlights": [
+              "I am from Brazil.",
+              "I live in Rio.",
+              "Where do you live?"
+            ]
+          }
         },
         {
-          "id": "en.act.08.origin-listen", "type": "listening", "skills": ["listening"], "concepts": ["en.be.origin", "en.live.location"], "difficulty": 0.3,
-          "title": "Escute onde a pessoa mora", "prompt": "Ouça e escolha a informação correta.", "minutes": 2,
-          "payload": { "transcript": "I am from Brazil. I live in Rio.", "options": ["I live in Rio.", "I live in London.", "I am from London."], "answer": "I live in Rio." },
-          "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.08.origin-listen",
+          "type": "listening",
+          "skills": [
+            "listening"
+          ],
+          "concepts": [
+            "en.be.origin",
+            "en.live.location"
+          ],
+          "difficulty": 0.3,
+          "title": "Escute onde a pessoa mora",
+          "prompt": "Ouça e escolha a informação correta.",
+          "minutes": 2,
+          "payload": {
+            "transcript": "I am from Brazil. I live in Rio.",
+            "options": [
+              "I live in Rio.",
+              "I live in London.",
+              "I am from London."
+            ],
+            "answer": "I live in Rio."
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.09.origin-choice", "type": "multiple_choice", "skills": ["vocabulary", "reading"], "concepts": ["en.be.origin"], "difficulty": 0.4,
-          "title": "Diga de onde é", "prompt": "Qual frase significa Eu sou do Brasil?", "minutes": 1,
-          "payload": { "options": ["I am from Brazil.", "I live in Brazil.", "I am from Rio."], "answer": "I am from Brazil." },
-          "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.09.origin-choice",
+          "type": "multiple_choice",
+          "skills": [
+            "vocabulary",
+            "reading"
+          ],
+          "concepts": [
+            "en.be.origin"
+          ],
+          "difficulty": 0.4,
+          "title": "Diga de onde é",
+          "prompt": "Qual frase significa Eu sou do Brasil?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "I am from Brazil.",
+              "I live in Brazil.",
+              "I am from Rio."
+            ],
+            "answer": "I am from Brazil."
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.10.origin-fill", "type": "fill_blank", "skills": ["grammar", "writing"], "concepts": ["en.be.origin"], "difficulty": 0.4,
-          "title": "Complete a origem", "prompt": "I am ___ Brazil. Escreva só a palavra que falta; a frase completa também é aceita.", "minutes": 1,
-          "payload": { "answer": "from", "accepted": [], "fullAnswers": ["I am from Brazil."] }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.10.origin-fill",
+          "type": "fill_blank",
+          "skills": [
+            "grammar",
+            "writing"
+          ],
+          "concepts": [
+            "en.be.origin"
+          ],
+          "difficulty": 0.4,
+          "title": "Complete a origem",
+          "prompt": "I am ___ Brazil. Escreva só a palavra que falta; a frase completa também é aceita.",
+          "minutes": 1,
+          "payload": {
+            "answer": "from",
+            "accepted": [],
+            "fullAnswers": [
+              "I am from Brazil."
+            ]
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.11.home-answer", "type": "short_answer", "skills": ["writing", "reading"], "concepts": ["en.live.location"], "difficulty": 0.5,
-          "title": "Responda onde mora", "prompt": "Where do you live? Escreva em inglês: Eu moro no Rio.", "minutes": 2,
-          "payload": { "answer": "I live in Rio.", "accepted": [] }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.11.home-answer",
+          "type": "short_answer",
+          "skills": [
+            "writing",
+            "reading"
+          ],
+          "concepts": [
+            "en.live.location"
+          ],
+          "difficulty": 0.5,
+          "title": "Responda onde mora",
+          "prompt": "Where do you live? Escreva em inglês: Eu moro no Rio.",
+          "minutes": 2,
+          "payload": {
+            "answer": "I live in Rio.",
+            "accepted": []
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.12.origin-speak", "type": "speaking", "skills": ["speaking", "pronunciation"], "concepts": ["en.be.origin", "en.live.location"],
-          "title": "Fale sua origem", "prompt": "Escute, repita e depois tente falar de memória.", "minutes": 2,
-          "payload": { "guidance": ["Ouça as duas frases.", "Repita em voz alta e, se quiser, pratique de memória."], "referenceText": "I am from Brazil. I live in Rio." }
+          "id": "en.act.12.origin-speak",
+          "type": "speaking",
+          "skills": [
+            "speaking",
+            "pronunciation"
+          ],
+          "concepts": [
+            "en.be.origin",
+            "en.live.location"
+          ],
+          "title": "Fale sua origem",
+          "prompt": "Escute, repita e depois tente falar de memória.",
+          "minutes": 2,
+          "payload": {
+            "guidance": [
+              "Ouça as duas frases.",
+              "Repita em voz alta e, se quiser, pratique de memória."
+            ],
+            "referenceText": "I am from Brazil. I live in Rio."
+          }
         }
       ]
     },
     {
-      "id": "en.l03", "slug": "profissao-e-perguntas", "title": "O que você faz?", "order": 3,
-      "objectives": ["Dizer profissão", "Reconhecer What do you do?", "Montar uma breve apresentação"],
-      "description": "Una nome, origem, residência e profissão em uma conversa curta.", "eyebrow": "Conversa", "minutes": 10,
+      "id": "en.l03",
+      "slug": "profissao-e-perguntas",
+      "title": "O que você faz?",
+      "order": 3,
+      "objectives": [
+        "Dizer profissão",
+        "Reconhecer What do you do?",
+        "Montar uma breve apresentação"
+      ],
+      "description": "Una nome, origem, residência e profissão em uma conversa curta.",
+      "eyebrow": "Conversa",
+      "minutes": 10,
       "activities": [
         {
-          "id": "en.act.13.job-intro", "type": "lesson_content", "skills": ["reading", "grammar"], "concepts": ["en.work.profession", "en.personal.questions"],
-          "title": "Sua profissão", "prompt": "Leia as frases e a pergunta.", "minutes": 2,
-          "payload": { "body": "Para dizer a profissão, use I am a teacher ou I am a student. A pergunta What do you do? pode significar O que você faz? no contexto de trabalho. Responda com uma frase simples.", "highlights": ["I am a teacher.", "I am a student.", "What do you do?"] }
+          "id": "en.act.13.job-intro",
+          "type": "lesson_content",
+          "skills": [
+            "reading",
+            "grammar"
+          ],
+          "concepts": [
+            "en.work.profession",
+            "en.personal.questions"
+          ],
+          "title": "Sua profissão",
+          "prompt": "Leia as frases e a pergunta.",
+          "minutes": 2,
+          "payload": {
+            "body": "Para dizer a profissão, use I am a teacher ou I am a student. A pergunta What do you do? pode significar O que você faz? no contexto de trabalho. Responda com uma frase simples.",
+            "highlights": [
+              "I am a teacher.",
+              "I am a student.",
+              "What do you do?"
+            ]
+          }
         },
         {
-          "id": "en.act.14.job-choice", "type": "multiple_choice", "skills": ["grammar", "reading"], "concepts": ["en.work.profession"], "difficulty": 0.5,
-          "title": "Escolha a frase natural", "prompt": "Qual frase diz Eu sou professor(a)?", "minutes": 1,
-          "payload": { "options": ["I am a teacher.", "I am teacher.", "I are a teacher."], "answer": "I am a teacher." },
-          "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.14.job-choice",
+          "type": "multiple_choice",
+          "skills": [
+            "grammar",
+            "reading"
+          ],
+          "concepts": [
+            "en.work.profession"
+          ],
+          "difficulty": 0.5,
+          "title": "Escolha a frase natural",
+          "prompt": "Qual frase diz Eu sou professor(a)?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "I am a teacher.",
+              "I am teacher.",
+              "I are a teacher."
+            ],
+            "answer": "I am a teacher."
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.15.job-order", "type": "ordering", "skills": ["grammar", "reading"], "concepts": ["en.work.profession"], "difficulty": 0.5,
-          "title": "Monte sua profissão", "prompt": "Organize as palavras para dizer: Eu sou professor(a).", "minutes": 2,
-          "payload": { "words": ["teacher", "a", "am", "I"], "answer": "I am a teacher" }, "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.15.job-order",
+          "type": "ordering",
+          "skills": [
+            "grammar",
+            "reading"
+          ],
+          "concepts": [
+            "en.work.profession"
+          ],
+          "difficulty": 0.5,
+          "title": "Monte sua profissão",
+          "prompt": "Organize as palavras para dizer: Eu sou professor(a).",
+          "minutes": 2,
+          "payload": {
+            "words": [
+              "teacher",
+              "a",
+              "am",
+              "I"
+            ],
+            "answer": "I am a teacher"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.16.job-listen", "type": "listening", "skills": ["listening"], "concepts": ["en.be.name", "en.work.profession"], "difficulty": 0.5,
-          "title": "Escute a apresentação", "prompt": "Qual profissão a pessoa mencionou?", "minutes": 2,
-          "payload": { "transcript": "Hello! My name is Sam. I am a student.", "options": ["I am a student.", "I am a teacher.", "I am a doctor."], "answer": "I am a student." },
-          "evaluation": { "strategy": "exact-normalized" }
+          "id": "en.act.16.job-listen",
+          "type": "listening",
+          "skills": [
+            "listening"
+          ],
+          "concepts": [
+            "en.be.name",
+            "en.work.profession"
+          ],
+          "difficulty": 0.5,
+          "title": "Escute a apresentação",
+          "prompt": "Qual profissão a pessoa mencionou?",
+          "minutes": 2,
+          "payload": {
+            "transcript": "Hello! My name is Sam. I am a student.",
+            "options": [
+              "I am a student.",
+              "I am a teacher.",
+              "I am a doctor."
+            ],
+            "answer": "I am a student."
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         },
         {
-          "id": "en.act.17.introduction-write", "type": "writing", "skills": ["writing"], "concepts": ["en.be.name", "en.be.origin", "en.live.location", "en.work.profession"],
-          "title": "Apresente-se por escrito", "prompt": "Escreva duas ou três frases em inglês: seu nome, de onde é e o que faz.", "minutes": 2,
-          "payload": { "guidance": ["Use My name is... para o nome.", "Use I am from... e I am a... para origem e profissão."], "minWords": 5 }
+          "id": "en.act.17.introduction-write",
+          "type": "writing",
+          "skills": [
+            "writing"
+          ],
+          "concepts": [
+            "en.be.name",
+            "en.be.origin",
+            "en.live.location",
+            "en.work.profession"
+          ],
+          "title": "Apresente-se por escrito",
+          "prompt": "Escreva duas ou três frases em inglês: seu nome, de onde é e o que faz.",
+          "minutes": 2,
+          "payload": {
+            "guidance": [
+              "Use My name is... para o nome.",
+              "Use I am from... e I am a... para origem e profissão."
+            ],
+            "minWords": 5
+          }
         },
         {
-          "id": "en.act.18.question-speak", "type": "speaking", "skills": ["speaking", "pronunciation"], "concepts": ["en.personal.questions"],
-          "title": "Pergunte a profissão", "prompt": "Escute e repita; depois tente sem ler.", "minutes": 1,
-          "payload": { "guidance": ["Ouça a pergunta.", "Fale no seu ritmo e repita para melhorar."], "referenceText": "What do you do?" }
+          "id": "en.act.18.question-speak",
+          "type": "speaking",
+          "skills": [
+            "speaking",
+            "pronunciation"
+          ],
+          "concepts": [
+            "en.personal.questions"
+          ],
+          "title": "Pergunte a profissão",
+          "prompt": "Escute e repita; depois tente sem ler.",
+          "minutes": 1,
+          "payload": {
+            "guidance": [
+              "Ouça a pergunta.",
+              "Fale no seu ritmo e repita para melhorar."
+            ],
+            "referenceText": "What do you do?"
+          }
+        },
+        {
+          "id": "en.diag.vocab.3",
+          "type": "multiple_choice",
+          "skills": [
+            "vocabulary"
+          ],
+          "concepts": [
+            "en.work.profession"
+          ],
+          "difficulty": 0.8,
+          "title": "Escolha uma profissão",
+          "prompt": "Qual palavra significa estudante?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "student",
+              "teacher",
+              "doctor"
+            ],
+            "answer": "student"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "en.diag.grammar.3",
+          "type": "fill_blank",
+          "skills": [
+            "grammar"
+          ],
+          "concepts": [
+            "en.be.origin"
+          ],
+          "difficulty": 0.8,
+          "title": "Complete a origem",
+          "prompt": "She ___ from Brazil. Escreva só a palavra que falta; a frase completa também é aceita.",
+          "minutes": 1,
+          "payload": {
+            "answer": "is",
+            "accepted": [],
+            "fullAnswers": [
+              "She is from Brazil."
+            ]
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "en.diag.listen.3",
+          "type": "listening",
+          "skills": [
+            "listening"
+          ],
+          "concepts": [
+            "en.work.profession"
+          ],
+          "difficulty": 0.8,
+          "title": "Escute e escolha",
+          "prompt": "Ouça e escolha a profissão mencionada.",
+          "minutes": 1,
+          "payload": {
+            "transcript": "My name is Alex. I am a teacher.",
+            "options": [
+              "teacher",
+              "student",
+              "doctor"
+            ],
+            "answer": "teacher"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "en.diag.write.3",
+          "type": "short_answer",
+          "skills": [
+            "writing"
+          ],
+          "concepts": [
+            "en.be.origin"
+          ],
+          "difficulty": 0.8,
+          "title": "Escreva sua origem",
+          "prompt": "Escreva em inglês: Eu sou do Brasil.",
+          "minutes": 1,
+          "payload": {
+            "answer": "I am from Brazil.",
+            "accepted": [
+              "I'm from Brazil."
+            ]
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
+        },
+        {
+          "id": "en.diag.read.3",
+          "type": "multiple_choice",
+          "skills": [
+            "reading"
+          ],
+          "concepts": [
+            "en.live.location"
+          ],
+          "difficulty": 0.8,
+          "title": "Leia a apresentação",
+          "prompt": "Leia: Sam is from Brazil, but lives in London. Onde Sam mora?",
+          "minutes": 1,
+          "payload": {
+            "options": [
+              "London",
+              "Brazil",
+              "Rio"
+            ],
+            "answer": "London"
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          }
         }
       ]
     }

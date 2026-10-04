@@ -13,16 +13,24 @@ export type NumberPrompt = {
   accepted?: string[];
 };
 
-function digits(value: string) {
-  if (!/^[\d\s.,:/ºª€$-]+$/u.test(value.trim())) return "";
-  return value.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
+function numericAnswer(value: string, category: string) {
+  const trimmed = value.trim();
+  if (category === "money") {
+    const plain = trimmed.replace(/[€$\s]/g, "");
+    if (!/^\d+(?:[,.]\d{1,2})?$/.test(plain)) return "";
+    const [whole, cents = ""] = plain.split(/[,.]/);
+    return `${Number(whole)}.${cents.padEnd(2, "0")}`;
+  }
+  const ordinal = category === "ordinal" ? trimmed.replace(/(?:st|nd|rd|th)$/i, "") : trimmed;
+  if (!/^[\d\s.,:/ºª-]+$/u.test(ordinal)) return "";
+  return ordinal.replace(/\D/g, "").replace(/^0+(?=\d)/, "");
 }
 
 export function gradeNumberDictation(prompt: NumberPrompt, answer: string) {
-  const actual = digits(answer);
+  const actual = numericAnswer(answer, prompt.category);
   return (
     Boolean(actual) &&
-    [prompt.display, ...(prompt.accepted ?? [])].some((value) => digits(value) === actual)
+    [prompt.display, ...(prompt.accepted ?? [])].some((value) => numericAnswer(value, prompt.category) === actual)
   );
 }
 

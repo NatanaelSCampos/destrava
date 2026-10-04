@@ -152,9 +152,19 @@ function validateReferences(course: CoursePackage, language: LanguagePackage) {
         throw new Error(`Assessment needs ${needed} distinct ${skill} questions: ${assessment.id}`);
     }
   }
-  for (const mission of course.missions)
+  for (const mission of course.missions) {
     for (const concept of mission.recommendedConcepts ?? [])
       if (!concepts.has(concept)) throw new Error(`Unknown mission concept: ${concept}`);
+    const objectiveIds = new Set(mission.objectives);
+    const detailIds = (mission.objectiveDetails ?? []).map((item) => item.id);
+    if (objectiveIds.size !== mission.objectives.length ||
+        new Set(detailIds).size !== detailIds.length ||
+        detailIds.length !== objectiveIds.size ||
+        detailIds.some((id) => !objectiveIds.has(id)))
+      throw new Error(`Mission objectives need one unique description each: ${mission.id}`);
+    if (!mission.setting?.trim() || !mission.opening?.trim() || !mission.character?.trim())
+      throw new Error(`Mission needs a complete roleplay setting: ${mission.id}`);
+  }
   for (const roleplay of course.roleplays) {
     const mission = course.missions.find((item) => item.scenario === roleplay.scenario);
     if (!mission) throw new Error(`Roleplay has no mission scenario: ${roleplay.id}`);

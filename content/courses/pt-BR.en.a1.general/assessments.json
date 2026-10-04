@@ -1,15 +1,107 @@
 [
   {
-    "id": "en.u01.diagnostic", "type": "adaptive_diagnostic", "unitId": "en.u01",
-    "skillWeights": { "vocabulary": 0.2, "grammar": 0.2, "listening": 0.2, "writing": 0.2, "reading": 0.2 },
-    "passingPolicy": { "overall": 0.6, "minimumBySkill": {} },
-    "skillPlan": ["vocabulary", "grammar", "listening", "writing", "reading"],
+    "id": "en.u01.diagnostic",
+    "type": "adaptive_diagnostic",
+    "unitId": "en.u01",
+    "skillWeights": {
+      "vocabulary": 0.2,
+      "grammar": 0.2,
+      "listening": 0.2,
+      "writing": 0.2,
+      "reading": 0.2
+    },
+    "passingPolicy": {
+      "overall": 0.6,
+      "minimumBySkill": {}
+    },
+    "skillPlan": [
+      "vocabulary",
+      "grammar",
+      "listening",
+      "writing",
+      "reading",
+      "vocabulary",
+      "grammar",
+      "listening",
+      "writing",
+      "reading"
+    ],
     "bank": [
-      { "activityId": "en.act.02.greeting", "skill": "vocabulary", "difficulty": 1 },
-      { "activityId": "en.act.03.name-fill", "skill": "grammar", "difficulty": 1 },
-      { "activityId": "en.act.08.origin-listen", "skill": "listening", "difficulty": 2 },
-      { "activityId": "en.act.11.home-answer", "skill": "writing", "difficulty": 2 },
-      { "activityId": "en.act.09.origin-choice", "skill": "reading", "difficulty": 2 }
+      {
+        "activityId": "en.act.02.greeting",
+        "skill": "vocabulary",
+        "difficulty": 1
+      },
+      {
+        "activityId": "en.act.09.origin-choice",
+        "skill": "vocabulary",
+        "difficulty": 2
+      },
+      {
+        "activityId": "en.diag.vocab.3",
+        "skill": "vocabulary",
+        "difficulty": 3
+      },
+      {
+        "activityId": "en.act.03.name-fill",
+        "skill": "grammar",
+        "difficulty": 1
+      },
+      {
+        "activityId": "en.act.15.job-order",
+        "skill": "grammar",
+        "difficulty": 2
+      },
+      {
+        "activityId": "en.diag.grammar.3",
+        "skill": "grammar",
+        "difficulty": 3
+      },
+      {
+        "activityId": "en.act.08.origin-listen",
+        "skill": "listening",
+        "difficulty": 1
+      },
+      {
+        "activityId": "en.act.16.job-listen",
+        "skill": "listening",
+        "difficulty": 2
+      },
+      {
+        "activityId": "en.diag.listen.3",
+        "skill": "listening",
+        "difficulty": 3
+      },
+      {
+        "activityId": "en.act.10.origin-fill",
+        "skill": "writing",
+        "difficulty": 1
+      },
+      {
+        "activityId": "en.act.11.home-answer",
+        "skill": "writing",
+        "difficulty": 2
+      },
+      {
+        "activityId": "en.diag.write.3",
+        "skill": "writing",
+        "difficulty": 3
+      },
+      {
+        "activityId": "en.act.04.name-question",
+        "skill": "reading",
+        "difficulty": 1
+      },
+      {
+        "activityId": "en.act.14.job-choice",
+        "skill": "reading",
+        "difficulty": 2
+      },
+      {
+        "activityId": "en.diag.read.3",
+        "skill": "reading",
+        "difficulty": 3
+      }
     ],
     "activities": []
   }

@@ -33,6 +33,13 @@ for (const { course } of loadContent()) {
   const expectedWords = course.lexicon.filter((entry) => entry.lessonId).length;
   if (wordError || words !== expectedWords)
     throw new Error(`Remote vocabulary count mismatch: ${course.id}`);
+  for (const assessment of course.assessments) {
+    const { data: items, error: itemError } = await db.from("assessment_items")
+      .select("activity_id,position").eq("assessment_id", assessment.id).order("position");
+    if (itemError || JSON.stringify((items ?? []).map((item) => item.activity_id)) !==
+      JSON.stringify(assessment.bank.map((item) => item.activityId)))
+      throw new Error(`Remote diagnostic bank mismatch: ${assessment.id}`);
+  }
   console.log(`Remote course verified: ${course.id} (${units} unit, ${lessons} lessons, ${activities} activities, ${words} vocabulary items).`);
 }
 const { error: profileError } = await db.from("user_course_profiles")

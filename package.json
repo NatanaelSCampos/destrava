@@ -15,6 +15,7 @@
     "content:compile": "node --import tsx scripts/compile-content.ts",
     "content:preview": "node --import tsx scripts/content-preview.ts",
     "learning:verify": "node --import tsx scripts/verify-learning-engine.ts",
+    "assessment:verify": "node --import tsx scripts/verify-adaptive-assessments.ts",
     "multilingual:verify": "node --import tsx scripts/verify-multilingual.ts",
     "onboarding:verify": "node --import tsx scripts/verify-onboarding.ts",
     "architecture:check": "node --import tsx scripts/check-architecture.ts",

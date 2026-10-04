@@ -109,6 +109,225 @@
       "spoken": "tercero",
       "example": "Terminó tercero en la carrera.",
       "exampleTranslation": "Terminou em terceiro na corrida."
+    },
+    {
+      "id": "0",
+      "category": "basic",
+      "display": "0",
+      "spoken": "cero",
+      "example": "El marcador está en cero.",
+      "exampleTranslation": "O placar está em zero."
+    },
+    {
+      "id": "1",
+      "category": "basic",
+      "display": "1",
+      "spoken": "uno",
+      "example": "Tengo un libro.",
+      "exampleTranslation": "Tenho um livro."
+    },
+    {
+      "id": "2",
+      "category": "basic",
+      "display": "2",
+      "spoken": "dos",
+      "example": "Somos dos personas.",
+      "exampleTranslation": "Somos duas pessoas."
+    },
+    {
+      "id": "5",
+      "category": "basic",
+      "display": "5",
+      "spoken": "cinco",
+      "example": "Hay cinco mesas.",
+      "exampleTranslation": "Há cinco mesas."
+    },
+    {
+      "id": "10",
+      "category": "basic",
+      "display": "10",
+      "spoken": "diez",
+      "example": "Quiero diez minutos.",
+      "exampleTranslation": "Quero dez minutos."
+    },
+    {
+      "id": "11",
+      "category": "basic",
+      "display": "11",
+      "spoken": "once",
+      "example": "La reunión es a las once.",
+      "exampleTranslation": "A reunião é às onze."
+    },
+    {
+      "id": "15",
+      "category": "basic",
+      "display": "15",
+      "spoken": "quince",
+      "example": "Tengo quince años.",
+      "exampleTranslation": "Tenho quinze anos."
+    },
+    {
+      "id": "20",
+      "category": "basic",
+      "display": "20",
+      "spoken": "veinte",
+      "example": "Son veinte euros.",
+      "exampleTranslation": "São vinte euros."
+    },
+    {
+      "id": "21",
+      "category": "basic",
+      "display": "21",
+      "spoken": "veintiuno",
+      "example": "Hay veintiún estudiantes.",
+      "exampleTranslation": "Há vinte e um estudantes."
+    },
+    {
+      "id": "30",
+      "category": "basic",
+      "display": "30",
+      "spoken": "treinta",
+      "example": "Vivo a treinta minutos.",
+      "exampleTranslation": "Moro a trinta minutos."
+    },
+    {
+      "id": "100",
+      "category": "basic",
+      "display": "100",
+      "spoken": "cien",
+      "example": "Hay cien plazas.",
+      "exampleTranslation": "Há cem vagas."
+    },
+    {
+      "id": "money-5",
+      "category": "money",
+      "display": "5 €",
+      "spoken": "cinco euros",
+      "example": "El café cuesta cinco euros.",
+      "exampleTranslation": "O café custa cinco euros."
+    },
+    {
+      "id": "money-9-90",
+      "category": "money",
+      "display": "9,90 €",
+      "spoken": "nueve euros con noventa céntimos",
+      "example": "El menú cuesta nueve euros con noventa céntimos.",
+      "exampleTranslation": "O menu custa nove euros e noventa centavos."
+    },
+    {
+      "id": "money-100",
+      "category": "money",
+      "display": "100 €",
+      "spoken": "cien euros",
+      "example": "Tengo cien euros para el viaje.",
+      "exampleTranslation": "Tenho cem euros para a viagem."
+    },
+    {
+      "id": "date-01-01",
+      "category": "date",
+      "display": "01/01",
+      "spoken": "el primero de enero",
+      "example": "La oficina abre el primero de enero.",
+      "exampleTranslation": "O escritório abre em primeiro de janeiro."
+    },
+    {
+      "id": "date-30-11",
+      "category": "date",
+      "display": "30/11",
+      "spoken": "el treinta de noviembre",
+      "example": "La cita es el treinta de noviembre.",
+      "exampleTranslation": "A consulta é em trinta de novembro."
+    },
+    {
+      "id": "time-07-00",
+      "category": "time",
+      "display": "07:00",
+      "spoken": "son las siete",
+      "example": "El tren sale a las siete.",
+      "exampleTranslation": "O trem sai às sete horas.",
+      "accepted": [
+        "7:00"
+      ]
+    },
+    {
+      "id": "time-13-45",
+      "category": "time",
+      "display": "13:45",
+      "spoken": "es la una y cuarenta y cinco",
+      "example": "La clase termina a la una y cuarenta y cinco.",
+      "exampleTranslation": "A aula termina às treze e quarenta e cinco."
+    },
+    {
+      "id": "time-21-30",
+      "category": "time",
+      "display": "21:30",
+      "spoken": "son las nueve y media de la noche",
+      "example": "Cenamos a las nueve y media de la noche.",
+      "exampleTranslation": "Jantamos às nove e meia da noite."
+    },
+    {
+      "id": "phone-555",
+      "category": "phone",
+      "display": "555 12 34 56",
+      "spoken": "cinco cinco cinco, uno dos, tres cuatro, cinco seis",
+      "example": "Mi número es cinco cinco cinco, uno dos, tres cuatro, cinco seis.",
+      "exampleTranslation": "Meu número é 555 12 34 56."
+    },
+    {
+      "id": "large-2000",
+      "category": "large",
+      "display": "2.000",
+      "spoken": "dos mil",
+      "example": "La ciudad tiene dos mil habitantes.",
+      "exampleTranslation": "A cidade tem dois mil habitantes."
+    },
+    {
+      "id": "large-10500",
+      "category": "large",
+      "display": "10.500",
+      "spoken": "diez mil quinientos",
+      "example": "El estadio tiene diez mil quinientos asientos.",
+      "exampleTranslation": "O estádio tem dez mil e quinhentos assentos."
+    },
+    {
+      "id": "large-100000",
+      "category": "large",
+      "display": "100.000",
+      "spoken": "cien mil",
+      "example": "El libro vendió cien mil ejemplares.",
+      "exampleTranslation": "O livro vendeu cem mil exemplares."
+    },
+    {
+      "id": "ordinal-2",
+      "category": "ordinal",
+      "display": "2.º",
+      "spoken": "segundo",
+      "example": "Él llegó segundo.",
+      "exampleTranslation": "Ele chegou em segundo lugar."
+    },
+    {
+      "id": "ordinal-4",
+      "category": "ordinal",
+      "display": "4.º",
+      "spoken": "cuarto",
+      "example": "Vivo en el cuarto piso.",
+      "exampleTranslation": "Moro no quarto andar."
+    },
+    {
+      "id": "ordinal-5",
+      "category": "ordinal",
+      "display": "5.º",
+      "spoken": "quinto",
+      "example": "Este es el quinto capítulo.",
+      "exampleTranslation": "Este é o quinto capítulo."
+    },
+    {
+      "id": "ordinal-10",
+      "category": "ordinal",
+      "display": "10.º",
+      "spoken": "décimo",
+      "example": "Es su décimo intento.",
+      "exampleTranslation": "É sua décima tentativa."
     }
   ],
   "categoryLabels": {

@@ -545,6 +545,129 @@
                   ],
                   "referenceText": "What do you do?"
                 }
+              },
+              {
+                "id": "en.diag.vocab.3",
+                "type": "multiple_choice",
+                "skills": [
+                  "vocabulary"
+                ],
+                "concepts": [
+                  "en.work.profession"
+                ],
+                "difficulty": 0.8,
+                "title": "Escolha uma profissão",
+                "prompt": "Qual palavra significa estudante?",
+                "minutes": 1,
+                "payload": {
+                  "options": [
+                    "student",
+                    "teacher",
+                    "doctor"
+                  ],
+                  "answer": "student"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.diag.grammar.3",
+                "type": "fill_blank",
+                "skills": [
+                  "grammar"
+                ],
+                "concepts": [
+                  "en.be.origin"
+                ],
+                "difficulty": 0.8,
+                "title": "Complete a origem",
+                "prompt": "She ___ from Brazil. Escreva só a palavra que falta; a frase completa também é aceita.",
+                "minutes": 1,
+                "payload": {
+                  "answer": "is",
+                  "accepted": [],
+                  "fullAnswers": [
+                    "She is from Brazil."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.diag.listen.3",
+                "type": "listening",
+                "skills": [
+                  "listening"
+                ],
+                "concepts": [
+                  "en.work.profession"
+                ],
+                "difficulty": 0.8,
+                "title": "Escute e escolha",
+                "prompt": "Ouça e escolha a profissão mencionada.",
+                "minutes": 1,
+                "payload": {
+                  "transcript": "My name is Alex. I am a teacher.",
+                  "options": [
+                    "teacher",
+                    "student",
+                    "doctor"
+                  ],
+                  "answer": "teacher"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.diag.write.3",
+                "type": "short_answer",
+                "skills": [
+                  "writing"
+                ],
+                "concepts": [
+                  "en.be.origin"
+                ],
+                "difficulty": 0.8,
+                "title": "Escreva sua origem",
+                "prompt": "Escreva em inglês: Eu sou do Brasil.",
+                "minutes": 1,
+                "payload": {
+                  "answer": "I am from Brazil.",
+                  "accepted": [
+                    "I'm from Brazil."
+                  ]
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
+              },
+              {
+                "id": "en.diag.read.3",
+                "type": "multiple_choice",
+                "skills": [
+                  "reading"
+                ],
+                "concepts": [
+                  "en.live.location"
+                ],
+                "difficulty": 0.8,
+                "title": "Leia a apresentação",
+                "prompt": "Leia: Sam is from Brazil, but lives in London. Onde Sam mora?",
+                "minutes": 1,
+                "payload": {
+                  "options": [
+                    "London",
+                    "Brazil",
+                    "Rio"
+                  ],
+                  "answer": "London"
+                },
+                "evaluation": {
+                  "strategy": "exact-normalized"
+                }
               }
             ],
             "eyebrow": "Conversa",
@@ -1195,6 +1318,11 @@
           "grammar",
           "listening",
           "writing",
+          "reading",
+          "vocabulary",
+          "grammar",
+          "listening",
+          "writing",
           "reading"
         ],
         "bank": [
@@ -1204,14 +1332,49 @@
             "difficulty": 1
           },
           {
+            "activityId": "en.act.09.origin-choice",
+            "skill": "vocabulary",
+            "difficulty": 2
+          },
+          {
+            "activityId": "en.diag.vocab.3",
+            "skill": "vocabulary",
+            "difficulty": 3
+          },
+          {
             "activityId": "en.act.03.name-fill",
             "skill": "grammar",
             "difficulty": 1
           },
           {
+            "activityId": "en.act.15.job-order",
+            "skill": "grammar",
+            "difficulty": 2
+          },
+          {
+            "activityId": "en.diag.grammar.3",
+            "skill": "grammar",
+            "difficulty": 3
+          },
+          {
             "activityId": "en.act.08.origin-listen",
             "skill": "listening",
+            "difficulty": 1
+          },
+          {
+            "activityId": "en.act.16.job-listen",
+            "skill": "listening",
             "difficulty": 2
+          },
+          {
+            "activityId": "en.diag.listen.3",
+            "skill": "listening",
+            "difficulty": 3
+          },
+          {
+            "activityId": "en.act.10.origin-fill",
+            "skill": "writing",
+            "difficulty": 1
           },
           {
             "activityId": "en.act.11.home-answer",
@@ -1219,9 +1382,24 @@
             "difficulty": 2
           },
           {
-            "activityId": "en.act.09.origin-choice",
+            "activityId": "en.diag.write.3",
+            "skill": "writing",
+            "difficulty": 3
+          },
+          {
+            "activityId": "en.act.04.name-question",
+            "skill": "reading",
+            "difficulty": 1
+          },
+          {
+            "activityId": "en.act.14.job-choice",
             "skill": "reading",
             "difficulty": 2
+          },
+          {
+            "activityId": "en.diag.read.3",
+            "skill": "reading",
+            "difficulty": 3
           }
         ],
         "activities": []
@@ -1635,10 +1813,171 @@
           "spoken": "twenty",
           "example": "I am twenty years old.",
           "exampleTranslation": "Eu tenho vinte anos."
+        },
+        {
+          "id": "en.number.11",
+          "category": "basic",
+          "display": "11",
+          "spoken": "eleven",
+          "example": "There are eleven students.",
+          "exampleTranslation": "Há onze estudantes."
+        },
+        {
+          "id": "en.number.17",
+          "category": "basic",
+          "display": "17",
+          "spoken": "seventeen",
+          "example": "I am seventeen years old.",
+          "exampleTranslation": "Tenho dezessete anos."
+        },
+        {
+          "id": "en.number.21",
+          "category": "basic",
+          "display": "21",
+          "spoken": "twenty-one",
+          "example": "She is twenty-one.",
+          "exampleTranslation": "Ela tem vinte e um anos."
+        },
+        {
+          "id": "en.number.47",
+          "category": "basic",
+          "display": "47",
+          "spoken": "forty-seven",
+          "example": "Turn to page forty-seven.",
+          "exampleTranslation": "Abra na página quarenta e sete."
+        },
+        {
+          "id": "en.money.5",
+          "category": "money",
+          "display": "$5",
+          "spoken": "five dollars",
+          "example": "The ticket is five dollars.",
+          "exampleTranslation": "O ingresso custa cinco dólares."
+        },
+        {
+          "id": "en.money.12-50",
+          "category": "money",
+          "display": "$12.50",
+          "spoken": "twelve dollars and fifty cents",
+          "example": "Lunch costs twelve dollars and fifty cents.",
+          "exampleTranslation": "O almoço custa doze dólares e cinquenta centavos."
+        },
+        {
+          "id": "en.money.100",
+          "category": "money",
+          "display": "$100",
+          "spoken": "one hundred dollars",
+          "example": "I have one hundred dollars.",
+          "exampleTranslation": "Tenho cem dólares."
+        },
+        {
+          "id": "en.date.01-01",
+          "category": "date",
+          "display": "01/01",
+          "spoken": "January first",
+          "example": "The trip starts on January first.",
+          "exampleTranslation": "A viagem começa em primeiro de janeiro."
+        },
+        {
+          "id": "en.date.12-25",
+          "category": "date",
+          "display": "12/25",
+          "spoken": "December twenty-fifth",
+          "example": "The shop opens on December twenty-fifth.",
+          "exampleTranslation": "A loja abre em vinte e cinco de dezembro."
+        },
+        {
+          "id": "en.time.08-15",
+          "category": "time",
+          "display": "08:15",
+          "spoken": "eight fifteen",
+          "example": "The class starts at eight fifteen.",
+          "exampleTranslation": "A aula começa às oito e quinze.",
+          "accepted": [
+            "8:15"
+          ]
+        },
+        {
+          "id": "en.time.14-30",
+          "category": "time",
+          "display": "14:30",
+          "spoken": "two thirty in the afternoon",
+          "example": "We meet at two thirty in the afternoon.",
+          "exampleTranslation": "Nos encontramos às duas e meia da tarde."
+        },
+        {
+          "id": "en.phone.555",
+          "category": "phone",
+          "display": "555 123 4567",
+          "spoken": "five five five, one two three, four five six seven",
+          "example": "My number is five five five, one two three, four five six seven.",
+          "exampleTranslation": "Meu número é 555 123 4567."
+        },
+        {
+          "id": "en.large.1000",
+          "category": "large",
+          "display": "1,000",
+          "spoken": "one thousand",
+          "example": "The town has one thousand residents.",
+          "exampleTranslation": "A cidade tem mil moradores."
+        },
+        {
+          "id": "en.large.1250",
+          "category": "large",
+          "display": "1,250",
+          "spoken": "one thousand two hundred and fifty",
+          "example": "The room holds one thousand two hundred and fifty people.",
+          "exampleTranslation": "A sala comporta mil duzentas e cinquenta pessoas."
+        },
+        {
+          "id": "en.large.10000",
+          "category": "large",
+          "display": "10,000",
+          "spoken": "ten thousand",
+          "example": "Ten thousand people live here.",
+          "exampleTranslation": "Dez mil pessoas moram aqui."
+        },
+        {
+          "id": "en.ordinal.1",
+          "category": "ordinal",
+          "display": "1st",
+          "spoken": "first",
+          "example": "She came first.",
+          "exampleTranslation": "Ela chegou em primeiro lugar."
+        },
+        {
+          "id": "en.ordinal.2",
+          "category": "ordinal",
+          "display": "2nd",
+          "spoken": "second",
+          "example": "He lives on the second floor.",
+          "exampleTranslation": "Ele mora no segundo andar."
+        },
+        {
+          "id": "en.ordinal.3",
+          "category": "ordinal",
+          "display": "3rd",
+          "spoken": "third",
+          "example": "This is my third lesson.",
+          "exampleTranslation": "Esta é minha terceira aula."
+        },
+        {
+          "id": "en.ordinal.10",
+          "category": "ordinal",
+          "display": "10th",
+          "spoken": "tenth",
+          "example": "Today is my tenth day here.",
+          "exampleTranslation": "Hoje é meu décimo dia aqui."
         }
       ],
       "categoryLabels": {
-        "basic": "Números para começar"
+        "basic": "Números para começar",
+        "money": "Dinheiro",
+        "date": "Datas",
+        "time": "Horários",
+        "phone": "Telefone",
+        "large": "Números grandes",
+        "ordinal": "Ordinais"
       }
     },
     "regionalVariants": [
