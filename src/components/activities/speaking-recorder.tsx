@@ -28,7 +28,7 @@ export function SpeakingRecorder({
   referenceHint?: string;
   numberPromptId?: string;
   onNumberAssessed?: (feedback: PronunciationFeedback) => void;
-  onSaved?: () => void;
+  onSaved?: (result?: { submissionId: string; transcription: string; feedback?: PronunciationFeedback }) => void;
 }) {
   const { course, state, saveSpeaking } = useStudy();
   const previous = numberPromptId
@@ -118,7 +118,7 @@ export function SpeakingRecorder({
       return;
     }
     if (!audioUrl || !transcription.trim()) return;
-    saveSpeaking(
+    const submissionId = saveSpeaking(
       activity.id,
       transcription.trim(),
       audioUrl,
@@ -126,7 +126,7 @@ export function SpeakingRecorder({
       practiceMode,
     );
     setSaved(true);
-    onSaved?.();
+    onSaved?.({ submissionId, transcription: transcription.trim(), feedback: ownWords ? undefined : (feedback ?? undefined) });
   }
 
   async function assess() {

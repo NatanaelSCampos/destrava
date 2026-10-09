@@ -76,7 +76,7 @@ type StudyContextValue = {
     audioUrl: string | null,
     feedback?: PronunciationFeedback,
     practiceMode?: SpeakingSubmission["practiceMode"],
-  ) => void;
+  ) => string;
   recordVocabularySearch: (id: string) => void;
   recordVocabularyAudio: (id: string) => void;
   recordNumberPractice: (
@@ -312,7 +312,8 @@ export function StudyProvider({
       audioUrl: string | null,
       feedback?: PronunciationFeedback,
       practiceMode: SpeakingSubmission["practiceMode"] = "lesson",
-    ) =>
+    ) => {
+      const submissionId = crypto.randomUUID();
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
         return recordEvaluatedSpeaking(
@@ -320,7 +321,7 @@ export function StudyProvider({
             ...completed,
             speaking: [
               {
-                id: crypto.randomUUID(),
+                id: submissionId,
                 activityId,
                 sessionId: current.activeSessionId,
                 transcription,
@@ -344,7 +345,9 @@ export function StudyProvider({
           activityId,
           feedback,
         );
-      }),
+      });
+      return submissionId;
+    },
     [],
   );
   const markVocabulary = useCallback(

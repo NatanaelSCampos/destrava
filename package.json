@@ -18,6 +18,8 @@
     "assessment:verify": "node --import tsx scripts/verify-adaptive-assessments.ts",
     "multilingual:verify": "node --import tsx scripts/verify-multilingual.ts",
     "onboarding:verify": "node --import tsx scripts/verify-onboarding.ts",
+    "interactive:verify": "node --import tsx scripts/verify-interactive-lessons.ts",
+    "interactive:verify:remote": "node --env-file=.env.local --import tsx scripts/verify-interactive-session-remote.ts",
     "architecture:check": "node --import tsx scripts/check-architecture.ts",
     "session:verify": "node --import tsx scripts/verify-session-time.ts",
     "db:seed": "node --env-file=.env.local --import tsx scripts/seed-supabase.ts",

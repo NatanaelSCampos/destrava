@@ -6,6 +6,7 @@ import {
   type CoursePackage, type LanguagePackage,
 } from "../src/content/contracts";
 import { runtimeBundle } from "../src/content/runtime-package";
+import { validateInteractiveLessons } from "../src/content/validate-interactive-lessons";
 
 const contentRoot = resolve(process.cwd(), "content");
 function readJson(path: string): unknown {
@@ -53,11 +54,13 @@ export function loadContent(): Array<{
       roleplays: readJson(join(root, "roleplays.json")),
       assessments: readJson(join(root, "assessments.json")),
       media: readJson(join(root, "media.json")),
+      interactiveLessons: jsonFiles(join(root, "interactive-lessons")).map((file) => readJson(join(root, "interactive-lessons", file))),
     });
     if (course.id !== name) throw new Error(`Course folder mismatch: ${name}`);
     const language = languages.get(course.targetLanguage);
     if (!language) throw new Error(`Unknown target language ${course.targetLanguage} for ${course.id}`);
     validateReferences(course, language.language);
+    validateInteractiveLessons(course, language.language);
     runtimeBundle({ course, language: language.language, moduleData: language.moduleData });
     bundles.push({ course, ...language });
   }
@@ -78,7 +81,7 @@ function assertUnique(ids: string[], label: string) {
 }
 
 function validateReferences(course: CoursePackage, language: LanguagePackage) {
-  if (course.schemaVersion !== "1.0" || language.schemaVersion !== "1.0")
+  if (!["1.0", "1.1"].includes(course.schemaVersion) || language.schemaVersion !== "1.0")
     throw new Error(`Unsupported package schema: ${course.id}`);
   if (course.defaultVariant && !language.variants.some((variant) => variant.id === course.defaultVariant))
     throw new Error(`Unknown course variant ${course.defaultVariant}`);

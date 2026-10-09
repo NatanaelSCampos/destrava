@@ -33,6 +33,7 @@ export function runtimeBundle(raw: CompiledPackage) {
       description: unit.description, objectives: unit.objectives, active: unit.active,
       lessons: unit.lessons.map((lesson) => ({
         id: lesson.id, slug: lesson.slug, title: lesson.title, order: lesson.order,
+        interactiveLessonRef: lesson.interactiveLessonRef,
         eyebrow: lesson.eyebrow, description: lesson.description,
         minutes: lesson.minutes, active: lesson.active,
         activities: lesson.activities.map((activity) => ({

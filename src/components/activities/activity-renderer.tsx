@@ -8,8 +8,14 @@ import { ExerciseCard } from "./exercise-card";
 import { WritingEditor } from "./writing-editor";
 import { SpeakingRecorder } from "./speaking-recorder";
 import { SpeakButton } from "@/components/audio/speak-button";
+import type { GradeResult } from "@/domain/activities/grader";
+import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 
-export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
+export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved }: {
+  activity: PublicActivity;
+  onAssessed?: (answer: string, result: GradeResult) => void;
+  onSpeakingSaved?: (result?: { submissionId: string; transcription: string; feedback?: PronunciationFeedback }) => void;
+}) {
   const { course, language, state, completeActivity } = useStudy();
   const done = state.completedActivityIds.includes(activity.id);
   return (
@@ -122,13 +128,14 @@ export function ActivityRenderer({ activity }: { activity: PublicActivity }) {
             <ExerciseCard
               key={activity.id}
               activity={activity as Parameters<typeof ExerciseCard>[0]["activity"]}
+              onAssessed={onAssessed}
             />
           )
         )}
         {activity.type === "writing" && <WritingEditor key={activity.id} activity={activity} />}
         {activity.type === "speaking" &&
           (featureFlags.SPEAKING && language.capabilities.speechRecognition ? (
-            <SpeakingRecorder key={activity.id} activity={activity} />
+            <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} />
           ) : (
             <p className="muted">A prática oral está temporariamente indisponível.</p>
           ))}

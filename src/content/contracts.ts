@@ -108,6 +108,47 @@ export const mediaSchema = z.object({
   src: id,
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
+// Authoring contract for a guided lesson. It contains presentation data only;
+// activity answers remain in the server-side CoursePackage activities.
+export const boardElementSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("text"), id, text: id, translation: z.string().optional() }),
+  z.object({ kind: z.literal("example"), id, text: id, translation: id }),
+  z.object({ kind: z.literal("comparison"), id, left: id, right: id, label: z.string().optional() }),
+]);
+export const lessonActionSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("board.show"), element: boardElementSchema }),
+  z.object({ type: z.literal("board.highlight"), targetId: id }),
+  z.object({ type: z.literal("board.clear") }),
+  z.object({ type: z.literal("translation.show"), visible: z.boolean() }),
+  z.object({ type: z.literal("caption.show"), text: z.string().max(300) }),
+  z.object({ type: z.literal("teacher.state"), state: z.enum(["speaking", "paused", "listening"]) }),
+  z.object({ type: z.literal("audio.play"), mediaId: id }),
+  z.object({ type: z.literal("activity.open"), activityRef: id }),
+  z.object({ type: z.literal("speech.request"), activityRef: id }),
+]);
+export type LessonAction = z.infer<typeof lessonActionSchema>;
+export type BoardElement = z.infer<typeof boardElementSchema>;
+export const interactiveLessonSchema = z.object({
+  id, courseId: id, unitId: id, lessonId: id, title: id,
+  objectives: z.array(id).min(1), concepts: z.array(id), skills: z.array(z.string().min(1)).min(1),
+  estimatedMinutes: z.number().positive(),
+  alternativeExamples: z.array(z.object({ conceptId: id, text: id, translation: id })).default([]),
+  segments: z.array(z.object({
+    id, title: id,
+    type: z.enum(["presentation", "explanation", "example", "activity", "checkpoint", "speaking", "summary"]),
+    objectives: z.array(id).default([]), concepts: z.array(id).default([]),
+    presentation: z.object({
+      mode: z.enum(["video", "audio", "slides"]), mediaId: id.optional(), durationMs: z.number().int().positive(),
+      transcript: z.array(z.object({ startMs: z.number().int().nonnegative(), endMs: z.number().int().positive(), text: id })).default([]),
+    }).optional(),
+    cues: z.array(z.object({ id, atMs: z.number().int().nonnegative(), action: lessonActionSchema })).default([]),
+    activityRef: id.optional(), required: z.boolean().default(false), allowInterruption: z.boolean().default(true),
+    resumeAnchorsMs: z.array(z.number().int().nonnegative()).default([0]),
+    explanation: z.string().optional(),
+  })).min(2),
+  provenance: provenanceSchema.optional(),
+});
+export type InteractiveLessonDefinition = z.infer<typeof interactiveLessonSchema>;
 export const conceptSchema = z.object({
   id,
   language: id,
@@ -185,6 +226,7 @@ export const lessonSchema = z.object({
   objectives: z.array(id), activities: z.array(activitySchema).min(1),
   eyebrow: z.string().default(""), description: z.string().default(""),
   minutes: z.number().positive(), active: z.boolean().default(true),
+  interactiveLessonRef: id.optional(),
 });
 export const unitSchema = z.object({
   id, slug: id, order: z.number().int().positive(), title: id,
@@ -216,6 +258,7 @@ export const coursePackageSchema = z.object({
   concepts: z.array(conceptSchema), lexicon: z.array(lexiconEntrySchema),
   missions: z.array(missionSchema).default([]), roleplays: z.array(roleplaySchema).default([]),
   assessments: z.array(assessmentSchema).default([]), media: z.array(mediaSchema).default([]),
+  interactiveLessons: z.array(interactiveLessonSchema).default([]),
   practice: z.object({ reviewStructures: z.array(z.object({
     id, lessonId: id, conceptId: id, title: id, prompt: id, answer: id, explanation: id,
   })).default([]) }).optional(),

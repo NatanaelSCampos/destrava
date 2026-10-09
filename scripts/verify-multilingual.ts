@@ -108,15 +108,15 @@ for (const variant of ["general", "en-US", "en-GB"]) {
   assert.equal(textToSpeechLocale(en.language, variant), locale);
 }
 assert.equal(en.resources.alphabet.length, 26);
-assert.equal(en.resources.numbers.length, 7);
+assert.equal(en.resources.numbers.length, 26);
 assert.equal(en.resources.regionalTopics.length, 2);
 assert.equal(en.course.units.length, 1);
 assert.equal(en.course.units[0].lessons.length, 3);
-assert.equal(en.course.units[0].lessons.flatMap((lesson) => lesson.activities).length, 18);
+assert.equal(en.course.units[0].lessons.flatMap((lesson) => lesson.activities).length, 23);
 assert.equal(en.resources.vocabulary.length, en.coursePackage.lexicon.length);
 assert.equal(en.resources.conversationScenarios.length, 1);
 assert.equal(en.coursePackage.roleplays.length, 1);
-assert.equal(en.coursePackage.assessments[0].bank.length, 5);
+assert.equal(en.coursePackage.assessments[0].bank.length, 15);
 assert.equal(en.coursePackage.assessments[0].passingPolicy.overall, 0.6);
 assert.equal(en.resources.imageScenes[0].image, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.image);
 assert.notEqual(en.resources.imageScenes[0].prompt, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.prompt);

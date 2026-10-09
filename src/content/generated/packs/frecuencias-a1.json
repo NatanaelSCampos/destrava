@@ -1,7 +1,7 @@
 {
   "course": {
-    "schemaVersion": "1.0",
-    "contentVersion": "1.0.0",
+    "schemaVersion": "1.1",
+    "contentVersion": "1.1.0",
     "id": "frecuencias-a1",
     "slug": "frecuencias-a1",
     "isDefault": true,
@@ -549,12 +549,40 @@
                     "status": "approved"
                   }
                 }
+              },
+              {
+                "id": "grammar-age-speaking",
+                "type": "speaking",
+                "skills": [
+                  "speaking",
+                  "pronunciation"
+                ],
+                "concepts": [
+                  "age-tener"
+                ],
+                "title": "Repita: tenho 26 anos",
+                "prompt": "Escute e repita: Tengo veintiséis años.",
+                "minutes": 2,
+                "payload": {
+                  "guidance": [
+                    "Ouça a frase antes de gravar.",
+                    "Diga a frase inteira e confira a avaliação."
+                  ],
+                  "referenceText": "Tengo veintiséis años."
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
               }
             ],
             "eyebrow": "Gramática",
             "description": "Ser, tener, llamarse, vivir e trabalhar.",
             "minutes": 15,
-            "active": true
+            "active": true,
+            "interactiveLessonRef": "aula-tener-idade"
           },
           {
             "id": "l-listening",
@@ -3109,6 +3137,255 @@
             "plantas",
             "toldo vermelho"
           ]
+        }
+      }
+    ],
+    "interactiveLessons": [
+      {
+        "id": "aula-tener-idade",
+        "courseId": "frecuencias-a1",
+        "unitId": "nos-presentamos",
+        "lessonId": "l-grammar",
+        "title": "Tener para falar de idade",
+        "objectives": [
+          "Dizer a idade em espanhol usando tener"
+        ],
+        "concepts": [
+          "age-tener"
+        ],
+        "skills": [
+          "grammar",
+          "speaking"
+        ],
+        "estimatedMinutes": 6,
+        "alternativeExamples": [
+          {
+            "conceptId": "age-tener",
+            "text": "Mi hermana tiene veinte años.",
+            "translation": "Minha irmã tem vinte anos."
+          },
+          {
+            "conceptId": "age-tener",
+            "text": "¿Cuántos años tienes? Tengo treinta años.",
+            "translation": "Quantos anos você tem? Tenho trinta anos."
+          }
+        ],
+        "segments": [
+          {
+            "id": "intro",
+            "title": "Introdução",
+            "type": "presentation",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "presentation": {
+              "mode": "slides",
+              "durationMs": 14000,
+              "transcript": [
+                {
+                  "startMs": 0,
+                  "endMs": 7000,
+                  "text": "Hoje vamos aprender a dizer a idade em espanhol."
+                },
+                {
+                  "startMs": 7000,
+                  "endMs": 14000,
+                  "text": "Para falar de idade, usamos o verbo tener."
+                }
+              ]
+            },
+            "cues": [
+              {
+                "id": "intro-title",
+                "atMs": 0,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "text",
+                    "id": "topic",
+                    "text": "TENER + idade",
+                    "translation": "TER + idade"
+                  }
+                }
+              },
+              {
+                "id": "intro-example",
+                "atMs": 7000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "example",
+                    "id": "age-example",
+                    "text": "Tengo veintiséis años.",
+                    "translation": "Tenho vinte e seis anos."
+                  }
+                }
+              }
+            ],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0,
+              7000
+            ],
+            "explanation": "Em espanhol, a idade é expressa com tener: tengo + número + años."
+          },
+          {
+            "id": "explanation",
+            "title": "Como funciona",
+            "type": "explanation",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "presentation": {
+              "mode": "slides",
+              "durationMs": 20000,
+              "transcript": [
+                {
+                  "startMs": 0,
+                  "endMs": 8500,
+                  "text": "Eu tenho: yo tengo. Você tem: tú tienes."
+                },
+                {
+                  "startMs": 8500,
+                  "endMs": 16000,
+                  "text": "Ela tem: ella tiene. Veja como a forma muda."
+                },
+                {
+                  "startMs": 16000,
+                  "endMs": 20000,
+                  "text": "Ana tiene veintiséis años."
+                }
+              ]
+            },
+            "cues": [
+              {
+                "id": "form-yo",
+                "atMs": 0,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "yo",
+                    "left": "yo",
+                    "right": "tengo"
+                  }
+                }
+              },
+              {
+                "id": "form-tu",
+                "atMs": 4000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "tu",
+                    "left": "tú",
+                    "right": "tienes"
+                  }
+                }
+              },
+              {
+                "id": "form-ella",
+                "atMs": 8500,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "ella",
+                    "left": "ella",
+                    "right": "tiene"
+                  }
+                }
+              },
+              {
+                "id": "form-highlight",
+                "atMs": 11500,
+                "action": {
+                  "type": "board.highlight",
+                  "targetId": "ella"
+                }
+              },
+              {
+                "id": "form-sentence",
+                "atMs": 16000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "example",
+                    "id": "ana",
+                    "text": "Ana tiene 26 años.",
+                    "translation": "Ana tem 26 anos."
+                  }
+                }
+              }
+            ],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0,
+              8500,
+              16000
+            ],
+            "explanation": "A forma muda com a pessoa. Com yo usamos tengo; com ella usamos tiene."
+          },
+          {
+            "id": "check-age",
+            "title": "Confira o que aprendeu",
+            "type": "checkpoint",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "activityRef": "grammar-3",
+            "required": true,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ],
+            "explanation": "Com Ana, use a forma tiene."
+          },
+          {
+            "id": "say-age",
+            "title": "Sua vez de falar",
+            "type": "speaking",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "activityRef": "grammar-age-speaking",
+            "required": true,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ]
+          },
+          {
+            "id": "summary",
+            "title": "Resumo",
+            "type": "summary",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ],
+            "explanation": "Para falar de idade: yo tengo, tú tienes, ella tiene. Volte quando quiser para praticar novamente."
+          }
+        ],
+        "provenance": {
+          "origin": "human",
+          "review": {
+            "status": "approved"
+          }
         }
       }
     ],

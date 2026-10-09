@@ -47,13 +47,23 @@ const { error: profileError } = await db.from("user_course_profiles")
 if (profileError) throw new Error(`Course profile migration unavailable: ${profileError.message}`);
 const { error: eventsError } = await db.from("study_events").select("course_id").limit(0);
 if (eventsError) throw new Error(`Course-scoped study events unavailable: ${eventsError.message}`);
+const { error: interactiveError } = await db.from("interactive_lesson_sessions")
+  .select("id,revision,content_version,runtime_state").limit(0);
+if (interactiveError) throw new Error(`Interactive lesson sessions unavailable: ${interactiveError.message}`);
+const { data: speakingActivity, error: speakingError } = await db.from("activities")
+  .select("id,type").eq("id", "grammar-age-speaking").maybeSingle();
+if (speakingError || speakingActivity?.type !== "speaking")
+  throw new Error("Interactive lesson speaking activity is not seeded.");
 const publicKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 if (publicKey && url) {
   const anonymous = createClient(url, publicKey, { auth: { persistSession: false } });
   const { data: exposed } = await anonymous.from("user_course_profiles").select("user_id").limit(1);
   if (exposed?.length) throw new Error("Anonymous access exposed a course profile.");
+  const { data: exposedSessions, error: accessError } = await anonymous.from("interactive_lesson_sessions")
+    .select("id").limit(1);
+  if (accessError || exposedSessions?.length) throw new Error("Anonymous access to interactive lesson sessions is unsafe.");
 }
-console.log("Remote course profile projection is available.");
+console.log("Remote course profile, interactive sessions, seeded speaking and anonymous RLS verified.");
 }
 
 main().catch((error: unknown) => {

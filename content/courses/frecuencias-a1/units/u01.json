@@ -526,12 +526,27 @@
               "status": "approved"
             }
           }
+        },
+        {
+          "id": "grammar-age-speaking",
+          "type": "speaking",
+          "skills": ["speaking", "pronunciation"],
+          "concepts": ["age-tener"],
+          "title": "Repita: tenho 26 anos",
+          "prompt": "Escute e repita: Tengo veintiséis años.",
+          "minutes": 2,
+          "payload": {
+            "guidance": ["Ouça a frase antes de gravar.", "Diga a frase inteira e confira a avaliação."],
+            "referenceText": "Tengo veintiséis años."
+          },
+          "provenance": { "origin": "human", "review": { "status": "approved" } }
         }
       ],
       "eyebrow": "Gramática",
       "description": "Ser, tener, llamarse, vivir e trabalhar.",
       "minutes": 15,
-      "active": true
+      "active": true,
+      "interactiveLessonRef": "aula-tener-idade"
     },
     {
       "id": "l-listening",

@@ -110,6 +110,7 @@ export const activitySchema = z.discriminatedUnion("type", [
 
 export const lessonSchema = z.object({
   id: z.string(),
+  interactiveLessonRef: z.string().optional(),
   slug: z.string(),
   title: z.string(),
   eyebrow: z.string(),
