@@ -779,6 +779,14 @@ Os locales de reconhecimento e avaliação são resolvidos pelo `LanguagePackage
 
 ---
 
+# Aula Particular Interativa
+
+A opção **Aula particular** abre `/live-classes`. A primeira aula interativa está ligada à lição de espanhol sobre `tener` para falar de idade. Ela reúne apresentação em slides com quadro sincronizado, explicações alternativas, exercício corrigido, prática de fala e retomada da sessão. O motor aceita mídia de vídeo ou áudio declarada no pacote; a demonstração atual usa a imagem e o roteiro do protótipo fornecido.
+
+Para criar outra aula, adicione uma definição em `content/courses/<course-id>/interactive-lessons/` e associe-a com `interactiveLessonRef` na lição correspondente. As referências e capacidades do idioma são validadas pelo pipeline normal. Veja [a implementação do MVP](DESTRAVA_IMPLEMENTACAO_AULA_PARTICULAR_INTERATIVA_MVP.md) para decisões, testes e limitações.
+
+---
+
 # Segurança
 
 O projeto inclui mecanismos como:
@@ -824,12 +832,15 @@ npm.cmd run content:compile
 npm.cmd run content:preview -- --course pt-BR.xx-Test.a1.general
 npm.cmd run learning:verify
 npm.cmd run multilingual:verify
+npm.cmd run interactive:verify
 npm.cmd run architecture:check
 npm.cmd run session:verify
 npm.cmd run build
 ```
 
 `predev` e `prebuild` compilam os pacotes automaticamente. Após aplicar as migrações e executar `npm.cmd run db:seed`, use `npm.cmd run db:verify:remote` para conferir o conteúdo no Supabase remoto. A revisão pedagógica emite avisos que exigem decisão editorial, mesmo quando a validação estrutural passa.
+
+Para conferir também a sessão interativa autenticada no Supabase remoto, execute `npm.cmd run interactive:verify:remote`. O script cria e remove uma conta descartável, sem enviar e-mail.
 
 ---
 

@@ -43,6 +43,7 @@ const navigation = (courseSlug: string) => [
   { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
   { href: "/basics", label: "Fundamentos", icon: CaseUpper },
   { href: "/study", label: "Aula de hoje", icon: Play },
+  { href: "/live-classes", label: "Aula particular", icon: Sparkles },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
   { href: "/conversation", label: "Conversar", icon: MessageCircle },
@@ -146,7 +147,9 @@ export function AppShell({ children, courseOptions }: {
       (item.href !== "/conversation" || featureFlags.AI_TUTOR) &&
       (item.href !== "/describe" || (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
       (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled)),
-  );
+  ).filter((item) => item.href !== "/live-classes" || course.units.some((unit) =>
+    unit.lessons.some((lesson) => Boolean(lesson.interactiveLessonRef)),
+  ));
   const studyNavCount = navItems.findIndex((item) => item.href === "/vocabulary");
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
   const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
@@ -351,7 +354,7 @@ export function AppShell({ children, courseOptions }: {
       )}
       <SelectionAudio />
       <PageTour pathname={pathname} replayToken={tourReplayToken} onOpenChange={setTourOpen} />
-      {featureFlags.AI_TUTOR && <WhatsNewDialog userId={authUserId} enabled={!tourOpen} />}
+      <WhatsNewDialog userId={authUserId} enabled={!tourOpen} />
     </div>
   );
 }
