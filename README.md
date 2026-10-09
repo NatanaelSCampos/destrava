@@ -709,6 +709,8 @@ Abra:
 http://localhost:3000
 ```
 
+Para entrar localmente, abra `/login` e use sua conta do Supabase remoto. Se o Turnstile mostrar o erro `110200`, o hostname local não está autorizado no widget. Use o login por Google ou configure um ambiente de desenvolvimento separado para testar o CAPTCHA com senha. A Cloudflare recomenda não autorizar `localhost` em widgets de produção. O login por Google pode ser habilitado apenas no ambiente local com `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED=true` em `.env.local`; reinicie `npm.cmd run dev` depois de alterar a variável.
+
 ---
 
 # Banco e autenticação
