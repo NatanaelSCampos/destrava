@@ -8,6 +8,11 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## Fluxo de desenvolvimento
+
+- Desenvolva e valide as mudanças no ambiente local. Use `npm.cmd run dev` e informe a rota local para revisão.
+- Publique no Fly.io somente quando o usuário pedir explicitamente. Não inclua deploy automático como etapa padrão de uma tarefa.
+
 ## Fly.io neste projeto
 
 - Nesta máquina, o `flyctl` tenta alcançar `api.machines.dev` por IPv6 e retorna `EOF`. Não faça uma primeira tentativa direta: use IPv4 desde o início.
