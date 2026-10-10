@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "minItems": 1,
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "letter": {
+        "type": "string",
+        "minLength": 1
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "word": {
+        "type": "string",
+        "minLength": 1
+      },
+      "translation": {
+        "type": "string",
+        "minLength": 1
+      },
+      "example": {
+        "type": "string",
+        "minLength": 1
+      },
+      "kind": {
+        "type": "string",
+        "enum": [
+          "vowel",
+          "consonant"
+        ]
+      },
+      "note": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "letter",
+      "name",
+      "word",
+      "translation",
+      "example",
+      "kind"
+    ]
+  }
+}

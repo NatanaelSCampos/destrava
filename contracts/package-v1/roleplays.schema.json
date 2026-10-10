@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "scenario": {
+        "type": "string",
+        "minLength": 1
+      },
+      "level": {
+        "type": "string",
+        "minLength": 1
+      },
+      "character": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "objectives": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "constraints": {
+        "type": "object",
+        "properties": {
+          "maxVocabularyLevel": {
+            "type": "string"
+          },
+          "allowHints": {
+            "type": "boolean"
+          }
+        }
+      },
+      "goals": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "general",
+            "travel",
+            "work",
+            "study",
+            "conversation"
+          ]
+        }
+      },
+      "contexts": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "required": [
+      "id",
+      "scenario",
+      "level",
+      "character",
+      "objectives"
+    ]
+  }
+}

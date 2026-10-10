@@ -1,0 +1,672 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "courseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unitId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lessonId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "objectives": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "skills": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "estimatedMinutes": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "alternativeExamples": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "conceptId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "translation": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "conceptId",
+          "text",
+          "translation"
+        ]
+      }
+    },
+    "segments": {
+      "minItems": 2,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "presentation",
+              "explanation",
+              "example",
+              "activity",
+              "checkpoint",
+              "speaking",
+              "summary"
+            ]
+          },
+          "objectives": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "concepts": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "presentation": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "video",
+                  "audio",
+                  "slides"
+                ]
+              },
+              "mediaId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "durationMs": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "transcript": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "startMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "endMs": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "textPresentation": {
+                      "type": "object",
+                      "properties": {
+                        "language": {
+                          "type": "string",
+                          "minLength": 2,
+                          "maxLength": 80
+                        },
+                        "direction": {
+                          "type": "string",
+                          "enum": [
+                            "ltr",
+                            "rtl",
+                            "auto"
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startMs",
+                    "endMs",
+                    "text"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "mode",
+              "durationMs"
+            ]
+          },
+          "cues": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "atMs": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "action": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "board.show"
+                        },
+                        "element": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "const": "text"
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "translation": {
+                                  "type": "string"
+                                },
+                                "textPresentation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "language": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 80
+                                    },
+                                    "direction": {
+                                      "type": "string",
+                                      "enum": [
+                                        "ltr",
+                                        "rtl",
+                                        "auto"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "id",
+                                "text"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "const": "example"
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "translation": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "textPresentation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "language": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 80
+                                    },
+                                    "direction": {
+                                      "type": "string",
+                                      "enum": [
+                                        "ltr",
+                                        "rtl",
+                                        "auto"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "id",
+                                "text",
+                                "translation"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "const": "comparison"
+                                },
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "left": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "right": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "label": {
+                                  "type": "string"
+                                },
+                                "leftPresentation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "language": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 80
+                                    },
+                                    "direction": {
+                                      "type": "string",
+                                      "enum": [
+                                        "ltr",
+                                        "rtl",
+                                        "auto"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                },
+                                "rightPresentation": {
+                                  "type": "object",
+                                  "properties": {
+                                    "language": {
+                                      "type": "string",
+                                      "minLength": 2,
+                                      "maxLength": 80
+                                    },
+                                    "direction": {
+                                      "type": "string",
+                                      "enum": [
+                                        "ltr",
+                                        "rtl",
+                                        "auto"
+                                      ]
+                                    }
+                                  },
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "id",
+                                "left",
+                                "right"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "element"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "board.highlight"
+                        },
+                        "targetId": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "targetId"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "board.clear"
+                        }
+                      },
+                      "required": [
+                        "type"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "translation.show"
+                        },
+                        "visible": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "visible"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "caption.show"
+                        },
+                        "text": {
+                          "type": "string",
+                          "maxLength": 300
+                        },
+                        "textPresentation": {
+                          "type": "object",
+                          "properties": {
+                            "language": {
+                              "type": "string",
+                              "minLength": 2,
+                              "maxLength": 80
+                            },
+                            "direction": {
+                              "type": "string",
+                              "enum": [
+                                "ltr",
+                                "rtl",
+                                "auto"
+                              ]
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "text"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "teacher.state"
+                        },
+                        "state": {
+                          "type": "string",
+                          "enum": [
+                            "speaking",
+                            "paused",
+                            "listening"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "state"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "audio.play"
+                        },
+                        "mediaId": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "mediaId"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "activity.open"
+                        },
+                        "activityRef": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "activityRef"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "speech.request"
+                        },
+                        "activityRef": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "activityRef"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "atMs",
+                "action"
+              ]
+            }
+          },
+          "activityRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required": {
+            "default": false,
+            "type": "boolean"
+          },
+          "allowInterruption": {
+            "default": true,
+            "type": "boolean"
+          },
+          "resumeAnchorsMs": {
+            "default": [
+              0
+            ],
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "type"
+        ]
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "enum": [
+            "human",
+            "ai_generated",
+            "adapted",
+            "imported"
+          ]
+        },
+        "generator": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "page": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "type",
+              "reference"
+            ]
+          }
+        },
+        "review": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "generated",
+                "review_pending",
+                "approved",
+                "published",
+                "deprecated"
+              ]
+            },
+            "reviewedBy": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        }
+      },
+      "required": [
+        "origin"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "courseId",
+    "unitId",
+    "lessonId",
+    "title",
+    "objectives",
+    "concepts",
+    "skills",
+    "estimatedMinutes",
+    "segments"
+  ]
+}

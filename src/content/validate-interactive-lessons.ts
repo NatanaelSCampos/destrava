@@ -1,9 +1,10 @@
 import type { CoursePackage, LanguagePackage, LessonAction } from "./contracts";
+import { supportedCourseSchemaVersions } from "./contracts";
 
 export function validateInteractiveLessons(course: CoursePackage, language: LanguagePackage) {
   if (course.targetLanguage !== language.id)
     throw new Error("Interactive lesson language mismatch");
-  if (!["1.3", "1.4", "1.5"].includes(course.schemaVersion))
+  if (!supportedCourseSchemaVersions.some((value) => value === course.schemaVersion))
     throw new Error(`Unsupported course schema: ${course.schemaVersion}`);
   const definitions = new Map(course.interactiveLessons.map((item) => [item.id, item]));
   if (definitions.size !== course.interactiveLessons.length)

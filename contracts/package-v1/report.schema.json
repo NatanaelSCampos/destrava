@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "reportVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "technicallyValid": {
+      "type": "boolean"
+    },
+    "compatible": {
+      "type": "boolean"
+    },
+    "preparation": {
+      "type": "string",
+      "enum": [
+        "prepared",
+        "rejected"
+      ]
+    },
+    "readiness": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "unknown",
+        "unavailable"
+      ]
+    },
+    "activation": {
+      "type": "string",
+      "const": "not_performed"
+    },
+    "identity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "contentVersion": {
+          "type": "string"
+        },
+        "envelopeVersion": {
+          "type": "string"
+        },
+        "languageSchema": {
+          "type": "string"
+        },
+        "courseSchema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "contentVersion",
+        "envelopeVersion",
+        "languageSchema",
+        "courseSchema"
+      ],
+      "additionalProperties": false
+    },
+    "editorial": {
+      "type": "object",
+      "properties": {
+        "declaredApproval": {
+          "type": "string"
+        },
+        "material": {
+          "type": "string"
+        },
+        "producerTrust": {
+          "type": "string",
+          "const": "unverified"
+        },
+        "administrativeApproval": {
+          "type": "string",
+          "const": "not_reviewed"
+        },
+        "published": {
+          "type": "boolean",
+          "const": false
+        },
+        "eligibleForPublication": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "declaredApproval",
+        "material",
+        "producerTrust",
+        "administrativeApproval",
+        "published",
+        "eligibleForPublication"
+      ],
+      "additionalProperties": false
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "security",
+              "integrity",
+              "structure",
+              "semantic",
+              "compatibility",
+              "editorial"
+            ]
+          },
+          "document": {
+            "type": "string"
+          },
+          "field": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "received": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "severity",
+          "category",
+          "document",
+          "field",
+          "message",
+          "resolution"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "reportVersion",
+    "technicallyValid",
+    "compatible",
+    "preparation",
+    "readiness",
+    "activation",
+    "editorial",
+    "diagnostics"
+  ],
+  "additionalProperties": false
+}

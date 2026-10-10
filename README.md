@@ -994,4 +994,16 @@ npm.cmd run presentation:verify
 npm.cmd run presentation:verify:ui
 ```
 
-[Diagnóstico, exemplos, testes, referências W3C e desafio de aprendizado](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). Curso 1.5 exige os metadados novos; 1.3/1.4 continuam aceitos. Catálogo 1.3.0 com 44 entradas. A apresentação RTL usa fixtures sintéticas; não foi instalado um curso real novo. Revisão normal em `http://127.0.0.1:3000`; IMEs, fontes e leitores de tela reais continuam pendentes. O Incremento 6 depende de autorização.
+[Diagnóstico, exemplos, testes, referências W3C e desafio de aprendizado](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). Curso 1.5 exige os metadados novos; 1.3/1.4 continuam aceitos. Catálogo 1.3.0 com 44 entradas. A apresentação RTL usa fixtures sintéticas; não foi instalado um curso real novo. Revisão normal em `http://127.0.0.1:3000`; IMEs, fontes e leitores de tela reais continuam pendentes.
+
+### Pacotes externos — Fase 3, Incremento 6
+
+A fronteira pública usa diretório declarativo, manifesto 1.0.0, documentos JSON e recursos locais com hash/tamanho. Os artefatos em [contracts/package-v1](contracts/package-v1/README.md) são gerados dos schemas existentes e podem ser usados por um produtor independente, sem imports privados, Supabase ou estrutura do runtime.
+
+```powershell
+npm.cmd run package:contracts
+npm.cmd run package:verify
+npm.cmd run package:validate -- C:\caminho\pacote --dry-run
+```
+
+A biblioteca/CLI valida estrutura, referências, capacidades e integridade e prepara um runtime temporário. A CLI é sempre somente leitura; não instala ou ativa cursos. Aprovação declarada, confiança do produtor, disponibilidade operacional e publicação permanecem distintas. [Relatório A–G, testes, limites e aprendizado](DESTRAVA_IMPORTACAO_INCREMENTO_6.md); [experimento reproduzível](contracts/package-v1/README.md#produtor-simulado-e-experimento). Entrega local sem commit; Incremento 7 aguarda autorização.

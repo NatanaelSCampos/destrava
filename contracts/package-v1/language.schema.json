@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?$"
+    },
+    "contentVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identity": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nativeName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "iso639_1": {
+          "type": "string"
+        },
+        "iso639_3": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "nativeName"
+      ]
+    },
+    "writingSystem": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "ltr",
+            "rtl"
+          ]
+        },
+        "scripts": {
+          "minItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "caseSensitive": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "direction",
+        "scripts",
+        "caseSensitive"
+      ]
+    },
+    "variants": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "default": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      }
+    },
+    "linguisticFeatures": {
+      "type": "object",
+      "properties": {
+        "romanization": {
+          "type": "boolean"
+        },
+        "tones": {
+          "type": "boolean"
+        },
+        "grammaticalGender": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "romanization",
+        "tones",
+        "grammaticalGender"
+      ]
+    },
+    "capabilityRequirements": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$"
+          },
+          "data": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "required": {
+            "default": true,
+            "type": "boolean"
+          },
+          "fallback": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "required": [
+              "id",
+              "version"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "speech": {
+      "type": "object",
+      "properties": {
+        "support": {
+          "type": "object",
+          "properties": {
+            "speechRecognition": {
+              "type": "boolean"
+            },
+            "textToSpeech": {
+              "type": "boolean"
+            },
+            "pronunciationAssessment": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "speechRecognition",
+            "textToSpeech",
+            "pronunciationAssessment"
+          ]
+        },
+        "defaultVariant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "providers": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "recognitionLocale": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "assessmentLocale": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "ttsLocale": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "recognitionLocale",
+                "assessmentLocale",
+                "ttsLocale"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "support",
+        "defaultVariant",
+        "providers"
+      ]
+    },
+    "normalization": {
+      "type": "object",
+      "properties": {
+        "trimWhitespace": {
+          "type": "boolean"
+        },
+        "collapseWhitespace": {
+          "type": "boolean"
+        },
+        "caseInsensitive": {
+          "type": "boolean"
+        },
+        "ignoreTerminalPunctuation": {
+          "type": "boolean"
+        },
+        "ignoreDiacritics": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "trimWhitespace",
+        "collapseWhitespace",
+        "caseInsensitive",
+        "ignoreTerminalPunctuation",
+        "ignoreDiacritics"
+      ]
+    },
+    "modules": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "contentVersion",
+    "id",
+    "identity",
+    "writingSystem",
+    "variants",
+    "linguisticFeatures",
+    "speech",
+    "normalization",
+    "modules"
+  ],
+  "additionalProperties": false
+}

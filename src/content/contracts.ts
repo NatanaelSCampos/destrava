@@ -22,6 +22,8 @@ export type { NormalizationRules } from "./activity-data";
 const id = z.string().trim().min(1);
 const version = z.string().regex(/^\d+\.\d+(?:\.\d+)?$/);
 const localizedTextSchema = z.record(z.string().min(2), z.string().min(1));
+export const supportedLanguageSchemaVersions = ["1.1"] as const;
+export const supportedCourseSchemaVersions = ["1.3", "1.4", "1.5"] as const;
 
 export const languageVariantSchema = z.object({
   id,
@@ -73,7 +75,7 @@ export const languagePackageSchema = z
   })
   .strict()
   .superRefine((language, ctx) => {
-    if (language.schemaVersion !== "1.1")
+    if (!supportedLanguageSchemaVersions.some((value) => value === language.schemaVersion))
       ctx.addIssue({
         code: "custom",
         path: ["schemaVersion"],
@@ -501,7 +503,7 @@ export const coursePackageSchema = z
   .superRefine((course, ctx) => {
     const issue = (path: (string | number)[], message: string) =>
       ctx.addIssue({ code: "custom", path, message });
-    if (!["1.3", "1.4", "1.5"].includes(course.schemaVersion))
+    if (!supportedCourseSchemaVersions.some((value) => value === course.schemaVersion))
       issue(
         ["schemaVersion"],
         "Declarative learning policies require CoursePackage schemaVersion 1.3",

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "level": {
+        "type": "string",
+        "minLength": 1
+      },
+      "scenario": {
+        "type": "string",
+        "minLength": 1
+      },
+      "objectives": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "recommendedConcepts": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "title": {
+        "type": "string"
+      },
+      "setting": {
+        "type": "string"
+      },
+      "character": {
+        "type": "string"
+      },
+      "opening": {
+        "type": "string"
+      },
+      "objectiveDetails": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "hint": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "label",
+            "hint"
+          ]
+        }
+      },
+      "goals": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "enum": [
+            "general",
+            "travel",
+            "work",
+            "study",
+            "conversation"
+          ]
+        }
+      },
+      "contexts": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "required": [
+      "id",
+      "level",
+      "scenario",
+      "objectives"
+    ]
+  }
+}

@@ -15,6 +15,8 @@ import {
   numbersModuleSchema,
   regionalVariantsModuleSchema,
   missionSchema,
+  supportedCourseSchemaVersions,
+  supportedLanguageSchemaVersions,
 } from "@/content/contracts";
 import { unitLearningPolicySchema } from "@/content/learning-policies";
 import { capabilityRequirementsSchema } from "@/content/capability-contracts";
@@ -588,9 +590,9 @@ export function capabilityCatalog(registry: CapabilityRegistry = capabilityRegis
     catalogVersion: "1.3.0",
     versionRule: "explicit-exact-allowlist",
     packageSchemas: {
-      language: "1.1",
-      course: "1.5",
-      acceptedCourseVersions: ["1.3", "1.4", "1.5"],
+      language: supportedLanguageSchemaVersions.at(-1)!,
+      course: supportedCourseSchemaVersions.at(-1)!,
+      acceptedCourseVersions: [...supportedCourseSchemaVersions],
     },
     requirementsSchema: z.toJSONSchema(capabilityRequirementsSchema, { io: "input" }),
     rules: [

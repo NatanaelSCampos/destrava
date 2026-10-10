@@ -1,6 +1,6 @@
 # Arquitetura multilíngua do Destrava
 
-Atualizado em 2026-10-10. Este documento registra a implementação incremental de [Contratos Multilíngua v1](DESTRAVA_CONTRATOS_MULTILINGUA_V1.md), conforme o [direcionamento atual](DESTRAVA_DIRECIONAMENTO_ARQUITETURAL.md). ES e EN são materiais experimentais; `xx-Test` é uma fixture sintética. O contrato público V1 completo e o importador externo permanecem pendentes.
+Atualizado em 2026-10-10. Este documento registra a implementação incremental de [Contratos Multilíngua v1](DESTRAVA_CONTRATOS_MULTILINGUA_V1.md), conforme o [direcionamento atual](DESTRAVA_DIRECIONAMENTO_ARQUITETURAL.md). ES e EN são materiais experimentais; `xx-Test` é uma fixture sintética. O Incremento 6 acrescentou a [fronteira pública de pacote v1](contracts/package-v1/README.md) e validação externa local. Instalação, ativação e consolidação editorial permanecem pendentes.
 
 ## Fluxo de runtime
 
@@ -12,7 +12,7 @@ cookie do curso ativo → CourseRegistry → CoursePackage + LanguagePackage
                               estado por usuário e curso
 ```
 
-- `src/content/contracts.ts` define os contratos Zod. O curso usa schema 1.3; o idioma usa schema 1.1. `contract-vocabulary.ts` fornece os enums compartilhados, sem importar preferências do domínio. `content/languages/<id>` declara identidade, variantes, normalização, características linguísticas, cobertura/mapeamentos de voz, requisitos e módulos. `content/courses/<id>` declara unidades, lições, atividades, conceitos, léxico, missões, role-plays, mídia e avaliações.
+- `src/content/contracts.ts` define os contratos Zod. O curso aceita schemas experimentais 1.3/1.4/1.5; o idioma usa schema 1.1. `contract-vocabulary.ts` fornece os enums compartilhados, sem importar preferências do domínio. `content/languages/<id>` declara identidade, variantes, normalização, características linguísticas, cobertura/mapeamentos de voz, requisitos e módulos. `content/courses/<id>` declara unidades, lições, atividades, conceitos, léxico, missões, role-plays, mídia e avaliações.
 - `scripts/content-loader.ts` valida schemas, IDs globais, referências, avaliações e mídia. `runtimeBundle()` negocia capacidades antes de criar o runtime; configuração/locale de provedor é uma condição operacional do ambiente. `scripts/content-pedagogy.ts` aplica regras editoriais determinísticas e informa avisos. `scripts/compile-content.ts` gera `src/content/generated`, usado pelo `CourseRegistry`. `scripts/content-preview.ts` mostra o roteiro compilável sem iniciar a aplicação.
 - `src/content/runtime-package.ts` projeta o contrato de autoria nos tipos usados pela UI e pelos motores existentes. Atividades preservam `skills: []`; tentativas objetivas alimentam todas as habilidades declaradas no perfil, além da habilidade principal usada na navegação. O léxico do curso alimenta vocabulário, dicionário, revisão e contexto do tutor. Missões e role-plays alimentam conversas. Avaliações preservam finalidade, método, atividades, política e referências de curso/unidade; o runtime não as descobre por `quiz`, posição ou IDs derivados.
 - `src/content/course-registry.ts` é a fronteira de resolução. O layout seleciona um pacote pelo cookie; o curso inicial é declarado por `isDefault` no conteúdo, sem depender da ordem dos arquivos. Rotas de IA e avaliação exigem `courseId`, resolvem o pacote e usam a variante do aluno. Reconhecimento e avaliação de pronúncia dependem da capacidade e do locale Azure do pacote; TTS do navegador aceita qualquer provedor com locale declarado.
@@ -94,4 +94,12 @@ Schemas neutros de apresentação estão em `src/content/text-presentation.ts`; 
 
 Inputs nativos preservam seleção, cursor e composição; o quadro usa `LearningBoard` sem um executor novo. Metadados de campos e de trechos/legendas/comparações exigem curso 1.5; 1.3/1.4 permanecem aceitos. Idioma permanece 1.1. O catálogo atual é 1.3.0 com 44 entradas (43 implementadas, uma parcial). `presentation.direction`, `presentation.bidi` e `text.input` têm bindings e limites explícitos.
 
-[Entrega e evidências de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md): 12.000 verificações geradas, browser com CSS real e teclado/seleção nativos, regressões e integração local. O suporte é a texto horizontal e fronteiras simples; não certifica idiomas RTL completos, rich text arbitrário, IMEs reais ou leitores de tela. Não foi iniciado o Incremento 6.
+[Entrega e evidências de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md): 12.000 verificações geradas, browser com CSS real e teclado/seleção nativos, regressões e integração local. O suporte é a texto horizontal e fronteiras simples; não certifica idiomas RTL completos, rich text arbitrário, IMEs reais ou leitores de tela.
+
+## Fronteira externa no Incremento 6
+
+O produtor entrega dados seguindo [o contrato público](contracts/package-v1/README.md). O adaptador `external-package-directory.ts` lê um snapshot limitado; `validateExternalPackageFiles()` valida documentos/referências/integridade e negocia capacidades. `runtimeBundle()` e `publicCourse()` continuam sendo as conversões do consumidor. O registro estático, seed e persistência não recebem escritas desse fluxo.
+
+`package-references.ts` concentra as verificações semânticas compartilhadas pelos carregadores interno e externo. O envelope neutro está em `package-contract.ts`; artefatos públicos são gerados sem definições paralelas. A CLI devolve relatório público; o runtime preparado é privado e temporário, sem garantia de imutabilidade para instalação. Saúde operacional e confiança editorial não são inferidas de validade estrutural.
+
+[Relatório, controles e testes de interoperabilidade](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). A prova usa um produtor independente fora do repositório e os executores existentes em memória. Instalação versionada, resolução de recursos, ativação e rollback pertencem ao Incremento 7, ainda não iniciado.

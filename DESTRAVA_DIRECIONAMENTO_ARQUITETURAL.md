@@ -119,7 +119,7 @@ não implementar agora suporte tonal, caracteres ou plugins apenas como antecipa
 
 **Situação da execução incremental:** a auditoria Fase 2.1 e os incrementos
 de desacoplamento de vocabulário e semântica de avaliações estão documentados.
-A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio foi homologado no checkpoint local `a7ec750`. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md` e `DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md`. O Incremento 4 foi implementado localmente com registro, negociação e catálogo de capacidades; ver `DESTRAVA_CAPACIDADES_INCREMENTO_4.md`. As Partes 5A, 5B e 5C foram implementadas localmente; o Incremento 6 depende de autorização.
+A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio foi homologado no checkpoint local `a7ec750`. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md` e `DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md`. O Incremento 4 foi implementado localmente com registro, negociação e catálogo de capacidades; ver `DESTRAVA_CAPACIDADES_INCREMENTO_4.md`. As Partes 5A, 5B e 5C foram implementadas localmente e comitadas no checkpoint `2e0ace4`. O Incremento 6 implementou a fronteira pública e validação local; ver [relatório A–G](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). O Incremento 7 aguarda autorização.
 
 **Fronteiras do Learning Engine e proposta do contrato de conteúdo V1.**
 
@@ -209,4 +209,10 @@ Padrões e variantes aceitas pertencem ao curso; restrições e equivalências p
 
 Idioma, variante, direção de conteúdo e contexto da interface são conceitos separados. O perfil/curso declara características; o motor resolve apresentação e mantém sequência lógica e validação. HTML dir/bdi, CSS lógico e entrada nativa são usados em componentes comuns, sem regras por nome de língua. Texto externo é escapado, isolado e tem controles de direção sinalizados nas fronteiras centrais; essa proteção não é uma política completa contra spoofing.
 
-[Entrega, classificações, testes e didática de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). O curso 1.5 sinaliza metadados novos; o catálogo 1.3.0 anuncia apresentação horizontal e entrada nativa com limites. Testes técnicos não comprovam qualidade editorial nem qualificação de um teclado/leitor real. Essas pendências acompanham a consolidação do contrato/capacidades no planejamento do Incremento 6, ainda não iniciado.
+[Entrega, classificações, testes e didática de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). O curso 1.5 sinaliza metadados novos; o catálogo 1.3.0 anuncia apresentação horizontal e entrada nativa com limites. Testes técnicos não comprovam qualidade editorial nem qualificação de um teclado/leitor real. Essas pendências continuam explícitas na fronteira pública.
+
+## Incremento 6 implementado localmente
+
+O formato escolhido é diretório com manifesto/documentos/recursos relativos. A [especificação pública](contracts/package-v1/README.md) reúne schemas gerados, catálogo e regras de compatibilidade. O produtor não importa código privado. O consumidor valida com a base existente e prepara o runtime em memória; não compila para o catálogo, instala ou publica.
+
+Compatibilidade técnica, disponibilidade operacional, declaração editorial, confiança, homologação e publicação são estados distintos. [Decisões, invariantes, testes e explicações](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). Não houve uso de banco ou provedores na importação; build e revisão normal continuam locais. O Incremento 7 deverá definir staging imutável, instalação versionada, recursos, ativação e rollback após aprovação.

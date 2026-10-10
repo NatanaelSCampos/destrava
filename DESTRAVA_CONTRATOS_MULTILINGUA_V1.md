@@ -3,8 +3,8 @@
 > Especificação oficial para desacoplar o motor do Destrava dos idiomas e tornar a entrada de novos idiomas/cursos um processo de conteúdo, não de desenvolvimento do Core.
 
 > **Nota de implementação — 2026-10-10:** este documento orienta a arquitetura;
-> o contrato público V1 completo ainda não foi consolidado. O schema executado
-> de curso é 1.3: avaliações declaram `purpose`, `method` e `assessmentRefs`,
+> a fronteira pública de pacote V1 foi implementada no Incremento 6; sua [especificação de autoria](contracts/package-v1/README.md) é a referência executável atual. Consolidação editorial, instalação e ativação continuam pendentes. O schema executado
+> de curso aceita 1.3/1.4/1.5: avaliações declaram `purpose`, `method` e `assessmentRefs`,
 > substituindo o campo ambíguo `unit.assessmentId`. Os exemplos históricos abaixo
 > devem ser lidos junto do [Incremento 2](DESTRAVA_AVALIACOES_INCREMENTO_2.md) e
 > do [direcionamento atual](DESTRAVA_DIRECIONAMENTO_ARQUITETURAL.md). O [Incremento 3](DESTRAVA_POLITICAS_INCREMENTO_3.md) acrescenta `unit.learningPolicy` para conclusão e domínio independentes, sem concluir a publicação do contrato V1 completo.
@@ -1618,4 +1618,10 @@ Exemplos e trechos do quadro/transcrição podem declarar `textPresentation`. Co
 
 O catálogo 1.3.0 registra `presentation.direction`, `presentation.bidi` e `text.input`, todas 1.0.0, com restrições explícitas. O produtor deve exigir essas capacidades quando forem mandatórias, inclusive para negociação com outros consumidores. Caracteres e capacidade de renderizar RTL não comprovam caligrafia, tipografia vertical, qualidade linguística ou suporte pedagógico completo.
 
-Controles Unicode legítimos são preservados. A inspeção sinaliza formatos potencialmente enganosos sem modificar texto canônico. Isolamento, escape de HTML e políticas de conteúdo são proteções diferentes; não há garantia geral contra spoofing. [Diagnóstico, exemplos, testes e limites de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). O Incremento 6 permanece aguardando autorização.
+Controles Unicode legítimos são preservados. A inspeção sinaliza formatos potencialmente enganosos sem modificar texto canônico. Isolamento, escape de HTML e políticas de conteúdo são proteções diferentes; não há garantia geral contra spoofing. [Diagnóstico, exemplos, testes e limites de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md).
+
+# 32. Fronteira pública implementada no Incremento 6
+
+O envelope 1.0.0 transporta os documentos com contratos de idioma 1.1 e curso experimental 1.3/1.4/1.5, sem confundir essas versões com `contentVersion`. A documentação canônica e os artefatos gerados ficam em [contracts/package-v1](contracts/package-v1/README.md). Eles não expõem estruturas privadas do runtime ou dependências de banco.
+
+A biblioteca/CLI local valida dados, relações, integridade e capacidades e reutiliza o runtime e os executores existentes. Aprovação declarada não é confiança comprovada; preparação técnica não é publicação. [Relatório, testes e limites](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). Instalação e ativação ficam para o Incremento 7, não iniciado.

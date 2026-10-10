@@ -44,7 +44,11 @@
     "variants:verify": "node --import tsx scripts/verify-variants.tsx",
     "variants:verify:ui": "node --import tsx scripts/verify-variants-ui.tsx",
     "presentation:verify": "node --import tsx scripts/verify-text-presentation.tsx",
-    "presentation:verify:ui": "node --import tsx scripts/verify-text-presentation-ui.tsx"
+    "presentation:verify:ui": "node --import tsx scripts/verify-text-presentation-ui.tsx",
+    "package:contracts": "node --import tsx scripts/export-package-contracts.ts",
+    "package:validate": "node --import tsx scripts/validate-external-package.ts",
+    "package:verify": "node --import tsx scripts/verify-external-packages.tsx",
+    "package:example": "node scripts/produce-external-course.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",
