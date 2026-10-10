@@ -2,6 +2,8 @@
 
 **Aprenda. Pratique. Destrave.**
 
+O desenvolvimento usa coordenação nativa com Lead, Implementador, QA e Revisor, worktrees isoladas para escrita e integração central. Consulte [o procedimento multiagente](DESTRAVA_MULTIAGENTE.md) para perfis, evidências de homologação e limites de permissões.
+
 O **Destrava** é uma plataforma multilíngua de aprendizado orientada por prática, adaptação e contexto real.
 
 O projeto começou com espanhol A1, mas a direção atual é mais ampla: construir um **motor de aprendizagem reutilizável entre idiomas**, no qual novos cursos e novas línguas entram principalmente como conteúdo e configuração, sem recriar a aplicação para cada idioma.

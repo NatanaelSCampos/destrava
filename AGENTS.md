@@ -28,3 +28,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Nesta máquina, o `flyctl` tenta alcançar `api.machines.dev` por IPv6 e retorna `EOF`. Não faça uma primeira tentativa direta: use IPv4 desde o início.
 - Para qualquer comando Fly, execute `powershell -ExecutionPolicy Bypass -File scripts/fly-ipv4.ps1 <comando>`. O script inicia um proxy HTTPS local que resolve os destinos por IPv4, configura `HTTP_PROXY` e `HTTPS_PROXY` só para o processo e encerra o proxy ao terminar.
 - Para publicar, execute `powershell -ExecutionPolicy Bypass -File scripts/deploy-fly.ps1`. A URL e a chave **publicável** do Supabase vêm de `.env.local`; nunca imprima nem transfira chaves privadas. Não interprete o `EOF` da API como falha do app.
+
+## Coordenação multiagente
+
+- O agente principal atua como Lead e é o único interlocutor principal com o usuário. Delegue quando houver benefício concreto; não é obrigatório acionar todos os especialistas.
+- Leia [DESTRAVA_MULTIAGENTE.md](DESTRAVA_MULTIAGENTE.md) para perfis, briefing, entrega, integração, evidências e limites reais. Os perfis reutilizáveis ficam em `.codex/agents/`.
+- Use no máximo Lead + Implementador + QA + Revisor. Especialistas não subdelegam. Use contexto delimitado e forneça explicitamente as restrições da tarefa.
+- Escrita paralela exige worktrees separadas e `workdir` explícito. Só o Lead integra no checkout principal. Não altere arquivos de outro agente nem critérios sem coordenação.
+- QA deriva testes dos requisitos; Revisor examina candidato congelado e não escreve ou implementa correções. Um perfil não comprova isolamento de sandbox: registre o modo de carregamento e permissões efetivas.
+- Banco, navegador, portas e processos compartilhados são coordenados sequencialmente pelo Lead. Worktrees não recebem credenciais remotas. Não use comandos remotos ou destrutivos sem autorização específica.
+- Toda entrega identifica baseline, candidato, arquivos, decisões, comandos/resultados, limitações, patch com arquivos novos, impedimentos e recomendações. Revalide após mudanças.
+- Commits exigem autorização da tarefa. Aprovação da estrutura multiagente não autoriza automaticamente push, deploy, publicação, migrações remotas, chamadas pagas ou o próximo incremento.
