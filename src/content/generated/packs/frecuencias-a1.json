@@ -3678,7 +3678,7 @@
     }
   },
   "language": {
-    "schemaVersion": "1.0",
+    "schemaVersion": "1.1",
     "contentVersion": "1.0.0",
     "id": "es",
     "identity": {
@@ -3712,16 +3712,17 @@
         "name": "Argentina"
       }
     ],
-    "capabilities": {
-      "speechRecognition": true,
-      "textToSpeech": true,
-      "pronunciationAssessment": true,
-      "regionalVariants": true,
+    "linguisticFeatures": {
       "romanization": false,
       "tones": false,
       "grammaticalGender": true
     },
     "speech": {
+      "support": {
+        "speechRecognition": true,
+        "textToSpeech": true,
+        "pronunciationAssessment": true
+      },
       "defaultVariant": "general",
       "providers": {
         "azure": {
@@ -3768,11 +3769,6 @@
         "enabled": true,
         "source": "fundamentals/regional-variants.json"
       }
-    },
-    "strategies": {
-      "textTokenizer": "latin-word-v1",
-      "answerNormalizer": "default-latin-v1",
-      "numberParser": "spanish-numbers-v1"
     }
   },
   "moduleData": {

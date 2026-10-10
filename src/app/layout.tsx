@@ -5,8 +5,10 @@ import "./globals.css";
 import "./pages.css";
 import "./activities.css";
 import "./page-tour.css";
+import "./learning-text.css";
+import { interfacePresentation } from "@/engine/presentation/text";
 import { allCourseBundles, defaultCourseId, findCourseBundle } from "@/content/course-registry";
-import { publicCourse } from "@/content/public";
+import { publicCourse, publicRequirements } from "@/content/public";
 import { StudyProvider } from "@/components/study-provider";
 import { AppShell } from "@/components/layout/app-shell";
 
@@ -22,12 +24,26 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const bundle = findCourseBundle(activeId) ?? findCourseBundle(defaultCourseId)!;
   const course = publicCourse(bundle.course, bundle.language);
   const courseOptions = allCourseBundles().map(({ course, language }) => ({
-    id: course.id, title: course.title, language: language.identity.nativeName,
+    id: course.id,
+    title: course.title,
+    language: language.identity.nativeName,
   }));
   return (
-    <html lang="pt-BR" className={inter.variable}>
+    <html
+      lang={interfacePresentation.language}
+      dir={interfacePresentation.direction}
+      className={inter.variable}
+    >
       <body>
-        <StudyProvider key={course.id} course={course} resources={bundle.resources} language={bundle.language}>
+        <StudyProvider
+          key={course.id}
+          course={course}
+          resources={bundle.resources}
+          language={{
+            ...bundle.language,
+            capabilityRequirements: publicRequirements(bundle.language.capabilityRequirements),
+          }}
+        >
           <AppShell courseOptions={courseOptions}>{children}</AppShell>
         </StudyProvider>
       </body>

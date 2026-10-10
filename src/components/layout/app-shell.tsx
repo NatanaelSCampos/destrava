@@ -144,7 +144,7 @@ export function AppShell({ children, courseOptions }: {
   ).total;
   const navItems = navigation(course.slug).filter(
     (item) =>
-      (item.href !== "/speaking" || (featureFlags.SPEAKING && language.capabilities.speechRecognition)) &&
+      (item.href !== "/speaking" || (featureFlags.SPEAKING && course.units.some((unit) => unit.lessons.some((lesson) => lesson.activities.some((activity) => activity.type === "speaking"))))) &&
       (item.href !== "/conversation" || featureFlags.AI_TUTOR) &&
       (item.href !== "/describe" || (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
       (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled)),

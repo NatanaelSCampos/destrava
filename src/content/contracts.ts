@@ -1,20 +1,27 @@
 import { z } from "zod";
-import { learningGoalSchema, learningSkillSchema, skillIdSchema, assessmentPurposeSchema } from "./contract-vocabulary";
+import {
+  learningGoalSchema,
+  learningSkillSchema,
+  skillIdSchema,
+  assessmentPurposeSchema,
+} from "./contract-vocabulary";
 import { unitLearningPolicySchema } from "./learning-policies";
 export { skillIdSchema, assessmentPurposeSchema } from "./contract-vocabulary";
+
+import { capabilityRequirementsSchema } from "./capability-contracts";
+import { activityPresentationSchema, textPresentationSchema } from "./text-presentation";
+import { activityVariantSchema, answerPolicySchema, variantIdsSchema } from "./variant-contracts";
+import {
+  normalizationRulesSchema,
+  activityTypeSchema,
+  objectiveActivityTypes,
+} from "./activity-data";
+export { normalizationRulesSchema, activityTypeSchema } from "./activity-data";
+export type { NormalizationRules } from "./activity-data";
 
 const id = z.string().trim().min(1);
 const version = z.string().regex(/^\d+\.\d+(?:\.\d+)?$/);
 const localizedTextSchema = z.record(z.string().min(2), z.string().min(1));
-
-export const normalizationRulesSchema = z.object({
-  trimWhitespace: z.boolean(),
-  collapseWhitespace: z.boolean(),
-  caseInsensitive: z.boolean(),
-  ignoreTerminalPunctuation: z.boolean(),
-  ignoreDiacritics: z.boolean(),
-});
-export type NormalizationRules = z.infer<typeof normalizationRulesSchema>;
 
 export const languageVariantSchema = z.object({
   id,
@@ -43,16 +50,18 @@ export const languagePackageSchema = z
       caseSensitive: z.boolean(),
     }),
     variants: z.array(languageVariantSchema).min(1),
-    capabilities: z.object({
-      speechRecognition: z.boolean(),
-      textToSpeech: z.boolean(),
-      pronunciationAssessment: z.boolean(),
-      regionalVariants: z.boolean(),
+    linguisticFeatures: z.object({
       romanization: z.boolean(),
       tones: z.boolean(),
       grammaticalGender: z.boolean(),
     }),
+    capabilityRequirements: capabilityRequirementsSchema.optional(),
     speech: z.object({
+      support: z.object({
+        speechRecognition: z.boolean(),
+        textToSpeech: z.boolean(),
+        pronunciationAssessment: z.boolean(),
+      }),
       defaultVariant: id,
       providers: z.record(z.string(), z.record(z.string(), speechLocaleSchema)),
     }),
@@ -61,15 +70,16 @@ export const languagePackageSchema = z
       z.string(),
       z.object({ enabled: z.boolean(), source: z.string().optional() }),
     ),
-    strategies: z
-      .object({
-        textTokenizer: id.optional(),
-        answerNormalizer: id.optional(),
-        numberParser: id.optional(),
-      })
-      .optional(),
   })
+  .strict()
   .superRefine((language, ctx) => {
+    if (language.schemaVersion !== "1.1")
+      ctx.addIssue({
+        code: "custom",
+        path: ["schemaVersion"],
+        message:
+          "Separated linguistic traits and speech coverage require LanguagePackage schemaVersion 1.1",
+      });
     const variants = new Set(language.variants.map((item) => item.id));
     if (variants.size !== language.variants.length)
       ctx.addIssue({ code: "custom", message: "Duplicate language variant" });
@@ -163,14 +173,28 @@ export const mediaSchema = z.object({
 // Authoring contract for a guided lesson. It contains presentation data only;
 // activity answers remain in the server-side CoursePackage activities.
 export const boardElementSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("text"), id, text: id, translation: z.string().optional() }),
-  z.object({ kind: z.literal("example"), id, text: id, translation: id }),
+  z.object({
+    kind: z.literal("text"),
+    id,
+    text: id,
+    translation: z.string().optional(),
+    textPresentation: textPresentationSchema.optional(),
+  }),
+  z.object({
+    kind: z.literal("example"),
+    id,
+    text: id,
+    translation: id,
+    textPresentation: textPresentationSchema.optional(),
+  }),
   z.object({
     kind: z.literal("comparison"),
     id,
     left: id,
     right: id,
     label: z.string().optional(),
+    leftPresentation: textPresentationSchema.optional(),
+    rightPresentation: textPresentationSchema.optional(),
   }),
 ]);
 export const lessonActionSchema = z.discriminatedUnion("type", [
@@ -178,7 +202,11 @@ export const lessonActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("board.highlight"), targetId: id }),
   z.object({ type: z.literal("board.clear") }),
   z.object({ type: z.literal("translation.show"), visible: z.boolean() }),
-  z.object({ type: z.literal("caption.show"), text: z.string().max(300) }),
+  z.object({
+    type: z.literal("caption.show"),
+    text: z.string().max(300),
+    textPresentation: textPresentationSchema.optional(),
+  }),
   z.object({
     type: z.literal("teacher.state"),
     state: z.enum(["speaking", "paused", "listening"]),
@@ -227,6 +255,7 @@ export const interactiveLessonSchema = z.object({
                   startMs: z.number().int().nonnegative(),
                   endMs: z.number().int().positive(),
                   text: id,
+                  textPresentation: textPresentationSchema.optional(),
                 }),
               )
               .default([]),
@@ -302,22 +331,11 @@ export const roleplaySchema = z.object({
   contexts: z.array(id).optional(),
 });
 
-export const activityTypeSchema = z.enum([
-  "lesson_content",
-  "multiple_choice",
-  "true_false",
-  "fill_blank",
-  "ordering",
-  "short_answer",
-  "writing",
-  "listening",
-  "speaking",
-  "flashcard",
-  "review",
-  "quiz",
-]);
 export const activitySchema = z.object({
   id,
+  variant: activityVariantSchema.optional(),
+  presentation: activityPresentationSchema.optional(),
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   type: activityTypeSchema,
   skills: z.array(skillIdSchema).min(1),
   concepts: z.array(id).default([]),
@@ -328,7 +346,11 @@ export const activitySchema = z.object({
   minutes: z.number().positive(),
   payload: z.record(z.string(), z.unknown()),
   evaluation: z
-    .object({ strategy: id, normalization: normalizationRulesSchema.optional() })
+    .object({
+      strategy: id,
+      normalization: normalizationRulesSchema.optional(),
+      answerPolicy: answerPolicySchema.optional(),
+    })
     .optional(),
   media: z.array(id).optional(),
   provenance: provenanceSchema.optional(),
@@ -337,6 +359,7 @@ export const activitySchema = z.object({
 });
 export const lessonSchema = z.object({
   id,
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   slug: id,
   title: id,
   order: z.number().int().positive(),
@@ -361,6 +384,7 @@ export const assessmentRefsSchema = z
 export const unitSchema = z
   .object({
     id,
+    capabilityRequirements: capabilityRequirementsSchema.optional(),
     slug: id,
     order: z.number().int().positive(),
     title: id,
@@ -378,6 +402,7 @@ export const unitSchema = z
   .strict();
 const assessmentBaseSchema = z.object({
   id,
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   title: id,
   purpose: assessmentPurposeSchema,
   unitId: id.optional(),
@@ -427,6 +452,7 @@ export type FixedAssessmentDefinition = z.infer<typeof fixedAssessmentSchema>;
 export type AssessmentRefs = z.infer<typeof assessmentRefsSchema>;
 export const coursePackageSchema = z
   .object({
+    capabilityRequirements: capabilityRequirementsSchema.optional(),
     schemaVersion: version,
     contentVersion: version,
     id,
@@ -435,6 +461,7 @@ export const coursePackageSchema = z
     sourceLanguage: id,
     targetLanguage: id,
     defaultVariant: z.string().optional(),
+    acceptedVariants: variantIdsSchema.optional(),
     framework: z.object({ name: id, entryLevel: z.string().optional(), exitLevel: id }),
     track: id,
     title: id,
@@ -474,10 +501,48 @@ export const coursePackageSchema = z
   .superRefine((course, ctx) => {
     const issue = (path: (string | number)[], message: string) =>
       ctx.addIssue({ code: "custom", path, message });
-    if (course.schemaVersion !== "1.3")
+    if (!["1.3", "1.4", "1.5"].includes(course.schemaVersion))
       issue(
         ["schemaVersion"],
         "Declarative learning policies require CoursePackage schemaVersion 1.3",
+      );
+    if (
+      !["1.4", "1.5"].includes(course.schemaVersion) &&
+      (course.acceptedVariants ||
+        course.units.some((unit) =>
+          unit.lessons.some((lesson) =>
+            lesson.activities.some(
+              (activity) => activity.variant || activity.evaluation?.answerPolicy,
+            ),
+          ),
+        ))
+    )
+      issue(
+        ["schemaVersion"],
+        "Variant constraints and answer policies require CoursePackage schemaVersion 1.4",
+      );
+    const hasTextMetadata =
+      course.units.some((unit) =>
+        unit.lessons.some((lesson) => lesson.activities.some((activity) => activity.presentation)),
+      ) ||
+      course.interactiveLessons.some((lesson) =>
+        lesson.segments.some(
+          (segment) =>
+            segment.presentation?.transcript.some((line) => line.textPresentation) ||
+            segment.cues.some(({ action }) =>
+              action.type === "caption.show"
+                ? Boolean(action.textPresentation)
+                : action.type === "board.show" &&
+                  (action.element.kind === "comparison"
+                    ? Boolean(action.element.leftPresentation || action.element.rightPresentation)
+                    : Boolean(action.element.textPresentation)),
+            ),
+        ),
+      );
+    if (hasTextMetadata && course.schemaVersion !== "1.5")
+      issue(
+        ["schemaVersion"],
+        "Text presentation metadata requires CoursePackage schemaVersion 1.5",
       );
     const definitions = new Map(course.assessments.map((item) => [item.id, item]));
     const activityOwners = new Map(
@@ -491,14 +556,7 @@ export const coursePackageSchema = z
       course.units.flatMap((unit) => unit.lessons.map((lesson) => [lesson.id, unit.id] as const)),
     );
     const units = new Set(course.units.map((unit) => unit.id));
-    const objectiveTypes = new Set([
-      "multiple_choice",
-      "true_false",
-      "fill_blank",
-      "ordering",
-      "short_answer",
-      "listening",
-    ]);
+    const objectiveTypes = new Set<string>(objectiveActivityTypes);
     if (definitions.size !== course.assessments.length)
       issue(["assessments"], "Duplicate assessment ID");
     for (const [index, definition] of course.assessments.entries()) {
@@ -631,14 +689,24 @@ export const coursePackageSchema = z
                 issue(path, `Policy activity outside active unit: ${activityId}`);
               if (owner && rule.kind === "submission" && owner.activity.type !== rule.practice)
                 issue(path, `Submission practice mismatch: ${activityId}`);
-              if (owner && rule.kind === "objective_score" &&
-                  (!objectiveTypes.has(owner.activity.type) || (rule.skill && !owner.activity.skills.includes(rule.skill))))
+              if (
+                owner &&
+                rule.kind === "objective_score" &&
+                (!objectiveTypes.has(owner.activity.type) ||
+                  (rule.skill && !owner.activity.skills.includes(rule.skill)))
+              )
                 issue(path, `Incompatible objective evidence: ${activityId}`);
             }
-            const required = rule.kind === "participation" ? rule.minimumCount ?? rule.activityIds.length
-              : rule.kind === "submission" ? rule.minimumCount
-                : rule.kind === "objective_score" ? rule.minimumSamples : undefined;
-            if (required && required > rule.activityIds.length) issue(path, "Required evidence count exceeds declared activities");
+            const required =
+              rule.kind === "participation"
+                ? (rule.minimumCount ?? rule.activityIds.length)
+                : rule.kind === "submission"
+                  ? rule.minimumCount
+                  : rule.kind === "objective_score"
+                    ? rule.minimumSamples
+                    : undefined;
+            if (required && required > rule.activityIds.length)
+              issue(path, "Required evidence count exceeds declared activities");
           }
           if (rule.kind === "review_score") {
             for (const wordId of rule.vocabularyIds) {
@@ -652,8 +720,11 @@ export const coursePackageSchema = z
           if (rule.kind === "assessment") {
             validateRef(rule.assessmentId, rule.purpose, path);
             const definition = definitions.get(rule.assessmentId);
-            const owner = definition?.unitId ?? (definition?.lessonId ? lessonOwners.get(definition.lessonId) : undefined);
-            if (owner && owner !== unit.id) issue(path, "Policy assessment belongs to another unit");
+            const owner =
+              definition?.unitId ??
+              (definition?.lessonId ? lessonOwners.get(definition.lessonId) : undefined);
+            if (owner && owner !== unit.id)
+              issue(path, "Policy assessment belongs to another unit");
           }
         }
       }

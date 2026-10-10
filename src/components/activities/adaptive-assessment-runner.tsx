@@ -1,4 +1,5 @@
 "use client";
+import { LearningText } from "@/components/learning/text-presentation";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -159,6 +160,13 @@ export function AdaptiveAssessmentRunner({
       </div>
     );
 
+  if (course.availability?.unavailableAssessmentIds?.includes(assessment.id))
+    return (
+      <div className="panel" role="status">
+        Esta avaliação está temporariamente indisponível. Nenhuma nota será registrada.
+      </div>
+    );
+
   return (
     <div className="adaptive-page">
       <div className="page-heading">
@@ -208,8 +216,20 @@ export function AdaptiveAssessmentRunner({
             </span>
             <span className="pill">{labels[next.skill]}</span>
           </div>
-          <h2>{current.title}</h2>
-          <p>{current.prompt}</p>
+          <LearningText
+            as="h2"
+            presentation={current.presentation}
+            field="title"
+            textRole="source"
+            text={current.title}
+          />
+          <LearningText
+            as="p"
+            presentation={current.presentation}
+            field="prompt"
+            textRole="source"
+            text={current.prompt}
+          />
           <ExerciseCard
             key={current.id}
             activity={current as Parameters<typeof ExerciseCard>[0]["activity"]}
@@ -329,7 +349,7 @@ export function AdaptiveAssessmentRunner({
             <Link href="/review" className="secondary-button">
               <RotateCcw size={16} /> Revisar cartões
             </Link>
-            {language.capabilities.speechRecognition && (
+            {language.speech.support.speechRecognition && (
               <Link href="/speaking" className="secondary-button">
                 Praticar fala <ArrowRight size={16} />
               </Link>

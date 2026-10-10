@@ -1,8 +1,9 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { checkContentContractDependencies, formatContractDependencyIssues } from "./contract-dependency-check";
+import { checkCapabilityImplementations } from "./capability-implementation-check";
 
-const roots = ["src/domain", "src/app", "src/components", "src/lib", "src/repositories"];
+const roots = ["src/domain", "src/app", "src/components", "src/lib", "src/repositories", "src/engine"];
 const allowed = new Set(["src/domain/study/course-state-storage.ts"]);
 const leak = /frecuenciasA1|spanishResources|spanishAlphabet|spanishRegions|SpanishRegion|speakSpanish|es-ES|es-MX|es-AR|\bspanish\b|\bespanhol\b|en-US|en-GB|\bEnglish\b|\binglês\b|lang=["'](?:es|en)["']/i;
 const matches: string[] = [];
@@ -29,3 +30,9 @@ if (contracts.issues.length) {
   console.error(`Content contract dependency violations:\n${formatContractDependencyIssues(contracts)}`);
   process.exitCode = 1;
 } else console.log(`content contract dependencies: ok (${contracts.files.length} local modules; no cycles)`);
+
+const capabilities = checkCapabilityImplementations();
+if (capabilities.length) {
+  console.error(`Capability registry violations:\n${capabilities.join("\n")}`);
+  process.exitCode = 1;
+} else console.log("capability registry: executors, shared schemas and dependency boundaries verified");

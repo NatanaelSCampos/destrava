@@ -9,6 +9,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { findCourseBundle } from "@/content/course-registry";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
 import { readCourseState } from "@/domain/study/course-state-storage";
+import { findActivity } from "@/content/schema";
 
 const inputSchema = z.object({
   courseId: z.string().min(1),
@@ -40,7 +41,15 @@ export async function POST(request: Request) {
   const bundle = findCourseBundle(parsed.data.courseId);
   if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
   try {
-    const variantId = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
+    const variantId = await userCourseVariant(
+      guard.userId ?? null,
+      bundle.course.id,
+      bundle.language,
+      bundle.course,
+      parsed.data.activityId
+        ? findActivity(bundle.course, parsed.data.activityId)?.variant
+        : undefined,
+    );
     const client = guard.userId ? await createSupabaseServerClient() : null;
     const { data } = client
       ? await client
@@ -77,8 +86,11 @@ export async function POST(request: Request) {
       studentContext: state
         ? {
             goal: goalLabels[state.profile.learningPreferences.goal],
-            contexts: bundle.coursePackage.contexts?.filter((item) =>
-              state.profile.learningPreferences.contexts.includes(item.id)).map((item) => item.label).slice(0, 3) ?? [],
+            contexts:
+              bundle.coursePackage.contexts
+                ?.filter((item) => state.profile.learningPreferences.contexts.includes(item.id))
+                .map((item) => item.label)
+                .slice(0, 3) ?? [],
             knownWords: Object.values(state.vocabulary ?? {}).filter(
               (item) => item.status === "known",
             ).length,

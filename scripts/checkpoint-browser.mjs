@@ -4,7 +4,8 @@ import { resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import { localApp, workspace, assertLocalUrl } from "./local-environment.mjs";
 
-export async function checkpointBrowser() {
+export async function checkpointBrowser({ appOrigin = localApp } = {}) {
+  assertLocalUrl(appOrigin, [localApp, "http://127.0.0.1:3001"]);
   const executable = [
     "C:/Program Files/Google/Chrome/Application/chrome.exe",
     "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
@@ -83,7 +84,7 @@ export async function checkpointBrowser() {
     if (message.method === "Fetch.requestPaused") {
       const { requestId, request } = message.params;
       try {
-        const url = assertLocalUrl(request.url, [localApp, "http://127.0.0.1:54321"]);
+        const url = assertLocalUrl(request.url, [appOrigin, "http://127.0.0.1:54321"]);
         requestDestinations.add(url.origin);
         void send("Fetch.continueRequest", { requestId }).catch(() => {});
       } catch {
@@ -112,21 +113,50 @@ export async function checkpointBrowser() {
   return {
     async cookies(entries) {
       await send("Network.setCookies", {
-        cookies: entries.map(({ name, value }) => ({ name, value, url: localApp, path: "/" })),
+        cookies: entries.map(({ name, value }) => ({ name, value, url: appOrigin, path: "/" })),
       });
     },
     async navigate(path) {
-      const url = new URL(path, localApp);
-      assertLocalUrl(url, [localApp]);
+      const url = new URL(path, appOrigin);
+      assertLocalUrl(url, [appOrigin]);
       await send("Page.navigate", { url: url.href });
     },
     evaluate,
+    async key(key, code = key, options = {}) {
+      const text =
+        key === "Enter"
+          ? "\r"
+          : key.length === 1 && !((options.modifiers ?? 0) & 7)
+            ? key
+            : undefined;
+      await send("Input.dispatchKeyEvent", {
+        type: text ? "keyDown" : "rawKeyDown",
+        key,
+        code,
+        ...(text ? { text, unmodifiedText: text } : {}),
+        ...options,
+      });
+      await send("Input.dispatchKeyEvent", { type: "keyUp", key, code, ...options });
+    },
+    async insertText(text) {
+      await send("Input.insertText", { text });
+    },
     async waitText(expected) {
       for (let i = 0; i < 120; i++) {
         try {
-          if (await evaluate(`document.body?.innerText?.includes(${JSON.stringify(expected)}) ?? false`)) return;
+          if (
+            await evaluate(
+              `document.body?.innerText?.includes(${JSON.stringify(expected)}) ?? false`,
+            )
+          )
+            return;
         } catch (error) {
-          if (!/context.*destroyed|Cannot find context|Cannot find default execution context/i.test(error.message)) throw error;
+          if (
+            !/context.*destroyed|Cannot find context|Cannot find default execution context/i.test(
+              error.message,
+            )
+          )
+            throw error;
         }
         await new Promise((resolve) => setTimeout(resolve, 250));
       }

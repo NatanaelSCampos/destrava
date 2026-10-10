@@ -6,6 +6,9 @@ import {
 } from "@/content/assessment-results";
 import type { Course } from "@/content/schema";
 import type { LanguagePackage } from "@/content/contracts";
+import { publicCourse } from "@/content/public";
+import type { CapabilityEnvironment } from "@/engine/capabilities/compatibility";
+import { requireLearningVariant } from "@/engine/variants/resolution";
 import {
   evaluateAssessment,
   AssessmentExecutionError,
@@ -18,7 +21,13 @@ export type StoredAssessmentRow = {
   started_at: string;
   finished_at: string;
   objective_score: number | null;
-  result: { courseId?: string; contentVersion?: string; input?: unknown; unitId?: string };
+  result: {
+    courseId?: string;
+    contentVersion?: string;
+    input?: unknown;
+    unitId?: string;
+    variantId?: string;
+  };
 };
 type AssessmentApiDependencies = {
   resolveCourse: (id: string) => { course: Course; language: LanguagePackage } | undefined;
@@ -31,6 +40,8 @@ type AssessmentApiDependencies = {
   ) => Promise<string>;
   read: (userId: string, assessmentIds: string[]) => Promise<StoredAssessmentRow[]>;
   now?: () => Date;
+  environment?: CapabilityEnvironment;
+  variantPreference?: (userId: string | null, courseId: string) => Promise<unknown>;
 };
 
 export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
@@ -40,12 +51,14 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
     input: AssessmentRequest,
     bundle: { course: Course; language: LanguagePackage },
     finishedAt: string,
+    variantId?: string,
   ) => {
     const grade = evaluateAssessment(
       bundle.course,
       input.assessmentId,
       input.responses,
       bundle.language.normalization,
+      { language: bundle.language, course: bundle.course, preference: variantId },
     );
     return serverAssessmentResultSchema.parse({
       id: input.attemptId,
@@ -53,6 +66,7 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
       assessmentId: grade.definition.id,
       ...assessmentSummary(grade.definition),
       contentVersion: bundle.course.contentVersion,
+      ...(variantId ? { variantId } : {}),
       source: "server",
       startedAt: input.startedAt,
       finishedAt: timestamp(finishedAt),
@@ -81,10 +95,35 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
       if (!bundle || !bundle.course.assessments.some((item) => item.id === input.data.assessmentId))
         return Response.json({ error: "Avaliação não encontrada neste curso." }, { status: 404 });
       try {
+        const preference = await dependencies.variantPreference?.(
+          user?.id ?? null,
+          bundle.course.id,
+        );
+        const variantId = requireLearningVariant(
+          bundle.language,
+          bundle.course,
+          preference,
+        ).variantId!;
+        const available = publicCourse(
+          bundle.course,
+          bundle.language,
+          dependencies.environment,
+          variantId,
+        );
+        if (available.availability?.unavailableAssessmentIds?.includes(input.data.assessmentId))
+          return Response.json(
+            {
+              error:
+                "Uma capacidade necessária à avaliação está indisponível. Nenhuma nota foi registrada.",
+              diagnostics: available.capabilityReport?.diagnostics,
+            },
+            { status: 503 },
+          );
         const result = createResult(
           input.data,
           bundle,
           (dependencies.now?.() ?? new Date()).toISOString(),
+          variantId,
         );
         if (user) {
           const finishedAt = await dependencies.save(user.id, input.data, result);
@@ -99,7 +138,7 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
                 ? error.message
                 : "Não foi possível registrar a avaliação. Verifique se seu conteúdo foi instalado no banco.",
           },
-          { status: error instanceof AssessmentExecutionError ? 422 : 503 },
+          { status: error instanceof AssessmentExecutionError ? error.status : 503 },
         );
       }
     },
@@ -132,7 +171,23 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           )
             continue;
           try {
-            results.push(createResult(input.data, bundle, row.finished_at));
+            // Never use today's preference to replay historical evidence.
+            if (
+              row.result.variantId &&
+              requireLearningVariant(bundle.language, bundle.course, row.result.variantId)
+                .diagnostics.length
+            )
+              continue;
+            if (
+              !row.result.variantId &&
+              bundle.course.units.some((unit) =>
+                unit.lessons.some((lesson) =>
+                  lesson.activities.some((a) => a.variant || a.answerPolicy),
+                ),
+              )
+            )
+              continue;
+            results.push(createResult(input.data, bundle, row.finished_at, row.result.variantId));
           } catch {
             /* An unreadable/tampered attempt is not an official result. */
           }

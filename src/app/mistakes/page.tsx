@@ -1,4 +1,5 @@
 "use client";
+import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
 import { ArrowRight, Check, NotebookPen, RotateCcw } from "lucide-react";
@@ -93,16 +94,19 @@ export default function MistakesPage() {
                   <span>{formatDate(item.lastMissedAt)}</span>
                 </div>
                 <h3>{context?.activity.title ?? "Atividade"}</h3>
-                <small>{course.title} · {course.languageCode.toUpperCase()}{topic ? ` · ${topic.label}` : ""}</small>
+                <small>
+                  {course.title} · {course.languageCode.toUpperCase()}
+                  {topic ? ` · ${topic.label}` : ""}
+                </small>
                 <div className="mistake-comparison">
                   <div>
                     <span>SUA RESPOSTA</span>
-                    <p>{item.originalAnswer}</p>
+                    <LearningText as="p" textRole="user" text={item.originalAnswer} />
                   </div>
                   <div>
                     <span>FORMA ESPERADA</span>
                     <p>
-                      <Check size={16} /> {item.correctAnswer}
+                      <Check size={16} /> <LearningText text={item.correctAnswer} />
                       <SpeakButton text={item.correctAnswer} label="Ouvir forma esperada" />
                     </p>
                   </div>
@@ -120,9 +124,23 @@ export default function MistakesPage() {
                     <ol>
                       {history.map((entry) => (
                         <li key={entry.id}>
-                          <span>{formatDate(entry.at)} · {
-                            { exercise: "Exercício", writing: "Escrita", speaking: "Fala", review: "Revisão" }[entry.source]
-                          } · {entry.correct === null ? "Sem nota objetiva" : entry.correct ? "Acertou" : "Precisa rever"}</span>
+                          <span>
+                            {formatDate(entry.at)} ·{" "}
+                            {
+                              {
+                                exercise: "Exercício",
+                                writing: "Escrita",
+                                speaking: "Fala",
+                                review: "Revisão",
+                              }[entry.source]
+                            }{" "}
+                            ·{" "}
+                            {entry.correct === null
+                              ? "Sem nota objetiva"
+                              : entry.correct
+                                ? "Acertou"
+                                : "Precisa rever"}
+                          </span>
                           <p>{entry.answer}</p>
                         </li>
                       ))}

@@ -1522,7 +1522,7 @@
     }
   },
   "language": {
-    "schemaVersion": "1.0",
+    "schemaVersion": "1.1",
     "contentVersion": "1.0.0",
     "id": "en",
     "identity": {
@@ -1552,16 +1552,17 @@
         "name": "Inglês do Reino Unido"
       }
     ],
-    "capabilities": {
-      "speechRecognition": true,
-      "textToSpeech": true,
-      "pronunciationAssessment": true,
-      "regionalVariants": true,
+    "linguisticFeatures": {
       "romanization": false,
       "tones": false,
       "grammaticalGender": false
     },
     "speech": {
+      "support": {
+        "speechRecognition": true,
+        "textToSpeech": true,
+        "pronunciationAssessment": true
+      },
       "defaultVariant": "general",
       "providers": {
         "azure": {
@@ -1603,10 +1604,6 @@
         "enabled": true,
         "source": "fundamentals/regional-variants.json"
       }
-    },
-    "strategies": {
-      "textTokenizer": "latin-word-v1",
-      "answerNormalizer": "default-latin-v1"
     }
   },
   "moduleData": {

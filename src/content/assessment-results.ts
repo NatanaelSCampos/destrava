@@ -21,6 +21,7 @@ export const assessedAnswerSchema = z.object({
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
   correctAnswer: z.string().optional(),
   explanation: z.string().optional(),
+  variantId: z.string().min(1).optional(),
 });
 export const serverAssessmentResultSchema = z
   .object({
@@ -32,6 +33,7 @@ export const serverAssessmentResultSchema = z
     unitId: z.string().optional(),
     lessonId: z.string().optional(),
     contentVersion: z.string(),
+    variantId: z.string().min(1).optional(),
     startedAt: z.iso.datetime(),
     finishedAt: z.iso.datetime(),
     source: z.literal("server"),

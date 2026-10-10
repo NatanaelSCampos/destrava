@@ -1,5 +1,8 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+import { LearningText } from "@/components/learning/text-presentation";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
@@ -20,6 +23,7 @@ import { SpeakButton } from "@/components/audio/speak-button";
 import type { PlannedReviewItem } from "@/domain/study/study-state";
 import { wordReviewCard } from "@/domain/review/review-card";
 import type { VisualCue } from "@/content/visual-vocabulary";
+import type { TextRole } from "@/engine/presentation/text";
 
 const visualIcons = {
   home: House,
@@ -45,6 +49,18 @@ type ReviewItem = {
   visual?: VisualCue;
 };
 
+function reviewTextRole(item: ReviewItem, flipped: boolean): TextRole {
+  if (item.kind === "word") {
+    const translation = flipped && item.presentation === "standard";
+    const sourcePrompt =
+      !flipped && ["reverse", "audio", "image"].includes(item.presentation ?? "");
+    return translation || sourcePrompt ? "source" : "fragment";
+  }
+  if (!flipped && item.kind === "structure") return "source";
+  if (!flipped && item.kind === "mistake") return "user";
+  return "target";
+}
+
 export function ReviewQueue({
   mode = "due",
   plannedItems,
@@ -54,8 +70,16 @@ export function ReviewQueue({
   plannedItems?: PlannedReviewItem[];
   onComplete?: () => void;
 }) {
-  const { course, resources, vocabularyItems, state, reviewWord, reviewError, reviewStructureCard } =
-    useStudy();
+  const textAttrs = useTextPresentation();
+  const {
+    course,
+    resources,
+    vocabularyItems,
+    state,
+    reviewWord,
+    reviewError,
+    reviewStructureCard,
+  } = useStudy();
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [finishedIds, setFinishedIds] = useState<string[]>([]);
@@ -132,16 +156,24 @@ export function ReviewQueue({
     const pronunciationCard = (id: string): ReviewItem[] => {
       const target = state.pronunciationReviews?.[id];
       const href = target && activityHref(target.activityId);
-      return target && href ? [{
-        kind: "pronunciation", id,
-        front: target.term,
-        back: target.referenceText,
-        example: target.lastAccuracy === null ? "Trecho não reconhecido" : `Última clareza: ${Math.round(target.lastAccuracy)}/100`,
-        frontLabel: "PRONÚNCIA PARA PRATICAR",
-        backLabel: "FRASE DA ATIVIDADE",
-        spokenText: target.referenceText,
-        activityHref: href,
-      }] : [];
+      return target && href
+        ? [
+            {
+              kind: "pronunciation",
+              id,
+              front: target.term,
+              back: target.referenceText,
+              example:
+                target.lastAccuracy === null
+                  ? "Trecho não reconhecido"
+                  : `Última clareza: ${Math.round(target.lastAccuracy)}/100`,
+              frontLabel: "PRONÚNCIA PARA PRATICAR",
+              backLabel: "FRASE DA ATIVIDADE",
+              spokenText: target.referenceText,
+              activityHref: href,
+            },
+          ]
+        : [];
     };
     if (plannedItems) {
       return plannedItems.flatMap((selected): ReviewItem[] =>
@@ -177,9 +209,12 @@ export function ReviewQueue({
           )
           .flatMap((entry) => structureCard(entry.id))
       : [];
-    const pronunciation = mode === "new" ? [] : Object.values(state.pronunciationReviews ?? {})
-      .filter((entry) => ReviewScheduler.isDue(entry.schedule))
-      .flatMap((entry) => pronunciationCard(entry.id));
+    const pronunciation =
+      mode === "new"
+        ? []
+        : Object.values(state.pronunciationReviews ?? {})
+            .filter((entry) => ReviewScheduler.isDue(entry.schedule))
+            .flatMap((entry) => pronunciationCard(entry.id));
     return [...mistakes, ...pronunciation, ...structures, ...words];
   }, [
     mode,
@@ -235,18 +270,31 @@ export function ReviewQueue({
   if (item.kind === "pronunciation")
     return (
       <div className="review-queue panel">
-        <span className="eyebrow">PRONÚNCIA · {finishedIds.length + 1} DE {items.length}</span>
+        <span className="eyebrow">
+          PRONÚNCIA · {finishedIds.length + 1} DE {items.length}
+        </span>
         <h2>{item.front}</h2>
-        <p>Ouça a frase e grave uma nova tentativa na atividade. A data da revisão muda somente depois da avaliação da gravação.</p>
-        <p lang={course.languageCode}>{item.back}</p>
+        <p>
+          Ouça a frase e grave uma nova tentativa na atividade. A data da revisão muda somente
+          depois da avaliação da gravação.
+        </p>
+        <p {...textAttrs()}>{item.back}</p>
         <SpeakButton text={item.spokenText} label="Ouvir frase" withLabel />
         <small>{item.example}</small>
         <div className="flashcard-actions">
-          <Link href={item.activityHref ?? "#"} className="primary-button">Gravar nova tentativa <ArrowRight size={16} /></Link>
-          <button type="button" className="secondary-button" onClick={() => {
-            setFinishedIds((current) => [...current, `${item.kind}-${item.id}`]);
-            setIndex(0);
-          }}>Ver próximo item</button>
+          <Link href={item.activityHref ?? "#"} className="primary-button">
+            Gravar nova tentativa <ArrowRight size={16} />
+          </Link>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              setFinishedIds((current) => [...current, `${item.kind}-${item.id}`]);
+              setIndex(0);
+            }}
+          >
+            Ver próximo item
+          </button>
         </div>
       </div>
     );
@@ -272,8 +320,20 @@ export function ReviewQueue({
             <VisualIcon size={70} strokeWidth={1.55} />
           </span>
         )}
-        <strong>{flipped ? item.back : item.front}</strong>
-        <p>{flipped ? item.example : "Toque para ver a resposta"}</p>
+        <LearningText
+          as="strong"
+          textRole={reviewTextRole(item, flipped)}
+          text={flipped ? item.back : item.front}
+        />
+        {flipped ? (
+          <LearningText
+            as="p"
+            textRole={item.kind === "word" ? "target" : "source"}
+            text={item.example}
+          />
+        ) : (
+          <p>Toque para ver a resposta</p>
+        )}
         <span className="flashcard-flip">
           <RotateCcw size={14} /> Virar cartão
         </span>

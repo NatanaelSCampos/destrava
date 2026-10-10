@@ -59,6 +59,8 @@ function AssessmentSelection() {
               ? "Escolha uma avaliação. Este curso não declarou um diagnóstico inicial."
               : "Este curso não possui avaliações declaradas."}
         </div>
+      ) : course.availability?.unavailableAssessmentIds?.includes(assessment.id) ? (
+        <div className="panel" role="status"><h2>Avaliação temporariamente indisponível</h2><p>Uma capacidade necessária à avaliação não está disponível. Isso não representa uma reprovação e nenhuma nota será registrada.</p></div>
       ) : assessment.method === "adaptive" ? (
         <AdaptiveAssessmentRunner key={assessment.id} assessment={assessment} />
       ) : (

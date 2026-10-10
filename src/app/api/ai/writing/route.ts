@@ -6,6 +6,7 @@ import { getAIProvider } from "@/domain/ai/ai-provider";
 import { findCourseBundle } from "@/content/course-registry";
 import { userCourseVariant } from "@/lib/user-course-variant";
 import { findActivity } from "@/content/schema";
+import { evaluateWritingText, TextRepresentationError } from "@/engine/text/representation";
 
 const inputSchema = z.object({
   courseId: z.string().min(1),
@@ -30,8 +31,35 @@ export async function POST(request: Request) {
   if (activity?.type !== "writing")
     return NextResponse.json({ error: "Atividade de escrita não encontrada." }, { status: 404 });
   try {
-    const variantId = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
-    const result = await getAIProvider().correctWriting({ ...parsed.data, course: bundle.course, language: bundle.language, sourceLanguage: bundle.coursePackage.sourceLanguage, variantId });
+    if (!evaluateWritingText(parsed.data.text, activity).accepted)
+      return NextResponse.json(
+        { error: "O texto não atende aos limites declarados nesta atividade." },
+        { status: 422 },
+      );
+  } catch (error) {
+    return NextResponse.json(
+      { error: "A medida de texto declarada está indisponível ou é inválida." },
+      {
+        status:
+          error instanceof TextRepresentationError && error.code === "UNAVAILABLE" ? 503 : 422,
+      },
+    );
+  }
+  try {
+    const variantId = await userCourseVariant(
+      guard.userId ?? null,
+      bundle.course.id,
+      bundle.language,
+      bundle.course,
+      activity.variant,
+    );
+    const result = await getAIProvider().correctWriting({
+      ...parsed.data,
+      course: bundle.course,
+      language: bundle.language,
+      sourceLanguage: bundle.coursePackage.sourceLanguage,
+      variantId,
+    });
     await logAIRequest("writing", result.usage, guard.reservationId ?? null);
     return NextResponse.json(result);
   } catch {

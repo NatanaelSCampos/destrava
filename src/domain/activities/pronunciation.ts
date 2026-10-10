@@ -1,4 +1,9 @@
 export type PronunciationFeedback = {
+  speechContext?: {
+    requestedVariant: string;
+    operationalLocale: string;
+    compatibility: "declared_mapping";
+  };
   referenceText: string;
   recognizedText: string;
   accuracy: number;

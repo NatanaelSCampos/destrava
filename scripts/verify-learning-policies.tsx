@@ -15,7 +15,8 @@ import { SupabaseStudyRepository } from "../src/repositories/supabase-study-repo
 import { nextActivity, buildStudyPlan } from "../src/domain/study/study-planner";
 import { PolicyChecklist } from "../src/components/activities/policy-checklist";
 
-const language = loadContent().find((item) => item.language.id === "xx-Test")!.language;
+const languageFixture = loadContent().find((item) => item.language.id === "xx-Test")!;
+const language = languageFixture.language;
 const participation = {
   id: "required",
   label: "Realizar introdução",
@@ -130,7 +131,7 @@ const base = coursePackageSchema.parse(raw);
 function fixture(change?: (course: CoursePackage) => void) {
   const copy = structuredClone(base);
   change?.(copy);
-  const bundle = runtimeBundle({ course: copy, language, moduleData: {} });
+  const bundle = runtimeBundle({ course: copy, language, moduleData: languageFixture.moduleData });
   return { ...bundle, exposed: publicCourse(bundle.course, language) };
 }
 const empty = () => readCourseState(null, base.id, language.id);
@@ -312,7 +313,8 @@ async function main() {
         minimumCount: 1,
       }),
     );
-    assert(!data.exposed.units[0].lessons[0].activities.some((item) => item.id === "speech"));
+    data.exposed = publicCourse(data.course, language, { dependencies: { "client.recording": { state: "unavailable", reason: "No recording API in synthetic device" } } });
+    assert(data.exposed.units[0].lessons[0].activities.some((item) => item.id === "speech"));
     const state = studied();
     state.completedActivityIds.push("speech");
     assert.equal(progress(data, state).completion.status, "unavailable");

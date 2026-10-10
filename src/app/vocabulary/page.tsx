@@ -1,5 +1,7 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Check, Search, Star } from "lucide-react";
@@ -8,8 +10,10 @@ import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { vocabularyContext, vocabularyOccurrences } from "@/content/vocabulary-context";
 import { normalizeDictionaryQuery, searchDictionary } from "@/domain/vocabulary/dictionary-search";
+import { LearningText, LearningInput } from "@/components/learning/text-presentation";
 
 export default function VocabularyPage() {
+  const textAttrs = useTextPresentation();
   const {
     course,
     resources,
@@ -24,8 +28,9 @@ export default function VocabularyPage() {
   useEffect(() => {
     const searched = normalizeDictionaryQuery(query);
     const exact = vocabularyItems.find((word) =>
-      [word.term, ...(resources.dictionary[word.id]?.aliases ?? [])]
-        .some((form) => normalizeDictionaryQuery(form) === searched),
+      [word.term, ...(resources.dictionary[word.id]?.aliases ?? [])].some(
+        (form) => normalizeDictionaryQuery(form) === searched,
+      ),
     );
     if (!searched || !exact) return;
     const timeout = window.setTimeout(() => recordVocabularySearch(exact.id), 900);
@@ -83,7 +88,7 @@ export default function VocabularyPage() {
       <div className="vocab-toolbar">
         <div className="vocab-search">
           <Search size={17} />
-          <input
+          <LearningInput
             aria-label="Buscar palavra"
             placeholder="Buscar palavra, significado ou variante…"
             value={query}
@@ -159,19 +164,28 @@ export default function VocabularyPage() {
                   text={item.term}
                   label={`Ouvir ${item.term}`}
                   className="vocab-sound"
-                  onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
+                  onPlay={() => {
+                    if (!item.catalogOnly) recordVocabularyAudio(item.id);
+                  }}
                 />
               </div>
-              <h3 lang={course.languageCode}>{item.term}</h3>
-              <p className="vocab-translation">{item.translation}</p>
+              <LearningText as="h3" text={item.term} />
+              <LearningText
+                as="p"
+                className="vocab-translation"
+                textRole="source"
+                text={item.translation}
+              />
               <div className="text-audio-row vocab-example-row">
-                <p className="vocab-example" lang={course.languageCode}>
+                <p className="vocab-example" {...textAttrs()}>
                   “{item.example}”
                 </p>
                 <SpeakButton
                   text={item.example}
                   label="Ouvir frase de exemplo"
-                  onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
+                  onPlay={() => {
+                    if (!item.catalogOnly) recordVocabularyAudio(item.id);
+                  }}
                 />
               </div>
               <details className="vocab-context">
@@ -183,11 +197,13 @@ export default function VocabularyPage() {
                   {context.senses.map((sense, index) => (
                     <li key={index}>
                       <strong>{sense.meaning}</strong>
-                      <span lang={course.languageCode}>{sense.example}</span>
+                      <LearningText as="span" text={sense.example} />
                       <SpeakButton
                         text={sense.example}
                         label="Ouvir exemplo"
-                        onPlay={() => { if (!item.catalogOnly) recordVocabularyAudio(item.id); }}
+                        onPlay={() => {
+                          if (!item.catalogOnly) recordVocabularyAudio(item.id);
+                        }}
                       />
                     </li>
                   ))}
@@ -195,7 +211,9 @@ export default function VocabularyPage() {
                 {context.regionalNote && (
                   <p>
                     {context.regionalNote}{" "}
-                    {resources.regionalContentHref && <Link href={resources.regionalContentHref}>Ver variações regionais</Link>}
+                    {resources.regionalContentHref && (
+                      <Link href={resources.regionalContentHref}>Ver variações regionais</Link>
+                    )}
                   </p>
                 )}
                 {occurrences.length > 0 && (
@@ -220,30 +238,34 @@ export default function VocabularyPage() {
               </details>
               <div className="vocab-card-footer">
                 <span className={`vocab-status ${status}`}>
-                  {item.catalogOnly ? "Variante regional" : status === "new"
-                    ? "Nova"
-                    : status === "learning"
-                      ? "Aprendendo"
-                      : status === "known"
-                        ? "Conhecida"
-                        : "Difícil"}
+                  {item.catalogOnly
+                    ? "Variante regional"
+                    : status === "new"
+                      ? "Nova"
+                      : status === "learning"
+                        ? "Aprendendo"
+                        : status === "known"
+                          ? "Conhecida"
+                          : "Difícil"}
                 </span>
-                {!item.catalogOnly && <div>
-                  <button
-                    aria-label={`Marcar ${item.term} como difícil`}
-                    title="Marcar como difícil"
-                    onClick={() => markVocabulary(item.id, "difficult")}
-                  >
-                    <Star size={16} fill={status === "difficult" ? "currentColor" : "none"} />
-                  </button>
-                  <button
-                    aria-label={`Marcar ${item.term} como conhecida`}
-                    title="Marcar como conhecida"
-                    onClick={() => markVocabulary(item.id, "known")}
-                  >
-                    <Check size={17} />
-                  </button>
-                </div>}
+                {!item.catalogOnly && (
+                  <div>
+                    <button
+                      aria-label={`Marcar ${item.term} como difícil`}
+                      title="Marcar como difícil"
+                      onClick={() => markVocabulary(item.id, "difficult")}
+                    >
+                      <Star size={16} fill={status === "difficult" ? "currentColor" : "none"} />
+                    </button>
+                    <button
+                      aria-label={`Marcar ${item.term} como conhecida`}
+                      title="Marcar como conhecida"
+                      onClick={() => markVocabulary(item.id, "known")}
+                    >
+                      <Check size={17} />
+                    </button>
+                  </div>
+                )}
               </div>
               {progress && (
                 <small className="vocab-due">

@@ -1,22 +1,34 @@
 import { z } from "zod";
-import { activityTypeSchema, normalizationRulesSchema, skillIdSchema, assessmentSchema, assessmentRefsSchema } from "./contracts";
+import {
+  activityTypeSchema,
+  normalizationRulesSchema,
+  skillIdSchema,
+  assessmentSchema,
+  assessmentRefsSchema,
+} from "./contracts";
+import { activityPayloadSchemas } from "./activity-data";
+import {
+  capabilityRequirementsSchema,
+  type CapabilityReport,
+  type CapabilityRequirement,
+} from "./capability-contracts";
 export { activityTypeSchema } from "./contracts";
 import { unitLearningPolicySchema } from "./learning-policies";
+import { coreSkillSchema } from "./contract-vocabulary";
+import { activityPresentationSchema } from "./text-presentation";
+import { activityVariantSchema, answerPolicySchema, variantIdsSchema } from "./variant-contracts";
 
-export const skillSchema = z.enum([
-  "vocabulary",
-  "grammar",
-  "listening",
-  "writing",
-  "speaking",
-  "reading",
-]);
+export const skillSchema = coreSkillSchema;
 export type Skill = z.infer<typeof skillSchema>;
 
 export type ActivityType = z.infer<typeof activityTypeSchema>;
 
 const activityBase = z.object({
   id: z.string().min(1),
+  variant: activityVariantSchema.optional(),
+  presentation: activityPresentationSchema.optional(),
+  answerPolicy: answerPolicySchema.optional(),
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   type: activityTypeSchema,
   title: z.string().min(1),
   prompt: z.string().default(""),
@@ -26,90 +38,41 @@ const activityBase = z.object({
   goals: z.array(z.string()).optional(),
   contexts: z.array(z.string()).optional(),
   minutes: z.number().positive(),
-  explanation: z.string().optional(),
   normalization: normalizationRulesSchema.optional(),
-  source: z.object({ book: z.enum(["student", "workbook"]), pages: z.string() }).optional(),
-  media: z
-    .discriminatedUnion("kind", [
-      z.object({ kind: z.literal("tts"), language: z.string().min(2) }),
-      z.object({
-        kind: z.literal("audio"),
-        url: z.string().min(1),
-        transcriptAvailableAfterAttempt: z.boolean().default(true),
-      }),
-    ])
-    .optional(),
 });
 
 export const activitySchema = z.discriminatedUnion("type", [
   activityBase.extend({
+    ...activityPayloadSchemas.lesson_content.shape,
     type: z.literal("lesson_content"),
-    body: z.string(),
-    highlights: z.array(z.string()).default([]),
   }),
   activityBase.extend({
+    ...activityPayloadSchemas.multiple_choice.shape,
     type: z.literal("multiple_choice"),
-    options: z.array(z.string()).min(2),
-    answer: z.string(),
   }),
-  activityBase.extend({ type: z.literal("true_false"), answer: z.enum(["true", "false"]) }),
   activityBase.extend({
+    ...activityPayloadSchemas.true_false.shape,
+    type: z.literal("true_false"),
+  }),
+  activityBase.extend({
+    ...activityPayloadSchemas.fill_blank.shape,
     type: z.literal("fill_blank"),
-    answer: z.string(),
-    accepted: z.array(z.string()).default([]),
-    fullAnswers: z.array(z.string()).default([]),
   }),
+  activityBase.extend({ ...activityPayloadSchemas.ordering.shape, type: z.literal("ordering") }),
   activityBase.extend({
-    type: z.literal("ordering"),
-    words: z.array(z.string()).min(2),
-    answer: z.string(),
-  }),
-  activityBase.extend({
+    ...activityPayloadSchemas.short_answer.shape,
     type: z.literal("short_answer"),
-    answer: z.string(),
-    accepted: z.array(z.string()).default([]),
   }),
-  activityBase.extend({
-    type: z.literal("writing"),
-    guidance: z.array(z.string()).default([]),
-    minWords: z.number().nonnegative(),
-  }),
-  activityBase.extend({
-    type: z.literal("listening"),
-    transcript: z.string(),
-    options: z.array(z.string()).min(2),
-    answer: z.string(),
-  }),
-  activityBase.extend({
-    type: z.literal("speaking"),
-    guidance: z.array(z.string()).default([]),
-    referenceText: z.string().min(1).optional(),
-  }),
-  activityBase.extend({
-    type: z.literal("flashcard"),
-    front: z.string(),
-    back: z.string(),
-    example: z.string(),
-  }),
-  activityBase.extend({
-    type: z.literal("review"),
-    body: z.string(),
-    steps: z.array(z.string()).default([]),
-    cards: z
-      .array(
-        z.object({
-          label: z.string(),
-          structure: z.string().optional(),
-          examples: z.array(z.string()).min(1),
-          practice: z.string(),
-        }),
-      )
-      .default([]),
-  }),
-  activityBase.extend({ type: z.literal("quiz"), body: z.string() }),
+  activityBase.extend({ ...activityPayloadSchemas.writing.shape, type: z.literal("writing") }),
+  activityBase.extend({ ...activityPayloadSchemas.listening.shape, type: z.literal("listening") }),
+  activityBase.extend({ ...activityPayloadSchemas.speaking.shape, type: z.literal("speaking") }),
+  activityBase.extend({ ...activityPayloadSchemas.flashcard.shape, type: z.literal("flashcard") }),
+  activityBase.extend({ ...activityPayloadSchemas.review.shape, type: z.literal("review") }),
+  activityBase.extend({ ...activityPayloadSchemas.quiz.shape, type: z.literal("quiz") }),
 ]);
 
 export const lessonSchema = z.object({
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   id: z.string(),
   interactiveLessonRef: z.string().optional(),
   slug: z.string(),
@@ -123,6 +86,7 @@ export const lessonSchema = z.object({
 });
 
 export const unitSchema = z.object({
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
   id: z.string(),
   slug: z.string(),
   title: z.string(),
@@ -137,10 +101,19 @@ export const unitSchema = z.object({
 });
 
 export const courseSchema = z.object({
+  capabilityRequirements: capabilityRequirementsSchema.optional(),
+  languageRequirements: capabilityRequirementsSchema.optional(),
+  capabilityReport: z.custom<CapabilityReport>().optional(),
+  capabilityRequests: z
+    .custom<Array<{ requirement: CapabilityRequirement; location: string }>>()
+    .optional(),
   id: z.string(),
   slug: z.string(),
   title: z.string(),
   languageCode: z.string().min(2),
+  sourceLanguage: z.string().optional(),
+  defaultVariant: z.string().optional(),
+  acceptedVariants: variantIdsSchema.optional(),
   level: z.string(),
   description: z.string(),
   contentVersion: z.string().default("legacy"),

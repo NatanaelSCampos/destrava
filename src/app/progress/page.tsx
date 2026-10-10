@@ -1,4 +1,5 @@
 "use client";
+import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
 import { ArrowRight, ChartNoAxesCombined, Target } from "lucide-react";
@@ -119,11 +120,7 @@ export default function ProgressPage() {
           <span className="eyebrow">
             <Target size={13} /> DOMÍNIO DA UNIDADE
           </span>
-          <h3>
-            {progress.isMastered
-              ? "Dominada"
-              : policyStatusLabels[progress.mastery.status]}
-          </h3>
+          <h3>{progress.isMastered ? "Dominada" : policyStatusLabels[progress.mastery.status]}</h3>
           <p>Realizar atividades, concluir a unidade e demonstrar domínio são marcos distintos.</p>
           <PolicyChecklist title="Conclusão" result={progress.completion} />
           <PolicyChecklist title="Domínio estimado" result={progress.mastery} />
@@ -144,53 +141,60 @@ export default function ProgressPage() {
           <div className="improvement-list">
             {improvements.map((item, index) => {
               const guidance = recommendationGuidance(course, state, item, resources);
-              const lessonActivityId = item.kind === "activity" && state.mistakes[item.id]
-                ? item.id
-                : item.kind === "review" ? firstDueMistake?.activityId : undefined;
-              return <div className="improvement-item" key={`${item.kind}-${item.id}`}>
-                <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <strong>{item.title}</strong>
-                  <p>{item.reason}</p>
-                </div>
-                <div className="improvement-actions">
-                  <Link href={recommendationLink(course.slug, item)} className="secondary-button">
-                    Praticar agora <ArrowRight size={15} />
-                  </Link>
-                  <details
-                    className="improvement-explanation"
-                    onToggle={(event) => {
-                      if (event.currentTarget.open)
-                        recordStudyEvent("explanation_opened", item.id, { courseId: course.id });
-                    }}
-                  >
-                    <summary>Ver explicação</summary>
-                    <p>{guidance.explanation}</p>
-                    {guidance.example && (
-                      <p>
-                        <strong>{item.kind === "image" ? "Observe:" : "Exemplo:"}</strong>{" "}
-                        <span lang={item.kind === "image" ? "pt-BR" : course.languageCode}>
-                          {guidance.example}
-                        </span>{" "}
-                        {item.kind !== "image" && (
-                          <SpeakButton text={guidance.example} label="Ouvir exemplo" />
-                        )}
-                      </p>
-                    )}
-                  </details>
-                  {featureFlags.AI_TUTOR && lessonActivityId && (
-                    <Link
-                      href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
-                      className="text-link"
-                    >
-                      Fazer microlição <ArrowRight size={15} />
+              const lessonActivityId =
+                item.kind === "activity" && state.mistakes[item.id]
+                  ? item.id
+                  : item.kind === "review"
+                    ? firstDueMistake?.activityId
+                    : undefined;
+              return (
+                <div className="improvement-item" key={`${item.kind}-${item.id}`}>
+                  <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.reason}</p>
+                  </div>
+                  <div className="improvement-actions">
+                    <Link href={recommendationLink(course.slug, item)} className="secondary-button">
+                      Praticar agora <ArrowRight size={15} />
                     </Link>
-                  )}
-                  {item.kind === "number" && (
-                    <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
-                  )}
+                    <details
+                      className="improvement-explanation"
+                      onToggle={(event) => {
+                        if (event.currentTarget.open)
+                          recordStudyEvent("explanation_opened", item.id, { courseId: course.id });
+                      }}
+                    >
+                      <summary>Ver explicação</summary>
+                      <p>{guidance.explanation}</p>
+                      {guidance.example && (
+                        <p>
+                          <strong>{item.kind === "image" ? "Observe:" : "Exemplo:"}</strong>{" "}
+                          <LearningText
+                            as="span"
+                            textRole={item.kind === "image" ? "source" : "target"}
+                            text={guidance.example}
+                          />{" "}
+                          {item.kind !== "image" && (
+                            <SpeakButton text={guidance.example} label="Ouvir exemplo" />
+                          )}
+                        </p>
+                      )}
+                    </details>
+                    {featureFlags.AI_TUTOR && lessonActivityId && (
+                      <Link
+                        href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
+                        className="text-link"
+                      >
+                        Fazer microlição <ArrowRight size={15} />
+                      </Link>
+                    )}
+                    {item.kind === "number" && (
+                      <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
+                    )}
+                  </div>
                 </div>
-              </div>;
+              );
             })}
           </div>
         ) : (
@@ -258,7 +262,15 @@ export default function ProgressPage() {
                     }}
                   />
                 </div>
-                <b>{!item.applicable ? "Não aplicável" : item.unavailable ? "Indisponível" : item.performance === null ? "Sem nota" : `${item.performance}%`}</b>
+                <b>
+                  {!item.applicable
+                    ? "Não aplicável"
+                    : item.unavailable
+                      ? "Indisponível"
+                      : item.performance === null
+                        ? "Sem nota"
+                        : `${item.performance}%`}
+                </b>
               </div>
             ))}
           </div>
@@ -272,23 +284,31 @@ export default function ProgressPage() {
           <h2>
             {progress.assessmentFinished
               ? `${progress.assessmentScore}% de acertos`
-              : progress.assessmentDefined ? "Um teste para fechar o ciclo" : "Sem avaliação final declarada"}
+              : progress.assessmentDefined
+                ? "Um teste para fechar o ciclo"
+                : "Sem avaliação final declarada"}
           </h2>
           <p>
             {progress.assessmentFinished
               ? "Veja os pontos que merecem outra revisão."
               : "Ao terminar as lições, confira o que já consegue usar sem consultar o conteúdo."}
           </p>
-          {unit.assessmentRefs.final && <Link
-            href={assessmentLink(unit.assessmentRefs.final)}
-            className="primary-button"
-          >
-            {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
-            <ArrowRight size={16} />
-          </Link>}
-          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && <Link href={assessmentLink(unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic!)} className="secondary-button">
-            Fazer diagnóstico adaptativo <ArrowRight size={16} />
-          </Link>}
+          {unit.assessmentRefs.final && (
+            <Link href={assessmentLink(unit.assessmentRefs.final)} className="primary-button">
+              {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
+              <ArrowRight size={16} />
+            </Link>
+          )}
+          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && (
+            <Link
+              href={assessmentLink(
+                unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic!,
+              )}
+              className="secondary-button"
+            >
+              Fazer diagnóstico adaptativo <ArrowRight size={16} />
+            </Link>
+          )}
           {progress.assessmentFinished && (
             <div className="assessment-strength">
               <strong>{weakSkills.length ? "Para revisar" : "Seu ponto forte"}</strong>

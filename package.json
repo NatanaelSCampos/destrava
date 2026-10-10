@@ -24,6 +24,10 @@
     "interactive:verify:remote": "node --env-file=.env.local --import tsx scripts/verify-interactive-session-remote.ts",
     "architecture:check": "node --import tsx scripts/check-architecture.ts",
     "contracts:verify": "node --import tsx scripts/verify-contract-vocabulary.ts",
+    "capabilities:verify": "node --import tsx scripts/verify-capabilities.tsx",
+    "text:verify": "node --import tsx scripts/verify-text-representation.tsx",
+    "text:verify:ui": "node --import tsx scripts/verify-text-ui.tsx",
+    "capabilities:catalog": "node --import tsx scripts/export-capability-catalog.ts",
     "session:verify": "node --import tsx scripts/verify-session-time.ts",
     "sync:verify": "node --import tsx scripts/verify-study-sync.ts",
     "checkpoint:prepare": "node scripts/prepare-local-checkpoint.mjs",
@@ -36,7 +40,11 @@
     "db:seed": "node --env-file=.env.local --import tsx scripts/seed-supabase.ts",
     "db:verify:remote": "node --env-file=.env.local --import tsx scripts/verify-content-remote.ts",
     "db:verify:local": "node scripts/run-local-checkpoint.mjs verify",
-    "format": "prettier --write src scripts package.json next.config.ts tsconfig.json postcss.config.mjs eslint.config.mjs"
+    "format": "prettier --write src scripts package.json next.config.ts tsconfig.json postcss.config.mjs eslint.config.mjs",
+    "variants:verify": "node --import tsx scripts/verify-variants.tsx",
+    "variants:verify:ui": "node --import tsx scripts/verify-variants-ui.tsx",
+    "presentation:verify": "node --import tsx scripts/verify-text-presentation.tsx",
+    "presentation:verify:ui": "node --import tsx scripts/verify-text-presentation-ui.tsx"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

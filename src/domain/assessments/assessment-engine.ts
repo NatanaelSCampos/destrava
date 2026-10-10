@@ -3,19 +3,30 @@ import type { AssessmentDefinition, NormalizationRules } from "@/content/contrac
 import type { AssessedAnswer, AssessmentResponse } from "@/content/assessment-results";
 import { resolveAssessment } from "@/content/assessment-references";
 import { gradeActivity } from "@/domain/activities/grader";
+import { evaluateWritingText, TextRepresentationError } from "@/engine/text/representation";
+import type { GradingContext } from "@/domain/activities/grader";
+import { requireLearningVariant } from "@/engine/variants/resolution";
 import {
   adaptiveAssessmentReport,
   nextAdaptiveItem,
   type AdaptiveAnswer,
 } from "@/domain/study/adaptive-assessment";
 
-export class AssessmentExecutionError extends Error {}
+export class AssessmentExecutionError extends Error {
+  constructor(
+    message: string,
+    public status = 422,
+  ) {
+    super(message);
+  }
+}
 
 export function evaluateAssessment(
   course: Course,
   assessmentId: string,
   responses: AssessmentResponse[],
   normalization: NormalizationRules,
+  context?: GradingContext,
 ) {
   const definition = resolveAssessment(course.assessments, assessmentId)!;
   const activities = new Map(
@@ -28,20 +39,46 @@ export function evaluateAssessment(
   const grade = (response: AssessmentResponse, skill?: AssessedAnswer["skill"]): AssessedAnswer => {
     const activity = activities.get(response.activityId);
     if (!activity) throw new AssessmentExecutionError("Atividade da avaliação não encontrada.");
+    let variantId: string | undefined;
+    if (context) {
+      try {
+        variantId = requireLearningVariant(
+          context.language,
+          context.course,
+          context.preference,
+          activity.variant,
+        ).variantId!;
+      } catch {
+        throw new AssessmentExecutionError(
+          "Contexto de variante indisponível; nenhuma nota foi registrada.",
+          503,
+        );
+      }
+    } else if (activity.variant || activity.answerPolicy)
+      throw new AssessmentExecutionError("Esta atividade exige contexto de variante.", 503);
     if (activity.type === "writing") {
-      const words = response.answer.trim() ? response.answer.trim().split(/\s+/).length : 0;
-      if (words < activity.minWords)
+      let accepted: boolean;
+      try {
+        accepted = evaluateWritingText(response.answer, activity).accepted;
+      } catch (error) {
+        throw new AssessmentExecutionError(
+          "A estratégia de medida da escrita está indisponível ou é inválida.",
+          error instanceof TextRepresentationError && error.code === "UNAVAILABLE" ? 503 : 422,
+        );
+      }
+      if (!accepted)
         throw new AssessmentExecutionError(
           "O texto ainda não atende à entrega exigida pela atividade.",
         );
       return {
         ...response,
+        ...(variantId ? { variantId } : {}),
         skill: "writing",
         correct: null,
         explanation: "Texto entregue; não integra a nota objetiva.",
       };
     }
-    const result = gradeActivity(activity, response.answer, normalization);
+    const result = gradeActivity(activity, response.answer, normalization, context);
     if (!result)
       throw new AssessmentExecutionError("Esta atividade não admite a correção declarada.");
     return { ...response, ...result, skill: skill ?? activity.skill };

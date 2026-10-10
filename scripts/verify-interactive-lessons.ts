@@ -56,7 +56,11 @@ assert.throws(() => validateInteractiveLessons(mutate((copy) => {
 assert.throws(() => validateInteractiveLessons(mutate((copy) => {
   copy.interactiveLessons[0].segments[2].activityRef = "missing";
 }), language), /Unknown interactive activityRef/);
-assert.throws(() => validateInteractiveLessons(course, testLanguage.language), /Required speaking unavailable/);
+assert.throws(() => validateInteractiveLessons(course, testLanguage.language), /language mismatch/);
+// Recording/manual transcription is distinct from provider speech recognition coverage.
+assert.doesNotThrow(() => validateInteractiveLessons(course, {
+  ...language, speech: { ...language.speech, support: { ...language.speech.support, speechRecognition: false } },
+}));
 assert.equal(lessonActionSchema.safeParse({ type: "seek", positionMs: 0 }).success, false);
 assert.equal(lessonActionSchema.safeParse({ type: "completeLesson" }).success, false);
 

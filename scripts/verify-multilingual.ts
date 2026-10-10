@@ -31,7 +31,7 @@ assert.equal(test.resources.vocabulary.length, 5);
 assert.equal(test.resources.alphabet.length, 4);
 assert.equal(test.resources.numbers.length, 0);
 assert.equal(speechLocale(test.language, "general", "recognitionLocale"), null);
-assert.equal(test.language.capabilities.textToSpeech, false);
+assert.equal(test.language.speech.support.textToSpeech, false);
 assert.equal(textToSpeechLocale(test.language, "general"), null);
 assert.equal(textToSpeechLocale({
   ...test.language,

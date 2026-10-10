@@ -1,6 +1,7 @@
 import { findCourseBundle } from "@/content/course-registry";
 import { createAssessmentApi } from "@/lib/assessment-api";
 import { sameAssessmentRequest } from "@/content/assessment-results";
+import { userCourseVariant } from "@/lib/user-course-variant";
 import {
   createSupabaseServerClient,
   getAuthenticatedUser,
@@ -12,6 +13,10 @@ const api = createAssessmentApi({
   resolveCourse: findCourseBundle,
   authenticatedUser: getAuthenticatedUser,
   requiresAuth: isSupabaseConfigured,
+  async variantPreference(userId, courseId) {
+    const bundle = findCourseBundle(courseId)!;
+    return userCourseVariant(userId, courseId, bundle.language, bundle.course);
+  },
   async save(userId, input, result) {
     const db = await createSupabaseServerClient();
     if (!db) throw new Error("Assessment database unavailable");
@@ -25,7 +30,8 @@ const api = createAssessmentApi({
     if (existing) {
       if (
         existing.result?.contentVersion !== result.contentVersion ||
-        !sameAssessmentRequest(existing.result?.input, input)
+        !sameAssessmentRequest(existing.result?.input, input) ||
+        (existing.result?.variantId && existing.result.variantId !== result.variantId)
       )
         throw new Error("Assessment attempt conflict");
       return existing.finished_at as string;
@@ -41,6 +47,7 @@ const api = createAssessmentApi({
         courseId: result.courseId,
         unitId: result.unitId,
         contentVersion: result.contentVersion,
+        variantId: result.variantId,
         purpose: result.purpose,
         method: result.method,
         passed: result.passed,

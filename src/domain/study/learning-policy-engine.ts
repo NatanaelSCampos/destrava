@@ -68,7 +68,7 @@ function aggregate(requirements: RequirementResult[]): PolicyResult {
 /** Pure AND evaluator. No host flags, providers, clock, scripts or persisted policy decisions. */
 export function evaluateUnitPolicies(unit: PublicUnit, state: StudyState, course?: PolicyCourse) {
   const policy = unit.learningPolicy;
-  if (!policy || !course || (state.courseId && state.courseId !== course.id)) {
+  if (!policy || !course || course.availability?.unavailableUnitIds?.includes(unit.id) || (state.courseId && state.courseId !== course.id)) {
     const unavailable: PolicyResult = { status: "unavailable", percentage: 0, requirements: [] };
     return { completion: unavailable, mastery: unavailable };
   }
@@ -149,6 +149,7 @@ export function evaluateUnitPolicies(unit: PublicUnit, state: StudyState, course
           result.activityIds = assessmentActivityIds(definition);
           // For course-scope assessments, availability is checked by the projection's explicit list.
           if (
+            course!.availability?.unavailableAssessmentIds?.includes(definition.id) ||
             result.activityIds.some((id) =>
               course!.availability?.unavailableActivityIds.includes(id),
             )

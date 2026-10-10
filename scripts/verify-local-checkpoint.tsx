@@ -164,7 +164,7 @@ function responses(bundle: Bundle, definition: AssessmentDefinition) {
   const answer = (id: string) => {
     const activity = activities.get(id)!;
     return activity.type === "writing"
-      ? Array(activity.minWords + 10)
+      ? Array((activity.minWords ?? 0) + 10)
           .fill("synthetic")
           .join(" ")
       : "answer" in activity
@@ -229,7 +229,7 @@ function completedState(bundle: Bundle) {
       state.writing.push({
         id: randomUUID(),
         activityId: activity.id,
-        text: Array(activity.minWords + 10)
+        text: Array((activity.minWords ?? 0) + 10)
           .fill("synthetic")
           .join(" "),
         createdAt: new Date().toISOString(),
@@ -418,6 +418,49 @@ async function main() {
       }
     },
   );
+  await check(
+    "5B preference persists locally and changing it does not reinterpret assessment evidence",
+    async () => {
+      const bundle = bundles.find((item) => item.language.id === "en")!;
+      const repo = repository(a, bundle);
+      const before = await results(a, bundle);
+      assert(before.length > 0);
+      assert(before.every((result) => result.variantId));
+      const state = structuredClone(saved.get(bundle.course.id)!);
+      state.profile.variantId = "en-GB";
+      await repo.save(
+        state,
+        publicCourse(bundle.course, bundle.language),
+        bundle.resources.vocabulary,
+      );
+      const loaded = await repo.load(bundle.course.id, bundle.language.id);
+      assert.equal(loaded?.profile.variantId, "en-GB");
+      const profile = await a.client
+        .from("user_course_profiles")
+        .select("variant_id")
+        .eq("user_id", a.id)
+        .eq("course_id", bundle.course.id)
+        .single();
+      assert.equal(profile.error, null);
+      assert.equal(profile.data?.variant_id, "en-GB");
+      const after = await results(a, bundle);
+      assert.deepEqual(
+        after.map((result) => [result.id, result.variantId, result.objectiveScore]),
+        before.map((result) => [result.id, result.variantId, result.objectiveScore]),
+      );
+      const activity = bundle.course.units
+        .flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities))
+        .find((item) => "answer" in item)!;
+      const graded = await api(a, "/api/grade", "POST", {
+        courseId: bundle.course.id,
+        activityId: activity.id,
+        answer: "answer" in activity ? activity.answer : "",
+      });
+      assert.equal(graded.status, 200);
+      assert.equal((await graded.json()).variantId, "en-GB");
+      saved.set(bundle.course.id, loaded!);
+    },
+  );
   await check("accounts/course isolation and forbidden cross-owner writes", async () => {
     const other = await b.client.from("user_course_state").select("state").eq("user_id", a.id);
     assert.equal(other.error, null);
@@ -593,9 +636,7 @@ async function main() {
       await browser.waitText("100%");
       await browser.waitText("Compreensão auditiva de pelo menos 80%");
       await browser.waitText("Cumprido");
-      await browser.evaluate(
-        "document.querySelector('.page-tour-close')?.click()",
-      );
+      await browser.evaluate("document.querySelector('.page-tour-close')?.click()");
       await browser.navigate(
         "/assessment?assessmentId=" + encodeURIComponent(en.course.assessmentRefs.diagnostic!),
       );

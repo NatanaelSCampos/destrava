@@ -6,6 +6,8 @@ import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";
 import { featureFlags } from "@/lib/feature-flags";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { evaluateWritingText, textMeasureLabel } from "@/engine/text/representation";
+import { LearningText, LearningTextarea } from "@/components/learning/text-presentation";
 
 type Writing = Extract<PublicActivity, { type: "writing" }>;
 type WritingFeedback = {
@@ -16,7 +18,13 @@ type WritingFeedback = {
   score: { grammar: number; vocabulary: number; clarity: number };
 };
 
-export function WritingEditor({ activity, onSaved }: { activity: Writing; onSaved?: (text: string) => void }) {
+export function WritingEditor({
+  activity,
+  onSaved,
+}: {
+  activity: Writing;
+  onSaved?: (text: string) => void;
+}) {
   const { course, language, state, saveWriting } = useStudy();
   const previous = state.writing.find((submission) => submission.activityId === activity.id);
   const [text, setText] = useState(previous?.text ?? "");
@@ -24,8 +32,15 @@ export function WritingEditor({ activity, onSaved }: { activity: Writing; onSave
   const [feedback, setFeedback] = useState<WritingFeedback | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-  const canSubmit = wordCount >= activity.minWords;
+  const [composing, setComposing] = useState(false);
+  let measurement: ReturnType<typeof evaluateWritingText> | undefined;
+  let measureError = "";
+  try {
+    measurement = evaluateWritingText(text, activity);
+  } catch {
+    measureError = "A estratégia de medida desta atividade não está disponível neste navegador.";
+  }
+  const canSubmit = measurement?.accepted === true && !composing;
 
   function save() {
     if (!canSubmit) return;
@@ -62,13 +77,22 @@ export function WritingEditor({ activity, onSaved }: { activity: Writing; onSave
         <strong>Para escrever</strong>
         <ul>
           {activity.guidance.map((item) => (
-            <li key={item}>{item}</li>
+            <LearningText
+              as="li"
+              key={item}
+              presentation={activity.presentation}
+              field="guidance"
+              textRole="source"
+              text={item}
+            />
           ))}
         </ul>
       </div>
       <div className="field">
         <label htmlFor={`writing-${activity.id}`}>{activity.title}</label>
-        <textarea
+        <LearningTextarea
+          presentation={activity.presentation}
+          onCompositionChange={setComposing}
           id={`writing-${activity.id}`}
           value={text}
           onChange={(event) => {
@@ -80,10 +104,19 @@ export function WritingEditor({ activity, onSaved }: { activity: Writing; onSave
           maxLength={3000}
         />
       </div>
-      {text.trim() && <SpeakButton text={text} label={`Ouvir seu texto em ${language.identity.nativeName}`} withLabel />}
+      {text.trim() && (
+        <SpeakButton
+          variant={activity.variant}
+          text={text}
+          label={`Ouvir seu texto em ${language.identity.nativeName}`}
+          withLabel
+        />
+      )}
       <div className="writing-footer">
-        <span className={wordCount < activity.minWords ? "muted" : "word-count-ok"}>
-          {wordCount} palavras · mínimo {activity.minWords}
+        <span className={canSubmit ? "word-count-ok" : "muted"} role="status">
+          {measurement
+            ? `${measurement.count} ${activity.textRequirement ? textMeasureLabel(measurement.requirement.measure) : "palavras"} · mínimo ${measurement.requirement.minimum}${measurement.requirement.maximum === undefined ? "" : ` · máximo ${measurement.requirement.maximum}`}`
+            : measureError}
         </span>
         <div>
           <button type="button" className="secondary-button" disabled={!canSubmit} onClick={save}>
@@ -121,10 +154,19 @@ export function WritingEditor({ activity, onSaved }: { activity: Writing; onSave
             <span className="pill">Gramática {feedback.score.grammar}/100</span>
           </div>
           <div className="text-audio-row">
-            <p className="corrected-text" lang={course.languageCode}>
-              {feedback.correctedText}
-            </p>
-            <SpeakButton text={feedback.correctedText} label="Ouvir texto revisado" withLabel />
+            <LearningText
+              as="p"
+              className="corrected-text"
+              presentation={activity.presentation}
+              field="answer"
+              text={feedback.correctedText}
+            />
+            <SpeakButton
+              variant={activity.variant}
+              text={feedback.correctedText}
+              label="Ouvir texto revisado"
+              withLabel
+            />
           </div>
           <div className="feedback-columns">
             <div>
@@ -133,9 +175,23 @@ export function WritingEditor({ activity, onSaved }: { activity: Writing; onSave
                 feedback.errors.map((item, index) => (
                   <p key={index}>
                     <strong>
-                      {item.excerpt} → {item.correction}
+                      <LearningText
+                        presentation={activity.presentation}
+                        textRole="fragment"
+                        text={item.excerpt}
+                      />
+                      {" → "}
+                      <LearningText
+                        presentation={activity.presentation}
+                        textRole="fragment"
+                        text={item.correction}
+                      />
                     </strong>
-                    <SpeakButton text={item.correction} label="Ouvir correção" />
+                    <SpeakButton
+                      variant={activity.variant}
+                      text={item.correction}
+                      label="Ouvir correção"
+                    />
                     <br />
                     {item.explanation}
                   </p>

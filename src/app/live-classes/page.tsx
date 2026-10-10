@@ -4,6 +4,7 @@ import { defaultCourseId, findCourseBundle } from "@/content/course-registry";
 import { InteractiveClassroom } from "@/components/interactive-lesson/interactive-classroom";
 import { curatedInteractiveExamples } from "@/content/interactive-examples";
 import "./live-classes.css";
+import { publicCourse } from "@/content/public";
 
 export default async function LiveClassesPage({ searchParams }: {
   searchParams: Promise<{ lesson?: string }>;
@@ -24,6 +25,8 @@ export default async function LiveClassesPage({ searchParams }: {
     <Link className="primary-button" href={`/course/${bundle.course.slug}`}>Voltar ao curso</Link>
   </div>;
   const media = Object.fromEntries(bundle.coursePackage.media.map(({ id, src, type }) => [id, { src, type }]));
+  if (publicCourse(bundle.course, bundle.language).availability?.unavailableInteractiveLessonIds?.includes(definition.id))
+    return <div className="live-empty panel" role="status"><h1>Aula temporariamente indisponível</h1><p>Uma capacidade obrigatória desta aula não está disponível. Seu progresso continua preservado.</p><Link className="secondary-button" href={`/course/${bundle.course.slug}`}>Voltar ao curso</Link></div>;
   return <InteractiveClassroom key={`${bundle.course.id}:${definition.id}`}
     definition={definition} courseId={bundle.course.id}
     contentVersion={bundle.coursePackage.contentVersion} media={media}

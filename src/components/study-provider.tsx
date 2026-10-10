@@ -50,6 +50,12 @@ import {
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { StudyProgressSync, type ProgressLoadStatus } from "@/domain/study/study-progress-sync";
 import { browserStudySyncCache } from "@/lib/study-sync-cache";
+import {
+  deviceCapabilitySnapshot,
+  serverDeviceSnapshot,
+  subscribeDeviceCapabilities,
+  courseWithDeviceAvailability,
+} from "@/lib/client-capabilities";
 import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
 import type { LanguagePackage, PublicAssessment } from "@/content/contracts";
 import {
@@ -145,6 +151,11 @@ export function StudyProvider({
   language: LanguagePackage;
   children: ReactNode;
 }) {
+  const deviceCapabilities = useSyncExternalStore(
+    subscribeDeviceCapabilities,
+    deviceCapabilitySnapshot,
+    serverDeviceSnapshot,
+  );
   const vocabularyItems = resources.vocabulary;
   const assessments = course.assessments;
   const [sync] = useState(
@@ -156,6 +167,17 @@ export function StudyProvider({
   );
   const snapshot = useSyncExternalStore(sync.subscribe, sync.getSnapshot, sync.getServerSnapshot);
   const { state, userId: authUserId, loadStatus: progressLoadStatus } = snapshot;
+  const visibleCourse = useMemo(
+    () =>
+      courseWithDeviceAvailability(
+        course,
+        deviceCapabilities,
+        language,
+        state.profile.variantId,
+        typeof window !== "undefined" ? (window.speechSynthesis?.getVoices() ?? []) : [],
+      ),
+    [course, deviceCapabilities, language, state.profile.variantId],
+  );
   const ready = progressLoadStatus !== "loading";
   const syncError = [snapshot.loadError, snapshot.saveError, snapshot.cacheError]
     .filter(Boolean)
@@ -692,7 +714,7 @@ export function StudyProvider({
 
   const value = useMemo(
     () => ({
-      course,
+      course: visibleCourse,
       resources,
       language,
       assessments,
@@ -732,7 +754,7 @@ export function StudyProvider({
       correctSessionDuration,
     }),
     [
-      course,
+      visibleCourse,
       resources,
       language,
       assessments,

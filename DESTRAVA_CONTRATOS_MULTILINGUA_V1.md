@@ -9,6 +9,8 @@
 > devem ser lidos junto do [Incremento 2](DESTRAVA_AVALIACOES_INCREMENTO_2.md) e
 > do [direcionamento atual](DESTRAVA_DIRECIONAMENTO_ARQUITETURAL.md). O [Incremento 3](DESTRAVA_POLITICAS_INCREMENTO_3.md) acrescenta `unit.learningPolicy` para conclusão e domínio independentes, sem concluir a publicação do contrato V1 completo.
 
+> **Incremento 4:** o perfil linguístico executado passou a schema 1.1, com `linguisticFeatures`, `speech.support` e `capabilityRequirements` separados. O curso continua no schema experimental 1.3, com requisitos opcionais tipados. Nomes de estratégias sem execução e o bloco antigo misturado de flags não constituem suporte. Os exemplos históricos abaixo não substituem os schemas atuais nem o [catálogo e relatório de capacidades](DESTRAVA_CAPACIDADES_INCREMENTO_4.md).
+
 ## 1. Objetivo
 
 O Destrava deve funcionar assim:
@@ -1585,3 +1587,35 @@ CoursePackage → ActivityContract → Destrava Core
 ```
 
 Este é o contrato-base para a evolução multilíngua do Destrava.
+
+# 30. Variantes e avaliação contextual implementadas em 5B
+
+O schema experimental de curso passa a aceitar 1.4, preservando 1.3 para os pacotes existentes. Os campos contextuais novos requerem 1.4 para que consumidores anteriores não ignorem uma restrição obrigatória. O perfil linguístico permanece 1.1.
+
+| Campo | Semântica | Visibilidade |
+| --- | --- | --- |
+| `CoursePackage.defaultVariant` | Padrão pedagógico efetivo; pode ser substituído por preferência aceita. | Pública |
+| `CoursePackage.acceptedVariants` | Conjunto não vazio, sem repetições, contido nas variantes da língua. Se ausente, todas as variantes do perfil são aceitas. O padrão deve pertencer ao conjunto. | Pública |
+| `Activity.variant.requiredVariant` | Exigência obrigatória, contida nas variantes aceitas do curso/atividade. Preserva a preferência salva. | Pública |
+| `Activity.variant.acceptedVariants` | Subconjunto aceito nesta atividade; seleção fora dele impede avaliação. | Pública |
+| `Activity.variant.speechFallback` | `exact` ou `same_language`; variante obrigatória proíbe o segundo. Ausência permite áudio auxiliar de outro locale apenas quando não há exigência. | Pública |
+| `Activity.evaluation.answerPolicy.alternatives` | Respostas completas autorizadas, com `text` e lista opcional `variants`. Ausência de lista autoriza a alternativa em todos os contextos aceitos. Não há inferência de sinônimos. | Privada |
+| `Activity.evaluation.answerPolicy.requiredForms` | Lista finita de formas completas exigidas para atividade objetiva; deve intersectar respostas declaradas em cada variante executável. Não é regex nem regra de gramática. | Privada |
+
+`src/content/variant-contracts.ts` é neutro e não importa domínio, UI, persistência, infraestrutura ou IA. O motor mantém precedência, referência e execução em `src/engine/variants`. A normalização técnica do 5A continua independente da equivalência declarada. A variante não substitui o locale de uma estratégia textual que já o exige explicitamente.
+
+A nova projeção de IA transmite autorização por status, sem exportar listas privadas. `declared_mapping` significa que um locale corresponde ao mapeamento do pacote; não certifica fidelidade de sotaque. Fallback e indisponibilidade são resultados explícitos. O resultado da avaliação persiste `variantId` no JSON existente e o replay não consulta a preferência atual.
+
+O catálogo 1.2.0 registra `linguistic.variant@1.0.0` e `linguistic.answers@1.0.0`. [Exemplos, testes, restrições e didática](DESTRAVA_VARIANTES_INCREMENTO_5B.md). A Parte 5C permanece pendente.
+
+# 31. Sistemas de escrita e apresentação implementados em 5C
+
+Curso aceita 1.5, preservando 1.3/1.4. Metadados novos de direção/idioma por campo exigem 1.5. Língua permanece 1.1; `writingSystem.direction` agora é consumido na apresentação, sem derivar direção do nome/ID da língua.
+
+`Activity.presentation.content` declara idioma/direção do texto alvo. `Activity.presentation.fields` pode declarar a apresentação de campos suportados, com precedência sobre o padrão do campo. Valores de direção são `ltr`, `rtl` e `auto`; schemas são estritos e não aceitam código, HTML ou CSS. Origem, texto alvo, entrada do aluno e controles da UI possuem contextos distintos. Campos explicativos existentes usam origem/auto; campos alvo usam o perfil; entrada desconhecida usa auto. Fonte/meta de apresentação não muda a variante pedagógica nem gabaritos.
+
+Exemplos e trechos do quadro/transcrição podem declarar `textPresentation`. Comparações têm `leftPresentation`/`rightPresentation`. Legendas preservam esse dado durante replay. A UI aplica dir e isolamento mantendo valores e IDs lógicos; não há reversão de caracteres/arrays. Inputs preservam comportamento nativo e guardam envio durante composição.
+
+O catálogo 1.3.0 registra `presentation.direction`, `presentation.bidi` e `text.input`, todas 1.0.0, com restrições explícitas. O produtor deve exigir essas capacidades quando forem mandatórias, inclusive para negociação com outros consumidores. Caracteres e capacidade de renderizar RTL não comprovam caligrafia, tipografia vertical, qualidade linguística ou suporte pedagógico completo.
+
+Controles Unicode legítimos são preservados. A inspeção sinaliza formatos potencialmente enganosos sem modificar texto canônico. Isolamento, escape de HTML e políticas de conteúdo são proteções diferentes; não há garantia geral contra spoofing. [Diagnóstico, exemplos, testes e limites de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). O Incremento 6 permanece aguardando autorização.

@@ -949,3 +949,49 @@ O idioma muda.
 O aluno muda.
 
 **O motor continua o mesmo.**
+
+### Capacidades — Fase 2, Incremento 4
+
+O motor possui registro estático de capacidades, versões exatas, schemas compartilhados e negociação de requisitos. Características do idioma, cobertura/configuração de voz, suporte do motor e políticas permanecem separados. Atividades obrigatórias indisponíveis ficam visíveis; não geram nota ou conclusão.
+
+```powershell
+npm.cmd run capabilities:verify
+npm.cmd run capabilities:catalog
+npm.cmd run architecture:check
+```
+
+O catálogo portável é [engine-capabilities-v1.json](contracts/engine-capabilities-v1.json). Consulte [inventário, decisões, testes e explicação didática](DESTRAVA_CAPACIDADES_INCREMENTO_4.md). O perfil de língua é schema 1.1; o curso permanece no schema experimental 1.3. Não foi implementado importador completo, API do Foundry ou Incremento 5. As mudanças desta etapa estão somente no ambiente local.
+
+### Texto — Incremento 5A
+
+Ordenação usa identidades por ocorrência, junção literal declarada e prova canônica privada. Escrita pode declarar medida e limites; `minWords` mantém o comportamento legado. O catálogo 1.1.0 publica schemas por versão para `activity.ordering`/`activity.writing` e as capacidades `text.reconstruction`/`text.measurement`.
+
+```powershell
+npm.cmd run text:verify
+npm.cmd run text:verify:ui
+```
+
+Veja [diagnóstico, exemplos, propriedades e limitações](DESTRAVA_TEXTO_INCREMENTO_5A.md). Essa entrega preservou língua 1.1 e curso 1.3. O estado posterior de variantes está descrito abaixo.
+
+### Variantes — Incremento 5B
+
+O curso preserva seu padrão no runtime. A resolução central aplica a exigência da atividade, a preferência válida e o padrão do curso/idioma, com diagnósticos. Alternativas autorizadas são dados privados; normalização e IA não criam equivalências. Áudio de outra variante tem aviso e é bloqueado quando a atividade exige fidelidade. Avaliações recuperam a variante originalmente persistida.
+
+```powershell
+npm.cmd run variants:verify
+npm.cmd run variants:verify:ui
+npm.cmd run checkpoint:verify
+```
+
+[Entrega, contratos, testes e explicação didática](DESTRAVA_VARIANTES_INCREMENTO_5B.md). Curso 1.4 exige os novos campos contextuais; cursos 1.3 continuam aceitos. Catálogo 1.2.0 com 41 entradas. IA e voz foram testadas com mocks; persistência foi homologada no Supabase local com contas sintéticas. Revisão local em `http://127.0.0.1:3000/settings`. O estado posterior de 5C está descrito abaixo.
+
+### Apresentação multilíngue — Incremento 5C
+
+A interface permanece em português/LTR. Textos e entradas educacionais usam a direção do perfil e metadados por campo, com isolamento bidirecional e preservação dos valores lógicos. Enter não envia a resposta durante composição; tokens mantêm suas identidades/reconstrução do 5A. O quadro da aula particular separa exemplos, comparações, traduções e legendas.
+
+```powershell
+npm.cmd run presentation:verify
+npm.cmd run presentation:verify:ui
+```
+
+[Diagnóstico, exemplos, testes, referências W3C e desafio de aprendizado](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). Curso 1.5 exige os metadados novos; 1.3/1.4 continuam aceitos. Catálogo 1.3.0 com 44 entradas. A apresentação RTL usa fixtures sintéticas; não foi instalado um curso real novo. Revisão normal em `http://127.0.0.1:3000`; IMEs, fontes e leitores de tela reais continuam pendentes. O Incremento 6 depende de autorização.

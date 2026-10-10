@@ -27,7 +27,7 @@ export function SelectionAudio() {
     return () => document.removeEventListener("selectionchange", update);
   }, []);
 
-  if (!text || !language.capabilities.textToSpeech) return null;
+  if (!text || !language.speech.support.textToSpeech) return null;
 
   return (
     <div className="selection-audio" onPointerDown={(event) => event.preventDefault()}>

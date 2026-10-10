@@ -38,6 +38,7 @@ export type Attempt = {
   skill: Skill;
   createdAt: string;
   sessionId: string | null;
+  variantId?: string;
 };
 
 export type VocabularyProgress = {
@@ -246,7 +247,7 @@ export const initialStudyState: StudyState = {
     daysPerWeek: 4,
     level: "A1",
     priorKnowledge: "none",
-    variantId: "general",
+    variantId: "",
     onboarded: false,
   },
   completedActivityIds: [],
@@ -595,6 +596,7 @@ export function recordAttempt(
     activityId: activity.id,
     answer,
     correct: result.correct,
+    ...(result.variantId ? { variantId: result.variantId } : {}),
     skill: activity.skill,
     createdAt,
     sessionId: state.activeSessionId,
@@ -840,6 +842,7 @@ export function recordServerAssessment(
     if (!activity) continue;
     if (answer.correct !== null)
       next = recordAttempt(next, activity, answer.answer, {
+        variantId: answer.variantId,
         correct: answer.correct,
         correctAnswer: answer.correctAnswer ?? "",
         explanation: answer.explanation ?? "",

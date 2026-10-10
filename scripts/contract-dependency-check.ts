@@ -177,6 +177,7 @@ export function inspectContractDependencies(
 
 export function checkContentContractDependencies(
   workspace = process.cwd(),
+  boundary = { roots: ["src/content/contracts.ts"], directories: ["src/content/"] },
 ): ContractDependencyReport {
   const configFile = ts.readConfigFile(join(workspace, "tsconfig.json"), ts.sys.readFile);
   if (configFile.error)
@@ -190,7 +191,7 @@ export function checkContentContractDependencies(
     );
   const label = (file: string) => relative(workspace, file).replaceAll("\\", "/");
   const report = inspectContractDependencies({
-    roots: [resolve(workspace, "src/content/contracts.ts")],
+    roots: boundary.roots.map((root) => resolve(workspace, root)),
     read: (file) => readFileSync(file, "utf8"),
     resolve: (from, specifier) => {
       const result = ts.resolveModuleName(specifier, from, config.options, ts.sys).resolvedModule;
@@ -201,7 +202,7 @@ export function checkContentContractDependencies(
           }
         : null;
     },
-    allowedFile: (file) => label(file).startsWith("src/content/"),
+    allowedFile: (file) => boundary.directories.some((directory) => label(file).startsWith(directory)),
   });
   return {
     files: report.files.map(label),

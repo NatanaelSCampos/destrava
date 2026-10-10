@@ -126,7 +126,7 @@ function assertUnique(ids: string[], label: string) {
 }
 
 function validateReferences(course: CoursePackage, language: LanguagePackage) {
-  if (course.schemaVersion !== "1.3" || language.schemaVersion !== "1.0")
+  if (!["1.3", "1.4", "1.5"].includes(course.schemaVersion) || language.schemaVersion !== "1.1")
     throw new Error(`Unsupported package schema: ${course.id}`);
   if (
     course.defaultVariant &&
@@ -227,20 +227,6 @@ function validateReferences(course: CoursePackage, language: LanguagePackage) {
   for (const media of course.media)
     if (media.src.startsWith("/") && !existsSync(join(process.cwd(), "public", media.src.slice(1))))
       throw new Error(`Missing media file: ${media.src}`);
-  for (const variant of language.variants) {
-    const provider = language.speech.providers.azure?.[variant.id];
-    if (language.capabilities.speechRecognition && !provider?.recognitionLocale)
-      throw new Error(`Missing Azure recognition configuration: ${language.id}/${variant.id}`);
-    if (
-      language.capabilities.pronunciationAssessment &&
-      !provider?.assessmentLocale &&
-      variant.id === language.speech.defaultVariant
-    )
-      throw new Error(`Missing Azure assessment configuration: ${language.id}/${variant.id}`);
-    if (
-      language.capabilities.textToSpeech &&
-      !Object.values(language.speech.providers).some((locales) => locales[variant.id]?.ttsLocale)
-    )
-      throw new Error(`Missing TTS configuration: ${language.id}/${variant.id}`);
-  }
+  // Provider/locale absence is operational availability, not an incompatible content contract.
+  // serverCapabilityEnvironment checks it when the course/operation is selected.
 }

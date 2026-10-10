@@ -16,13 +16,12 @@ for (const { course, language } of loadContent()) {
           if (!introducedConcepts.has(concept)) warnings.push(`${label}: concept ${concept} appears before introduction`);
         if (activity.type === "listening" && !activity.skills.includes("listening"))
           errors.push(`${label}: listening activity lacks listening skill`);
-        if (activity.type === "listening" && !language.capabilities.textToSpeech &&
+        if (activity.type === "listening" && !language.speech.support.textToSpeech &&
+            (activity.payload.media as { kind?: string } | undefined)?.kind !== "audio" &&
             !(activity.media ?? []).some((id) => course.media.some((item) => item.id === id && item.type === "audio")))
           errors.push(`${label}: listening activity has no audio source`);
         if (activity.type === "speaking" && !activity.skills.includes("speaking"))
           errors.push(`${label}: speaking activity lacks speaking skill`);
-        if (activity.type === "speaking" && !language.capabilities.speechRecognition)
-          errors.push(`${label}: speaking activity requires speech recognition`);
         if (activity.type === "writing" && !activity.skills.includes("writing"))
           errors.push(`${label}: writing activity lacks writing skill`);
         const payload = activity.payload;

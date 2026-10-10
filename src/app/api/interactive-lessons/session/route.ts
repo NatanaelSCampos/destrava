@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { publicCourse } from "@/content/public";
 import { z } from "zod";
 import { boardElementSchema } from "@/content/contracts";
 import { findCourseBundle } from "@/content/course-registry";
@@ -64,6 +65,8 @@ export async function POST(request: Request) {
   const resolved = resolve(courseId, lessonId);
   if (!resolved) return NextResponse.json({ error: "Aula não encontrada." }, { status: 404 });
   const { bundle, definition } = resolved;
+  if (publicCourse(bundle.course, bundle.language).availability?.unavailableInteractiveLessonIds?.includes(definition.id))
+    return NextResponse.json({ error: "Uma capacidade necessária à aula está indisponível. Nenhum progresso foi alterado." }, { status: 503 });
   const segment = definition.segments[runtime.segmentIndex];
   const segmentIds = new Set(definition.segments.map((item) => item.id));
   const canonicalPath = runtime.runtimePath.filter((node) => node.kind === "canonical").map((node) => node.segmentId);

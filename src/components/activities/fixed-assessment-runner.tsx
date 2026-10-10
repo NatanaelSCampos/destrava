@@ -26,6 +26,8 @@ export function FixedAssessmentRunner({ assessment }: { assessment: FixedAssessm
     ),
   );
   const current = activities.get(assessment.activityIds[index]);
+  if (course.availability?.unavailableAssessmentIds?.includes(assessment.id))
+    return <div className="panel" role="status">Esta avaliação está temporariamente indisponível. Nenhuma nota será registrada.</div>;
   if (assessment.activityIds.some((id) => !activities.has(id)))
     return (
       <div className="empty-state">Uma atividade exigida por esta avaliação está indisponível.</div>

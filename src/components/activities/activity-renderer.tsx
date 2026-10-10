@@ -10,15 +10,64 @@ import { SpeakingRecorder } from "./speaking-recorder";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { GradeResult } from "@/domain/activities/grader";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
+import { resolveLearningVariant } from "@/engine/variants/resolution";
+import { variantLabel } from "@/content/language-variant";
+import { LearningText } from "@/components/learning/text-presentation";
 
-export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWritingSaved }: {
+export function ActivityRenderer({
+  activity,
+  onAssessed,
+  onSpeakingSaved,
+  onWritingSaved,
+}: {
   activity: PublicActivity;
   onAssessed?: (answer: string, result: GradeResult) => void;
   onWritingSaved?: (text: string) => void;
-  onSpeakingSaved?: (result?: { submissionId: string; transcription: string; feedback?: PronunciationFeedback }) => void;
+  onSpeakingSaved?: (result?: {
+    submissionId: string;
+    transcription: string;
+    feedback?: PronunciationFeedback;
+  }) => void;
 }) {
   const { course, language, state, completeActivity } = useStudy();
   const done = state.completedActivityIds.includes(activity.id);
+  const variant = resolveLearningVariant(
+    language,
+    course,
+    state.profile.variantId,
+    activity.variant,
+  );
+  if (variant.status === "invalid")
+    return (
+      <article className="activity-panel panel" role="status">
+        <h2>{activity.title}</h2>
+        <p>
+          Esta atividade exige uma variante que não está selecionada ou possui configuração
+          inválida. Confira suas preferências. Nenhuma resposta foi avaliada.
+        </p>
+      </article>
+    );
+  if (course.availability?.unavailableActivityIds.includes(activity.id))
+    return (
+      <article className="activity-panel panel" aria-label={activity.title}>
+        <div className="activity-top">
+          <div>
+            <span className="eyebrow">ATIVIDADE INDISPONÍVEL</span>
+            <h2>{activity.title}</h2>
+          </div>
+        </div>
+        <div className="activity-main" role="status">
+          <p>
+            {course.availability.reasons?.[activity.id]?.[0] ??
+              "Esta atividade está temporariamente indisponível."}
+          </p>
+          <p className="muted">
+            A atividade continua no curso. Esta indisponibilidade não conta como erro nem como
+            conclusão.
+          </p>
+        </div>
+      </article>
+    );
   return (
     <article className="activity-panel panel">
       <div className="activity-top">
@@ -26,13 +75,39 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
           <span className="eyebrow">
             <BookOpen size={13} /> ATIVIDADE
           </span>
-          <h2>{activity.title}</h2>
-          <p>{activity.prompt}</p>
-          {language.capabilities.textToSpeech && !(activity.type === "review" && activity.cards.length > 0) && (
-            <small className="audio-selection-hint">
-              Selecione uma palavra ou frase para ouvir.
+          <LearningText
+            as="h2"
+            presentation={activity.presentation}
+            field="title"
+            textRole="source"
+            text={activity.title}
+          />
+          <LearningText
+            as="p"
+            presentation={activity.presentation}
+            field="prompt"
+            textRole="source"
+            text={activity.prompt}
+          />
+          {activity.variant?.requiredVariant && (
+            <small>
+              Esta atividade usa {variantLabel(language, variant.variantId, course)}. Sua
+              preferência geral permanece salva.
             </small>
           )}
+          {variant.diagnostics.length > 0 && (
+            <p role="status">
+              {variant.diagnostics.some((d) => d.code === "PREFERENCE_CONFLICT")
+                ? "A variante exigida pela atividade prevalece nesta prática."
+                : "Sua preferência não é aceita neste curso. Usando o padrão do curso; revise em Configurações."}
+            </p>
+          )}
+          {language.speech.support.textToSpeech &&
+            !(activity.type === "review" && activity.cards.length > 0) && (
+              <small className="audio-selection-hint">
+                Selecione uma palavra ou frase para ouvir.
+              </small>
+            )}
         </div>
         <span className="activity-time">
           <Clock3 size={14} /> {activity.minutes} min
@@ -47,7 +122,13 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
               <div className="review-guide">
                 <div className="review-guide-intro">
                   <span className="eyebrow">COMO FAZER</span>
-                  <p>{activity.body}</p>
+                  <LearningText
+                    as="p"
+                    presentation={activity.presentation}
+                    field="body"
+                    textRole="source"
+                    text={activity.body}
+                  />
                   <ol>
                     {activity.steps.map((step) => (
                       <li key={step}>{step}</li>
@@ -61,15 +142,31 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
                         <span>{String(index + 1).padStart(2, "0")}</span>
                         <h3>{card.label}</h3>
                       </div>
-                      {card.structure && <p className="review-card-structure">{card.structure}</p>}
+                      {card.structure && (
+                        <LearningText
+                          as="p"
+                          className="review-card-structure"
+                          presentation={activity.presentation}
+                          text={card.structure}
+                        />
+                      )}
                       <div className="review-card-example">
                         <small>
                           {card.examples.length > 1 ? "EXEMPLOS PARA OUVIR" : "EXEMPLO PARA OUVIR"}
                         </small>
                         {card.examples.map((example) => (
                           <div className="text-audio-row" key={example}>
-                            <p lang={course.languageCode}>{example}</p>
-                            <SpeakButton text={example} label={`Ouvir exemplo: ${example}`} />
+                            <LearningText
+                              as="p"
+                              presentation={activity.presentation}
+                              field="example"
+                              text={example}
+                            />
+                            <SpeakButton
+                              variant={activity.variant}
+                              text={example}
+                              label={`Ouvir exemplo: ${example}`}
+                            />
                           </div>
                         ))}
                       </div>
@@ -85,14 +182,34 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
                 </p>
               </div>
             ) : (
-              activity.body.split("\n\n").map((paragraph, index) => <p key={index}>{paragraph}</p>)
+              activity.body
+                .split("\n\n")
+                .map((paragraph, index) => (
+                  <LearningText
+                    as="p"
+                    key={index}
+                    presentation={activity.presentation}
+                    field="body"
+                    textRole="source"
+                    text={paragraph}
+                  />
+                ))
             )}
             {activity.type === "lesson_content" && activity.highlights.length > 0 && (
               <div className="phrase-strip">
                 {activity.highlights.map((phrase) => (
                   <span className="phrase-audio-item" key={phrase}>
-                    <span lang={course.languageCode}>{phrase}</span>
-                    <SpeakButton text={phrase} label={`Ouvir ${phrase}`} />
+                    <LearningText
+                      as="span"
+                      presentation={activity.presentation}
+                      field="highlights"
+                      text={phrase}
+                    />
+                    <SpeakButton
+                      variant={activity.variant}
+                      text={phrase}
+                      label={`Ouvir ${phrase}`}
+                    />
                   </span>
                 ))}
               </div>
@@ -133,9 +250,11 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
             />
           )
         )}
-        {activity.type === "writing" && <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} />}
+        {activity.type === "writing" && (
+          <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} />
+        )}
         {activity.type === "speaking" &&
-          (featureFlags.SPEAKING && language.capabilities.speechRecognition ? (
+          (featureFlags.SPEAKING ? (
             <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} />
           ) : (
             <p className="muted">A prática oral está temporariamente indisponível.</p>
@@ -144,14 +263,38 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWrit
           <div className="lesson-body">
             <div className="phrase-strip">
               <span className="phrase-audio-item">
-                <span lang={course.languageCode}>{activity.front}</span>
-                <SpeakButton text={activity.front} label={`Ouvir ${activity.front}`} />
+                <LearningText
+                  as="span"
+                  presentation={activity.presentation}
+                  field="front"
+                  text={activity.front}
+                />
+                <SpeakButton
+                  variant={activity.variant}
+                  text={activity.front}
+                  label={`Ouvir ${activity.front}`}
+                />
               </span>
-              <span>{activity.back}</span>
+              <LearningText
+                as="span"
+                presentation={activity.presentation}
+                field="back"
+                textRole="source"
+                text={activity.back}
+              />
             </div>
             <div className="text-audio-row">
-              <p lang={course.languageCode}>{activity.example}</p>
-              <SpeakButton text={activity.example} label="Ouvir frase de exemplo" />
+              <LearningText
+                as="p"
+                presentation={activity.presentation}
+                field="example"
+                text={activity.example}
+              />
+              <SpeakButton
+                variant={activity.variant}
+                text={activity.example}
+                label="Ouvir frase de exemplo"
+              />
             </div>
             <button className="primary-button" onClick={() => completeActivity(activity.id)}>
               Concluir flashcard

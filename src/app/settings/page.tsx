@@ -1,14 +1,27 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useEffect, useMemo, useState } from "react";
 import { Check, Download, LogOut, Settings2 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
-import { speechLocale as languageSpeechLocale, textToSpeechLocale } from "@/content/language-variant";
+import {
+  speechLocale as languageSpeechLocale,
+  textToSpeechLocale,
+} from "@/content/language-variant";
 import { AccountSecurity } from "@/components/auth/account-security";
 import { LinkedAccounts } from "@/components/auth/linked-accounts";
 import { SpeakButton } from "@/components/audio/speak-button";
-import { createLearningPreferences, goalLabels, learningSkills, skillLabels, type LearningGoal, type LearningSkill } from "@/domain/study/learning-preferences";
+import { resolveLearningVariant } from "@/engine/variants/resolution";
+import {
+  createLearningPreferences,
+  goalLabels,
+  learningSkills,
+  skillLabels,
+  type LearningGoal,
+  type LearningSkill,
+} from "@/domain/study/learning-preferences";
 import {
   normalizedVoiceLocale,
   readVoicePreference,
@@ -22,15 +35,18 @@ export default function SettingsPage() {
 }
 
 function SettingsContent() {
-  const { course, language, resources, state, authUserId, updateProfile, recordStudyEvent } = useStudy();
+  const textAttrs = useTextPresentation();
+  const { course, language, resources, state, authUserId, updateProfile, recordStudyEvent } =
+    useStudy();
   const [saved, setSaved] = useState(false);
   const [preferences, setPreferences] = useState(state.profile.learningPreferences);
-  const [region, setRegion] = useState(state.profile.variantId ?? language.speech.defaultVariant);
+  const resolution = resolveLearningVariant(language, course, state.profile.variantId);
+  const [region, setRegion] = useState(resolution.variantId ?? "");
   const [browserVoices, setBrowserVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceSupported, setVoiceSupported] = useState<boolean | null>(null);
   const [preferredVoiceId, setPreferredVoiceId] = useState("");
   const [voiceSaveError, setVoiceSaveError] = useState(false);
-  const speechLocale = textToSpeechLocale(language, region) ?? "";
+  const speechLocale = textToSpeechLocale(language, region, course) ?? "";
   const previewText = resources.alphabet[0]?.example ?? resources.vocabulary[0]?.example ?? "";
   const matchingVoices = useMemo(
     () =>
@@ -78,18 +94,24 @@ function SettingsContent() {
     setSaved(true);
   }
   function changePreferences(changes: Partial<Omit<typeof preferences, "skillWeights">>) {
-    setPreferences((current) => createLearningPreferences({
-      goal: changes.goal ?? current.goal,
-      contexts: changes.contexts ?? current.contexts,
-      skillPriorities: changes.skillPriorities ?? current.skillPriorities,
-      preferredSessionMinutes: changes.preferredSessionMinutes ?? current.preferredSessionMinutes,
-    }));
+    setPreferences((current) =>
+      createLearningPreferences({
+        goal: changes.goal ?? current.goal,
+        contexts: changes.contexts ?? current.contexts,
+        skillPriorities: changes.skillPriorities ?? current.skillPriorities,
+        preferredSessionMinutes: changes.preferredSessionMinutes ?? current.preferredSessionMinutes,
+      }),
+    );
     setSaved(false);
   }
   function togglePriority(skill: LearningSkill) {
-    changePreferences({ skillPriorities: preferences.skillPriorities.includes(skill)
-      ? preferences.skillPriorities.filter((item) => item !== skill)
-      : preferences.skillPriorities.length < 2 ? [...preferences.skillPriorities, skill] : preferences.skillPriorities });
+    changePreferences({
+      skillPriorities: preferences.skillPriorities.includes(skill)
+        ? preferences.skillPriorities.filter((item) => item !== skill)
+        : preferences.skillPriorities.length < 2
+          ? [...preferences.skillPriorities, skill]
+          : preferences.skillPriorities,
+    });
   }
   function exportData() {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
@@ -128,37 +150,82 @@ function SettingsContent() {
           <div className="settings-form">
             <div className="field">
               <label htmlFor="learning-goal">Onde quer usar {language.identity.nativeName}?</label>
-              <select id="learning-goal" value={preferences.goal}
-                onChange={(event) => changePreferences({ goal: event.target.value as LearningGoal, contexts: [] })}>
-                {resources.learningOptions.supportedGoals.map((goal) => <option key={goal} value={goal}>{goalLabels[goal]}</option>)}
+              <select
+                id="learning-goal"
+                value={preferences.goal}
+                onChange={(event) =>
+                  changePreferences({ goal: event.target.value as LearningGoal, contexts: [] })
+                }
+              >
+                {resources.learningOptions.supportedGoals.map((goal) => (
+                  <option key={goal} value={goal}>
+                    {goalLabels[goal]}
+                  </option>
+                ))}
               </select>
             </div>
-            {resources.learningOptions.contexts.some((item) => item.goal === preferences.goal) && <div className="field">
-              <label>Contextos (até três)</label>
-              <div className="settings-preference-choices">
-                {resources.learningOptions.contexts.filter((item) => item.goal === preferences.goal).map((item) =>
-                  <button key={item.id} type="button" aria-pressed={preferences.contexts.includes(item.id)}
-                    className={preferences.contexts.includes(item.id) ? "selected" : ""}
-                    onClick={() => changePreferences({ contexts: preferences.contexts.includes(item.id)
-                      ? preferences.contexts.filter((id) => id !== item.id)
-                      : preferences.contexts.length < 3 ? [...preferences.contexts, item.id] : preferences.contexts })}>
-                    {item.label}</button>)}
+            {resources.learningOptions.contexts.some((item) => item.goal === preferences.goal) && (
+              <div className="field">
+                <label>Contextos (até três)</label>
+                <div className="settings-preference-choices">
+                  {resources.learningOptions.contexts
+                    .filter((item) => item.goal === preferences.goal)
+                    .map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        aria-pressed={preferences.contexts.includes(item.id)}
+                        className={preferences.contexts.includes(item.id) ? "selected" : ""}
+                        onClick={() =>
+                          changePreferences({
+                            contexts: preferences.contexts.includes(item.id)
+                              ? preferences.contexts.filter((id) => id !== item.id)
+                              : preferences.contexts.length < 3
+                                ? [...preferences.contexts, item.id]
+                                : preferences.contexts,
+                          })
+                        }
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                </div>
               </div>
-            </div>}
+            )}
             <div className="field">
               <label>Prioridades (até duas, na ordem)</label>
               <div className="settings-preference-choices">
-                {learningSkills.map((skill) => <button key={skill} type="button"
-                  aria-pressed={preferences.skillPriorities.includes(skill)}
-                  className={preferences.skillPriorities.includes(skill) ? "selected" : ""}
-                  onClick={() => togglePriority(skill)}>{skillLabels[skill]}
-                  {preferences.skillPriorities.includes(skill) && ` · ${preferences.skillPriorities.indexOf(skill) + 1}ª`}</button>)}
+                {learningSkills.map((skill) => (
+                  <button
+                    key={skill}
+                    type="button"
+                    aria-pressed={preferences.skillPriorities.includes(skill)}
+                    className={preferences.skillPriorities.includes(skill) ? "selected" : ""}
+                    onClick={() => togglePriority(skill)}
+                  >
+                    {skillLabels[skill]}
+                    {preferences.skillPriorities.includes(skill) &&
+                      ` · ${preferences.skillPriorities.indexOf(skill) + 1}ª`}
+                  </button>
+                ))}
               </div>
             </div>
-            <div className="field"><label htmlFor="session-minutes">Tempo de cada sessão</label>
-              <select id="session-minutes" value={preferences.preferredSessionMinutes}
-                onChange={(event) => changePreferences({ preferredSessionMinutes: Number(event.target.value) as 5 | 15 | 30 | 45 })}>
-                {[5, 15, 30, 45].map((minutes) => <option key={minutes} value={minutes}>{minutes === 45 ? "45 min ou mais" : `${minutes} min`}</option>)}
+            <div className="field">
+              <label htmlFor="session-minutes">Tempo de cada sessão</label>
+              <select
+                id="session-minutes"
+                value={preferences.preferredSessionMinutes}
+                onChange={(event) =>
+                  changePreferences({
+                    preferredSessionMinutes: Number(event.target.value) as 5 | 15 | 30 | 45,
+                  })
+                }
+              >
+                {[5, 15, 30, 45].map((minutes) => (
+                  <option key={minutes} value={minutes}>
+                    {minutes === 45 ? "45 min ou mais" : `${minutes} min`}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="field">
@@ -166,7 +233,15 @@ function SettingsContent() {
               <div className="read-only-field">{course.level}</div>
             </div>
             <div className="field">
-              <label htmlFor="language-variant">Variante de {language.identity.nativeName} para estudar</label>
+              <label htmlFor="language-variant">
+                Variante de {language.identity.nativeName} para estudar
+              </label>
+              {resolution.diagnostics.length > 0 && (
+                <small role="status">
+                  Sua preferência anterior não é aceita neste curso. O padrão está selecionado;
+                  salve uma opção válida para atualizar sua preferência.
+                </small>
+              )}
               <select
                 id="language-variant"
                 value={region}
@@ -175,20 +250,23 @@ function SettingsContent() {
                   setSaved(false);
                 }}
               >
-                {language.variants.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
+                {language.variants
+                  .filter(
+                    (item) => !course.acceptedVariants || course.acceptedVariants.includes(item.id),
+                  )
+                  .map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
               </select>
               <small>
                 Usada nos exemplos regionais, no áudio disponível no navegador e no professor IA.
               </small>
-              {language.capabilities.pronunciationAssessment && !languageSpeechLocale(language, region, "assessmentLocale") && (
-                <small>
-                  A avaliação de pronúncia não está disponível para esta variante.
-                </small>
-              )}
+              {language.speech.support.pronunciationAssessment &&
+                !languageSpeechLocale(language, region, "assessmentLocale") && (
+                  <small>A avaliação de pronúncia não está disponível para esta variante.</small>
+                )}
             </div>
             <button className="primary-button" onClick={save}>
               <Check size={16} /> Salvar alterações
@@ -221,72 +299,78 @@ function SettingsContent() {
           )}
         </aside>
       </div>
-      {language.capabilities.textToSpeech && speechLocale && <section className="panel settings-panel audio-settings-panel">
-        <span className="eyebrow">ÁUDIO DE ESTUDO</span>
-        <h2>Escolha a voz que você prefere ouvir</h2>
-        <p>
-          As vozes vêm do navegador e do dispositivo. Por isso, os áudios podem soar diferentes no celular e no computador.
-        </p>
-        <div className="settings-form">
-          <div className="field">
-            <label htmlFor="language-voice">Voz para {language.identity.nativeName} ({speechLocale})</label>
-            <select
-              id="language-voice"
-              value={
-                matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId)
-                  ? preferredVoiceId
-                  : ""
-              }
-              disabled={!voiceSupported}
-              onChange={(event) => {
-                const next = event.target.value;
-                const didSave = saveVoicePreference(speechLocale, next);
-                setVoiceSaveError(!didSave);
-                if (didSave) setPreferredVoiceId(next);
-              }}
-            >
-              <option value="">Automática do navegador</option>
-              {matchingVoices.map((voice) => (
-                <option key={voiceId(voice)} value={voiceId(voice)}>
-                  {voice.name}
-                </option>
-              ))}
-            </select>
-            {voiceSupported === null ? (
-              <small>Carregando as vozes deste dispositivo…</small>
-            ) : !voiceSupported ? (
-              <small>Este navegador não oferece leitura de texto por voz.</small>
-            ) : matchingVoices.length === 0 ? (
-              <small>
-                Nenhuma voz {speechLocale} apareceu neste dispositivo. O navegador tentará outra voz
-                do idioma disponível; instale uma voz dessa variante para poder escolhê-la aqui.
-              </small>
-            ) : preferredVoiceId &&
-              !matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId) ? (
-              <small>
-                A voz salva não está disponível neste dispositivo. Será usada outra voz.
-              </small>
-            ) : (
-              <small>
-                A escolha é salva neste dispositivo e aplicada aos botões de áudio do app. Em outro
-                dispositivo, escolha a voz novamente.
-              </small>
-            )}
-            {voiceSaveError && (
-              <small role="alert">Não foi possível salvar a voz neste navegador.</small>
-            )}
+      {language.speech.support.textToSpeech && speechLocale && (
+        <section className="panel settings-panel audio-settings-panel">
+          <span className="eyebrow">ÁUDIO DE ESTUDO</span>
+          <h2>Escolha a voz que você prefere ouvir</h2>
+          <p>
+            As vozes vêm do navegador e do dispositivo. Por isso, os áudios podem soar diferentes no
+            celular e no computador.
+          </p>
+          <div className="settings-form">
+            <div className="field">
+              <label htmlFor="language-voice">
+                Voz para {language.identity.nativeName} ({speechLocale})
+              </label>
+              <select
+                id="language-voice"
+                value={
+                  matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId)
+                    ? preferredVoiceId
+                    : ""
+                }
+                disabled={!voiceSupported}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  const didSave = saveVoicePreference(speechLocale, next);
+                  setVoiceSaveError(!didSave);
+                  if (didSave) setPreferredVoiceId(next);
+                }}
+              >
+                <option value="">Automática do navegador</option>
+                {matchingVoices.map((voice) => (
+                  <option key={voiceId(voice)} value={voiceId(voice)}>
+                    {voice.name}
+                  </option>
+                ))}
+              </select>
+              {voiceSupported === null ? (
+                <small>Carregando as vozes deste dispositivo…</small>
+              ) : !voiceSupported ? (
+                <small>Este navegador não oferece leitura de texto por voz.</small>
+              ) : matchingVoices.length === 0 ? (
+                <small>
+                  Nenhuma voz {speechLocale} apareceu neste dispositivo. Uma voz de outra variante
+                  pode servir como apoio, com aviso ao reproduzir. Atividades que exigem a variante
+                  bloqueiam esse fallback.
+                </small>
+              ) : preferredVoiceId &&
+                !matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId) ? (
+                <small>
+                  A voz salva não está disponível neste dispositivo. Será usada outra voz.
+                </small>
+              ) : (
+                <small>
+                  A escolha é salva neste dispositivo e aplicada aos botões de áudio do app. Em
+                  outro dispositivo, escolha a voz novamente.
+                </small>
+              )}
+              {voiceSaveError && (
+                <small role="alert">Não foi possível salvar a voz neste navegador.</small>
+              )}
+            </div>
+            <div className="audio-settings-preview">
+              <span {...textAttrs()}>{previewText}</span>
+              <SpeakButton
+                text={previewText}
+                label="Ouvir exemplo com a voz escolhida"
+                locale={speechLocale}
+                withLabel
+              />
+            </div>
           </div>
-          <div className="audio-settings-preview">
-            <span lang={language.id}>{previewText}</span>
-            <SpeakButton
-              text={previewText}
-              label="Ouvir exemplo com a voz escolhida"
-              locale={speechLocale}
-              withLabel
-            />
-          </div>
-        </div>
-      </section>}
+        </section>
+      )}
       {authUserId && <LinkedAccounts />}
       {authUserId && <AccountSecurity />}
     </div>

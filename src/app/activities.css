@@ -70,13 +70,13 @@
   display: grid;
   gap: 7px;
   margin: 0;
-  padding-left: 20px;
+  padding-inline-start: 20px;
   color: #38383d;
   line-height: 1.5;
   font-size: 13px;
 }
 .review-guide-intro li {
-  padding-left: 3px;
+  padding-inline-start: 3px;
 }
 .review-card-grid {
   display: grid;
@@ -214,7 +214,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  text-align: left;
+  text-align: start;
   font-weight: 560;
 }
 .option:hover:not(:disabled),
@@ -347,7 +347,7 @@
   padding-top: 4px;
 }
 .correct-answer .speak-button {
-  margin-left: 6px;
+  margin-inline-start: 6px;
   vertical-align: middle;
 }
 .transcript {
@@ -421,7 +421,7 @@
   font-size: 12px;
 }
 .guidance-box ul {
-  padding-left: 18px;
+  padding-inline-start: 18px;
   margin: 8px 0 0;
   color: #67676d;
   font-size: 11px;
@@ -820,7 +820,7 @@
 .tutor-compose > small {
   color: #a2a2a7;
   font-size: 9px;
-  text-align: right;
+  text-align: end;
 }
 @keyframes pulse {
   50% {

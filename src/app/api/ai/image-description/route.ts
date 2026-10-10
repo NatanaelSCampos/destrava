@@ -5,6 +5,7 @@ import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
 import { SpeechTranscriptionError, transcribeWav } from "@/lib/transcribe-speech";
 import { userCourseVariant } from "@/lib/user-course-variant";
+import { buildLinguisticAIContext } from "@/domain/ai/linguistic-context";
 import { featureFlags } from "@/lib/feature-flags";
 
 export async function POST(request: Request) {
@@ -17,7 +18,10 @@ export async function POST(request: Request) {
   const bundle = typeof courseId === "string" ? findCourseBundle(courseId) : null;
   if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
   const sceneId = form?.get("sceneId");
-  const scene = typeof sceneId === "string" ? bundle.resources.imageScenes.find((item) => item.id === sceneId) : undefined;
+  const scene =
+    typeof sceneId === "string"
+      ? bundle.resources.imageScenes.find((item) => item.id === sceneId)
+      : undefined;
   const file = form?.get("audio");
   const text = form?.get("text");
   if (!scene || (file instanceof File && typeof text === "string"))
@@ -39,7 +43,11 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   try {
-    const variant = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
+    const variant = await userCourseVariant(
+      guard.userId ?? null,
+      bundle.course.id,
+      bundle.language,
+    );
     const result = await getAIProvider().evaluateImageDescription({
       language: bundle.language.identity.nativeName,
       sourceLanguage: bundle.coursePackage.sourceLanguage,
@@ -48,6 +56,12 @@ export async function POST(request: Request) {
       sceneFacts: scene.facts,
       transcript,
       region: variantLabel(bundle.language, variant),
+      linguisticContext: buildLinguisticAIContext(
+        bundle.course,
+        bundle.language,
+        bundle.coursePackage.sourceLanguage,
+        variant,
+      ),
     });
     await logAIRequest("image_description", result.usage, guard.reservationId ?? null);
     return NextResponse.json({

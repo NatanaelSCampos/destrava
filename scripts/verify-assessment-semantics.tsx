@@ -32,7 +32,8 @@ import { StudyProvider } from "../src/components/study-provider";
 import { FixedAssessmentRunner } from "../src/components/activities/fixed-assessment-runner";
 import { AdaptiveAssessmentRunner } from "../src/components/activities/adaptive-assessment-runner";
 
-const language = loadContent().find((item) => item.language.id === "xx-Test")!.language;
+const languageFixture = loadContent().find((item) => item.language.id === "xx-Test")!;
+const language = languageFixture.language;
 const raw = {
   schemaVersion: "1.3",
   contentVersion: "2.0.0",
@@ -165,7 +166,7 @@ const base = coursePackageSchema.parse(raw);
 function bundle(change?: (course: CoursePackage) => void) {
   const copy = structuredClone(base);
   change?.(copy);
-  return runtimeBundle({ course: copy, language, moduleData: {} });
+  return runtimeBundle({ course: copy, language, moduleData: languageFixture.moduleData });
 }
 const current = bundle();
 const exposed = publicCourse(current.course, language);

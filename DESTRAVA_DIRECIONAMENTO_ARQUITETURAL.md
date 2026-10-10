@@ -119,7 +119,7 @@ não implementar agora suporte tonal, caracteres ou plugins apenas como antecipa
 
 **Situação da execução incremental:** a auditoria Fase 2.1 e os incrementos
 de desacoplamento de vocabulário e semântica de avaliações estão documentados.
-A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio está implementado e validado localmente; sua persistência ainda depende de instalação/homologação isolada. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md`. O Incremento 4 não foi iniciado.
+A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio foi homologado no checkpoint local `a7ec750`. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md` e `DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md`. O Incremento 4 foi implementado localmente com registro, negociação e catálogo de capacidades; ver `DESTRAVA_CAPACIDADES_INCREMENTO_4.md`. As Partes 5A, 5B e 5C foram implementadas localmente; o Incremento 6 depende de autorização.
 
 **Fronteiras do Learning Engine e proposta do contrato de conteúdo V1.**
 
@@ -180,8 +180,9 @@ referências, capacidades e políticas não se resumem à validação de campos.
 - Aprovação por pacote ou por material? Como o motor confia no produtor?
 - Quais políticas de conclusão/correção entram no V1 e quais ficam para uma extensão?
 
-Um registro tipado de implementações internas é a hipótese inicial mais simples
-para capacidades. Plugins executáveis externos só devem ser considerados se
+O Incremento 4 adotou um registro tipado de implementações internas, com schemas
+compartilhados e bindings conferidos por AST. Essa é a base atual das capacidades.
+Plugins executáveis externos só devem ser considerados se
 um caso concreto exigir distribuição independente de comportamento.
 
 ## 8. Etapa de integridade já implementada
@@ -193,3 +194,19 @@ nesta atualização; validação manual continua pendente. Ver
 
 Nenhuma funcionalidade, conta, conteúdo de teste ou dado foi alterado nesta
 atualização documental. Não houve commit nem deploy.
+
+## Incremento 5A implementado localmente
+
+Apenas representação textual, identidade por ocorrência, reconstrução e medidas/limites foram generalizados. [Relatório e exemplos](DESTRAVA_TEXTO_INCREMENTO_5A.md). Novas capacidades foram verificadas e publicadas no catálogo local; requisitos de runtime/locale não viram uma declaração de suporte universal. O Incremento 4 permanece sem commit; seu estado anterior está preservado em cópia local ignorada. Não iniciar 5B/5C sem instrução posterior.
+
+## Incremento 5B implementado localmente
+
+Padrões e variantes aceitas pertencem ao curso; restrições e equivalências pertencem à atividade; preferência é do aluno. O motor aplica precedência e validação determinísticas. Compatibilidade de locale/provedor é operacional e não redefine a variante pedagógica. O novo contexto de IA transporta restrições e classificação local da resposta sem exportar novas listas privadas de gabarito.
+
+[Entrega e aprendizado de 5B](DESTRAVA_VARIANTES_INCREMENTO_5B.md): 20 grupos de variantes, 7.000 verificações geradas, regressões de 5A preservadas e 14 cenários contra Supabase local isolado. A fidelidade acústica e a qualidade linguística não foram certificadas por esses testes. O schema de curso 1.4 sinaliza os novos campos obrigatórios para consumidores; 1.3 continua aceito para o conteúdo existente. Não iniciar 5C sem autorização.
+
+## Incremento 5C implementado localmente
+
+Idioma, variante, direção de conteúdo e contexto da interface são conceitos separados. O perfil/curso declara características; o motor resolve apresentação e mantém sequência lógica e validação. HTML dir/bdi, CSS lógico e entrada nativa são usados em componentes comuns, sem regras por nome de língua. Texto externo é escapado, isolado e tem controles de direção sinalizados nas fronteiras centrais; essa proteção não é uma política completa contra spoofing.
+
+[Entrega, classificações, testes e didática de 5C](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). O curso 1.5 sinaliza metadados novos; o catálogo 1.3.0 anuncia apresentação horizontal e entrada nativa com limites. Testes técnicos não comprovam qualidade editorial nem qualificação de um teclado/leitor real. Essas pendências acompanham a consolidação do contrato/capacidades no planejamento do Incremento 6, ainda não iniciado.
