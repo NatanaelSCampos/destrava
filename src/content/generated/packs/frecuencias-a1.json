@@ -1,7 +1,7 @@
 {
   "course": {
-    "schemaVersion": "1.1",
-    "contentVersion": "1.1.0",
+    "schemaVersion": "1.3",
+    "contentVersion": "1.2.0",
     "id": "frecuencias-a1",
     "slug": "frecuencias-a1",
     "isDefault": true,
@@ -1677,7 +1677,221 @@
             "active": true
           }
         ],
-        "assessmentId": "frecuencias-a1.nos-presentamos.diagnostic",
+        "assessmentRefs": {
+          "diagnostic": "frecuencias-a1.nos-presentamos.diagnostic",
+          "final": "nos-presentamos-final",
+          "formative": []
+        },
+        "learningPolicy": {
+          "completion": {
+            "requirements": [
+              {
+                "id": "required-activities",
+                "label": "Realizar as atividades obrigatórias",
+                "kind": "participation",
+                "activityIds": [
+                  "intro-1",
+                  "objectives-1",
+                  "vocab-1",
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-1",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "grammar-age-speaking",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-1",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "writing-1",
+                  "speaking-1",
+                  "speaking-repeat-1",
+                  "review-1",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3",
+                  "assessment-intro",
+                  "assessment-1",
+                  "assessment-2",
+                  "assessment-3",
+                  "assessment-4",
+                  "assessment-5",
+                  "assessment-6",
+                  "assessment-writing"
+                ]
+              }
+            ]
+          },
+          "mastery": {
+            "requirements": [
+              {
+                "id": "completion",
+                "label": "Cumprir a conclusão da unidade",
+                "kind": "unit_completed"
+              },
+              {
+                "id": "objective",
+                "label": "Desempenho objetivo de pelo menos 80%",
+                "kind": "objective_score",
+                "activityIds": [
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3"
+                ],
+                "minimumScore": 80,
+                "minimumSamples": 1
+              },
+              {
+                "id": "reviews",
+                "label": "Evidência de revisão de pelo menos 80%",
+                "kind": "review_score",
+                "vocabularyIds": [
+                  "hola",
+                  "buenos-dias",
+                  "buenas-tardes",
+                  "hasta-luego",
+                  "hasta-manana",
+                  "llamarse",
+                  "tener",
+                  "vivir",
+                  "trabajar",
+                  "brasileno",
+                  "argentino",
+                  "profesor",
+                  "medico",
+                  "treinta",
+                  "donde",
+                  "de-donde",
+                  "cuantos",
+                  "hablar"
+                ],
+                "activityIds": [
+                  "intro-1",
+                  "objectives-1",
+                  "vocab-1",
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-1",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "grammar-age-speaking",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-1",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "writing-1",
+                  "speaking-1",
+                  "speaking-repeat-1",
+                  "review-1",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3",
+                  "assessment-intro",
+                  "assessment-1",
+                  "assessment-2",
+                  "assessment-3",
+                  "assessment-4",
+                  "assessment-5",
+                  "assessment-6",
+                  "assessment-writing"
+                ],
+                "minimumScore": 80,
+                "minimumSamples": 1,
+                "minimumReviews": 1
+              },
+              {
+                "id": "writing",
+                "label": "Entregar a prática escrita",
+                "kind": "submission",
+                "activityIds": [
+                  "writing-1"
+                ],
+                "practice": "writing",
+                "minimumCount": 1
+              },
+              {
+                "id": "speaking",
+                "label": "Entregar uma prática de fala",
+                "kind": "submission",
+                "activityIds": [
+                  "grammar-age-speaking",
+                  "speaking-1",
+                  "speaking-repeat-1"
+                ],
+                "practice": "speaking",
+                "minimumCount": 1
+              },
+              {
+                "id": "final",
+                "label": "Atingir o critério da avaliação somativa",
+                "kind": "assessment",
+                "assessmentId": "nos-presentamos-final",
+                "purpose": "summative"
+              }
+            ]
+          }
+        },
         "description": "Aprenda a cumprimentar, falar de você e conhecer alguém em espanhol.",
         "active": true
       }
@@ -2950,15 +3164,10 @@
     "assessments": [
       {
         "id": "frecuencias-a1.nos-presentamos.diagnostic",
-        "type": "adaptive_diagnostic",
+        "title": "Diagnóstico do curso",
+        "purpose": "diagnostic",
         "unitId": "nos-presentamos",
-        "skillWeights": {
-          "vocabulary": 0.2,
-          "grammar": 0.2,
-          "listening": 0.2,
-          "writing": 0.2,
-          "reading": 0.2
-        },
+        "objectiveIds": [],
         "passingPolicy": {
           "overall": 0.75,
           "minimumBySkill": {
@@ -2968,6 +3177,14 @@
             "writing": 0.6,
             "reading": 0.6
           }
+        },
+        "method": "adaptive",
+        "skillWeights": {
+          "vocabulary": 0.2,
+          "grammar": 0.2,
+          "listening": 0.2,
+          "writing": 0.2,
+          "reading": 0.2
         },
         "skillPlan": [
           "vocabulary",
@@ -3097,8 +3314,29 @@
             "skill": "writing",
             "difficulty": 1
           }
-        ],
-        "activities": []
+        ]
+      },
+      {
+        "id": "nos-presentamos-final",
+        "title": "Avaliação final da unidade",
+        "purpose": "summative",
+        "unitId": "nos-presentamos",
+        "lessonId": "l-assessment",
+        "objectiveIds": [],
+        "passingPolicy": {
+          "overall": 0.75
+        },
+        "method": "fixed",
+        "gradingStrategy": "objective_mean",
+        "activityIds": [
+          "assessment-1",
+          "assessment-2",
+          "assessment-3",
+          "assessment-4",
+          "assessment-5",
+          "assessment-6",
+          "assessment-writing"
+        ]
       }
     ],
     "media": [
@@ -3140,6 +3378,9 @@
         }
       }
     ],
+    "assessmentRefs": {
+      "diagnostic": "frecuencias-a1.nos-presentamos.diagnostic"
+    },
     "interactiveLessons": [
       {
         "id": "aula-tener-idade",

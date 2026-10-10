@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { activityTypeSchema, normalizationRulesSchema, skillIdSchema } from "./contracts";
+import { activityTypeSchema, normalizationRulesSchema, skillIdSchema, assessmentSchema, assessmentRefsSchema } from "./contracts";
 export { activityTypeSchema } from "./contracts";
+import { unitLearningPolicySchema } from "./learning-policies";
 
 export const skillSchema = z.enum([
   "vocabulary",
@@ -126,10 +127,13 @@ export const unitSchema = z.object({
   slug: z.string(),
   title: z.string(),
   number: z.number().int().positive(),
+  skills: z.array(skillIdSchema).default([]),
   description: z.string(),
   objectives: z.array(z.string()),
   active: z.boolean(),
   lessons: z.array(lessonSchema),
+  assessmentRefs: assessmentRefsSchema.default({ formative: [] }),
+  learningPolicy: unitLearningPolicySchema.optional(),
 });
 
 export const courseSchema = z.object({
@@ -139,6 +143,9 @@ export const courseSchema = z.object({
   languageCode: z.string().min(2),
   level: z.string(),
   description: z.string(),
+  contentVersion: z.string().default("legacy"),
+  assessments: z.array(assessmentSchema).default([]),
+  assessmentRefs: z.object({ diagnostic: z.string().min(1).optional() }).default({}),
   learningConcepts: z
     .array(z.object({ id: z.string().min(1), label: z.string().min(1) }))
     .default([]),

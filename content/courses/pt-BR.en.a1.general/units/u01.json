@@ -45,7 +45,6 @@
       "en.lex.you"
     ]
   },
-  "assessmentId": "en.u01.diagnostic",
   "lessons": [
     {
       "id": "en.l01",
@@ -650,5 +649,65 @@
         }
       ]
     }
-  ]
+  ],
+  "assessmentRefs": {
+    "diagnostic": "en.u01.diagnostic"
+  },
+  "learningPolicy": {
+    "completion": {
+      "requirements": [
+        {
+          "id": "required-activities",
+          "label": "Realizar as atividades obrigatórias",
+          "kind": "participation",
+          "activityIds": [
+            "en.act.01.intro",
+            "en.act.02.greeting",
+            "en.act.03.name-fill",
+            "en.act.04.name-question",
+            "en.act.05.name-speak",
+            "en.act.06.name-card",
+            "en.act.07.origin-intro",
+            "en.act.08.origin-listen",
+            "en.act.09.origin-choice",
+            "en.act.10.origin-fill",
+            "en.act.11.home-answer",
+            "en.act.12.origin-speak",
+            "en.act.13.job-intro",
+            "en.act.14.job-choice",
+            "en.act.15.job-order",
+            "en.act.16.job-listen",
+            "en.act.17.introduction-write",
+            "en.act.18.question-speak",
+            "en.diag.vocab.3",
+            "en.diag.grammar.3",
+            "en.diag.listen.3",
+            "en.diag.write.3",
+            "en.diag.read.3"
+          ]
+        }
+      ]
+    },
+    "mastery": {
+      "requirements": [
+        {
+          "id": "completion",
+          "label": "Cumprir a conclusão da unidade",
+          "kind": "unit_completed"
+        },
+        {
+          "id": "listening",
+          "label": "Compreensão auditiva de pelo menos 80%",
+          "kind": "objective_score",
+          "skill": "listening",
+          "activityIds": [
+            "en.act.08.origin-listen",
+            "en.act.16.job-listen"
+          ],
+          "minimumScore": 80,
+          "minimumSamples": 2
+        }
+      ]
+    }
+  }
 }

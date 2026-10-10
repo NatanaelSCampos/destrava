@@ -27,10 +27,16 @@ export function runtimeBundle(raw: CompiledPackage) {
     id: coursePackage.id, slug: coursePackage.slug, title: coursePackage.title,
     languageCode: language.id, level: coursePackage.framework.exitLevel,
     description: coursePackage.description,
+    contentVersion: coursePackage.contentVersion,
+    assessments: coursePackage.assessments,
+    assessmentRefs: coursePackage.assessmentRefs,
     learningConcepts: coursePackage.concepts.map((concept) => ({ id: concept.id, label: concept.name })),
     units: coursePackage.units.map((unit) => ({
       id: unit.id, slug: unit.slug, title: unit.title, number: unit.order,
       description: unit.description, objectives: unit.objectives, active: unit.active,
+      skills: unit.skills,
+      assessmentRefs: unit.assessmentRefs,
+      learningPolicy: unit.learningPolicy,
       lessons: unit.lessons.map((lesson) => ({
         id: lesson.id, slug: lesson.slug, title: lesson.title, order: lesson.order,
         interactiveLessonRef: lesson.interactiveLessonRef,

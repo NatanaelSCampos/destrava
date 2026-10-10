@@ -6,8 +6,8 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import type { ReactNode } from "react";
 import type { PublicActivity, PublicCourse } from "@/content/public";
@@ -21,9 +21,8 @@ import {
   recordMicroLessonAttempt,
   recordNumberAttempt,
   recordRegionalAttempt,
-  recordAdaptiveAssessment,
+  recordServerAssessment,
   recordVocabularySignal,
-  reconcileAssessments,
   reviewMistake,
   reviewStructure,
   reviewVocabulary,
@@ -36,7 +35,6 @@ import {
   type RegionalAttempt,
   type MicroLessonAttempt,
   type ImageDescriptionAttempt,
-  type AdaptiveAssessmentAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { boundedStudySeconds } from "@/domain/study/session-time";
@@ -50,8 +48,15 @@ import {
   type ConversationSession,
 } from "@/domain/conversation/conversation-session";
 import { readCourseState } from "@/domain/study/course-state-storage";
+import { StudyProgressSync, type ProgressLoadStatus } from "@/domain/study/study-progress-sync";
+import { browserStudySyncCache } from "@/lib/study-sync-cache";
 import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
 import type { LanguagePackage, PublicAssessment } from "@/content/contracts";
+import {
+  serverAssessmentResultSchema,
+  type AssessmentRequest,
+  type ServerAssessmentResult,
+} from "@/content/assessment-results";
 
 export type { VocabularyItem } from "@/content/language-resources";
 
@@ -65,6 +70,10 @@ type StudyContextValue = {
   ready: boolean;
   authUserId: string | null;
   syncError: string;
+  progressLoadStatus: ProgressLoadStatus;
+  pendingProgress: StudyState[];
+  hasRecoveredProgress: boolean;
+  retryProgressSync: () => Promise<void>;
   flushStudyState: () => Promise<void>;
   updateProfile: (profile: Partial<StudentProfile>) => void;
   completeActivity: (id: string) => void;
@@ -82,13 +91,15 @@ type StudyContextValue = {
   recordNumberPractice: (
     input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
   ) => void;
-  recordRegionalCheck: (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) => void;
+  recordRegionalCheck: (
+    input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">,
+  ) => void;
   recordMicroLesson: (
     input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
   ) => void;
   saveConversation: (session: ConversationSession) => void;
   saveImageDescription: (attempt: Omit<ImageDescriptionAttempt, "id" | "createdAt">) => void;
-  saveAdaptiveAssessment: (attempt: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) => void;
+  submitAssessment: (input: Omit<AssessmentRequest, "courseId">) => Promise<ServerAssessmentResult>;
   addConversationReply: (
     sessionId: string,
     studentText: string,
@@ -122,188 +133,185 @@ type StudyContextValue = {
 };
 
 const StudyContext = createContext<StudyContextValue | null>(null);
-const storageKey = "destrava-study:v2:demo";
-const legacyStorageKey = "frecuencias-study:v1:demo";
 
 export function StudyProvider({
   course,
   resources,
   language,
-  assessments,
   children,
 }: {
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
-  assessments: PublicAssessment[];
   children: ReactNode;
 }) {
   const vocabularyItems = resources.vocabulary;
-  const [state, setState] = useState<StudyState>(() =>
-    readCourseState(null, course.id, course.languageCode),
+  const assessments = course.assessments;
+  const [sync] = useState(
+    () =>
+      new StudyProgressSync(
+        () => readCourseState(null, course.id, course.languageCode),
+        browserStudySyncCache(course.id, course.languageCode),
+      ),
   );
-  const [ready, setReady] = useState(false);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
-  const [syncError, setSyncError] = useState("");
-  const repository = useRef<SupabaseStudyRepository | null>(null);
-  const saveQueue = useRef<Promise<void>>(Promise.resolve());
+  const snapshot = useSyncExternalStore(sync.subscribe, sync.getSnapshot, sync.getServerSnapshot);
+  const { state, userId: authUserId, loadStatus: progressLoadStatus } = snapshot;
+  const ready = progressLoadStatus !== "loading";
+  const syncError = [snapshot.loadError, snapshot.saveError, snapshot.cacheError]
+    .filter(Boolean)
+    .join(" ");
+  const pendingProgress = useMemo(
+    () => (snapshot.dirty ? [...snapshot.recovery, state] : snapshot.recovery),
+    [snapshot.dirty, snapshot.recovery, state],
+  );
+  const hasRecoveredProgress = snapshot.recovery.length > 0;
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const setState = useCallback(
+    (updater: StudyState | ((current: StudyState) => StudyState)) => {
+      sync.update(updater);
+    },
+    [sync],
+  );
 
   useEffect(() => {
-    let cancelled = false;
+    const generation = sync.beginLoading();
+    const client = createSupabaseBrowserClient();
+    let sessionUserId: string | null | undefined;
+    const subscription = client?.auth.onAuthStateChange((event, session) => {
+      const nextUserId = session?.user.id ?? null;
+      if (!sync.isCurrent(generation) || event === "INITIAL_SESSION") return;
+      if (event === "SIGNED_OUT" || (event === "SIGNED_IN" && nextUserId !== sessionUserId)) {
+        // Revoke writes immediately, before React starts the next effect.
+        sync.invalidate(generation);
+        setLoadAttempt((attempt) => attempt + 1);
+      }
+    });
     const timeout = window.setTimeout(() => {
       void (async () => {
-        const client = createSupabaseBrowserClient();
-        if (client) {
+        try {
+          if (!client) {
+            await sync.load(generation, null, null);
+            return;
+          }
           const { data, error } = await client.auth.getUser();
-          if (cancelled) return;
+          if (!sync.isCurrent(generation)) return;
+          sessionUserId = data.user?.id ?? null;
           if (error || !data.user) {
-            setReady(true);
+            sync.block(generation, error ? "Não foi possível verificar sua conta." : "");
             return;
           }
           const accountId = data.user.id;
-          setAuthUserId(accountId);
           const access = await canAccessWithMfa(client);
-          if (cancelled) return;
+          if (!sync.isCurrent(generation)) return;
           if (!access.allowed) {
-            if (access.error) setSyncError("Não foi possível verificar a segurança da sessão.");
-            setReady(true);
+            sync.block(
+              generation,
+              access.error ? "Não foi possível verificar a segurança da sessão." : "",
+              accountId,
+            );
             return;
           }
-          const nextRepository = new SupabaseStudyRepository(client, accountId);
-          repository.current = nextRepository;
-          try {
-            const remote = await nextRepository.load(course.id, course.languageCode);
-            if (cancelled) return;
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
-            if (remote || cached)
-              setState(remote ?? readCourseState(JSON.parse(cached!), course.id, course.languageCode));
-          } catch (caught) {
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
-            if (cached) {
-              try {
-                setState(readCourseState(JSON.parse(cached), course.id, course.languageCode));
-              } catch {
-                /* Keep fresh state. */
-              }
-            }
-            setSyncError(
-              caught instanceof Error
-                ? caught.message
-                : "Não foi possível carregar a sincronização.",
-            );
-          }
-          setReady(true);
-          return;
+          const repository = new SupabaseStudyRepository(client, accountId, {
+            course,
+            load: async () => {
+              const response = await fetch(
+                `/api/assessments?courseId=${encodeURIComponent(course.id)}`,
+                { cache: "no-store" },
+              );
+              if (!response.ok)
+                throw new Error("Não foi possível carregar os resultados das avaliações.");
+              const body = await response.json();
+              if (!Array.isArray(body.results)) throw new Error("Formato dos resultados inválido.");
+              return body.results.map((result: unknown) =>
+                serverAssessmentResultSchema.parse(result),
+              );
+            },
+          });
+          await sync.load(generation, accountId, {
+            load: () => repository.load(course.id, course.languageCode),
+            save: (nextState) => repository.save(nextState, course, vocabularyItems),
+          });
+        } catch (error) {
+          sync.block(
+            generation,
+            error instanceof Error ? error.message : "Não foi possível carregar seu progresso.",
+          );
         }
-        try {
-          const saved = window.localStorage.getItem(`${storageKey}:${course.id}`)
-            ?? window.localStorage.getItem(`${legacyStorageKey}:${course.id}`)
-            ?? window.localStorage.getItem(legacyStorageKey);
-          if (saved) {
-            setState(readCourseState(JSON.parse(saved), course.id, course.languageCode));
-          }
-        } catch {
-          /* An invalid local draft should not prevent studying. */
-        }
-        setReady(true);
       })();
     }, 0);
     return () => {
-      cancelled = true;
       window.clearTimeout(timeout);
+      subscription?.data.subscription.unsubscribe();
+      sync.invalidate(generation);
     };
-  }, [course.id, course.languageCode]);
+  }, [course, vocabularyItems, loadAttempt, sync]);
 
   useEffect(() => {
-    if (!ready) return;
-    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
-    window.localStorage.setItem(key, JSON.stringify(state));
-    if (!repository.current) return;
+    if (!snapshot.dirty || !sync.canSaveRemote()) return;
     const timeout = window.setTimeout(() => {
-      const currentRepository = repository.current;
-      if (!currentRepository) return;
-      saveQueue.current = saveQueue.current
-        .catch(() => undefined)
-        .then(async () => {
-          await currentRepository.save(state, course, vocabularyItems);
-          setSyncError("");
-        })
-        .catch((caught) =>
-          setSyncError(caught instanceof Error ? caught.message : "Não foi possível sincronizar."),
-        );
+      // The controller keeps failures pending and also checks the generation inside the queue.
+      void sync.flush(snapshot.generation).catch(() => undefined);
     }, 700);
     return () => window.clearTimeout(timeout);
-  }, [ready, state, authUserId, course, vocabularyItems]);
+  }, [snapshot.dirty, snapshot.generation, progressLoadStatus, state, sync]);
 
-  const flushStudyState = useCallback(async () => {
-    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
-    window.localStorage.setItem(key, JSON.stringify(state));
-    const currentRepository = repository.current;
-    if (!currentRepository) return;
-    saveQueue.current = saveQueue.current.catch(() => undefined).then(() =>
-      currentRepository.save(state, course, vocabularyItems),
-    );
-    await saveQueue.current;
-    setSyncError("");
-  }, [authUserId, course, state, vocabularyItems]);
+  const flushStudyState = useCallback(() => sync.flush(), [sync]);
+  const retryProgressSync = useCallback(async () => {
+    if (sync.getSnapshot().loadStatus === "failed") {
+      setLoadAttempt((attempt) => attempt + 1);
+    } else {
+      await sync.flush().catch(() => undefined);
+    }
+  }, [sync]);
 
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
       setState((current) => ({ ...current, profile: { ...current.profile, ...profile } })),
-    [],
+    [setState],
   );
   const completeActivity = useCallback(
     (id: string) => setState((current) => markActivityComplete(current, id)),
-    [],
+    [setState],
   );
   const submitAttempt = useCallback(
     (activity: PublicActivity, answer: string, result: GradeResult) =>
-      setState((current) =>
-        reconcileAssessments(recordAttempt(current, activity, answer, result), course),
-      ),
-    [course],
+      setState((current) => recordAttempt(current, activity, answer, result)),
+    [setState],
   );
   const saveWriting = useCallback(
     (activityId: string, text: string, feedback?: unknown) =>
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
-        return reconcileAssessments(
-          recordEvaluatedWriting(
-            {
-              ...completed,
-              writing: [
-                {
-                  id: crypto.randomUUID(),
-                  activityId,
-                  sessionId: current.activeSessionId,
-                  text,
-                  createdAt: new Date().toISOString(),
-                  feedback,
-                },
-                ...current.writing,
-              ],
-              events: [
-                {
-                  id: crypto.randomUUID(),
-                  type: "writing_submitted",
-                  activityId,
-                  createdAt: new Date().toISOString(),
-                },
-                ...completed.events,
-              ],
-            },
-            activityId,
-            text,
-            feedback,
-          ),
-          course,
+        return recordEvaluatedWriting(
+          {
+            ...completed,
+            writing: [
+              {
+                id: crypto.randomUUID(),
+                activityId,
+                sessionId: current.activeSessionId,
+                text,
+                createdAt: new Date().toISOString(),
+                feedback,
+              },
+              ...current.writing,
+            ],
+            events: [
+              {
+                id: crypto.randomUUID(),
+                type: "writing_submitted",
+                activityId,
+                createdAt: new Date().toISOString(),
+              },
+              ...completed.events,
+            ],
+          },
+          activityId,
+          text,
+          feedback,
         );
       }),
-    [course],
+    [setState],
   );
   const saveSpeaking = useCallback(
     (
@@ -348,7 +356,7 @@ export function StudyProvider({
       });
       return submissionId;
     },
-    [],
+    [setState],
   );
   const markVocabulary = useCallback(
     (id: string, status: "new" | "learning" | "known" | "difficult") =>
@@ -363,44 +371,44 @@ export function StudyProvider({
           },
         },
       })),
-    [],
+    [setState],
   );
   const reviewWord = useCallback(
     (id: string, rating: boolean | "difficult") =>
       setState((current) => reviewVocabulary(current, id, rating)),
-    [],
+    [setState],
   );
   const reviewError = useCallback(
     (id: string, correct: boolean) => setState((current) => reviewMistake(current, id, correct)),
-    [],
+    [setState],
   );
   const reviewStructureCard = useCallback(
     (id: string, correct: boolean) =>
       setState((current) => reviewStructure(current, id, correct, resources.structures)),
-    [resources.structures],
+    [setState, resources.structures],
   );
   const recordVocabularySearch = useCallback(
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_search")),
-    [],
+    [setState],
   );
   const recordVocabularyAudio = useCallback(
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_audio")),
-    [],
+    [setState],
   );
   const recordNumberPractice = useCallback(
     (input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">) =>
       setState((current) => recordNumberAttempt(current, input)),
-    [],
+    [setState],
   );
   const recordRegionalCheck = useCallback(
     (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) =>
       setState((current) => recordRegionalAttempt(current, input)),
-    [],
+    [setState],
   );
   const recordMicroLesson = useCallback(
     (input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">) =>
       setState((current) => recordMicroLessonAttempt(current, input)),
-    [],
+    [setState],
   );
   const saveConversation = useCallback(
     (session: ConversationSession) =>
@@ -437,7 +445,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [],
+    [setState],
   );
   const saveImageDescription = useCallback(
     (input: Omit<ImageDescriptionAttempt, "id" | "createdAt">) =>
@@ -465,12 +473,28 @@ export function StudyProvider({
           ],
         };
       }),
-    [],
+    [setState],
   );
-  const saveAdaptiveAssessment = useCallback(
-    (input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) =>
-      setState((current) => recordAdaptiveAssessment(current, course, input)),
-    [course],
+  const submitAssessment = useCallback(
+    async (input: Omit<AssessmentRequest, "courseId">) => {
+      const generation = sync.getSnapshot().generation;
+      const userId = sync.getSnapshot().userId;
+      const response = await fetch("/api/assessments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...input, courseId: course.id }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error ?? "Não foi possível executar a avaliação.");
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou durante a avaliação.");
+      const result = serverAssessmentResultSchema.parse(body);
+      if (result.courseId !== course.id || result.contentVersion !== course.contentVersion)
+        throw new Error("O conteúdo da avaliação mudou. Recarregue a página.");
+      setState((current) => recordServerAssessment(current, course, result));
+      return result;
+    },
+    [course, setState, sync],
   );
   const addConversationReply = useCallback(
     (
@@ -491,7 +515,9 @@ export function StudyProvider({
           session,
           studentText,
           reply,
-          resources.conversationScenarios.find((item) => item.id === session.scenarioId)?.objectives.map((item) => item.id) ?? [],
+          resources.conversationScenarios
+            .find((item) => item.id === session.scenarioId)
+            ?.objectives.map((item) => item.id) ?? [],
           inputMode,
         );
         if (updated === session) return current;
@@ -529,7 +555,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [resources.conversationScenarios],
+    [setState, resources.conversationScenarios],
   );
   const completeConversation = useCallback(
     (sessionId: string) =>
@@ -548,7 +574,7 @@ export function StudyProvider({
           ...current.events,
         ],
       })),
-    [],
+    [setState],
   );
   const recordStudyEvent = useCallback(
     (type: string, itemId?: string, metadata?: Record<string, string | number | boolean>) =>
@@ -559,7 +585,7 @@ export function StudyProvider({
           ...current.events,
         ],
       })),
-    [],
+    [setState],
   );
   const startSession = useCallback(
     (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
@@ -599,7 +625,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [course.id],
+    [setState, course.id],
   );
   const updateActiveSessionDuration = useCallback(
     (sessionId: string, seconds: number) =>
@@ -615,7 +641,7 @@ export function StudyProvider({
           ? current
           : { ...current, sessions };
       }),
-    [],
+    [setState],
   );
   const finishSession = useCallback(
     (seconds = 0) =>
@@ -630,9 +656,7 @@ export function StudyProvider({
               ? {
                   ...session,
                   finishedAt: now.toISOString(),
-                  durationSeconds: boundedStudySeconds(
-                    Math.max(session.durationSeconds, seconds),
-                  ),
+                  durationSeconds: boundedStudySeconds(Math.max(session.durationSeconds, seconds)),
                 }
               : session,
           ),
@@ -648,7 +672,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [course.id],
+    [setState, course.id],
   );
   const correctSessionDuration = useCallback(
     (sessionId: string, minutes: number) =>
@@ -663,7 +687,7 @@ export function StudyProvider({
           ? current
           : { ...current, sessions };
       }),
-    [],
+    [setState],
   );
 
   const value = useMemo(
@@ -677,6 +701,10 @@ export function StudyProvider({
       ready,
       authUserId,
       syncError,
+      progressLoadStatus,
+      pendingProgress,
+      hasRecoveredProgress,
+      retryProgressSync,
       flushStudyState,
       updateProfile,
       completeActivity,
@@ -694,7 +722,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
-      saveAdaptiveAssessment,
+      submitAssessment,
       addConversationReply,
       completeConversation,
       recordStudyEvent,
@@ -713,6 +741,10 @@ export function StudyProvider({
       ready,
       authUserId,
       syncError,
+      progressLoadStatus,
+      pendingProgress,
+      hasRecoveredProgress,
+      retryProgressSync,
       flushStudyState,
       updateProfile,
       completeActivity,
@@ -730,7 +762,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
-      saveAdaptiveAssessment,
+      submitAssessment,
       addConversationReply,
       completeConversation,
       recordStudyEvent,

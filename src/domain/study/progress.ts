@@ -1,7 +1,8 @@
 import type { PublicCourse, PublicUnit } from "@/content/public";
 import type { StudyState } from "./study-state";
 import type { Skill } from "@/content/schema";
-import { featureFlags } from "@/lib/feature-flags";
+import { evaluateUnitPolicies, currentAssessmentResult, type PolicyCourse } from "./learning-policy-engine";
+import { assessmentActivityIds, resolveAssessment } from "@/content/assessment-references";
 
 const objectiveTypes = new Set([
   "multiple_choice",
@@ -16,14 +17,17 @@ export function unitProgress(
   unit: PublicUnit,
   state: StudyState,
   vocabularyItems: ReadonlyArray<{ id: string; lessonId: string }> = [],
+  course?: PolicyCourse,
 ) {
   const activities = unit.lessons.flatMap((lesson) => lesson.activities);
   const lessonIds = new Set(unit.lessons.map((lesson) => lesson.id));
   const activityIds = new Set(activities.map((activity) => activity.id));
-  const assessmentLesson = unit.lessons.find((lesson) =>
-    lesson.activities.some((activity) => activity.type === "quiz"),
+  const assessment = resolveAssessment(
+    course?.assessments ?? [],
+    unit.assessmentRefs.final,
+    "summative",
   );
-  const assessmentIds = new Set(assessmentLesson?.activities.map((activity) => activity.id) ?? []);
+  const assessmentIds = new Set(assessment ? assessmentActivityIds(assessment) : []);
   const completed = activities.filter((activity) =>
     state.completedActivityIds.includes(activity.id),
   ).length;
@@ -31,44 +35,48 @@ export function unitProgress(
     (activity) => objectiveTypes.has(activity.type) && !assessmentIds.has(activity.id),
   );
   const latest = objective
-    .map((activity) => state.attempts.find((attempt) => attempt.activityId === activity.id))
+    .map((activity) => state.attempts.filter((attempt) => attempt.activityId === activity.id && attempt.correct !== null)
+      .sort((a,b) => b.createdAt.localeCompare(a.createdAt))[0])
     .filter((attempt) => attempt !== undefined);
   const exerciseScore = latest.length
     ? Math.round((100 * latest.filter((attempt) => attempt.correct).length) / latest.length)
-    : 0;
+    : null;
   const reviewSchedules = [
     ...vocabularyItems
       .filter((item) => lessonIds.has(item.lessonId))
       .map((item) => state.vocabulary[item.id]?.schedule)
-      .filter((item) => item !== undefined),
+      .filter((item) => item !== undefined && item.reviewCount > 0),
     ...Object.values(state.mistakes)
       .filter((item) => activityIds.has(item.activityId))
-      .map((item) => item.schedule),
+      .map((item) => item.schedule).filter(item => item.reviewCount > 0),
   ];
   const reviewScore = reviewSchedules.length
     ? Math.round(
         reviewSchedules.reduce((sum, item) => sum + item.masteryScore, 0) / reviewSchedules.length,
       )
-    : 0;
-  const assessment =
-    assessmentLesson?.activities.filter((activity) => objectiveTypes.has(activity.type)) ?? [];
-  const assessmentWriting =
-    assessmentLesson?.activities.filter((activity) => activity.type === "writing") ?? [];
-  const assessmentAttempts = assessment
-    .map((activity) => state.attempts.find((attempt) => attempt.activityId === activity.id))
-    .filter((attempt) => attempt !== undefined);
-  const assessmentScore = assessmentAttempts.length
-    ? Math.round(
-        (100 * assessmentAttempts.filter((attempt) => attempt.correct).length) /
-          assessmentAttempts.length,
-      )
-    : 0;
-  const assessmentFinished =
-    Boolean(assessmentLesson) &&
-    assessmentAttempts.length === assessment.length &&
-    assessmentWriting.every((activity) =>
-      state.writing.some((submission) => submission.activityId === activity.id),
-    );
+    : null;
+  const candidates = !assessment
+    ? []
+    : assessment.method === "fixed"
+      ? state.assessmentAttempts.filter((item) => item.assessmentId === assessment.id)
+      : state.adaptiveAssessments.filter((item) => item.assessmentId === assessment.id);
+  const result = assessment && course ? currentAssessmentResult(course,state,assessment.id) : undefined;
+  const assessmentScore = result?.objectiveScore ?? null;
+  const assessmentFinished = Boolean(
+    result && result.status === "completed" && assessmentScore !== null,
+  );
+  const assessmentPassed = assessmentFinished ? (result?.passed ?? null) : null;
+  const assessmentStatus = !assessment
+    ? ("not_defined" as const)
+    : !result
+      ? candidates.length
+        ? ("historical" as const)
+        : ("not_taken" as const)
+      : !assessmentFinished
+        ? ("insufficient" as const)
+        : assessmentPassed
+          ? ("passed" as const)
+          : ("failed" as const);
   const writingDone = activities.some(
     (activity) =>
       activity.type === "writing" &&
@@ -80,50 +88,49 @@ export function unitProgress(
       activity.type === "speaking" &&
       state.speaking.some((submission) => submission.activityId === activity.id),
   );
-  const isCompleted = completed === activities.length;
+  const { completion, mastery } = evaluateUnitPolicies(unit,state,course);
+  const isCompleted = completion.status === "satisfied" || completion.status === "not_required";
   return {
     completed,
     total: activities.length,
-    percentage: activities.length ? Math.round((100 * completed) / activities.length) : 0,
+    percentage: completion.percentage,
+    participationPercentage: activities.length ? Math.round((100 * completed) / activities.length) : 0,
+    completion,
+    mastery,
     isCompleted,
     exerciseScore,
     reviewScore,
     assessmentScore,
     assessmentFinished,
+    assessmentDefined: Boolean(assessment),
+    assessmentPassed,
+    assessmentStatus,
     writingDone,
     speakingDone,
-    isMastered:
-      isCompleted &&
-      exerciseScore >= 80 &&
-      (!featureFlags.SPACED_REPETITION || reviewScore >= 80) &&
-      writingDone &&
-      (!featureFlags.SPEAKING || speakingDone) &&
-      assessmentFinished &&
-      assessmentScore >= 75,
+    isMastered: mastery.status === "satisfied",
   };
 }
 
 export function courseProgress(course: PublicCourse, state: StudyState) {
   const units = course.units.filter((unit) => unit.active);
-  const total = units.reduce(
-    (sum, unit) => sum + unit.lessons.flatMap((lesson) => lesson.activities).length,
-    0,
-  );
-  const completed = units.reduce((sum, unit) => sum + unitProgress(unit, state).completed, 0);
-  return total ? Math.round((100 * completed) / total) : 0;
+  return units.length ? Math.round(units.reduce((sum,unit) =>
+    sum + unitProgress(unit,state,[],course).percentage,0)/units.length) : 0;
 }
 
 export function currentUnit(course: PublicCourse, state: StudyState) {
   const active = course.units.filter((unit) => unit.active);
-  return active.find((unit) => !unitProgress(unit, state).isCompleted) ?? active.at(-1);
+  return active.find((unit) => !unitProgress(unit, state, [], course).isCompleted) ?? active.at(-1);
 }
 
 export function skillProgress(course: PublicCourse, state: StudyState, skill: Skill) {
   const activities = course.units
     .flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities))
-    .filter((activity) => (activity.skills.length ? activity.skills.includes(skill) : activity.skill === skill));
+    .filter((activity) =>
+      activity.skills.length ? activity.skills.includes(skill) : activity.skill === skill,
+    );
   const attempts = activities
-    .map((activity) => state.attempts.find((attempt) => attempt.activityId === activity.id))
+    .map((activity) => state.attempts.filter((attempt) => attempt.activityId === activity.id && attempt.correct !== null)
+      .sort((a,b) => b.createdAt.localeCompare(a.createdAt))[0])
     .filter((attempt) => attempt !== undefined);
   const performance = attempts.length
     ? Math.round((100 * attempts.filter((attempt) => attempt.correct).length) / attempts.length)
@@ -131,5 +138,9 @@ export function skillProgress(course: PublicCourse, state: StudyState, skill: Sk
   const completed = activities.filter((activity) =>
     state.completedActivityIds.includes(activity.id),
   ).length;
-  return { completed, total: activities.length, performance };
+  const applicable = activities.length > 0 || course.units.some(unit => unit.skills.includes(skill));
+  const status = !applicable ? "not_applicable" as const : activities.length === 0
+    ? "unavailable" as const : performance === null ? "not_assessed" as const : "assessed" as const;
+  return { completed, total: activities.length, performance, applicable,
+    unavailable: applicable && activities.length === 0, status };
 }

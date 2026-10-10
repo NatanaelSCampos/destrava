@@ -6,6 +6,7 @@ import { featureFlags } from "@/lib/feature-flags";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import type { LanguageResources } from "@/content/language-resources";
 import { orderByLearningAffinity } from "./learning-preferences";
+import { outstandingPolicyActivityIds } from "./learning-policy-engine";
 
 function reviewCandidates(
   course: PublicCourse,
@@ -164,7 +165,8 @@ export function buildStudyPlan(
 }
 
 export function nextActivity(course: PublicCourse, state: StudyState): PublicActivity | undefined {
-  return course.units
-    .flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities))
-    .find((activity) => !state.completedActivityIds.includes(activity.id));
+  const activities = course.units.flatMap(unit => unit.lessons.flatMap(lesson => lesson.activities));
+  const required = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));
+  return activities.find(activity => required.has(activity.id)) ??
+    activities.find(activity => !state.completedActivityIds.includes(activity.id));
 }

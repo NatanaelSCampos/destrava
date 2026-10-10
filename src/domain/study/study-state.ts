@@ -10,7 +10,12 @@ import type { ReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 import type { AdaptiveAnswer } from "@/domain/study/adaptive-assessment";
-import { defaultLearningPreferences, type LearningPreferences, type SelfReportedLevel } from "./learning-preferences";
+import type { ServerAssessmentResult } from "@/content/assessment-results";
+import {
+  defaultLearningPreferences,
+  type LearningPreferences,
+  type SelfReportedLevel,
+} from "./learning-preferences";
 
 export type StudentProfile = {
   learningPreferences: LearningPreferences;
@@ -41,7 +46,10 @@ export type VocabularyProgress = {
   schedule: ReviewSchedule;
 };
 export type SessionMode = "guided" | "difficulties";
-export type PlannedReviewItem = { kind: "word" | "mistake" | "structure" | "pronunciation"; id: string };
+export type PlannedReviewItem = {
+  kind: "word" | "mistake" | "structure" | "pronunciation";
+  id: string;
+};
 export type StructureReviewProgress = { id: string; schedule: ReviewSchedule };
 export type PronunciationReviewProgress = {
   id: string;
@@ -117,11 +125,16 @@ export type ReviewEntry = {
 export type AssessmentAttempt = {
   id: string;
   assessmentId: string;
-  unitId: string;
+  unitId?: string;
   startedAt: string;
   finishedAt: string;
-  objectiveScore: number;
-};
+  objectiveScore: number | null;
+} & Partial<
+  Omit<
+    ServerAssessmentResult,
+    "id" | "assessmentId" | "unitId" | "startedAt" | "finishedAt" | "objectiveScore" | "source"
+  >
+> & { source?: "server" | "historical" };
 export type WritingSubmission = {
   id: string;
   activityId: string;
@@ -182,7 +195,16 @@ export type ImageDescriptionAttempt = {
 export type AdaptiveAssessmentAttempt = {
   id: string;
   courseId: string;
-  unitId: string;
+  unitId?: string;
+  assessmentId?: string;
+  method?: "adaptive";
+  purpose?: ServerAssessmentResult["purpose"];
+  contentVersion?: string;
+  source?: "server" | "historical";
+  objectiveScore?: number | null;
+  passed?: boolean | null;
+  status?: ServerAssessmentResult["status"];
+  responseKey?: string;
   answers: AdaptiveAnswer[];
   startedAt: string;
   finishedAt: string;
@@ -252,9 +274,15 @@ export const initialStudyState: StudyState = {
 export function recordAdaptiveAssessment(
   state: StudyState,
   course: PublicCourse,
-  input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">,
+  input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt"> & {
+    id?: string;
+    finishedAt?: string;
+  },
 ): StudyState {
-  if (input.courseId !== course.id || !course.units.some((unit) => unit.id === input.unitId))
+  if (
+    input.courseId !== course.id ||
+    (input.unitId && !course.units.some((unit) => unit.id === input.unitId))
+  )
     return state;
   const activities = new Map(
     course.units.flatMap((unit) =>
@@ -263,7 +291,7 @@ export function recordAdaptiveAssessment(
       ),
     ),
   );
-  const finishedAt = new Date().toISOString();
+  const finishedAt = input.finishedAt ?? new Date().toISOString();
   const mistakes = { ...state.mistakes };
   const reviewEvents: StudyEvent[] = [];
   for (const answer of input.answers) {
@@ -301,14 +329,14 @@ export function recordAdaptiveAssessment(
     ...state,
     mistakes,
     adaptiveAssessments: [
-      { ...input, id: crypto.randomUUID(), finishedAt },
-      ...(state.adaptiveAssessments ?? []),
+      { ...input, id: input.id ?? crypto.randomUUID(), finishedAt },
+      ...(state.adaptiveAssessments ?? []).filter((item) => !input.id || item.id !== input.id),
     ].slice(0, 20),
     events: [
       {
         id: crypto.randomUUID(),
         type: "adaptive_assessment_completed",
-        itemId: input.unitId,
+        itemId: input.assessmentId ?? input.unitId,
         createdAt: finishedAt,
       },
       ...reviewEvents,
@@ -351,13 +379,16 @@ export function recordRegionalAttempt(
       { ...input, id: crypto.randomUUID(), createdAt },
       ...(state.regionalAttempts ?? []),
     ].slice(0, 200),
-    events: [{
-      id: crypto.randomUUID(),
-      type: input.correct ? "regional_check_correct" : "regional_check_wrong",
-      itemId: input.topicId,
-      metadata: { selectedAnswer: input.selectedAnswer },
-      createdAt,
-    }, ...state.events],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: input.correct ? "regional_check_correct" : "regional_check_wrong",
+        itemId: input.topicId,
+        metadata: { selectedAnswer: input.selectedAnswer },
+        createdAt,
+      },
+      ...state.events,
+    ],
   };
 }
 
@@ -474,7 +505,11 @@ export function recordEvaluatedSpeaking(
     const previous = pronunciationReviews[id];
     const correct = word.errorType === "None" && word.accuracy !== null && word.accuracy >= 75;
     if (!previous && correct) continue;
-    const schedule = ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(now), correct, now);
+    const schedule = ReviewScheduler.afterAnswer(
+      previous?.schedule ?? ReviewScheduler.initial(now),
+      correct,
+      now,
+    );
     pronunciationReviews[id] = {
       id,
       activityId,
@@ -732,7 +767,7 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
         timesCorrect: mistake.timesCorrect + Number(correct),
         timesMissed: mistake.timesMissed + Number(!correct),
         lastReviewedAt: new Date().toISOString(),
-        lastCorrectAt: correct ? new Date().toISOString() : mistake.lastCorrectAt ?? null,
+        lastCorrectAt: correct ? new Date().toISOString() : (mistake.lastCorrectAt ?? null),
         schedule,
       },
     },
@@ -752,60 +787,141 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
   };
 }
 
-const objectiveTypes = new Set([
-  "multiple_choice",
-  "true_false",
-  "fill_blank",
-  "ordering",
-  "short_answer",
-  "listening",
-]);
+function matchesAssessmentResult(course: PublicCourse, result: ServerAssessmentResult) {
+  const definition = course.assessments.find((item) => item.id === result.assessmentId);
+  return Boolean(
+    definition &&
+    result.courseId === course.id &&
+    result.contentVersion === course.contentVersion &&
+    result.purpose === definition.purpose &&
+    result.method === definition.method,
+  );
+}
 
-export function reconcileAssessments(state: StudyState, course: PublicCourse): StudyState {
-  let next = state;
-  for (const unit of course.units) {
-    const lesson = unit.lessons.find((item) =>
-      item.activities.some((activity) => activity.type === "quiz"),
-    );
-    if (!lesson) continue;
-    const objective = lesson.activities.filter((activity) => objectiveTypes.has(activity.type));
-    const writing = lesson.activities.filter((activity) => activity.type === "writing");
-    const attempts = objective.map((activity) =>
-      state.attempts.find((attempt) => attempt.activityId === activity.id),
-    );
-    const submissions = writing.map((activity) =>
-      state.writing.find((submission) => submission.activityId === activity.id),
-    );
-    if (attempts.some((item) => !item) || submissions.some((item) => !item)) continue;
-    const dates = [
-      ...attempts.map((item) => item!.createdAt),
-      ...submissions.map((item) => item!.createdAt),
-    ].sort();
-    const assessmentId = `${unit.id}-final`;
-    const latest = next.assessmentAttempts.find((item) => item.assessmentId === assessmentId);
-    if (latest && dates.some((date) => date <= latest.finishedAt)) continue;
-    const objectiveScore = objective.length
-      ? Math.round((100 * attempts.filter((item) => item?.correct).length) / objective.length)
-      : 0;
-    const finishedAt = new Date().toISOString();
-    next = {
-      ...next,
-      assessmentAttempts: [
-        {
-          id: crypto.randomUUID(),
-          assessmentId,
-          unitId: unit.id,
-          startedAt: dates[0] ?? finishedAt,
-          finishedAt,
-          objectiveScore,
-        },
-        ...next.assessmentAttempts,
-      ],
-      events: [
-        { id: crypto.randomUUID(), type: "assessment_completed", createdAt: finishedAt },
-        ...next.events,
-      ],
-    };
+export function recordServerAssessment(
+  state: StudyState,
+  course: PublicCourse,
+  result: ServerAssessmentResult,
+): StudyState {
+  if (!matchesAssessmentResult(course, result)) return state;
+  if (result.method === "adaptive") {
+    if (
+      state.adaptiveAssessments.some(
+        (item) => item.id === result.id && item.responseKey === result.responseKey,
+      )
+    )
+      return state;
+    if (result.answers.some((answer) => answer.correct === null || !answer.difficulty))
+      return state;
+    return recordAdaptiveAssessment(state, course, {
+      ...result,
+      method: "adaptive",
+      answers: result.answers.map((answer) => ({
+        ...answer,
+        correct: answer.correct === true,
+        difficulty: answer.difficulty!,
+      })),
+    });
   }
-  return next;
+  if (
+    state.assessmentAttempts.some(
+      (item) => item.id === result.id && item.responseKey === result.responseKey,
+    )
+  )
+    return state;
+  let next = state;
+  const activities = new Map(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) => lesson.activities.map((item) => [item.id, item] as const)),
+    ),
+  );
+  for (const answer of result.answers) {
+    const activity = activities.get(answer.activityId);
+    if (!activity) continue;
+    if (answer.correct !== null)
+      next = recordAttempt(next, activity, answer.answer, {
+        correct: answer.correct,
+        correctAnswer: answer.correctAnswer ?? "",
+        explanation: answer.explanation ?? "",
+      });
+    else if (activity.type === "writing") {
+      next = markActivityComplete(next, activity.id);
+      if (
+        !next.writing.some((item) => item.activityId === activity.id && item.text === answer.answer)
+      )
+        next = {
+          ...next,
+          writing: [
+            {
+              id: crypto.randomUUID(),
+              activityId: activity.id,
+              text: answer.answer,
+              createdAt: result.finishedAt,
+              sessionId: state.activeSessionId,
+            },
+            ...next.writing,
+          ],
+        };
+    }
+  }
+  return {
+    ...next,
+    assessmentAttempts: [
+      result,
+      ...next.assessmentAttempts.filter((item) => item.id !== result.id),
+    ],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: "assessment_completed",
+        itemId: result.assessmentId,
+        createdAt: result.finishedAt,
+        metadata: { purpose: result.purpose, method: result.method },
+      },
+      ...next.events,
+    ],
+  };
+}
+
+/** Refresh current results from the server; cached rows are retained only as history. */
+export function restoreServerAssessmentResults(
+  state: StudyState,
+  course: PublicCourse,
+  results: ServerAssessmentResult[],
+): StudyState {
+  const fixed: AssessmentAttempt[] = state.assessmentAttempts.map((item) =>
+    item.source === "server" ? { ...item, source: "historical" as const } : item,
+  );
+  const adaptive: AdaptiveAssessmentAttempt[] = state.adaptiveAssessments.map((item) =>
+    item.source === "server" ? { ...item, source: "historical" as const } : item,
+  );
+  const valid = results.filter((result) => matchesAssessmentResult(course, result));
+  for (const result of valid) {
+    if (result.method === "fixed") {
+      const existing = fixed.findIndex((item) => item.id === result.id);
+      if (existing >= 0) fixed.splice(existing, 1);
+      fixed.push(result);
+    } else if (result.answers.every((answer) => answer.correct !== null && answer.difficulty)) {
+      const existing = adaptive.findIndex((item) => item.id === result.id);
+      if (existing >= 0) adaptive.splice(existing, 1);
+      adaptive.push({
+        ...result,
+        method: "adaptive",
+        answers: result.answers.map((answer) => ({
+          ...answer,
+          correct: answer.correct === true,
+          difficulty: answer.difficulty!,
+        })),
+      });
+    }
+  }
+  const completed = new Set(state.completedActivityIds);
+  for (const result of valid.filter((item) => item.method === "fixed"))
+    for (const answer of result.answers) completed.add(answer.activityId);
+  return {
+    ...state,
+    completedActivityIds: [...completed],
+    assessmentAttempts: fixed.sort((a, b) => b.finishedAt.localeCompare(a.finishedAt)),
+    adaptiveAssessments: adaptive.sort((a, b) => b.finishedAt.localeCompare(a.finishedAt)),
+  };
 }

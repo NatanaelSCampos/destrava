@@ -6,6 +6,7 @@ import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
 import { featureFlags } from "@/lib/feature-flags";
 import { contentAffinityRank, orderByLearningAffinity, type LearningSkill } from "./learning-preferences";
+import { outstandingPolicyActivityIds } from "./learning-policy-engine";
 
 type RecommendationBase = {
   source:
@@ -52,7 +53,9 @@ export class LearningRecommendationEngine {
         lesson.activities.map((activity) => ({ activity, lesson, unit })),
       ),
     );
-    const nextCoreActivityId = activities.find((item) => !state.completedActivityIds.includes(item.activity.id))?.activity.id;
+    const pendingPolicyIds = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));
+    const nextCoreActivityId = activities.find(item => pendingPolicyIds.has(item.activity.id))?.activity.id ??
+      activities.find((item) => !state.completedActivityIds.includes(item.activity.id))?.activity.id;
     const activityById = new Map(activities.map((entry) => [entry.activity.id, entry]));
     const skillScores = new Map(profile.skills.map((item) => [item.id, item.score]));
     const conceptScores = new Map(profile.concepts.map((item) => [item.id, item.score]));
@@ -325,7 +328,7 @@ export class LearningRecommendationEngine {
     }
 
     for (const [index, context] of activities.entries()) {
-      if (state.completedActivityIds.includes(context.activity.id)) continue;
+      if (state.completedActivityIds.includes(context.activity.id) && !pendingPolicyIds.has(context.activity.id)) continue;
       const skillScore = Math.min(
         ...(context.activity.skills.length ? context.activity.skills : [context.activity.skill])
           .map((skill) => skillScores.get(skill))
@@ -350,7 +353,7 @@ export class LearningRecommendationEngine {
       const goalAffinity = context.activity.goals?.includes(preferences.goal) ? 3 : 0;
       const contextAffinity = preferences.contexts.some((id) => context.activity.contexts?.includes(id)) ? 4 : 0;
       // Personalization only reorders curriculum choices. Reviews and demonstrated weaknesses keep their tiers.
-      const priority = Math.min(69, pedagogicalPriority +
+      const priority = Math.min(69, pedagogicalPriority + (pendingPolicyIds.has(context.activity.id) ? 8 : 0) +
         (context.activity.id === nextCoreActivityId ? 15 : 0) +
         Math.round((skillPreference - 0.6) * 10) + goalAffinity + contextAffinity);
       add({
@@ -358,7 +361,7 @@ export class LearningRecommendationEngine {
         source: "curriculum",
         id: context.activity.id,
         title: context.activity.title,
-        reason: "Próxima atividade da sua trilha, ajustada ao seu desempenho.",
+        reason: pendingPolicyIds.has(context.activity.id) ? "Prática ligada a um requisito pendente da unidade." : "Prática opcional, ajustada ao seu desempenho.",
         priority,
         minutes: context.activity.minutes,
         unitNumber: context.unit.number,

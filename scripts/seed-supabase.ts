@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { loadContent } from "./content-loader";
 import { runtimeBundle } from "../src/content/runtime-package";
+import { assessmentSeedRows } from "../src/repositories/assessment-content-projection";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -46,6 +47,7 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
   await upsert("courses", [{
     id: course.id, slug: course.slug, title: course.title, level: course.level,
     description: course.description, active: true,
+    content_version: coursePackage.contentVersion, assessment_refs: coursePackage.assessmentRefs,
   }]);
   const unitForLesson = new Map<string, string>();
   for (const unit of course.units) {
@@ -53,6 +55,8 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
       id: unit.id, course_id: course.id, slug: unit.slug, title: unit.title,
       number: unit.number, description: unit.description, objectives: unit.objectives,
       active: unit.active,
+      assessment_refs: unit.assessmentRefs,
+      learning_policy: unit.learningPolicy,
     }]);
     for (const lesson of unit.lessons) {
       unitForLesson.set(lesson.id, unit.id);
@@ -97,27 +101,10 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
       position: index + 1, active: true,
     }]);
   }
-  for (const assessment of coursePackage.assessments) {
-    if (!assessment.unitId) continue;
-    await upsert("assessments", [{
-      id: assessment.id, unit_id: assessment.unitId,
-      title: `Diagnóstico · ${course.units.find((unit) => unit.id === assessment.unitId)?.title ?? course.title}`,
-      passing_score: Math.round(assessment.passingPolicy.overall * 100), active: true,
-    }]);
-    await syncAssessmentItems(assessment.id, assessment.bank.map((item) => item.activityId));
-  }
-  for (const unit of course.units) {
-    const finalLesson = unit.lessons.find((lesson) => lesson.activities.some((activity) => activity.type === "quiz"));
-    if (!finalLesson) continue;
-    const id = `${unit.id}-final`;
-    await upsert("assessments", [{
-      id, unit_id: unit.id, title: `Avaliação final · ${unit.title}`,
-      passing_score: 75, active: true,
-    }]);
-    await upsert("assessment_items", finalLesson.activities
-      .filter((activity) => activity.type !== "quiz")
-      .map((activity, index) => ({ assessment_id: id, activity_id: activity.id, position: index + 1 })),
-    "assessment_id,activity_id");
+  for (const row of assessmentSeedRows(coursePackage)) {
+    const { activityIds, ...assessment } = row;
+    await upsert("assessments", [assessment]);
+    await syncAssessmentItems(assessment.id, activityIds);
   }
   console.log(`Seeded ${course.id}: ${course.units.length} unit(s), ${resources.vocabulary.length} vocabulary items.`);
 }

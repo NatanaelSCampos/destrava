@@ -1025,3 +1025,13 @@ select:focus-visible {
     font-size: 27px;
   }
 }
+/* Pending progress stays visible while remote writes are blocked or recovering. */
+.study-sync-notice {
+  margin-bottom: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+.study-sync-notice p { margin: 0 0 0.625rem; }
+.study-sync-notice > div { display: flex; flex-wrap: wrap; gap: 0.5rem; }

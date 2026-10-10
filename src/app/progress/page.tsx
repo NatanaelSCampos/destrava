@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ChartNoAxesCombined, Check, Circle, Target } from "lucide-react";
+import { ArrowRight, ChartNoAxesCombined, Target } from "lucide-react";
+import { PolicyChecklist, policyStatusLabels } from "@/components/activities/policy-checklist";
 import { useStudy } from "@/components/study-provider";
 import { courseProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
 import { buildLearningProfile, type MasteryMetric } from "@/domain/study/learning-profile";
@@ -12,6 +13,7 @@ import { recommendationLink } from "@/lib/recommendation-link";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { recommendationGuidance } from "@/domain/study/recommendation-guidance";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { assessmentLink } from "@/content/assessment-references";
 
 const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "vocabulary", label: "Vocabulário" },
@@ -52,7 +54,7 @@ function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[]
 export default function ProgressPage() {
   const { course, resources, state, vocabularyItems, recordStudyEvent } = useStudy();
   const unit = currentUnit(course, state)!;
-  const progress = unitProgress(unit, state, vocabularyItems);
+  const progress = unitProgress(unit, state, vocabularyItems, course);
   const totalProgress = courseProgress(course, state);
   const skillData = skillLabels.map((item) => ({
     ...item,
@@ -98,7 +100,7 @@ export default function ProgressPage() {
         <section className="progress-main-card">
           <span className="eyebrow">{course.title.toUpperCase()}</span>
           <h2>
-            Você já percorreu <strong>{totalProgress}%</strong> do curso disponível.
+            Você cumpriu <strong>{totalProgress}%</strong> dos requisitos de conclusão.
           </h2>
           <p>Continue praticando para transformar conhecimento em confiança.</p>
           <div className="progress-track">
@@ -109,7 +111,7 @@ export default function ProgressPage() {
               Unidade {unit.number} · {unit.title}
             </span>
             <strong>
-              {progress.completed} de {progress.total} atividades
+              {progress.completed} de {progress.total} atividades realizadas
             </strong>
           </div>
         </section>
@@ -120,28 +122,11 @@ export default function ProgressPage() {
           <h3>
             {progress.isMastered
               ? "Dominada"
-              : progress.isCompleted
-                ? "Concluída, em revisão"
-                : "Em construção"}
+              : policyStatusLabels[progress.mastery.status]}
           </h3>
-          <p>Completar a trilha é o primeiro passo; domínio pede prática e revisão.</p>
-          <div className="mastery-checks">
-            {[
-              { label: "Trilha concluída", done: progress.isCompleted },
-              { label: "Exercícios ≥ 80%", done: progress.exerciseScore >= 80 },
-              { label: "Revisão ≥ 80%", done: progress.reviewScore >= 80 },
-              { label: "Writing e speaking", done: progress.writingDone && progress.speakingDone },
-              {
-                label: "Teste final ≥ 75%",
-                done: progress.assessmentFinished && progress.assessmentScore >= 75,
-              },
-            ].map((item) => (
-              <div key={item.label}>
-                {item.done ? <Check size={16} /> : <Circle size={15} />}
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          <p>Realizar atividades, concluir a unidade e demonstrar domínio são marcos distintos.</p>
+          <PolicyChecklist title="Conclusão" result={progress.completion} />
+          <PolicyChecklist title="Domínio estimado" result={progress.mastery} />
         </section>
       </div>
       <section className="panel improvement-panel">
@@ -273,12 +258,12 @@ export default function ProgressPage() {
                     }}
                   />
                 </div>
-                <b>{item.performance === null ? "Sem nota" : `${item.performance}%`}</b>
+                <b>{!item.applicable ? "Não aplicável" : item.unavailable ? "Indisponível" : item.performance === null ? "Sem nota" : `${item.performance}%`}</b>
               </div>
             ))}
           </div>
           <p className="helper-note">
-            A barra mostra conclusão; a nota mostra acertos nas atividades corrigidas. Produções
+            A barra mostra participação; a nota mostra acertos nas atividades corrigidas. Produções
             livres ficam sem nota automática.
           </p>
         </section>
@@ -287,23 +272,23 @@ export default function ProgressPage() {
           <h2>
             {progress.assessmentFinished
               ? `${progress.assessmentScore}% de acertos`
-              : "Um teste para fechar o ciclo"}
+              : progress.assessmentDefined ? "Um teste para fechar o ciclo" : "Sem avaliação final declarada"}
           </h2>
           <p>
             {progress.assessmentFinished
               ? "Veja os pontos que merecem outra revisão."
               : "Ao terminar as lições, confira o que já consegue usar sem consultar o conteúdo."}
           </p>
-          <Link
-            href={`/course/${course.slug}/unit/${unit.number}/lesson/${unit.lessons.find((lesson) => lesson.activities.some((activity) => activity.type === "quiz"))?.slug ?? unit.lessons.at(-1)?.slug}`}
+          {unit.assessmentRefs.final && <Link
+            href={assessmentLink(unit.assessmentRefs.final)}
             className="primary-button"
           >
             {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
             <ArrowRight size={16} />
-          </Link>
-          <Link href="/assessment" className="secondary-button">
+          </Link>}
+          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && <Link href={assessmentLink(unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic!)} className="secondary-button">
             Fazer diagnóstico adaptativo <ArrowRight size={16} />
-          </Link>
+          </Link>}
           {progress.assessmentFinished && (
             <div className="assessment-strength">
               <strong>{weakSkills.length ? "Para revisar" : "Seu ponto forte"}</strong>

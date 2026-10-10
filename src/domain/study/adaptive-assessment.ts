@@ -1,5 +1,5 @@
-import type { CoursePackage } from "@/content/contracts";
-type AssessmentSkill = CoursePackage["assessments"][number]["skillPlan"][number];
+import type { AdaptiveAssessmentDefinition } from "@/content/contracts";
+type AssessmentSkill = AdaptiveAssessmentDefinition["skillPlan"][number];
 export type AdaptiveBankItem = { activityId: string; skill: AssessmentSkill; difficulty: 1 | 2 | 3; ceiling?: boolean };
 
 export type AdaptiveAnswer = {

@@ -4,7 +4,7 @@ import type { NumberPrompt } from "@/domain/numbers/number-practice";
 import type { VisualCue } from "./visual-vocabulary";
 import type { ImageDescriptionScene } from "./image-description-scenes";
 import type { AlphabetLetter, RegionalTopic } from "./fundamentals-types";
-import type { LearningGoal, LearningSkill } from "@/domain/study/learning-preferences";
+import type { LearningGoal, LearningSkill } from "./contract-vocabulary";
 
 export type VocabularyItem = {
   id: string;

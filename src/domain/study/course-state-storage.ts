@@ -16,7 +16,8 @@ function isCourseStorage(value: unknown): value is CourseStateStorage {
       value.schemaVersion === 2 &&
       "courses" in value &&
       value.courses &&
-      typeof value.courses === "object",
+      typeof value.courses === "object" &&
+      !Array.isArray(value.courses),
   );
 }
 
@@ -74,6 +75,41 @@ export function readCourseState(raw: unknown, courseId: string, languageCode = "
   if (courseId === LEGACY_COURSE_ID && raw && typeof raw === "object")
     return normalize(raw as Partial<StudyState>, courseId, languageCode);
   return normalize(null, courseId, languageCode);
+}
+
+/** Existing remote rows must be readable; malformed rows are not missing enrollments. */
+export function readPersistedCourseState(
+  raw: unknown, courseId: string, languageCode = "", legacy = false,
+): StudyState | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw))
+    throw new Error("O progresso salvo está ilegível. A sincronização foi bloqueada para proteger seus dados.");
+  if ("schemaVersion" in raw) {
+    if (!isCourseStorage(raw)) throw new Error("Formato de progresso salvo não reconhecido.");
+    if (!(courseId in raw.courses)) {
+      if (legacy) return null;
+      throw new Error("O progresso salvo não corresponde ao curso atual.");
+    }
+    return readPersistedCourseState(raw.courses[courseId], courseId, languageCode);
+  }
+  if ("courseId" in raw && typeof raw.courseId !== "string")
+    throw new Error("O progresso salvo não identifica um curso válido.");
+  if ("courseId" in raw && raw.courseId !== courseId) {
+    if (legacy) return null;
+    throw new Error("O progresso salvo não corresponde ao curso atual.");
+  }
+  if (legacy && !("courseId" in raw) && courseId !== LEGACY_COURSE_ID) return null;
+  for (const key of ["completedActivityIds", "attempts", "sessions", "events", "reviews", "writing", "speaking",
+    "structureAttempts", "assessmentAttempts", "numberAttempts", "regionalAttempts", "microLessonAttempts",
+    "conversations", "imageDescriptions", "adaptiveAssessments"])
+    if (key in raw && !Array.isArray((raw as Record<string, unknown>)[key]))
+      throw new Error("O progresso salvo contém dados ilegíveis.");
+  for (const key of ["profile", "vocabulary", "mistakes", "structureReviews", "pronunciationReviews"])
+    if (key in raw) {
+      const value = (raw as Record<string, unknown>)[key];
+      if (!value || typeof value !== "object" || Array.isArray(value))
+        throw new Error("O progresso salvo contém dados ilegíveis.");
+    }
+  return normalize({ ...raw, courseId } as Partial<StudyState>, courseId, languageCode);
 }
 
 export function writeCourseState(

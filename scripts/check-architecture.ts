@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { checkContentContractDependencies, formatContractDependencyIssues } from "./contract-dependency-check";
 
 const roots = ["src/domain", "src/app", "src/components", "src/lib", "src/repositories"];
 const allowed = new Set(["src/domain/study/course-state-storage.ts"]);
@@ -22,3 +23,9 @@ if (matches.length) {
   console.error(`Language-specific references in generic runtime:\n${matches.join("\n")}`);
   process.exitCode = 1;
 } else console.log("architecture boundary: ok");
+
+const contracts = checkContentContractDependencies();
+if (contracts.issues.length) {
+  console.error(`Content contract dependency violations:\n${formatContractDependencyIssues(contracts)}`);
+  process.exitCode = 1;
+} else console.log(`content contract dependencies: ok (${contracts.files.length} local modules; no cycles)`);

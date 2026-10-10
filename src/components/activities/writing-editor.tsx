@@ -16,7 +16,7 @@ type WritingFeedback = {
   score: { grammar: number; vocabulary: number; clarity: number };
 };
 
-export function WritingEditor({ activity }: { activity: Writing }) {
+export function WritingEditor({ activity, onSaved }: { activity: Writing; onSaved?: (text: string) => void }) {
   const { course, language, state, saveWriting } = useStudy();
   const previous = state.writing.find((submission) => submission.activityId === activity.id);
   const [text, setText] = useState(previous?.text ?? "");
@@ -31,6 +31,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
     if (!canSubmit) return;
     saveWriting(activity.id, text);
     setSaved(true);
+    onSaved?.(text);
   }
   async function correct() {
     if (!canSubmit || loading) return;
@@ -47,6 +48,7 @@ export function WritingEditor({ activity }: { activity: Writing }) {
       setFeedback(data.feedback as WritingFeedback);
       saveWriting(activity.id, text, data.feedback);
       setSaved(true);
+      onSaved?.(text);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível corrigir agora.");
     } finally {

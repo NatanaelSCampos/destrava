@@ -1,10 +1,8 @@
 import type { CoursePackage, LanguagePackage, LessonAction } from "./contracts";
 
 export function validateInteractiveLessons(course: CoursePackage, language: LanguagePackage) {
-  if (course.schemaVersion !== "1.0" && course.schemaVersion !== "1.1")
+  if (course.schemaVersion !== "1.3")
     throw new Error(`Unsupported course schema: ${course.schemaVersion}`);
-  if (course.interactiveLessons.length && course.schemaVersion !== "1.1")
-    throw new Error("Interactive lessons require CoursePackage schemaVersion 1.1");
   const definitions = new Map(course.interactiveLessons.map((item) => [item.id, item]));
   if (definitions.size !== course.interactiveLessons.length) throw new Error("Duplicate interactive lesson ID");
   const media = new Map(course.media.map((item) => [item.id, item]));

@@ -1,7 +1,7 @@
 {
   "course": {
-    "schemaVersion": "1.0",
-    "contentVersion": "1.0.0",
+    "schemaVersion": "1.3",
+    "contentVersion": "1.2.0",
     "id": "pt-BR.en.a1.general",
     "slug": "ingles-a1",
     "isDefault": false,
@@ -676,7 +676,67 @@
             "active": true
           }
         ],
-        "assessmentId": "en.u01.diagnostic",
+        "assessmentRefs": {
+          "diagnostic": "en.u01.diagnostic",
+          "formative": []
+        },
+        "learningPolicy": {
+          "completion": {
+            "requirements": [
+              {
+                "id": "required-activities",
+                "label": "Realizar as atividades obrigatórias",
+                "kind": "participation",
+                "activityIds": [
+                  "en.act.01.intro",
+                  "en.act.02.greeting",
+                  "en.act.03.name-fill",
+                  "en.act.04.name-question",
+                  "en.act.05.name-speak",
+                  "en.act.06.name-card",
+                  "en.act.07.origin-intro",
+                  "en.act.08.origin-listen",
+                  "en.act.09.origin-choice",
+                  "en.act.10.origin-fill",
+                  "en.act.11.home-answer",
+                  "en.act.12.origin-speak",
+                  "en.act.13.job-intro",
+                  "en.act.14.job-choice",
+                  "en.act.15.job-order",
+                  "en.act.16.job-listen",
+                  "en.act.17.introduction-write",
+                  "en.act.18.question-speak",
+                  "en.diag.vocab.3",
+                  "en.diag.grammar.3",
+                  "en.diag.listen.3",
+                  "en.diag.write.3",
+                  "en.diag.read.3"
+                ]
+              }
+            ]
+          },
+          "mastery": {
+            "requirements": [
+              {
+                "id": "completion",
+                "label": "Cumprir a conclusão da unidade",
+                "kind": "unit_completed"
+              },
+              {
+                "id": "listening",
+                "label": "Compreensão auditiva de pelo menos 80%",
+                "kind": "objective_score",
+                "activityIds": [
+                  "en.act.08.origin-listen",
+                  "en.act.16.job-listen"
+                ],
+                "skill": "listening",
+                "minimumScore": 80,
+                "minimumSamples": 2
+              }
+            ]
+          }
+        },
         "description": "Cumprimente, apresente-se e faça perguntas pessoais simples.",
         "active": true
       }
@@ -1300,18 +1360,21 @@
     "assessments": [
       {
         "id": "en.u01.diagnostic",
-        "type": "adaptive_diagnostic",
+        "title": "Diagnóstico do curso",
+        "purpose": "diagnostic",
         "unitId": "en.u01",
+        "objectiveIds": [],
+        "passingPolicy": {
+          "overall": 0.6,
+          "minimumBySkill": {}
+        },
+        "method": "adaptive",
         "skillWeights": {
           "vocabulary": 0.2,
           "grammar": 0.2,
           "listening": 0.2,
           "writing": 0.2,
           "reading": 0.2
-        },
-        "passingPolicy": {
-          "overall": 0.6,
-          "minimumBySkill": {}
         },
         "skillPlan": [
           "vocabulary",
@@ -1401,8 +1464,7 @@
             "skill": "reading",
             "difficulty": 3
           }
-        ],
-        "activities": []
+        ]
       }
     ],
     "media": [
@@ -1426,6 +1488,9 @@
         }
       }
     ],
+    "assessmentRefs": {
+      "diagnostic": "en.u01.diagnostic"
+    },
     "interactiveLessons": [],
     "practice": {
       "reviewStructures": [

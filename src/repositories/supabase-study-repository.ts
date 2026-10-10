@@ -2,8 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { PublicCourse } from "@/content/public";
 import type { VocabularyItem } from "@/components/study-provider";
 import type { StudyState } from "@/domain/study/study-state";
-import { readCourseState } from "@/domain/study/course-state-storage";
-import { skillProgress, unitProgress } from "@/domain/study/progress";
+import { readPersistedCourseState, readCourseState } from "@/domain/study/course-state-storage";
+import { restoreServerAssessmentResults } from "@/domain/study/study-state";
+import type { ServerAssessmentResult } from "@/content/assessment-results";
+import { skillProgress } from "@/domain/study/progress";
+import { projectUnitProgress } from "./unit-progress-projection";
 import type { Skill } from "@/content/schema";
 import { projectStudyEvents } from "./study-event-projection";
 
@@ -15,6 +18,7 @@ export class SupabaseStudyRepository {
   constructor(
     private db: SupabaseClient,
     private userId: string,
+    private assessmentSync?: { course: PublicCourse; load: () => Promise<ServerAssessmentResult[]> },
   ) {}
 
   async load(courseId: string, languageCode: string): Promise<StudyState | null> {
@@ -25,15 +29,20 @@ export class SupabaseStudyRepository {
       .eq("course_id", courseId)
       .maybeSingle();
     if (courseError) throw new Error(`Não foi possível carregar seu progresso: ${courseError.message}`);
-    let raw = courseData?.state;
-    if (!raw) {
+    let state: StudyState | null;
+    if (courseData !== null) {
+      state = readPersistedCourseState(courseData.state, courseId, languageCode);
+    } else {
       const { data: legacy, error } = await this.db.from("user_study_state")
         .select("state").eq("user_id", this.userId).maybeSingle();
       if (error) throw new Error(`Não foi possível carregar seu progresso anterior: ${error.message}`);
-      raw = legacy?.state;
+      state = legacy === null ? null : readPersistedCourseState(legacy.state, courseId, languageCode, true);
     }
-    if (!raw) return null;
-    const state = readCourseState(raw, courseId, languageCode);
+    if (this.assessmentSync) {
+      const results = await this.assessmentSync.load();
+      if (state || results.length) state = restoreServerAssessmentResults(state ?? readCourseState(null, courseId, languageCode), this.assessmentSync.course, results);
+    }
+    if (state === null) return null;
     const speaking = await Promise.all(
       (state.speaking ?? []).map(async (submission) => {
         if (!submission.audioPath) return submission;
@@ -148,18 +157,7 @@ export class SupabaseStudyRepository {
         },
       })),
     );
-    await this.upsert(
-      "assessment_attempts",
-      (state.assessmentAttempts ?? []).map((attempt) => ({
-        id: attempt.id,
-        user_id: uid,
-        assessment_id: attempt.assessmentId,
-        started_at: attempt.startedAt,
-        finished_at: attempt.finishedAt,
-        objective_score: attempt.objectiveScore,
-        result: { unitId: attempt.unitId },
-      })),
-    );
+    // Formal results are written by /api/assessments after canonical server grading.
     await this.upsert(
       "study_session_activities",
       state.sessions.flatMap((session) =>
@@ -330,7 +328,7 @@ export class SupabaseStudyRepository {
           const completed = lesson.activities.filter((activity) =>
             state.completedActivityIds.includes(activity.id),
           ).length;
-          const percent = Math.round((100 * completed) / lesson.activities.length);
+          const percent = lesson.activities.length ? Math.round((100 * completed) / lesson.activities.length) : 0;
           return {
             user_id: uid,
             lesson_id: lesson.id,
@@ -344,20 +342,7 @@ export class SupabaseStudyRepository {
     );
     await this.upsert(
       "unit_progress",
-      units.map((unit) => {
-        const progress = unitProgress(unit, state, vocabularyItems);
-        return {
-          user_id: uid,
-          unit_id: unit.id,
-          completion_percent: progress.percentage,
-          completed_at: progress.isCompleted ? now : null,
-          mastered_at: progress.isMastered ? now : null,
-          exercise_score: progress.exerciseScore,
-          review_score: progress.reviewScore,
-          assessment_score: progress.assessmentFinished ? progress.assessmentScore : null,
-          updated_at: now,
-        };
-      }),
+      units.map((unit) => projectUnitProgress(uid,course,unit,state,vocabularyItems,now)),
       "user_id,unit_id",
     );
     await this.upsert(

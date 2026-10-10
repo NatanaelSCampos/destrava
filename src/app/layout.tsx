@@ -27,7 +27,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="pt-BR" className={inter.variable}>
       <body>
-        <StudyProvider key={course.id} course={course} resources={bundle.resources} language={bundle.language} assessments={bundle.coursePackage.assessments.map(({ id, unitId, skillWeights, passingPolicy, skillPlan, bank }) => ({ id, unitId, skillWeights, passingPolicy, skillPlan, bank }))}>
+        <StudyProvider key={course.id} course={course} resources={bundle.resources} language={bundle.language}>
           <AppShell courseOptions={courseOptions}>{children}</AppShell>
         </StudyProvider>
       </body>

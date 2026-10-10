@@ -11,9 +11,10 @@ import { SpeakButton } from "@/components/audio/speak-button";
 import type { GradeResult } from "@/domain/activities/grader";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 
-export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved }: {
+export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved, onWritingSaved }: {
   activity: PublicActivity;
   onAssessed?: (answer: string, result: GradeResult) => void;
+  onWritingSaved?: (text: string) => void;
   onSpeakingSaved?: (result?: { submissionId: string; transcription: string; feedback?: PronunciationFeedback }) => void;
 }) {
   const { course, language, state, completeActivity } = useStudy();
@@ -132,7 +133,7 @@ export function ActivityRenderer({ activity, onAssessed, onSpeakingSaved }: {
             />
           )
         )}
-        {activity.type === "writing" && <WritingEditor key={activity.id} activity={activity} />}
+        {activity.type === "writing" && <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} />}
         {activity.type === "speaking" &&
           (featureFlags.SPEAKING && language.capabilities.speechRecognition ? (
             <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} />

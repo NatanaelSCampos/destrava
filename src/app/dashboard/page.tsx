@@ -40,7 +40,7 @@ function currentStreak(dates: string[]) {
 export default function DashboardPage() {
   const { course, resources, state, ready, vocabularyItems } = useStudy();
   const unit = currentUnit(course, state)!;
-  const progress = unitProgress(unit, state, vocabularyItems);
+  const progress = unitProgress(unit, state, vocabularyItems, course);
   const totalProgress = courseProgress(course, state);
   const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const focus = LearningRecommendationEngine.recommend(

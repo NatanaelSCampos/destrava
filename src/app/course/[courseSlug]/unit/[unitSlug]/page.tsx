@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, Play, Target } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { unitProgress } from "@/domain/study/progress";
+import { PolicyChecklist, policyStatusLabels } from "@/components/activities/policy-checklist";
 
 export default function UnitPage() {
   const { courseSlug, unitSlug } = useParams<{ courseSlug: string; unitSlug: string }>();
@@ -14,7 +15,7 @@ export default function UnitPage() {
   );
   if (courseSlug !== course.slug || !unit)
     return <div className="empty-state">Unidade não encontrada.</div>;
-  const progress = unitProgress(unit, state, vocabularyItems);
+  const progress = unitProgress(unit, state, vocabularyItems, course);
   const nextLesson = unit.lessons.find((lesson) =>
     lesson.activities.some((activity) => !state.completedActivityIds.includes(activity.id)),
   );
@@ -53,7 +54,7 @@ export default function UnitPage() {
         </div>
         <div className="unit-hero-score">
           <strong>{progress.percentage}%</strong>
-          <span>da trilha concluída</span>
+          <span>dos requisitos de conclusão</span>
           <div className="progress-track">
             <span style={{ width: `${progress.percentage}%` }} />
           </div>
@@ -70,7 +71,7 @@ export default function UnitPage() {
           </div>
           <div className="lesson-list">
             {unit.lessons.map((lesson, index) => {
-              const completed = lesson.activities.every((activity) =>
+              const completed = lesson.activities.length > 0 && lesson.activities.every((activity) =>
                 state.completedActivityIds.includes(activity.id),
               );
               const partial = lesson.activities.some((activity) =>
@@ -120,29 +121,25 @@ export default function UnitPage() {
                 ? "Unidade dominada"
                 : progress.isCompleted
                   ? "Trilha concluída"
-                  : "Em construção"}
+                  : policyStatusLabels[progress.mastery.status]}
             </h3>
             <p>Concluir atividades e dominar o conteúdo são marcos diferentes.</p>
             <div>
               <span>Exercícios</span>
-              <strong>{progress.exerciseScore}%</strong>
+              <strong>{progress.exerciseScore === null ? "Sem evidência" : `${progress.exerciseScore}%`}</strong>
             </div>
             <div>
               <span>Revisão</span>
-              <strong>{progress.reviewScore}%</strong>
+              <strong>{progress.reviewScore === null ? "Sem evidência" : `${progress.reviewScore}%`}</strong>
             </div>
             <div>
               <span>Teste final</span>
               <strong>
-                {progress.assessmentFinished ? `${progress.assessmentScore}%` : "Pendente"}
+                {!progress.assessmentDefined ? "Não declarada" : progress.assessmentFinished ? `${progress.assessmentScore}%` : progress.assessmentStatus === "historical" ? "Resultado anterior" : "Não realizada"}
               </strong>
             </div>
-            <div>
-              <span>Escrita e fala</span>
-              <strong>
-                {progress.writingDone && progress.speakingDone ? "Concluídas" : "Pendentes"}
-              </strong>
-            </div>
+            <PolicyChecklist title="Conclusão" result={progress.completion} />
+            <PolicyChecklist title="Domínio estimado" result={progress.mastery} />
           </div>
         </aside>
       </div>

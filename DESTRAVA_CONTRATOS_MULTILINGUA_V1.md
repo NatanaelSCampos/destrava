@@ -2,6 +2,13 @@
 
 > Especificação oficial para desacoplar o motor do Destrava dos idiomas e tornar a entrada de novos idiomas/cursos um processo de conteúdo, não de desenvolvimento do Core.
 
+> **Nota de implementação — 2026-10-10:** este documento orienta a arquitetura;
+> o contrato público V1 completo ainda não foi consolidado. O schema executado
+> de curso é 1.3: avaliações declaram `purpose`, `method` e `assessmentRefs`,
+> substituindo o campo ambíguo `unit.assessmentId`. Os exemplos históricos abaixo
+> devem ser lidos junto do [Incremento 2](DESTRAVA_AVALIACOES_INCREMENTO_2.md) e
+> do [direcionamento atual](DESTRAVA_DIRECIONAMENTO_ARQUITETURAL.md). O [Incremento 3](DESTRAVA_POLITICAS_INCREMENTO_3.md) acrescenta `unit.learningPolicy` para conclusão e domínio independentes, sem concluir a publicação do contrato V1 completo.
+
 ## 1. Objetivo
 
 O Destrava deve funcionar assim:

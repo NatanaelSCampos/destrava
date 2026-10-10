@@ -12,5 +12,5 @@ for (const { course, language, moduleData } of bundles) {
     for (const lesson of [...unit.lessons].sort((a, b) => a.order - b.order))
       console.log(`    ${lesson.order}. ${lesson.title}: ${lesson.activities.map((item) => `${item.type}(${item.id})`).join(", ")}`);
   }
-  console.log(`Assessment: ${course.assessments.map((item) => `${item.id} (${item.skillPlan.length} questions)`).join(", ") || "none"}`);
+  console.log(`Assessment: ${course.assessments.map((item) => `${item.id} · ${item.purpose}/${item.method} (${item.method === "adaptive" ? item.skillPlan.length : item.activityIds.length} items)`).join(", ") || "none"}`);
 }

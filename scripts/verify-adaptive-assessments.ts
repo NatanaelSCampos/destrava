@@ -3,7 +3,7 @@ import { loadContent } from "./content-loader";
 import { adaptiveAssessmentReport, nextAdaptiveItem, type AdaptiveAnswer } from "../src/domain/study/adaptive-assessment";
 
 for (const { course } of loadContent()) {
-  for (const assessment of course.assessments.filter((item) => item.type === "adaptive_diagnostic")) {
+  for (const assessment of course.assessments.filter((item) => item.method === "adaptive")) {
     const count = assessment.skillPlan.length;
     for (let pattern = 0; pattern < 2 ** count; pattern++) {
       const answers: AdaptiveAnswer[] = [];

@@ -21,9 +21,9 @@ const mutate = (change: (copy: CoursePackage) => void) => {
   change(copy);
   return copy;
 };
-assert.equal(course.schemaVersion, "1.1");
-assert.equal(english.course.schemaVersion, "1.0");
-assert.equal(testLanguage.course.schemaVersion, "1.0");
+assert.equal(course.schemaVersion, "1.3");
+assert.equal(english.course.schemaVersion, "1.3");
+assert.equal(testLanguage.course.schemaVersion, "1.3");
 assert(english.course.units.every((unit) => unit.lessons.every((lesson) => !lesson.interactiveLessonRef)));
 assert.doesNotThrow(() => validateInteractiveLessons(course, language));
 assert(curatedInteractiveExamples(course, definition).length > 0);

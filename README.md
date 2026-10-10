@@ -823,6 +823,40 @@ Detalhes operacionais de domínio, SMTP, OAuth, CAPTCHA e segurança devem ser c
 
 # Validação
 
+## Checkpoint integrado dos Incrementos 1–3
+
+O ambiente atual da aplicação é **local**, com Supabase em
+`http://127.0.0.1:54321` e Next em `http://127.0.0.1:3000`.
+As credenciais remotas foram preservadas em `.env.remote.backup.local`, ignorado
+pelo Git. `.env.integration.local` contém somente o perfil de integração local,
+sem chaves de OpenAI/Azure, Google OAuth ou Turnstile.
+
+```powershell
+npm.cmd run checkpoint:prepare
+npm.cmd run checkpoint:migrate
+npm.cmd run checkpoint:seed
+npm.cmd run dev:local
+# Em outro terminal, com a aplicação local em execução:
+npm.cmd run checkpoint:verify
+npm.cmd run build:local
+```
+
+Os comandos verificam projeto, daemon Docker, diretório, portas e destino
+loopback; migrações usam `--local` explicitamente. Não use `supabase db push`
+genérico para estes testes: o CLI continua vinculado ao projeto remoto.
+O verificador cria e remove suas próprias contas sintéticas e testa APIs reais,
+RLS, MFA, recuperação, persistência e navegador desktop/mobile. Requer Docker,
+o CLI instalado pelo projeto e Chrome ou Edge instalado.
+
+TOTP está habilitado em `supabase/config.toml`. Após mudar configurações locais,
+`checkpoint:restart` reinicia apenas este stack e preserva volumes; depois use
+`checkpoint:prepare` e reinicie `dev:local` para recarregar o ambiente.
+As migrações dos incrementos 2 e 3 foram aplicadas **somente localmente**.
+Contas de produção não existem neste banco; para revisão manual, cadastre uma
+conta local pela tela de login.
+
+Veja [o relatório e a proposta de checkpoint Git](DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md).
+
 Execute antes de considerar uma entrega concluída:
 
 ```powershell
@@ -833,14 +867,49 @@ npm.cmd run content:pedagogy
 npm.cmd run content:compile
 npm.cmd run content:preview -- --course pt-BR.xx-Test.a1.general
 npm.cmd run learning:verify
+npm.cmd run policies:verify
+npm.cmd run assessment:verify
+npm.cmd run assessment:semantics:verify
 npm.cmd run multilingual:verify
 npm.cmd run interactive:verify
 npm.cmd run architecture:check
+npm.cmd run contracts:verify
 npm.cmd run session:verify
+npm.cmd run sync:verify
 npm.cmd run build
 ```
 
 `predev` e `prebuild` compilam os pacotes automaticamente. Após aplicar as migrações e executar `npm.cmd run db:seed`, use `npm.cmd run db:verify:remote` para conferir o conteúdo no Supabase remoto. A revisão pedagógica emite avisos que exigem decisão editorial, mesmo quando a validação estrutural passa.
+
+### Avaliações — Fase 2, Incremento 2
+
+O schema de curso 1.3 preserva as finalidades, métodos e referências de avaliação
+introduzidos no Incremento 2 e acrescenta políticas de conclusão/domínio.
+O diagnóstico inicial vem de `course.assessmentRefs.diagnostic`; a final da
+unidade vem de `unit.assessmentRefs.final`. Quiz e nomes de IDs não definem
+esses papéis. Resultados sem evidência suficiente têm nota null.
+
+Para revisar a seleção local, use `http://localhost:3000/assessment` ou
+`http://localhost:3000/assessment?assessmentId=nos-presentamos-final` no curso
+espanhol. A gravação completa autenticada depende do conteúdo instalado no banco.
+`20261010000100_assessment_semantics.sql` e o seed correspondente estão
+preparados, **não aplicados remotamente**. Não execute instalação remota como
+parte da validação local sem autorização. Veja [a entrega do incremento](DESTRAVA_AVALIACOES_INCREMENTO_2.md)
+para arquivos, testes sintéticos, alterações nas fixtures e limites de persistência.
+
+### Políticas — Fase 2, Incremento 3
+
+Cada unidade declara `learningPolicy.completion` e `learningPolicy.mastery`.
+Participação não equivale a aprovação; atividades opcionais não bloqueiam a
+conclusão. Critérios medidos sem evidência suficiente têm nota null. Um recurso
+obrigatório indisponível permanece no cálculo e aparece na interface.
+
+Revise os critérios em `http://localhost:3000/progress` e na página da unidade.
+`policies:verify` usa dados sintéticos e repositório simulado. A migração
+`20261010000200_learning_policies.sql` foi aplicada no Supabase local durante o
+checkpoint integrado; continua sem aplicação remota nesta entrega. O app usa
+o perfil local protegido. Veja [a entrega original](DESTRAVA_POLITICAS_INCREMENTO_3.md)
+e [a homologação integrada](DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md).
 
 Para conferir também a sessão interativa autenticada no Supabase remoto, execute `npm.cmd run interactive:verify:remote`. O script cria e remove uma conta descartável, sem enviar e-mail.
 

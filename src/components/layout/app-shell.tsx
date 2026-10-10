@@ -37,6 +37,7 @@ import { SelectionAudio } from "@/components/audio/selection-audio";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboarding";
+import { StudySyncNotice } from "@/components/study-sync-notice";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -131,7 +132,7 @@ export function AppShell({ children, courseOptions }: {
       </div>
     );
   if (!state.profile.onboarded)
-    return <PedagogicalOnboarding courseOptions={courseOptions} />;
+    return <><StudySyncNotice /><PedagogicalOnboarding courseOptions={courseOptions} /></>;
   const progress = courseProgress(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>
@@ -324,7 +325,7 @@ export function AppShell({ children, courseOptions }: {
             </Link>
           </div>
         </header>
-        <main className="main-content">{children}</main>
+        <main className="main-content"><StudySyncNotice />{children}</main>
       </div>
       <nav className="mobile-primary-nav" aria-label="Atalhos de estudo">
         <Link href="/dashboard" aria-current={pathname === "/dashboard" ? "page" : undefined}>
