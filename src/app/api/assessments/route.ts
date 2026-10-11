@@ -1,4 +1,7 @@
 import { findCourseBundle } from "@/content/course-registry";
+import { resolveRuntimeCourse, courseInstallationRuntime } from "@/lib/course-installation-runtime";
+import { serverAssessmentResultSchema } from "@/content/assessment-results";
+import type { JsonValue } from "@/domain/course-installations/contracts";
 import { createAssessmentApi } from "@/lib/assessment-api";
 import { sameAssessmentRequest } from "@/content/assessment-results";
 import { userCourseVariant } from "@/lib/user-course-variant";
@@ -10,14 +13,49 @@ import {
 
 export const runtime = "nodejs";
 const api = createAssessmentApi({
-  resolveCourse: findCourseBundle,
+  async resolveCourse(courseId, sessionId, userId) {
+    const bundle = await resolveRuntimeCourse(courseId, userId, sessionId);
+    return (
+      bundle && {
+        ...bundle,
+        ...("versionSession" in bundle
+          ? { versionReference: bundle.versionSession.reference }
+          : {}),
+      }
+    );
+  },
   authenticatedUser: getAuthenticatedUser,
   requiresAuth: isSupabaseConfigured,
-  async variantPreference(userId, courseId) {
-    const bundle = findCourseBundle(courseId)!;
+  async variantPreference(userId, courseId, resolved) {
+    const bundle = resolved ?? findCourseBundle(courseId)!;
     return userCourseVariant(userId, courseId, bundle.language, bundle.course);
   },
   async save(userId, input, result) {
+    if (input.versionSessionId) {
+      const service = courseInstallationRuntime();
+      const existing = (await service.listEvidence(userId, input.versionSessionId)).find(
+        (item) => item.id === result.id,
+      );
+      if (existing) {
+        const saved = serverAssessmentResultSchema.parse(existing.result);
+        if (
+          existing.kind !== "assessment" ||
+          existing.definitionId !== result.assessmentId ||
+          !sameAssessmentRequest(existing.input, input) ||
+          saved.variantId !== result.variantId
+        )
+          throw new Error("Assessment evidence conflict");
+        return saved.finishedAt;
+      }
+      await service.recordEvidence(userId, input.versionSessionId, {
+        id: result.id,
+        kind: "assessment",
+        definitionId: result.assessmentId,
+        input: JSON.parse(JSON.stringify(input)) as JsonValue,
+        result: JSON.parse(JSON.stringify(result)) as JsonValue,
+      });
+      return result.finishedAt;
+    }
     const db = await createSupabaseServerClient();
     if (!db) throw new Error("Assessment database unavailable");
     const { data: existing, error: readError } = await db
@@ -57,7 +95,32 @@ const api = createAssessmentApi({
     if (error) throw error;
     return result.finishedAt;
   },
-  async read(userId, assessmentIds) {
+  async read(userId, assessmentIds, scope) {
+    if (scope?.versionSessionId) {
+      const evidence = await courseInstallationRuntime().listEvidence(
+        userId,
+        scope.versionSessionId,
+      );
+      return evidence
+        .filter((item) => item.kind === "assessment" && assessmentIds.includes(item.definitionId))
+        .map((item) => {
+          const saved = serverAssessmentResultSchema.parse(item.result);
+          return {
+            id: item.id,
+            assessment_id: item.definitionId,
+            started_at: saved.startedAt,
+            finished_at: saved.finishedAt,
+            objective_score: saved.objectiveScore,
+            result: {
+              courseId: saved.courseId,
+              contentVersion: saved.contentVersion,
+              unitId: saved.unitId,
+              variantId: saved.variantId,
+              input: item.input,
+            },
+          };
+        });
+    }
     const db = await createSupabaseServerClient();
     if (!db) throw new Error("Assessment database unavailable");
     const { data, error } = await db

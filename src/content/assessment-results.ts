@@ -7,6 +7,7 @@ export const assessmentResponseSchema = z
 export const assessmentRequestSchema = z
   .object({
     courseId: z.string().min(1),
+    versionSessionId: z.uuid().optional(),
     assessmentId: z.string().min(1),
     attemptId: z.uuid(),
     startedAt: z.iso.datetime(),
@@ -33,6 +34,12 @@ export const serverAssessmentResultSchema = z
     unitId: z.string().optional(),
     lessonId: z.string().optional(),
     contentVersion: z.string(),
+    installationId: z.uuid().optional(),
+    artifactHash: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .optional(),
+    versionSessionId: z.uuid().optional(),
     variantId: z.string().min(1).optional(),
     startedAt: z.iso.datetime(),
     finishedAt: z.iso.datetime(),

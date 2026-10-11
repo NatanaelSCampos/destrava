@@ -102,4 +102,16 @@ O produtor entrega dados seguindo [o contrato público](contracts/package-v1/REA
 
 `package-references.ts` concentra as verificações semânticas compartilhadas pelos carregadores interno e externo. O envelope neutro está em `package-contract.ts`; artefatos públicos são gerados sem definições paralelas. A CLI devolve relatório público; o runtime preparado é privado e temporário, sem garantia de imutabilidade para instalação. Saúde operacional e confiança editorial não são inferidas de validade estrutural.
 
-[Relatório, controles e testes de interoperabilidade](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). A prova usa um produtor independente fora do repositório e os executores existentes em memória. Instalação versionada, resolução de recursos, ativação e rollback pertencem ao Incremento 7, ainda não iniciado.
+[Relatório, controles e testes de interoperabilidade](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). A prova usa um produtor independente fora do repositório e os executores existentes em memória. A persistência dessa fronteira é descrita no Incremento 7 abaixo.
+
+## Instalação versionada — Incremento 7
+
+`src/domain/course-installations` concentra identidade, inventário/hash, estados, ports e serviço. O adapter `supabase-course-installations.ts` usa bucket privado `course-artifacts` para bytes completos e schema privado `destrava_private` para metadados, ponteiro ativo, recibos, histórico, sessões e evidências. As RPCs são exclusivas do servidor; não se faz seed/upsert dessas versões nas tabelas globais dos cursos compilados.
+
+Instalação reserva, envia/verifica recursos e confirma; falhas entre banco e Storage conservam uma preparação recuperável. Preparação, aprovação de teste e seleção ativa são operações separadas. Publicação real permanece negada. O emissor em `scripts/course-installation-local-authority.ts` exige isolamento local positivo; não é dependência das rotas da aplicação.
+
+Ativação/rollback usam CAS de revisão, lock do ponteiro e recibo por operação na mesma transação. Abertura de sessão captura a referência sob esse lock; mudança posterior não modifica sua versão. Avaliações, atividades e políticas registram evidências append-only por sessão/instalação/hash. A resolução revalida o snapshot completo e usa `runtimeBundle`, `publicCourse`, grader e motores existentes. Falha de integridade não troca por conteúdo compilado.
+
+Integração dinâmica é limitada às rotas de sessões, mídia, correção, avaliações e políticas, e à inspeção autenticada `/installed-courses/<sessionId>`. O `StudyProvider`, seletor de cursos, onboarding e progresso legado continuam ligados ao catálogo compilado. Consumidores de IA, voz e aula interativa rejeitam requisições com escopo instalado até sua adaptação. Este incremento não certifica suporte dinâmico completo ou um fluxo administrativo em produção.
+
+As triggers protegem metadados contra mutações comuns do Storage; não são uma garantia física WORM ou isolamento contra owner/root. Upload usa `upsert:false` e cada consumo verifica bytes/hash sem cache. [Relatório do Incremento 7](DESTRAVA_INSTALACOES_INCREMENTO_7.md) registra as provas reais, limites, estados e procedimentos locais. Contratos públicos de autoria não foram duplicados.

@@ -14,6 +14,10 @@ import {
   AssessmentExecutionError,
   assessmentSummary,
 } from "@/domain/assessments/assessment-engine";
+import {
+  InstallationError,
+  type InstalledContentReference,
+} from "@/domain/course-installations/contracts";
 
 export type StoredAssessmentRow = {
   id: string;
@@ -30,7 +34,21 @@ export type StoredAssessmentRow = {
   };
 };
 type AssessmentApiDependencies = {
-  resolveCourse: (id: string) => { course: Course; language: LanguagePackage } | undefined;
+  resolveCourse: (
+    id: string,
+    versionSessionId?: string,
+    userId?: string | null,
+  ) =>
+    | { course: Course; language: LanguagePackage; versionReference?: InstalledContentReference }
+    | undefined
+    | Promise<
+        | {
+            course: Course;
+            language: LanguagePackage;
+            versionReference?: InstalledContentReference;
+          }
+        | undefined
+      >;
   authenticatedUser: () => Promise<{ id: string } | null>;
   requiresAuth: () => boolean;
   save: (
@@ -38,10 +56,18 @@ type AssessmentApiDependencies = {
     input: AssessmentRequest,
     result: ServerAssessmentResult,
   ) => Promise<string>;
-  read: (userId: string, assessmentIds: string[]) => Promise<StoredAssessmentRow[]>;
+  read: (
+    userId: string,
+    assessmentIds: string[],
+    scope?: { courseId: string; versionSessionId?: string },
+  ) => Promise<StoredAssessmentRow[]>;
   now?: () => Date;
   environment?: CapabilityEnvironment;
-  variantPreference?: (userId: string | null, courseId: string) => Promise<unknown>;
+  variantPreference?: (
+    userId: string | null,
+    courseId: string,
+    bundle?: { course: Course; language: LanguagePackage },
+  ) => Promise<unknown>;
 };
 
 export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
@@ -49,7 +75,11 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
     serverAssessmentResultSchema.shape.finishedAt.parse(new Date(value).toISOString());
   const createResult = (
     input: AssessmentRequest,
-    bundle: { course: Course; language: LanguagePackage },
+    bundle: {
+      course: Course;
+      language: LanguagePackage;
+      versionReference?: InstalledContentReference;
+    },
     finishedAt: string,
     variantId?: string,
   ) => {
@@ -66,6 +96,13 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
       assessmentId: grade.definition.id,
       ...assessmentSummary(grade.definition),
       contentVersion: bundle.course.contentVersion,
+      ...(bundle.versionReference
+        ? {
+            installationId: bundle.versionReference.installationId,
+            artifactHash: bundle.versionReference.artifactHash,
+            versionSessionId: input.versionSessionId,
+          }
+        : {}),
       ...(variantId ? { variantId } : {}),
       source: "server",
       startedAt: input.startedAt,
@@ -91,13 +128,21 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           { error: "Envie somente a identificação e as respostas da avaliação." },
           { status: 400 },
         );
-      const bundle = dependencies.resolveCourse(input.data.courseId);
-      if (!bundle || !bundle.course.assessments.some((item) => item.id === input.data.assessmentId))
-        return Response.json({ error: "Avaliação não encontrada neste curso." }, { status: 404 });
       try {
+        const bundle = await dependencies.resolveCourse(
+          input.data.courseId,
+          input.data.versionSessionId,
+          user?.id,
+        );
+        if (
+          !bundle ||
+          !bundle.course.assessments.some((item) => item.id === input.data.assessmentId)
+        )
+          return Response.json({ error: "Avaliação não encontrada neste curso." }, { status: 404 });
         const preference = await dependencies.variantPreference?.(
           user?.id ?? null,
           bundle.course.id,
+          bundle,
         );
         const variantId = requireLearningVariant(
           bundle.language,
@@ -131,6 +176,20 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
         }
         return Response.json(result);
       } catch (error) {
+        if (error instanceof InstallationError)
+          return Response.json(
+            { error: "Não foi possível acessar a versão desta sessão.", code: error.code },
+            {
+              status:
+                error.code === "SESSION_NOT_FOUND" || error.code === "INSTALLATION_NOT_FOUND"
+                  ? 404
+                  : error.code === "NOT_AUTHORIZED"
+                    ? 403
+                    : error.code === "INVALID_INPUT"
+                      ? 400
+                      : 503,
+            },
+          );
         return Response.json(
           {
             error:
@@ -150,13 +209,18 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           { status: 401 },
         );
       const courseId = new URL(request.url).searchParams.get("courseId");
-      const bundle = courseId ? dependencies.resolveCourse(courseId) : undefined;
-      if (!bundle) return Response.json({ error: "Curso não encontrado." }, { status: 404 });
-      if (!user || !bundle.course.assessments.length) return Response.json({ results: [] });
+      const versionSessionId =
+        new URL(request.url).searchParams.get("versionSessionId") ?? undefined;
       try {
+        const bundle = courseId
+          ? await dependencies.resolveCourse(courseId, versionSessionId, user?.id)
+          : undefined;
+        if (!bundle) return Response.json({ error: "Curso não encontrado." }, { status: 404 });
+        if (!user || !bundle.course.assessments.length) return Response.json({ results: [] });
         const rows = await dependencies.read(
           user.id,
           bundle.course.assessments.map((item) => item.id),
+          { courseId: bundle.course.id, versionSessionId },
         );
         const results: ServerAssessmentResult[] = [];
         for (const row of rows) {
@@ -193,7 +257,21 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           }
         }
         return Response.json({ results });
-      } catch {
+      } catch (error) {
+        if (error instanceof InstallationError)
+          return Response.json(
+            { error: "Não foi possível acessar a versão desta sessão.", code: error.code },
+            {
+              status:
+                error.code === "SESSION_NOT_FOUND" || error.code === "INSTALLATION_NOT_FOUND"
+                  ? 404
+                  : error.code === "NOT_AUTHORIZED"
+                    ? 403
+                    : error.code === "INVALID_INPUT"
+                      ? 400
+                      : 503,
+            },
+          );
         return Response.json(
           { error: "Não foi possível consultar seus resultados." },
           { status: 503 },

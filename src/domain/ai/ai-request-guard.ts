@@ -5,10 +5,18 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import type { AIUsage } from "./ai-provider";
+import {
+  unsupportedVersionRequest,
+  type VersionPayloadParser,
+} from "@/lib/versioned-operation-guard";
 
 const windows = new Map<string, { count: number; resetAt: number }>();
 
-export async function guardAIRequest(request: Request, feature: string) {
+export async function guardAIRequest(
+  request: Request,
+  feature: string,
+  parser: VersionPayloadParser = "json",
+) {
   if (isSupabaseConfigured()) {
     const user = await getAuthenticatedUser();
     if (!user)
@@ -18,6 +26,8 @@ export async function guardAIRequest(request: Request, feature: string) {
           { status: 401 },
         ),
       };
+    const versionScope = await unsupportedVersionRequest(request, parser);
+    if (versionScope) return { error: versionScope };
     const client = await createSupabaseServerClient();
     if (!client)
       return {
@@ -49,6 +59,8 @@ export async function guardAIRequest(request: Request, feature: string) {
         { status: 503 },
       ),
     };
+  const versionScope = await unsupportedVersionRequest(request, parser);
+  if (versionScope) return { error: versionScope };
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   const current = windows.get(ip);
   const now = Date.now();

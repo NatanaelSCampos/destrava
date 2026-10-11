@@ -1008,4 +1008,16 @@ npm.cmd run package:verify
 npm.cmd run package:validate -- C:\caminho\pacote --dry-run
 ```
 
-A biblioteca/CLI valida estrutura, referências, capacidades e integridade e prepara um runtime temporário. A CLI é sempre somente leitura; não instala ou ativa cursos. Aprovação declarada, confiança do produtor, disponibilidade operacional e publicação permanecem distintas. [Relatório A–G, testes, limites e aprendizado](DESTRAVA_IMPORTACAO_INCREMENTO_6.md); [experimento reproduzível](contracts/package-v1/README.md#produtor-simulado-e-experimento). Entrega local sem commit; Incremento 7 aguarda autorização.
+A biblioteca/CLI valida estrutura, referências, capacidades e integridade e prepara um runtime temporário. A CLI de validação é sempre somente leitura; não instala ou ativa cursos. Aprovação declarada, confiança do produtor, disponibilidade operacional e publicação permanecem distintas. [Relatório A–G, testes, limites e aprendizado](DESTRAVA_IMPORTACAO_INCREMENTO_6.md); [experimento reproduzível](contracts/package-v1/README.md#produtor-simulado-e-experimento). Checkpoint do Incremento 6: `0e2c988`.
+
+### Instalações versionadas — Incremento 7
+
+O catálogo persistente mantém snapshots privados por instalação/hash, versões coexistentes, preparação e aprovação local separadas. Ativação e rollback usam revisão concorrente e recibo idempotente. Sessões e evidências preservam a versão original. A execução reutiliza os avaliadores e políticas existentes; o seletor normal de cursos continua compilado. IA, voz e aula interativa ainda não aceitam uma sessão instalada e rejeitam esse escopo explicitamente.
+
+```powershell
+npm.cmd run installations:verify
+npm.cmd run installations:verify:local
+npm.cmd run installations:local -- list <courseId>
+```
+
+Os dois últimos comandos exigem o perfil isolado `.env.integration.local` e comprovam o Docker/projeto/loopback. Aprovação e ativação reais continuam bloqueadas por padrão; o emissor de autoridade de teste existe somente em scripts locais, sem rota administrativa HTTP. Consulte [entrega, procedimento, evidências e limitações](DESTRAVA_INSTALACOES_INCREMENTO_7.md). A rota `/installed-courses/<sessionId>` permite inspecionar uma sessão própria e seu áudio com o player existente. Nenhuma publicação remota foi realizada.

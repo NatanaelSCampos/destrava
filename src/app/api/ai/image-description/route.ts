@@ -11,7 +11,7 @@ import { featureFlags } from "@/lib/feature-flags";
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Atividade indisponível." }, { status: 503 });
-  const guard = await guardAIRequest(request, "image_description");
+  const guard = await guardAIRequest(request, "image_description", "form");
   if (guard.error) return guard.error;
   const form = await request.formData().catch(() => null);
   const courseId = form?.get("courseId");

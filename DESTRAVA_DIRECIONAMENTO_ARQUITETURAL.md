@@ -119,7 +119,7 @@ não implementar agora suporte tonal, caracteres ou plugins apenas como antecipa
 
 **Situação da execução incremental:** a auditoria Fase 2.1 e os incrementos
 de desacoplamento de vocabulário e semântica de avaliações estão documentados.
-A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio foi homologado no checkpoint local `a7ec750`. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md` e `DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md`. O Incremento 4 foi implementado localmente com registro, negociação e catálogo de capacidades; ver `DESTRAVA_CAPACIDADES_INCREMENTO_4.md`. As Partes 5A, 5B e 5C foram implementadas localmente e comitadas no checkpoint `2e0ace4`. O Incremento 6 implementou a fronteira pública e validação local; ver [relatório A–G](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). O Incremento 7 aguarda autorização.
+A proposta de análise abaixo registra a orientação original. O Incremento 3 de políticas de conclusão/domínio foi homologado no checkpoint local `a7ec750`. Ver `DESTRAVA_POLITICAS_INCREMENTO_3.md` e `DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md`. O Incremento 4 foi implementado localmente com registro, negociação e catálogo de capacidades; ver `DESTRAVA_CAPACIDADES_INCREMENTO_4.md`. As Partes 5A, 5B e 5C foram implementadas localmente e comitadas no checkpoint `2e0ace4`. O Incremento 6 implementou a fronteira pública e validação local; ver [relatório A–G](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). O Incremento 7 foi autorizado e implementado no ambiente local isolado; [entrega, homologação e limites](DESTRAVA_INSTALACOES_INCREMENTO_7.md). Publicação real permanece bloqueada; o Incremento 8 depende de especificação e aprovação próprias.
 
 **Fronteiras do Learning Engine e proposta do contrato de conteúdo V1.**
 
@@ -215,4 +215,10 @@ Idioma, variante, direção de conteúdo e contexto da interface são conceitos 
 
 O formato escolhido é diretório com manifesto/documentos/recursos relativos. A [especificação pública](contracts/package-v1/README.md) reúne schemas gerados, catálogo e regras de compatibilidade. O produtor não importa código privado. O consumidor valida com a base existente e prepara o runtime em memória; não compila para o catálogo, instala ou publica.
 
-Compatibilidade técnica, disponibilidade operacional, declaração editorial, confiança, homologação e publicação são estados distintos. [Decisões, invariantes, testes e explicações](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). Não houve uso de banco ou provedores na importação; build e revisão normal continuam locais. O Incremento 7 deverá definir staging imutável, instalação versionada, recursos, ativação e rollback após aprovação.
+Compatibilidade técnica, disponibilidade operacional, declaração editorial, confiança, homologação e publicação são estados distintos. [Decisões, invariantes, testes e explicações](DESTRAVA_IMPORTACAO_INCREMENTO_6.md). Não houve uso de banco ou provedores naquela importação; sua persistência posterior está descrita abaixo.
+
+## Incremento 7: instalação e resolução versionadas locais
+
+Snapshot privado e catálogo persistente separam dados imutáveis da seleção ativa. Preparação/confirmação tratam a fronteira não atômica banco/Storage. CAS, receipt e histórico são transacionais; sessões/evidências preservam referência e critérios originais após troca e rollback. O motor/importador existente é reutilizado. A fonte canônica da arquitetura permanece [DESTRAVA_ARQUITETURA_MULTILINGUA.md](DESTRAVA_ARQUITETURA_MULTILINGUA.md); [o relatório da entrega](DESTRAVA_INSTALACOES_INCREMENTO_7.md) contém testes e procedimentos.
+
+A gestão é exclusivamente interna/local neste estágio. Manifesto editorial não concede autoridade; publicação real e runtime instalado em produção são negados até existir aprovação confiável. A UI normal continua compilada e não há suporte dinâmico completo em IA/voz/aula interativa. Essas fronteiras deverão ser consideradas na especificação do próximo incremento, sem implementação automática.

@@ -154,6 +154,12 @@ Riscos: sistemas de arquivos mutáveis, autoridade/confiança de produtores, tra
 
 ## Métricas e aprendizado
 
+### Checkpoint e primeiro piloto real
+
+Em 2026-10-10, os 11 arquivos desta implantação foram revisados e commitados em `b34915d6cc9a0311fa10e36e400512bead109527`, mensagem `chore: bootstrap and verify multiagent development workflow`. O registro acima descreve a homologação anterior ao commit. Os dois arquivos locais fora do escopo permaneceram preservados; as worktrees foram alinhadas por fast-forward após backups verificados, sem reset/clean.
+
+O primeiro piloto real é [o Incremento 7](DESTRAVA_INSTALACOES_INCREMENTO_7.md), autorizado em sua especificação própria. Lead trabalha em `feat/increment-7-versioned-installations`; Implementador e QA possuem escopos de escrita separados em worktrees com baseline `b34915d`. Revisor examina candidatos com hashes sem implementar correções. Perfil explícito e fiscalização continuam sendo garantias procedimentais; não houve comprovação de seleção automática de TOML ou sandbox restritivo por papel. Resultados, correções e métricas do piloto ficam no relatório da entrega.
+
 Registre tempo de execução e coordenação, retrabalho, achados confirmados/descartados, conflitos, alterações fora do escopo, comandos/exit codes, candidato/hash e reprodução dos resultados. Tokens/custos só são registrados quando o cliente os disponibilizar; não estimar custo financeiro como evidência medida. Um piloto não demonstra ganho estatístico de produtividade.
 
 Task Decomposition separa código, testes e revisão por contratos. Agent Orchestration usa a comunicação nativa e o Lead. Context Isolation limita briefing/histórico, sem prometer isolamento de filesystem. Agent Handoffs transferem patches e evidências completas. Parallel Execution é usada somente entre tarefas independentes; integração é sequencial. Independent Review confronta a entrega com critérios e riscos sem implementar sua própria correção. Git Worktrees separam escritas e branches. Human-in-the-Loop mantém autorização para checkpoint, ações sensíveis e início do próximo incremento.

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       { status: 503 },
     );
 
-  const guard = await guardAIRequest(request, "pronunciation");
+  const guard = await guardAIRequest(request, "pronunciation", "form");
   if (guard.error) return guard.error;
 
   const form = await request.formData().catch(() => null);
