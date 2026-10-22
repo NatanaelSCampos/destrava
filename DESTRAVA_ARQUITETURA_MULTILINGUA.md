@@ -115,3 +115,13 @@ Ativação/rollback usam CAS de revisão, lock do ponteiro e recibo por operaç�
 Integração dinâmica é limitada às rotas de sessões, mídia, correção, avaliações e políticas, e à inspeção autenticada `/installed-courses/<sessionId>`. O `StudyProvider`, seletor de cursos, onboarding e progresso legado continuam ligados ao catálogo compilado. Consumidores de IA, voz e aula interativa rejeitam requisições com escopo instalado até sua adaptação. Este incremento não certifica suporte dinâmico completo ou um fluxo administrativo em produção.
 
 As triggers protegem metadados contra mutações comuns do Storage; não são uma garantia física WORM ou isolamento contra owner/root. Upload usa `upsert:false` e cada consumo verifica bytes/hash sem cache. [Relatório do Incremento 7](DESTRAVA_INSTALACOES_INCREMENTO_7.md) registra as provas reais, limites, estados e procedimentos locais. Contratos públicos de autoria não foram duplicados.
+
+## Resolução no fluxo normal — Incremento 8
+
+`application-course-runtime.ts` resolve fonte compilada/instalada/indisponível. Layout autentica e projeta curso/idioma/recursos públicos; seletor e onboarding usam o catálogo elegível instalado. O `StudyProvider` recebe a referência fixada e reutiliza os renderers/planner/avaliadores existentes. Seleção por usuário referencia sessão I7; não redefine o ponteiro ativo.
+
+`domain/installed-study` concentra compatibilidade, seleção/progresso e projeção canônica. `supabase-installed-study` implementa seus ports em RPCs privadas do servidor; `InstalledStudyHttpRepository` liga o provider ao serviço e preserva as invariantes de `StudyProgressSync`. Progresso é separado por usuário/instalação, e avaliações oficiais derivam das evidências I7 dessa versão, independentemente de notas declaradas pelo cliente.
+
+O snapshot mantém dados de estudo/submissão manual válidos, sem escrever FKs do catálogo compilado. Namespace/cache e key do provider incluem usuário/fonte/artefato/sessão. Reload retoma o pin, nova seleção captura active com CAS/recibo e rollback restaura a referência sem reinterpretar evidências. Falha do artefato anterior não impede ler a revisão estrutural da seleção para escolher um destino saudável; executar aquele artefato continua exigindo resolução/integridade/compatibilidade.
+
+Revisão, IA, oral, conversação e aula interativa ainda não possuem caminho instalado completo. Required bloqueia ativação/rollback; caminhos opcionais não geram notas artificiais. O perfil portável é gerado do filtro canônico. [Relatório A–H, matriz e provas integradas](DESTRAVA_RUNTIME_INCREMENTO_8.md). Nenhuma API do Foundry, Admin completo, autoridade editorial de produção ou publicação remota foi adicionada.

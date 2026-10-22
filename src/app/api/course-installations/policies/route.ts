@@ -2,13 +2,10 @@ import { z } from "zod";
 import { randomUUID } from "node:crypto";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 import { courseInstallationRuntime } from "@/lib/course-installation-runtime";
+import { installedStudyRuntime } from "@/lib/installed-study-runtime";
 import { publicCourse } from "@/content/public";
-import { findActivity } from "@/content/schema";
 import { readCourseState } from "@/domain/study/course-state-storage";
-import { recordAttempt, recordServerAssessment } from "@/domain/study/study-state";
 import { evaluateUnitPolicies } from "@/domain/study/learning-policy-engine";
-import { serverAssessmentResultSchema } from "@/content/assessment-results";
-import type { GradeResult } from "@/domain/activities/grader";
 import { InstallationError, type JsonValue } from "@/domain/course-installations/contracts";
 
 export const runtime = "nodejs";
@@ -33,27 +30,10 @@ export async function POST(request: Request) {
     const course = publicCourse(content.prepared.bundle.course, content.prepared.bundle.language);
     const unit = course.units.find((item) => item.id === parsed.data.unitId);
     if (!unit) return Response.json({ error: "DEFINITION_NOT_FOUND" }, { status: 404 });
-    let state = readCourseState(null, course.id, course.languageCode);
-    const evidence = await service.listEvidence(user.id, session.id);
-    for (const entry of evidence) {
-      if (entry.kind === "assessment") {
-        const result = serverAssessmentResultSchema.parse(entry.result);
-        if (
-          result.installationId !== session.reference.installationId ||
-          result.artifactHash !== session.reference.artifactHash
-        )
-          throw new Error("Version evidence mismatch");
-        state = recordServerAssessment(state, course, result);
-      } else if (entry.kind === "activity") {
-        const activity = findActivity(content.prepared.bundle.course, entry.definitionId);
-        const answer =
-          entry.input && typeof entry.input === "object" && !Array.isArray(entry.input)
-            ? entry.input.answer
-            : null;
-        if (activity && typeof answer === "string")
-          state = recordAttempt(state, activity, answer, entry.result as unknown as GradeResult);
-      }
-    }
+    const projection = await installedStudyRuntime().loadProjection(user.id, session.id);
+    const state =
+      projection.progress.state ?? readCourseState(null, course.id, course.languageCode);
+    const evidence = projection.evidence;
     const result = evaluateUnitPolicies(unit, state, course);
     await service.recordEvidence(user.id, session.id, {
       id: parsed.data.evidenceId ?? randomUUID(),

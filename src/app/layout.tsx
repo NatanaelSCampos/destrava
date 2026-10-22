@@ -7,10 +7,11 @@ import "./activities.css";
 import "./page-tour.css";
 import "./learning-text.css";
 import { interfacePresentation } from "@/engine/presentation/text";
-import { allCourseBundles, defaultCourseId, findCourseBundle } from "@/content/course-registry";
-import { publicCourse, publicRequirements } from "@/content/public";
 import { StudyProvider } from "@/components/study-provider";
 import { AppShell } from "@/components/layout/app-shell";
+import { getAuthenticatedUser } from "@/lib/supabase/server";
+import { resolveApplicationRuntime } from "@/lib/application-course-runtime";
+import { RuntimeUnavailablePanel } from "@/components/layout/runtime-unavailable";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -20,32 +21,47 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const activeId = (await cookies()).get("destrava-active-course")?.value ?? defaultCourseId;
-  const bundle = findCourseBundle(activeId) ?? findCourseBundle(defaultCourseId)!;
-  const course = publicCourse(bundle.course, bundle.language);
-  const courseOptions = allCourseBundles().map(({ course, language }) => ({
-    id: course.id,
-    title: course.title,
-    language: language.identity.nativeName,
-  }));
+  const user = await getAuthenticatedUser();
+  const selected = await resolveApplicationRuntime(
+    user?.id ?? null,
+    (await cookies()).get("destrava-active-course")?.value,
+  );
+  const { view, context } = selected;
   return (
     <html
       lang={interfacePresentation.language}
       dir={interfacePresentation.direction}
       className={inter.variable}
     >
-      <body>
-        <StudyProvider
-          key={course.id}
-          course={course}
-          resources={bundle.resources}
-          language={{
-            ...bundle.language,
-            capabilityRequirements: publicRequirements(bundle.language.capabilityRequirements),
-          }}
-        >
-          <AppShell courseOptions={courseOptions}>{children}</AppShell>
-        </StudyProvider>
+      <body
+        data-runtime-source={selected.source}
+        data-content-version={context?.reference.contentVersion}
+        data-version-session={context?.versionSessionId}
+        data-installation-id={context?.reference.installationId}
+      >
+        {view ? (
+          <StudyProvider
+            key={`${selected.userId ?? "anonymous"}:${selected.source}:${view.course.id}:${context?.reference.artifactHash ?? "compiled"}:${context?.versionSessionId ?? "bootstrap"}`}
+            course={view.course}
+            resources={view.resources}
+            language={view.language}
+            runtime={context}
+            mountedUserId={selected.userId}
+          >
+            <AppShell
+              courseOptions={selected.courseOptions}
+              selectionRevision={selected.selectionRevision}
+            >
+              {children}
+            </AppShell>
+          </StudyProvider>
+        ) : (
+          <RuntimeUnavailablePanel
+            courses={selected.courseOptions}
+            revision={selected.selectionRevision}
+            unavailable={selected.unavailable!}
+          />
+        )}
       </body>
     </html>
   );

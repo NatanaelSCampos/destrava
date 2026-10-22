@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { installedCourseCompatibility } from "@/domain/installed-study/compatibility";
 import { publicRequirements } from "@/content/capability-contracts";
 import { z } from "zod";
 import { packageFileSchema, packageLimits } from "@/content/package-contract";
@@ -170,6 +171,9 @@ export class CourseInstallationService {
     if (installation.approval !== "local_test_approved")
       throw new InstallationError("INSTALLATION_NOT_APPROVED", "activation");
     const validated = await this.verify(installation, "activation");
+    const integration = installedCourseCompatibility(validated.prepared!.bundle.course);
+    if (!integration.compatible)
+      throw new InstallationError("INTEGRATION_UNAVAILABLE", "activation", integration.diagnostics);
     const mandatory = negotiateCapabilities(
       (validated.prepared!.bundle.course.capabilityRequests ?? []).filter(
         (request) => request.requirement.required,

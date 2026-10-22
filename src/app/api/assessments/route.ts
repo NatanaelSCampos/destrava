@@ -1,5 +1,7 @@
 import { findCourseBundle } from "@/content/course-registry";
-import { resolveRuntimeCourse, courseInstallationRuntime } from "@/lib/course-installation-runtime";
+import { courseInstallationRuntime } from "@/lib/course-installation-runtime";
+import { resolveApplicationOperation } from "@/lib/application-course-runtime";
+import { installedStudyRuntime } from "@/lib/installed-study-runtime";
 import { serverAssessmentResultSchema } from "@/content/assessment-results";
 import type { JsonValue } from "@/domain/course-installations/contracts";
 import { createAssessmentApi } from "@/lib/assessment-api";
@@ -14,12 +16,15 @@ import {
 export const runtime = "nodejs";
 const api = createAssessmentApi({
   async resolveCourse(courseId, sessionId, userId) {
-    const bundle = await resolveRuntimeCourse(courseId, userId, sessionId);
+    const bundle = await resolveApplicationOperation(courseId, userId, sessionId);
     return (
       bundle && {
         ...bundle,
-        ...("versionSession" in bundle
-          ? { versionReference: bundle.versionSession.reference }
+        ...(bundle.versionSession
+          ? {
+              versionReference: bundle.versionSession.reference,
+              versionSessionId: bundle.versionSession.id,
+            }
           : {}),
       }
     );
@@ -27,6 +32,9 @@ const api = createAssessmentApi({
   authenticatedUser: getAuthenticatedUser,
   requiresAuth: isSupabaseConfigured,
   async variantPreference(userId, courseId, resolved) {
+    if (userId && resolved?.versionSessionId)
+      return (await installedStudyRuntime().load(userId, resolved.versionSessionId)).state?.profile
+        .variantId;
     const bundle = resolved ?? findCourseBundle(courseId)!;
     return userCourseVariant(userId, courseId, bundle.language, bundle.course);
   },
@@ -97,7 +105,7 @@ const api = createAssessmentApi({
   },
   async read(userId, assessmentIds, scope) {
     if (scope?.versionSessionId) {
-      const evidence = await courseInstallationRuntime().listEvidence(
+      const evidence = await installedStudyRuntime().listVersionEvidence(
         userId,
         scope.versionSessionId,
       );
@@ -112,6 +120,7 @@ const api = createAssessmentApi({
             finished_at: saved.finishedAt,
             objective_score: saved.objectiveScore,
             result: {
+              canonical: saved,
               courseId: saved.courseId,
               contentVersion: saved.contentVersion,
               unitId: saved.unitId,

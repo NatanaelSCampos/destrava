@@ -1,4 +1,4 @@
-import type { CapabilityRequirement } from "@/content/capability-contracts";
+import type { CapabilityDiagnostic, CapabilityRequirement } from "@/content/capability-contracts";
 import type { ExternalPackageManifest } from "@/content/package-contract";
 import type { CapabilityEnvironment } from "@/engine/capabilities/compatibility";
 import type {
@@ -161,6 +161,7 @@ export type InstallationStage =
   | "evidence";
 export type InstallationErrorCode =
   | "NOT_AUTHORIZED"
+  | "INTEGRATION_UNAVAILABLE"
   | "INVALID_PACKAGE"
   | "INVALID_INPUT"
   | "VERSION_CONFLICT"
@@ -183,6 +184,7 @@ export class InstallationError extends Error {
   constructor(
     readonly code: InstallationErrorCode,
     readonly stage: InstallationStage,
+    readonly diagnostics: CapabilityDiagnostic[] = [],
   ) {
     super(`Course installation operation failed: ${code} (${stage}).`);
     this.name = "InstallationError";

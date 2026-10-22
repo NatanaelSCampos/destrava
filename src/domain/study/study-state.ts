@@ -272,6 +272,11 @@ export const initialStudyState: StudyState = {
   activeSessionId: null,
 };
 
+/** Optional server replay context; ordinary recording retains its clock and IDs. */
+export type StudyRecordingContext = { now?: Date; idFor?: (key: string) => string };
+const recordingId = (context: StudyRecordingContext | undefined, key: string) =>
+  context?.idFor?.(key) ?? crypto.randomUUID();
+
 export function recordAdaptiveAssessment(
   state: StudyState,
   course: PublicCourse,
@@ -279,6 +284,7 @@ export function recordAdaptiveAssessment(
     id?: string;
     finishedAt?: string;
   },
+  context?: StudyRecordingContext,
 ): StudyState {
   if (
     input.courseId !== course.id ||
@@ -292,7 +298,7 @@ export function recordAdaptiveAssessment(
       ),
     ),
   );
-  const finishedAt = input.finishedAt ?? new Date().toISOString();
+  const finishedAt = input.finishedAt ?? (context?.now ?? new Date()).toISOString();
   const mistakes = { ...state.mistakes };
   const reviewEvents: StudyEvent[] = [];
   for (const answer of input.answers) {
@@ -301,10 +307,16 @@ export function recordAdaptiveAssessment(
     if (answer.correct || !activity || !answer.correctAnswer?.trim()) continue;
     const previous = mistakes[answer.activityId];
     const schedule = previous
-      ? { ...ReviewScheduler.afterAnswer(previous.schedule, false), nextReviewAt: finishedAt }
-      : ReviewScheduler.initial(new Date(finishedAt));
+      ? {
+          ...ReviewScheduler.afterAnswer(previous.schedule, false, context?.now),
+          nextReviewAt: finishedAt,
+        }
+      : ReviewScheduler.initial(
+          new Date(finishedAt),
+          context?.idFor?.("adaptive:schedule:" + activity.id),
+        );
     mistakes[answer.activityId] = {
-      id: previous?.id ?? crypto.randomUUID(),
+      id: previous?.id ?? recordingId(context, "adaptive:mistake:" + activity.id),
       activityId: answer.activityId,
       courseId: course.id,
       languageCode: course.languageCode,
@@ -320,7 +332,7 @@ export function recordAdaptiveAssessment(
       schedule,
     };
     reviewEvents.push({
-      id: crypto.randomUUID(),
+      id: recordingId(context, "adaptive:review:" + activity.id),
       type: "adaptive_review_scheduled",
       activityId: answer.activityId,
       createdAt: finishedAt,
@@ -330,12 +342,12 @@ export function recordAdaptiveAssessment(
     ...state,
     mistakes,
     adaptiveAssessments: [
-      { ...input, id: input.id ?? crypto.randomUUID(), finishedAt },
+      { ...input, id: input.id ?? recordingId(context, "adaptive:attempt"), finishedAt },
       ...(state.adaptiveAssessments ?? []).filter((item) => !input.id || item.id !== input.id),
     ].slice(0, 20),
     events: [
       {
-        id: crypto.randomUUID(),
+        id: recordingId(context, "adaptive:completed"),
         type: "adaptive_assessment_completed",
         itemId: input.assessmentId ?? input.unitId,
         createdAt: finishedAt,
@@ -416,8 +428,13 @@ export function recordMicroLessonAttempt(
   };
 }
 
-function event(type: string, activityId?: string): StudyEvent {
-  return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), activityId };
+function event(type: string, activityId?: string, context?: StudyRecordingContext): StudyEvent {
+  return {
+    id: recordingId(context, "event:" + type + ":" + (activityId ?? "")),
+    type,
+    createdAt: (context?.now ?? new Date()).toISOString(),
+    activityId,
+  };
 }
 
 function itemEvent(type: string, itemId: string): StudyEvent {
@@ -563,7 +580,11 @@ export function recordVocabularySignal(
   };
 }
 
-export function markActivityComplete(state: StudyState, activityId: string): StudyState {
+export function markActivityComplete(
+  state: StudyState,
+  activityId: string,
+  context?: StudyRecordingContext,
+): StudyState {
   const alreadyCompleted = state.completedActivityIds.includes(activityId);
   const sessions = state.sessions.map((session) =>
     session.id === state.activeSessionId && !session.activityIds.includes(activityId)
@@ -580,7 +601,7 @@ export function markActivityComplete(state: StudyState, activityId: string): Stu
       : [...state.completedActivityIds, activityId],
     events: alreadyCompleted
       ? state.events
-      : [event("lesson_completed", activityId), ...state.events],
+      : [event("lesson_completed", activityId, context), ...state.events],
   };
 }
 
@@ -589,10 +610,12 @@ export function recordAttempt(
   activity: PublicActivity,
   answer: string,
   result: GradeResult,
+  context?: StudyRecordingContext,
 ): StudyState {
-  const createdAt = new Date().toISOString();
+  const now = context?.now ?? new Date();
+  const createdAt = now.toISOString();
   const attempt: Attempt = {
-    id: crypto.randomUUID(),
+    id: recordingId(context, "attempt:" + activity.id),
     activityId: activity.id,
     answer,
     correct: result.correct,
@@ -605,7 +628,7 @@ export function recordAttempt(
   if (!result.correct) {
     const previous = mistakes[activity.id];
     mistakes[activity.id] = {
-      id: previous?.id ?? crypto.randomUUID(),
+      id: previous?.id ?? recordingId(context, "mistake:" + activity.id),
       activityId: activity.id,
       courseId: state.courseId,
       languageCode: state.languageCode,
@@ -619,7 +642,12 @@ export function recordAttempt(
       lastMissedAt: createdAt,
       lastReviewedAt: previous?.lastReviewedAt ?? null,
       lastCorrectAt: previous?.lastCorrectAt ?? null,
-      schedule: ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(), false),
+      schedule: ReviewScheduler.afterAnswer(
+        previous?.schedule ??
+          ReviewScheduler.initial(now, context?.idFor?.("schedule:" + activity.id)),
+        false,
+        now,
+      ),
     };
   } else if (mistakes[activity.id]) {
     const previous = mistakes[activity.id];
@@ -628,7 +656,7 @@ export function recordAttempt(
       timesCorrect: previous.timesCorrect + 1,
       lastReviewedAt: createdAt,
       lastCorrectAt: createdAt,
-      schedule: ReviewScheduler.afterAnswer(previous.schedule, true),
+      schedule: ReviewScheduler.afterAnswer(previous.schedule, true, now),
     };
   }
   const sessions = state.sessions.map((session) =>
@@ -650,8 +678,8 @@ export function recordAttempt(
       ? state.completedActivityIds
       : [...state.completedActivityIds, activity.id],
     events: [
-      event(result.correct ? "exercise_correct" : "exercise_wrong", activity.id),
-      event("exercise_answered", activity.id),
+      event(result.correct ? "exercise_correct" : "exercise_wrong", activity.id, context),
+      event("exercise_answered", activity.id, context),
       ...state.events,
     ],
   };
@@ -804,6 +832,7 @@ export function recordServerAssessment(
   state: StudyState,
   course: PublicCourse,
   result: ServerAssessmentResult,
+  context?: StudyRecordingContext,
 ): StudyState {
   if (!matchesAssessmentResult(course, result)) return state;
   if (result.method === "adaptive") {
@@ -815,15 +844,20 @@ export function recordServerAssessment(
       return state;
     if (result.answers.some((answer) => answer.correct === null || !answer.difficulty))
       return state;
-    return recordAdaptiveAssessment(state, course, {
-      ...result,
-      method: "adaptive",
-      answers: result.answers.map((answer) => ({
-        ...answer,
-        correct: answer.correct === true,
-        difficulty: answer.difficulty!,
-      })),
-    });
+    return recordAdaptiveAssessment(
+      state,
+      course,
+      {
+        ...result,
+        method: "adaptive",
+        answers: result.answers.map((answer) => ({
+          ...answer,
+          correct: answer.correct === true,
+          difficulty: answer.difficulty!,
+        })),
+      },
+      context,
+    );
   }
   if (
     state.assessmentAttempts.some(
@@ -841,14 +875,20 @@ export function recordServerAssessment(
     const activity = activities.get(answer.activityId);
     if (!activity) continue;
     if (answer.correct !== null)
-      next = recordAttempt(next, activity, answer.answer, {
-        variantId: answer.variantId,
-        correct: answer.correct,
-        correctAnswer: answer.correctAnswer ?? "",
-        explanation: answer.explanation ?? "",
-      });
+      next = recordAttempt(
+        next,
+        activity,
+        answer.answer,
+        {
+          variantId: answer.variantId,
+          correct: answer.correct,
+          correctAnswer: answer.correctAnswer ?? "",
+          explanation: answer.explanation ?? "",
+        },
+        context,
+      );
     else if (activity.type === "writing") {
-      next = markActivityComplete(next, activity.id);
+      next = markActivityComplete(next, activity.id, context);
       if (
         !next.writing.some((item) => item.activityId === activity.id && item.text === answer.answer)
       )
@@ -856,7 +896,7 @@ export function recordServerAssessment(
           ...next,
           writing: [
             {
-              id: crypto.randomUUID(),
+              id: recordingId(context, "assessment:writing:" + activity.id),
               activityId: activity.id,
               text: answer.answer,
               createdAt: result.finishedAt,
@@ -875,7 +915,7 @@ export function recordServerAssessment(
     ],
     events: [
       {
-        id: crypto.randomUUID(),
+        id: recordingId(context, "assessment:completed"),
         type: "assessment_completed",
         itemId: result.assessmentId,
         createdAt: result.finishedAt,

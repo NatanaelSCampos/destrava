@@ -123,3 +123,16 @@ npm.cmd run package:validate -- $incompatibleCoursePath --dry-run
 O modo `--unsupported` muda a versão requerida de `presentation.bidi` para `99.0.0` e recalcula hashes/tamanhos. O relatório deve conter `CAPABILITY_VERSION_INCOMPATIBLE`, apontando `documents/course.json`, sem criar curso no catálogo. Se editar um documento manualmente, atualize seu hash/tamanho no manifesto; caso contrário, também haverá `INTEGRITY_MISMATCH`.
 
 Para reproduzir independência real, copie esta pasta e `scripts/produce-external-course.mjs` para outro diretório e execute o produtor lá. Seus únicos imports são built-ins do Node; o pacote gerado contém dados, nunca o script produtor. Um DLF futuro pode usar outra linguagem e outro validador estrutural, conservando estes artefatos e as regras semânticas documentadas.
+
+## Perfil de execução instalada e experimento I8
+
+[installed-runtime.json](installed-runtime.json) complementa o catálogo: implementação do motor, integração instalada e disponibilidade operacional são estados distintos. É gerado por `npm.cmd run runtime:profile` da mesma fonte usada para bloquear ativação incompatível. Não concede autorização de publicação nem comprova saúde de provedores/browser. O perfil atual é exclusivamente de homologação local; requisitos obrigatórios não integrados rejeitam ativação e rollback.
+
+O produtor `scripts/produce-independent-learning-course.mjs` gera um percurso completo sintético: conteúdo, ordenação, escrita manual, avaliação final e políticas. Copie esta distribuição pública e o script para fora do repositório; execute com Node, sem instalar dependências:
+
+```powershell
+$independentCoursePath = Join-Path $env:TEMP ('destrava-independent-' + [guid]::NewGuid())
+node scripts/produce-independent-learning-course.mjs contracts/package-v1 $independentCoursePath --version=1.0.0
+```
+
+Use outro diretório novo com `--version=2.0.0` e o mesmo `--course-id=<id>` para manter as identidades curriculares e trocar o gabarito. O verificador `runtime:verify` reproduz a distribuição isolada com permissões de filesystem e zero imports privados/rede. `runtime:verify:local` pertence ao consumidor: instala, autoriza por mecanismo restrito de teste e percorre a interface normal. Esses scripts não pertencem ao contrato público do produtor. [Matriz por caminho e evidências](../../DESTRAVA_RUNTIME_INCREMENTO_8.md).

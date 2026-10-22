@@ -29,7 +29,7 @@ export function ExerciseCard({
   activity: Exercise;
   onAssessed?: (answer: string, result: GradeResult) => void;
 }) {
-  const { course, language, submitAttempt } = useStudy();
+  const { language, assessActivity } = useStudy();
   const [answer, setAnswer] = useState("");
   const [ordered, setOrdered] = useState<string[]>([]);
   const [result, setResult] = useState<GradeResult | null>(null);
@@ -49,21 +49,8 @@ export function ExerciseCard({
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/grade", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseId: course.id,
-          activityId: activity.id,
-          answer: selectedAnswer,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
-      const feedback = data as GradeResult;
+      const feedback = await assessActivity(activity, selectedAnswer, onAssessed);
       setResult(feedback);
-      if (onAssessed) onAssessed(selectedAnswer, feedback);
-      else submitAttempt(activity, selectedAnswer, feedback);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível corrigir agora.");
     } finally {

@@ -1,12 +1,21 @@
 import { readPersistedCourseState } from "@/domain/study/course-state-storage";
 import type { StudySyncCache } from "@/domain/study/study-progress-sync";
+import type { InstalledRuntimeContext } from "@/lib/installed-runtime-types";
 
 const storageKey = "destrava-study:v2:demo";
 const legacyStorageKey = "frecuencias-study:v1:demo";
 
-export function browserStudySyncCache(courseId: string, languageCode: string): StudySyncCache {
+export function browserStudySyncCache(
+  courseId: string,
+  languageCode: string,
+  runtime?: InstalledRuntimeContext,
+): StudySyncCache {
   const keyFor = (userId: string | null) =>
-    userId ? `${storageKey}:${userId}:${courseId}` : `${storageKey}:${courseId}`;
+    runtime
+      ? `destrava-installed-study:v1:${userId}:${runtime.reference.installationId}:${runtime.reference.artifactHash}:${runtime.versionSessionId}`
+      : userId
+        ? `${storageKey}:${userId}:${courseId}`
+        : `${storageKey}:${courseId}`;
   const read = (key: string, legacy = false) => {
     const value = window.localStorage.getItem(key);
     return value === null
@@ -15,6 +24,7 @@ export function browserStudySyncCache(courseId: string, languageCode: string): S
   };
   return {
     read(userId) {
+      if (runtime && userId !== runtime.userId) return { state: null, pending: null, recovery: [] };
       const key = keyFor(userId);
       const pending = read(`${key}:pending`);
       const recoveryValue = window.localStorage.getItem(`${key}:recovery`);
@@ -23,15 +33,19 @@ export function browserStudySyncCache(courseId: string, languageCode: string): S
       return {
         state:
           read(key) ??
-          (userId
-            ? (read(`${legacyStorageKey}:${userId}:${courseId}`, true) ??
-              read(`${legacyStorageKey}:${userId}`, true))
-            : (read(`${legacyStorageKey}:${courseId}`, true) ?? read(legacyStorageKey, true))),
+          (runtime
+            ? null
+            : userId
+              ? (read(`${legacyStorageKey}:${userId}:${courseId}`, true) ??
+                read(`${legacyStorageKey}:${userId}`, true))
+              : (read(`${legacyStorageKey}:${courseId}`, true) ?? read(legacyStorageKey, true))),
         pending,
         recovery: recovery.map((raw) => readPersistedCourseState(raw, courseId, languageCode)!),
       };
     },
     write(userId, entry) {
+      if (runtime && userId !== runtime.userId)
+        throw new Error("O contexto local não pertence à conta atual.");
       const key = keyFor(userId);
       // Save recovery copies first; a storage quota failure must not replace them with remote state.
       if (entry.recovery.length)

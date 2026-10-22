@@ -41,6 +41,11 @@ import { boundedStudySeconds } from "@/domain/study/session-time";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { SupabaseStudyRepository } from "@/repositories/supabase-study-repository";
+import { InstalledStudyHttpRepository } from "@/repositories/installed-study-http-repository";
+import {
+  matchingInstalledReference,
+  type InstalledRuntimeContext,
+} from "@/lib/installed-runtime-types";
 import {
   appendConversationReply,
   finishConversation,
@@ -67,6 +72,12 @@ import {
 export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
+  runtime?: InstalledRuntimeContext;
+  assessActivity: (
+    activity: PublicActivity,
+    answer: string,
+    onAssessed?: (answer: string, result: GradeResult) => void,
+  ) => Promise<GradeResult>;
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
@@ -132,7 +143,7 @@ type StudyContextValue = {
     plan: PlannedItem[],
     mode: SessionMode,
     targetMinutes: number,
-  ) => void;
+  ) => Promise<void>;
   updateActiveSessionDuration: (sessionId: string, seconds: number) => void;
   finishSession: (seconds?: number) => void;
   correctSessionDuration: (sessionId: string, minutes: number) => void;
@@ -145,11 +156,15 @@ export function StudyProvider({
   resources,
   language,
   children,
+  runtime,
+  mountedUserId,
 }: {
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
   children: ReactNode;
+  runtime?: InstalledRuntimeContext;
+  mountedUserId?: string | null;
 }) {
   const deviceCapabilities = useSyncExternalStore(
     subscribeDeviceCapabilities,
@@ -162,7 +177,7 @@ export function StudyProvider({
     () =>
       new StudyProgressSync(
         () => readCourseState(null, course.id, course.languageCode),
-        browserStudySyncCache(course.id, course.languageCode),
+        browserStudySyncCache(course.id, course.languageCode, runtime),
       ),
   );
   const snapshot = useSyncExternalStore(sync.subscribe, sync.getSnapshot, sync.getServerSnapshot);
@@ -198,14 +213,20 @@ export function StudyProvider({
   useEffect(() => {
     const generation = sync.beginLoading();
     const client = createSupabaseBrowserClient();
-    let sessionUserId: string | null | undefined;
+    let sessionUserId: string | null | undefined = mountedUserId ?? runtime?.userId;
     const subscription = client?.auth.onAuthStateChange((event, session) => {
       const nextUserId = session?.user.id ?? null;
       if (!sync.isCurrent(generation) || event === "INITIAL_SESSION") return;
-      if (event === "SIGNED_OUT" || (event === "SIGNED_IN" && nextUserId !== sessionUserId)) {
+      if (
+        event === "SIGNED_OUT" ||
+        (event === "SIGNED_IN" && sessionUserId !== undefined && nextUserId !== sessionUserId)
+      ) {
         // Revoke writes immediately, before React starts the next effect.
         sync.invalidate(generation);
         setLoadAttempt((attempt) => attempt + 1);
+        window.location.assign(
+          new URL(nextUserId ? "/dashboard" : "/login", window.location.origin).href,
+        );
       }
     });
     const timeout = window.setTimeout(() => {
@@ -231,6 +252,19 @@ export function StudyProvider({
               access.error ? "Não foi possível verificar a segurança da sessão." : "",
               accountId,
             );
+            return;
+          }
+          if (
+            (mountedUserId !== undefined && mountedUserId !== accountId) ||
+            (runtime && runtime.userId !== accountId)
+          ) {
+            sync.block(generation, "Sua conta mudou. O contexto será recarregado.", accountId);
+            window.location.assign(new URL("/dashboard", window.location.origin).href);
+            return;
+          }
+          if (runtime) {
+            const repository = new InstalledStudyHttpRepository(runtime, course);
+            await sync.load(generation, accountId, repository);
             return;
           }
           const repository = new SupabaseStudyRepository(client, accountId, {
@@ -266,7 +300,7 @@ export function StudyProvider({
       subscription?.data.subscription.unsubscribe();
       sync.invalidate(generation);
     };
-  }, [course, vocabularyItems, loadAttempt, sync]);
+  }, [course, vocabularyItems, loadAttempt, sync, runtime, mountedUserId]);
 
   useEffect(() => {
     if (!snapshot.dirty || !sync.canSaveRemote()) return;
@@ -279,12 +313,66 @@ export function StudyProvider({
 
   const flushStudyState = useCallback(() => sync.flush(), [sync]);
   const retryProgressSync = useCallback(async () => {
-    if (sync.getSnapshot().loadStatus === "failed") {
+    if (
+      sync.getSnapshot().loadStatus === "failed" ||
+      (runtime && sync.getSnapshot().saveError.includes("PROGRESS_CONFLICT"))
+    ) {
       setLoadAttempt((attempt) => attempt + 1);
     } else {
       await sync.flush().catch(() => undefined);
     }
-  }, [sync]);
+  }, [sync, runtime]);
+
+  const assessActivity = useCallback(
+    async (
+      activity: PublicActivity,
+      answer: string,
+      onAssessed?: (answer: string, result: GradeResult) => void,
+    ) => {
+      const generation = sync.getSnapshot().generation;
+      const userId = sync.getSnapshot().userId;
+      const studySessionId = sync.getSnapshot().state.activeSessionId;
+      if (runtime) await sync.flush(generation);
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou antes da correção.");
+      const evidenceId = runtime ? crypto.randomUUID() : undefined;
+      const response = await fetch("/api/grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId: course.id,
+          activityId: activity.id,
+          answer,
+          ...(runtime
+            ? {
+                versionSessionId: runtime.versionSessionId,
+                evidenceId,
+                ...(studySessionId ? { studySessionId } : {}),
+              }
+            : {}),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua conta ou contexto mudou durante a correção.");
+      if (
+        runtime &&
+        (!data.metadata ||
+          data.metadata.versionSessionId !== runtime.versionSessionId ||
+          data.metadata.evidenceId !== evidenceId ||
+          !data.metadata.reference ||
+          !matchingInstalledReference(data.metadata.reference, runtime.reference))
+      )
+        throw new Error("A correção não corresponde à versão desta sessão.");
+      if (typeof data.correct !== "boolean") throw new Error("Resposta de correção inválida.");
+      const feedback = data as GradeResult;
+      if (onAssessed) onAssessed(answer, feedback);
+      else setState((current) => recordAttempt(current, activity, answer, feedback));
+      return feedback;
+    },
+    [course, runtime, setState, sync],
+  );
 
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
@@ -501,10 +589,17 @@ export function StudyProvider({
     async (input: Omit<AssessmentRequest, "courseId">) => {
       const generation = sync.getSnapshot().generation;
       const userId = sync.getSnapshot().userId;
+      if (runtime) await sync.flush(generation);
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou antes da avaliação.");
       const response = await fetch("/api/assessments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...input, courseId: course.id }),
+        body: JSON.stringify({
+          ...input,
+          courseId: course.id,
+          ...(runtime ? { versionSessionId: runtime.versionSessionId } : {}),
+        }),
       });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error ?? "Não foi possível executar a avaliação.");
@@ -513,10 +608,17 @@ export function StudyProvider({
       const result = serverAssessmentResultSchema.parse(body);
       if (result.courseId !== course.id || result.contentVersion !== course.contentVersion)
         throw new Error("O conteúdo da avaliação mudou. Recarregue a página.");
+      if (
+        runtime &&
+        (result.installationId !== runtime.reference.installationId ||
+          result.artifactHash !== runtime.reference.artifactHash ||
+          result.versionSessionId !== runtime.versionSessionId)
+      )
+        throw new Error("A avaliação não corresponde à instalação desta sessão.");
       setState((current) => recordServerAssessment(current, course, result));
       return result;
     },
-    [course, setState, sync],
+    [course, setState, sync, runtime],
   );
   const addConversationReply = useCallback(
     (
@@ -610,7 +712,41 @@ export function StudyProvider({
     [setState],
   );
   const startSession = useCallback(
-    (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
+    async (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
+      const generation = sync.getSnapshot().generation;
+      if (sync.getSnapshot().state.activeSessionId) return;
+      if (runtime) {
+        const response = await fetch("/api/course/active", { cache: "no-store" });
+        if (!response.ok)
+          throw new Error("Não foi possível verificar a versão ativa. Tente novamente.");
+        const catalog = await response.json();
+        const current = catalog.active?.find(
+          (entry: { reference: { courseId: string } }) => entry.reference.courseId === course.id,
+        );
+        if (!current || !sync.isCurrent(generation))
+          throw new Error("O contexto do curso mudou. Recarregue a página.");
+        if (!matchingInstalledReference(current.reference, runtime.reference)) {
+          await sync.flush(generation);
+          if (!sync.isCurrent(generation)) throw new Error("A conta mudou. Recarregue a página.");
+          const selected = await fetch("/api/course/active", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              courseId: course.id,
+              source: "installed",
+              expectedRevision: runtime.selectionRevision,
+              operationId: crypto.randomUUID(),
+            }),
+          });
+          if (!selected.ok)
+            throw new Error(
+              "Não foi possível iniciar a versão ativa. Seu progresso foi preservado.",
+            );
+          window.location.assign(new URL("/study", window.location.origin).href);
+          return;
+        }
+      }
+      if (!sync.isCurrent(generation)) throw new Error("A conta mudou. Recarregue a página.");
       setState((current) => {
         if (current.activeSessionId) return current;
         const id = crypto.randomUUID();
@@ -646,8 +782,9 @@ export function StudyProvider({
             ...current.events,
           ],
         };
-      }),
-    [setState, course.id],
+      });
+    },
+    [setState, course.id, runtime, sync],
   );
   const updateActiveSessionDuration = useCallback(
     (sessionId: string, seconds: number) =>
@@ -714,6 +851,8 @@ export function StudyProvider({
 
   const value = useMemo(
     () => ({
+      runtime,
+      assessActivity,
       course: visibleCourse,
       resources,
       language,
@@ -755,6 +894,8 @@ export function StudyProvider({
     }),
     [
       visibleCourse,
+      runtime,
+      assessActivity,
       resources,
       language,
       assessments,

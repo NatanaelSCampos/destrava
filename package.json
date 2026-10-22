@@ -51,7 +51,10 @@
     "package:example": "node scripts/produce-external-course.mjs",
     "installations:verify": "node --import tsx scripts/verify-course-installations.tsx",
     "installations:verify:local": "node scripts/run-course-installations-local.mjs verify",
-    "installations:local": "node scripts/run-course-installations-local.mjs manage"
+    "installations:local": "node scripts/run-course-installations-local.mjs manage",
+    "runtime:verify": "node --import tsx scripts/verify-installed-runtime.tsx",
+    "runtime:verify:local": "node scripts/run-installed-runtime-local.mjs",
+    "runtime:profile": "node --import tsx scripts/export-installed-runtime-profile.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

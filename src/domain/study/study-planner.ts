@@ -101,17 +101,28 @@ export function buildStudyPlan(
   );
   const plan: PlannedItem[] = [];
   const budget = Math.max(1, Math.round(dailyMinutes));
-  const focusedConversation = mode === "difficulties" && budget >= 10
-    ? orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences).find((scenario) =>
-        scenario.focusConceptIds?.some((id) =>
-          profile.concepts.some((concept) => concept.id === id && concept.score !== null && concept.score < 75),
-        ),
-      ) ?? orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences)[0]
-    : undefined;
+  const focusedConversation =
+    mode === "difficulties" && budget >= 10
+      ? (orderByLearningAffinity(
+          resources.conversationScenarios,
+          state.profile.learningPreferences,
+        ).find((scenario) =>
+          scenario.focusConceptIds?.some((id) =>
+            profile.concepts.some(
+              (concept) => concept.id === id && concept.score !== null && concept.score < 75,
+            ),
+          ),
+        ) ??
+        orderByLearningAffinity(
+          resources.conversationScenarios,
+          state.profile.learningPreferences,
+        )[0])
+      : undefined;
   const activityBudget = budget - (focusedConversation ? 3 : 0);
-  const candidates = featureFlags.SPACED_REPETITION
-    ? reviewCandidates(course, state, vocabularyItems, now, mode, resources)
-    : [];
+  const candidates =
+    featureFlags.SPACED_REPETITION && course.availability?.spacedRepetition !== false
+      ? reviewCandidates(course, state, vocabularyItems, now, mode, resources)
+      : [];
   if (candidates.length) {
     const count = Math.min(candidates.length, Math.max(1, Math.floor(budget / 3)), 5);
     plan.push({
@@ -165,8 +176,14 @@ export function buildStudyPlan(
 }
 
 export function nextActivity(course: PublicCourse, state: StudyState): PublicActivity | undefined {
-  const activities = course.units.flatMap(unit => unit.lessons.flatMap(lesson => lesson.activities));
-  const required = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));
-  return activities.find(activity => required.has(activity.id)) ??
-    activities.find(activity => !state.completedActivityIds.includes(activity.id));
+  const activities = course.units.flatMap((unit) =>
+    unit.lessons.flatMap((lesson) => lesson.activities),
+  );
+  const required = new Set(
+    course.units.flatMap((unit) => [...outstandingPolicyActivityIds(unit, state, course)]),
+  );
+  return (
+    activities.find((activity) => required.has(activity.id)) ??
+    activities.find((activity) => !state.completedActivityIds.includes(activity.id))
+  );
 }

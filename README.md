@@ -1021,3 +1021,17 @@ npm.cmd run installations:local -- list <courseId>
 ```
 
 Os dois últimos comandos exigem o perfil isolado `.env.integration.local` e comprovam o Docker/projeto/loopback. Aprovação e ativação reais continuam bloqueadas por padrão; o emissor de autoridade de teste existe somente em scripts locais, sem rota administrativa HTTP. Consulte [entrega, procedimento, evidências e limitações](DESTRAVA_INSTALACOES_INCREMENTO_7.md). A rota `/installed-courses/<sessionId>` permite inspecionar uma sessão própria e seu áudio com o player existente. Nenhuma publicação remota foi realizada.
+
+### Runtime instalado e interoperabilidade — Incremento 8
+
+O seletor e o onboarding normais passam a listar cursos instalados ativos, íntegros e aprovados exclusivamente no ambiente local. Curso, unidade, lição, correção, escrita manual, avaliação e progresso usam o mesmo motor. Reload mantém a sessão fixada; **Estudar versão atual** captura o ponteiro ativo. Progresso é separado por usuário/instalação, e notas são recompostas das evidências do servidor.
+
+```powershell
+npm.cmd run runtime:verify
+npm.cmd run runtime:verify:local
+npm.cmd run runtime:profile
+```
+
+O produtor experimental executa fora do repositório somente com contratos públicos. O [perfil de integração](contracts/package-v1/installed-runtime.json) distingue capacidades do motor e caminhos instalados. IA, oral, revisão persistida e Aula Particular ainda são bloqueados nesse contexto; implementação do recurso não significa disponibilidade ou homologação.
+
+Consulte [arquitetura, matriz, evidências, segurança e explicação educacional A–H](DESTRAVA_RUNTIME_INCREMENTO_8.md). Revisão local: `http://127.0.0.1:3000`. Produção instalada permanece bloqueada; não há publicação remota nem commit deste incremento.

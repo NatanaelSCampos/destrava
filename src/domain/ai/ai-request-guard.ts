@@ -28,6 +28,29 @@ export async function guardAIRequest(
       };
     const versionScope = await unsupportedVersionRequest(request, parser);
     if (versionScope) return { error: versionScope };
+    if (process.env.DESTRAVA_LOCAL_ONLY === "1" && process.env.NODE_ENV !== "production") {
+      try {
+        const { isSelectedInstalled } = await import("@/lib/application-course-runtime");
+        if (await isSelectedInstalled(user.id))
+          return {
+            error: NextResponse.json(
+              {
+                error: "Este recurso ainda não está integrado a cursos instalados.",
+                capability: feature,
+                layer: "installed.integration",
+              },
+              { status: 422 },
+            ),
+          };
+      } catch {
+        return {
+          error: NextResponse.json(
+            { error: "Não foi possível verificar o contexto de estudo." },
+            { status: 503 },
+          ),
+        };
+      }
+    }
     const client = await createSupabaseServerClient();
     if (!client)
       return {

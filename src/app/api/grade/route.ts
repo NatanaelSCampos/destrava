@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { courseInstallationRuntime, resolveRuntimeCourse } from "@/lib/course-installation-runtime";
+import { courseInstallationRuntime } from "@/lib/course-installation-runtime";
+import { resolveApplicationOperation, installedPublicView } from "@/lib/application-course-runtime";
+import { installedStudyRuntime } from "@/lib/installed-study-runtime";
+import { InstalledStudyError } from "@/domain/installed-study/contracts";
 import { randomUUID } from "node:crypto";
 import { InstallationError, type JsonValue } from "@/domain/course-installations/contracts";
 import { findActivity } from "@/content/schema";
@@ -15,6 +18,7 @@ const requestSchema = z.object({
   answer: z.string().max(1000),
   versionSessionId: z.uuid().optional(),
   evidenceId: z.uuid().optional(),
+  studySessionId: z.uuid().optional(),
 });
 
 export async function POST(request: Request) {
@@ -26,13 +30,24 @@ export async function POST(request: Request) {
   if (!input.success) return NextResponse.json({ error: "Resposta inválida." }, { status: 400 });
   let bundle;
   try {
-    bundle = await resolveRuntimeCourse(input.data.courseId, user?.id, input.data.versionSessionId);
+    bundle = await resolveApplicationOperation(
+      input.data.courseId,
+      user?.id,
+      input.data.versionSessionId,
+    );
   } catch (error) {
     return NextResponse.json(
       { error: "Não foi possível resolver a versão da sessão." },
       {
         status:
-          error instanceof InstallationError && error.code === "SESSION_NOT_FOUND" ? 404 : 503,
+          error instanceof InstallationError && error.code === "SESSION_NOT_FOUND"
+            ? 404
+            : error instanceof InstalledStudyError &&
+                ["SESSION_CONFLICT", "NOT_AUTHORIZED"].includes(error.code)
+              ? 403
+              : error instanceof InstalledStudyError && error.code === "INVALID_INPUT"
+                ? 400
+                : 503,
       },
     );
   }
@@ -41,14 +56,33 @@ export async function POST(request: Request) {
   if (!activity) return NextResponse.json({ error: "Atividade não encontrada." }, { status: 404 });
   let result;
   try {
-    const preference = await userCourseVariant(
-      user?.id ?? null,
-      bundle.course.id,
-      bundle.language,
-      bundle.course,
-      activity.variant,
-    );
-    const exposed = publicCourse(bundle.course, bundle.language, undefined, preference);
+    const installed =
+      input.data.versionSessionId && user
+        ? await installedStudyRuntime().load(user.id, input.data.versionSessionId)
+        : null;
+    if (
+      input.data.studySessionId &&
+      !installed?.state?.sessions.some((session) => session.id === input.data.studySessionId)
+    )
+      return NextResponse.json({ error: "Sessão de estudo inválida." }, { status: 400 });
+    const preference = installed
+      ? installed.state?.profile.variantId
+      : await userCourseVariant(
+          user?.id ?? null,
+          bundle.course.id,
+          bundle.language,
+          bundle.course,
+          activity.variant,
+        );
+    const exposed =
+      installed && user
+        ? installedPublicView(
+            (await installedStudyRuntime().resolveContext(user.id, input.data.versionSessionId!))
+              .content,
+            input.data.versionSessionId!,
+            preference,
+          ).course
+        : publicCourse(bundle.course, bundle.language, undefined, preference);
     if (exposed.availability?.unavailableActivityIds.includes(activity.id))
       return NextResponse.json(
         {
@@ -75,13 +109,32 @@ export async function POST(request: Request) {
     );
   if (input.data.versionSessionId && user) {
     try {
-      await courseInstallationRuntime().recordEvidence(user.id, input.data.versionSessionId, {
-        id: input.data.evidenceId ?? randomUUID(),
-        kind: "activity",
-        definitionId: activity.id,
-        input: { answer: input.data.answer },
-        result: JSON.parse(JSON.stringify(result)) as JsonValue,
-      });
+      const evidence = await courseInstallationRuntime().recordEvidence(
+        user.id,
+        input.data.versionSessionId,
+        {
+          id: input.data.evidenceId ?? randomUUID(),
+          kind: "activity",
+          definitionId: activity.id,
+          input: {
+            answer: input.data.answer,
+            ...(input.data.studySessionId ? { studySessionId: input.data.studySessionId } : {}),
+          },
+          result: JSON.parse(JSON.stringify(result)) as JsonValue,
+        },
+      );
+      return NextResponse.json(
+        {
+          ...result,
+          metadata: {
+            reference: evidence.reference,
+            versionSessionId: evidence.sessionId,
+            evidenceId: evidence.id,
+            createdAt: evidence.createdAt,
+          },
+        },
+        { headers: { "Cache-Control": "private, no-store" } },
+      );
     } catch {
       return NextResponse.json(
         { error: "Não foi possível preservar a evidência desta versão." },

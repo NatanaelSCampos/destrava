@@ -62,10 +62,12 @@ function StudyContent() {
     durationValue === "5" || durationValue === "15" || durationValue === "30"
       ? (Number(durationValue) as 5 | 15 | 30)
       : "full";
-  const targetMinutes = duration === "full" ? state.profile.learningPreferences.preferredSessionMinutes : duration;
+  const targetMinutes =
+    duration === "full" ? state.profile.learningPreferences.preferredSessionMinutes : duration;
   const unit = currentUnit(course, state)!;
   const planned = useMemo(
-    () => buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode),
+    () =>
+      buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode),
     [course, state, targetMinutes, vocabularyItems, resources, mode],
   );
   const focusedMistakeId = planned.find(
@@ -73,11 +75,19 @@ function StudyContent() {
   )?.id;
   const suggestedPractice = useMemo(() => {
     const profile = buildLearningProfile(course, state, vocabularyItems, resources);
-    return LearningRecommendationEngine.recommend(course, state, profile, vocabularyItems, resources)
+    return LearningRecommendationEngine.recommend(
+      course,
+      state,
+      profile,
+      vocabularyItems,
+      resources,
+    )
       .filter((entry) => entry.kind === "conversation" || entry.kind === "image")
       .slice(0, 2);
   }, [course, state, vocabularyItems, resources]);
   const activeSession = state.sessions.find((session) => session.id === state.activeSessionId);
+  const [startingSession, setStartingSession] = useState(false);
+  const [startError, setStartError] = useState("");
   const sessionUnit = course.units.find((entry) => entry.id === activeSession?.unitId) ?? unit;
   const plan = activeSession?.plan ?? planned;
   const [index, setIndex] = useState(0);
@@ -147,9 +157,12 @@ function StudyContent() {
           .find((entry) => entry.id === item.id)
       : undefined;
   const lastSession = state.sessions.find((session) => session.finishedAt);
-  const lastFocusedMistakeId = lastSession?.mode === "difficulties"
-    ? lastSession.plan.find((entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]))?.id
-    : undefined;
+  const lastFocusedMistakeId =
+    lastSession?.mode === "difficulties"
+      ? lastSession.plan.find(
+          (entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]),
+        )?.id
+      : undefined;
   const practiceHistory = useMemo(
     () => buildPracticeHistory(course, state, vocabularyItems),
     [course, state, vocabularyItems],
@@ -249,8 +262,10 @@ function StudyContent() {
             </p>
             <button
               className="study-start-button"
-              disabled={!plan.length}
-              onClick={() => {
+              disabled={!plan.length || startingSession}
+              onClick={async () => {
+                setStartingSession(true);
+                setStartError("");
                 setIndex(0);
                 const firstActivity = plan.find((entry) => entry.kind === "activity");
                 const planUnit = course.units.find((entry) =>
@@ -258,11 +273,20 @@ function StudyContent() {
                     lesson.activities.some((activity) => activity.id === firstActivity?.id),
                   ),
                 );
-                startSession(planUnit?.id ?? unit.id, plan, mode, targetMinutes);
+                try {
+                  await startSession(planUnit?.id ?? unit.id, plan, mode, targetMinutes);
+                } catch (error) {
+                  setStartError(
+                    error instanceof Error ? error.message : "Não foi possível iniciar a sessão.",
+                  );
+                } finally {
+                  setStartingSession(false);
+                }
               }}
             >
               <Play size={17} fill="currentColor" /> Começar sessão <ArrowRight size={17} />
             </button>
+            {startError && <p role="alert">{startError}</p>}
             {mode === "difficulties" && focusedMistakeId && (
               <Link
                 href={`/micro-lesson?activity=${encodeURIComponent(focusedMistakeId)}`}
@@ -324,8 +348,8 @@ function StudyContent() {
               <p>
                 {sessionTimeNeedsCorrection(lastSession)
                   ? "Tempo a corrigir"
-                  : `${formatMinutes(countedStudySeconds(lastSession) / 60)} estudados`} · {lastSession.correct}{" "}
-                acertos · {lastSession.wrong} erros
+                  : `${formatMinutes(countedStudySeconds(lastSession) / 60)} estudados`}{" "}
+                · {lastSession.correct} acertos · {lastSession.wrong} erros
               </p>
               {comparisons.length ? (
                 <>
@@ -384,7 +408,10 @@ function StudyContent() {
             {activeSession.mode === "difficulties"
               ? "Treino de dificuldades"
               : `Unidade ${sessionUnit.number} · ${sessionUnit.title}`}{" "}
-            · meta de {activeSession.targetMinutes ?? state.profile.learningPreferences.preferredSessionMinutes} min
+            · meta de{" "}
+            {activeSession.targetMinutes ??
+              state.profile.learningPreferences.preferredSessionMinutes}{" "}
+            min
           </p>
         </div>
         <div className="study-session-meta">

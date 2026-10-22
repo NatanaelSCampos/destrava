@@ -222,3 +222,9 @@ Compatibilidade técnica, disponibilidade operacional, declaração editorial, c
 Snapshot privado e catálogo persistente separam dados imutáveis da seleção ativa. Preparação/confirmação tratam a fronteira não atômica banco/Storage. CAS, receipt e histórico são transacionais; sessões/evidências preservam referência e critérios originais após troca e rollback. O motor/importador existente é reutilizado. A fonte canônica da arquitetura permanece [DESTRAVA_ARQUITETURA_MULTILINGUA.md](DESTRAVA_ARQUITETURA_MULTILINGUA.md); [o relatório da entrega](DESTRAVA_INSTALACOES_INCREMENTO_7.md) contém testes e procedimentos.
 
 A gestão é exclusivamente interna/local neste estágio. Manifesto editorial não concede autoridade; publicação real e runtime instalado em produção são negados até existir aprovação confiável. A UI normal continua compilada e não há suporte dinâmico completo em IA/voz/aula interativa. Essas fronteiras deverão ser consideradas na especificação do próximo incremento, sem implementação automática.
+
+## Incremento 8: curso externo no runtime normal
+
+O estado posterior do seletor/onboarding e da execução instalada está em [DESTRAVA_RUNTIME_INCREMENTO_8.md](DESTRAVA_RUNTIME_INCREMENTO_8.md). O ponteiro ativo I7 permanece canônico; a seleção por aluno guarda sessão fixada, e progresso/evidências são separados por instalação. O motor e o importador existentes são reutilizados. Produção, autoridade editorial real, IA/oral/interativo/review instalados e API do Foundry permanecem fora desta integração local.
+
+O [perfil público instalado](contracts/package-v1/installed-runtime.json) é derivado do registro/filtro, sem redefinir os schemas ou o catálogo global. Disponibilidade e homologação são verificadas por caminho, sem presumir que uma capacidade implementada é operacional no instalado.

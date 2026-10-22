@@ -25,7 +25,7 @@ export function WritingEditor({
   activity: Writing;
   onSaved?: (text: string) => void;
 }) {
-  const { course, language, state, saveWriting } = useStudy();
+  const { course, language, state, saveWriting, runtime } = useStudy();
   const previous = state.writing.find((submission) => submission.activityId === activity.id);
   const [text, setText] = useState(previous?.text ?? "");
   const [saved, setSaved] = useState(false);
@@ -122,7 +122,7 @@ export function WritingEditor({
           <button type="button" className="secondary-button" disabled={!canSubmit} onClick={save}>
             <Check size={16} /> Salvar texto
           </button>
-          {featureFlags.AI_WRITING && (
+          {featureFlags.AI_WRITING && !runtime && (
             <button
               type="button"
               className="primary-button"

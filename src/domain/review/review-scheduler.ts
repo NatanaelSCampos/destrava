@@ -11,9 +11,9 @@ export type ReviewSchedule = {
 const intervals = [3, 7, 15, 30];
 
 export class ReviewScheduler {
-  static initial(now = new Date()): ReviewSchedule {
+  static initial(now = new Date(), id = crypto.randomUUID()): ReviewSchedule {
     return {
-      id: crypto.randomUUID(),
+      id,
       nextReviewAt: now.toISOString(),
       intervalDays: 0,
       easeFactor: 2.5,

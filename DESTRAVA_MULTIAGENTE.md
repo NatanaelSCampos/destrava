@@ -17,9 +17,11 @@ O formato de perfil por projeto segue a [documentação oficial de subagentes](h
 
 ## Carregamento de perfis
 
-O Lead deve verificar a interface de delegação disponível. Se ela selecionar o perfil nativo, registre a evidência. A ferramenta `collaboration.spawn_agent` desta sessão não expõe seleção de papel, cwd ou sandbox.
+O Lead deve verificar a interface de delegação disponível em cada sessão. Quando houver `agent_type`, solicite o papel nativo e registre o argumento utilizado. Esse argumento não comprova por si só qual arquivo TOML foi carregado, o cwd efetivo ou as permissões de sandbox.
 
-Nesse caso, o Lead lê o perfil canônico e inclui suas instruções no briefing do subagente, usando `fork_turns="none"` para delimitar contexto. O especialista confirma marcador, papel e restrições antes de escrever. Esse modo é **carregamento explícito pelo Lead**, não prova de seleção automática do TOML pelo runtime. Não criar um servidor ou orquestrador próprio para simular suporte ausente.
+Quando a seleção não estiver disponível ou o carregamento não puder ser comprovado, o Lead lê o perfil canônico e inclui suas instruções no briefing do subagente, usando `fork_turns="none"` para delimitar contexto. O especialista confirma marcador, papel e restrições antes de escrever. Esse modo é **carregamento explícito pelo Lead**, não prova de seleção automática do TOML pelo runtime. Não criar um servidor ou orquestrador próprio para simular suporte ausente.
+
+Na retomada do I8, a interface passou a expor `agent_type`; foram solicitados `qa` e `revisor`, com contexto inicial vazio e as instruções canônicas também fornecidas explicitamente. As ferramentas não ofereceram isolamento adicional por cwd ou override de sandbox nessa chamada; workdir, ownership e fiscalização de hashes continuaram obrigatórios. Essa evidência atualiza o diagnóstico histórico do piloto inicial, sem atribuir retroativamente essas opções às chamadas anteriores.
 
 A política de leitura do Revisor, quando não houver garantia técnica de sandbox, é homologada por candidato congelado, comandos sem escrita e comparação de hashes/status antes e depois. Isso detecta alterações e fiscaliza o procedimento; não equivale a uma barreira de segurança contra um agente malicioso.
 
@@ -165,3 +167,9 @@ Registre tempo de execução e coordenação, retrabalho, achados confirmados/de
 Task Decomposition separa código, testes e revisão por contratos. Agent Orchestration usa a comunicação nativa e o Lead. Context Isolation limita briefing/histórico, sem prometer isolamento de filesystem. Agent Handoffs transferem patches e evidências completas. Parallel Execution é usada somente entre tarefas independentes; integração é sequencial. Independent Review confronta a entrega com critérios e riscos sem implementar sua própria correção. Git Worktrees separam escritas e branches. Human-in-the-Loop mantém autorização para checkpoint, ações sensíveis e início do próximo incremento.
 
 Mais agentes adicionam consumo e coordenação. Uma correção pequena com poucos arquivos pode ser melhor executada pelo Lead; múltiplos especialistas são úteis quando testes, análise de riscos e implementação possuem trabalho independente suficiente.
+
+### Segundo piloto real: Incremento 8
+
+Baseline `bccb67e97a2eb4212ba574b6f9030ad706aaf541`, branch Lead `feat/increment-8-runtime-interoperability`. Worktrees Implementador/QA foram alinhadas por fast-forward depois de preservar entregas I7 com hashes. A equipe manteve quatro papéis e carregamento explícito, sem subdelegação, novo orquestrador ou alterações de configuração/permissões.
+
+O [relatório do Incremento 8](DESTRAVA_RUNTIME_INCREMENTO_8.md#f-processo-multiagente-e-comparação) registra ownership, contratos de entrega, correções levantadas por QA/Revisor, candidatos e resultados. Lead integra UI e executa banco/browser/build sequencialmente; testes puros e investigação dos especialistas ocorrem independentemente. Resultados e limites pertencem ao candidato integrado, não apenas aos patches de cada worktree. Não houve autorização de commit, publicação ou próximo incremento.

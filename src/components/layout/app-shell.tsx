@@ -38,6 +38,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboarding";
 import { StudySyncNotice } from "@/components/study-sync-notice";
+import type { RuntimeCourseOption } from "@/lib/installed-runtime-types";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -61,13 +62,28 @@ function isNavActive(href: string, pathname: string) {
   return pathname.startsWith(href) && (href !== "/dashboard" || pathname === href);
 }
 
-export function AppShell({ children, courseOptions }: {
+export function AppShell({
+  children,
+  courseOptions,
+  selectionRevision = 0,
+}: {
   children: ReactNode;
-  courseOptions: Array<{ id: string; title: string; language: string }>;
+  courseOptions: RuntimeCourseOption[];
+  selectionRevision?: number;
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { course, resources, language, state, vocabularyItems, ready, authUserId, flushStudyState } = useStudy();
+  const {
+    course,
+    resources,
+    language,
+    state,
+    vocabularyItems,
+    ready,
+    authUserId,
+    flushStudyState,
+    runtime,
+  } = useStudy();
   const [switchingCourse, setSwitchingCourse] = useState(false);
   const [courseError, setCourseError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -132,7 +148,15 @@ export function AppShell({ children, courseOptions }: {
       </div>
     );
   if (!state.profile.onboarded)
-    return <><StudySyncNotice /><PedagogicalOnboarding courseOptions={courseOptions} /></>;
+    return (
+      <>
+        <StudySyncNotice />
+        <PedagogicalOnboarding
+          courseOptions={courseOptions}
+          selectionRevision={selectionRevision}
+        />
+      </>
+    );
   const progress = courseProgress(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>
@@ -140,20 +164,44 @@ export function AppShell({ children, courseOptions }: {
     ),
   );
   const pendingReviews = dueReviewCounts(
-    state, vocabularyItems, new Date(), activityIds, resources.structures,
+    state,
+    vocabularyItems,
+    new Date(),
+    activityIds,
+    resources.structures,
   ).total;
-  const navItems = navigation(course.slug).filter(
-    (item) =>
-      (item.href !== "/speaking" || (featureFlags.SPEAKING && course.units.some((unit) => unit.lessons.some((lesson) => lesson.activities.some((activity) => activity.type === "speaking"))))) &&
-      (item.href !== "/conversation" || featureFlags.AI_TUTOR) &&
-      (item.href !== "/describe" || (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
-      (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled)),
-  ).filter((item) => item.href !== "/live-classes" || course.units.some((unit) =>
-    unit.lessons.some((lesson) => Boolean(lesson.interactiveLessonRef)),
-  ));
+  const navItems = navigation(course.slug)
+    .filter(
+      (item) =>
+        (item.href !== "/speaking" ||
+          (featureFlags.SPEAKING &&
+            course.units.some((unit) =>
+              unit.lessons.some((lesson) =>
+                lesson.activities.some((activity) => activity.type === "speaking"),
+              ),
+            ))) &&
+        (item.href !== "/conversation" || (featureFlags.AI_TUTOR && !runtime)) &&
+        (item.href !== "/review" || !runtime) &&
+        (item.href !== "/describe" ||
+          (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
+        (item.href !== "/basics" ||
+          Object.values(language.modules).some((module) => module.enabled)),
+    )
+    .filter(
+      (item) =>
+        item.href !== "/live-classes" ||
+        course.units.some((unit) =>
+          unit.lessons.some((lesson) => Boolean(lesson.interactiveLessonRef)),
+        ),
+    );
   const studyNavCount = navItems.findIndex((item) => item.href === "/vocabulary");
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
   const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
+  const installedBlockedPath =
+    runtime &&
+    ["/review", "/speaking", "/conversation", "/describe", "/micro-lesson", "/numbers"].some(
+      (path) => pathname === path,
+    );
 
   return (
     <div className="app-frame">
@@ -194,30 +242,87 @@ export function AppShell({ children, courseOptions }: {
             </span>
             <ChevronDown size={15} />
           </div>
+          {runtime && (
+            <div className="course-switcher">
+              <small>Versão {runtime.reference.contentVersion}</small>
+              <button
+                type="button"
+                className="text-link"
+                data-use-current-version
+                disabled={switchingCourse}
+                onClick={async () => {
+                  setSwitchingCourse(true);
+                  setCourseError("");
+                  try {
+                    await flushStudyState();
+                    const response = await fetch("/api/course/active", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        courseId: course.id,
+                        source: "installed",
+                        expectedRevision: runtime.selectionRevision,
+                        operationId: crypto.randomUUID(),
+                      }),
+                    });
+                    if (!response.ok)
+                      throw new Error(
+                        "Não foi possível iniciar a versão atual. Recarregue e tente novamente.",
+                      );
+                    window.location.assign(new URL("/dashboard", window.location.origin).href);
+                  } catch (error) {
+                    setCourseError(error instanceof Error ? error.message : "Versão indisponível.");
+                    setSwitchingCourse(false);
+                  }
+                }}
+              >
+                Estudar versão atual
+              </button>
+              <small>Recarregar mantém esta versão. Use o botão para iniciar a versão ativa.</small>
+              {courseError && <small role="alert">{courseError}</small>}
+            </div>
+          )}
           {courseOptions.length > 1 && (
             <label className="course-switcher">
               Trocar curso
-              <select value={course.id} disabled={switchingCourse} onChange={async (event) => {
-                const courseId = event.target.value;
-                if (courseId === course.id) return;
-                setSwitchingCourse(true);
-                setCourseError("");
-                try {
-                  await flushStudyState();
-                  const response = await fetch("/api/course/active", {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ courseId }),
-                  });
-                  if (!response.ok) throw new Error("Não foi possível trocar de curso.");
-                  // Reload so the server layout resolves the new course cookie.
-                  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-                  window.location.assign("/dashboard");
-                } catch (error) {
-                  setCourseError(error instanceof Error ? error.message : "Falha ao trocar de curso.");
-                  setSwitchingCourse(false);
-                }
-              }}>
-                {courseOptions.map((option) => <option key={option.id} value={option.id}>{option.title} · {option.language}</option>)}
+              <select
+                data-course-selector
+                value={course.id}
+                disabled={switchingCourse}
+                onChange={async (event) => {
+                  const courseId = event.target.value;
+                  if (courseId === course.id) return;
+                  setSwitchingCourse(true);
+                  setCourseError("");
+                  try {
+                    await flushStudyState();
+                    const response = await fetch("/api/course/active", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        courseId,
+                        source: courseOptions.find((option) => option.id === courseId)?.source,
+                        expectedRevision: selectionRevision,
+                        operationId: crypto.randomUUID(),
+                      }),
+                    });
+                    if (!response.ok) throw new Error("Não foi possível trocar de curso.");
+                    // Reload so the server layout resolves the new course cookie.
+                    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+                    window.location.assign("/dashboard");
+                  } catch (error) {
+                    setCourseError(
+                      error instanceof Error ? error.message : "Falha ao trocar de curso.",
+                    );
+                    setSwitchingCourse(false);
+                  }
+                }}
+              >
+                {courseOptions.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.title} · {option.language}
+                  </option>
+                ))}
               </select>
               {courseError && <small role="alert">{courseError}</small>}
             </label>
@@ -260,7 +365,7 @@ export function AppShell({ children, courseOptions }: {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          {featureFlags.AI_TUTOR && (
+          {featureFlags.AI_TUTOR && !runtime && (
             <button className="sidebar-tutor" onClick={() => setTutorOpen(true)}>
               <span className="sidebar-tutor-icon">
                 <Sparkles size={18} />
@@ -315,7 +420,7 @@ export function AppShell({ children, courseOptions }: {
                 <CircleHelp size={16} /> <span>Ver guia</span>
               </button>
             )}
-            {featureFlags.AI_TUTOR && (
+            {featureFlags.AI_TUTOR && !runtime && (
               <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
                 <Sparkles size={16} /> Perguntar ao professor
               </button>
@@ -325,7 +430,24 @@ export function AppShell({ children, courseOptions }: {
             </Link>
           </div>
         </header>
-        <main className="main-content"><StudySyncNotice />{children}</main>
+        <main className="main-content">
+          <StudySyncNotice />
+          {installedBlockedPath ? (
+            <section className="panel" role="status">
+              <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
+              <h1>Este recurso ainda não está disponível neste curso</h1>
+              <p>
+                A integração com cursos instalados está em preparação. Nenhuma nota ou progresso
+                será alterado por isso.
+              </p>
+              <Link className="secondary-button" href={`/course/${course.slug}`}>
+                Continuar meu curso
+              </Link>
+            </section>
+          ) : (
+            children
+          )}
+        </main>
       </div>
       <nav className="mobile-primary-nav" aria-label="Atalhos de estudo">
         <Link href="/dashboard" aria-current={pathname === "/dashboard" ? "page" : undefined}>
@@ -334,23 +456,36 @@ export function AppShell({ children, courseOptions }: {
         <Link href="/study" aria-current={pathname === "/study" ? "page" : undefined}>
           <Play size={20} /> <span>Aula</span>
         </Link>
-        <Link href="/review" aria-current={pathname === "/review" ? "page" : undefined}>
-          <RotateCcw size={20} /> <span>Revisar</span>
+        <Link
+          href={runtime ? "/history" : "/review"}
+          aria-current={pathname === (runtime ? "/history" : "/review") ? "page" : undefined}
+        >
+          <RotateCcw size={20} /> <span>{runtime ? "Histórico" : "Revisar"}</span>
         </Link>
-        {featureFlags.AI_TUTOR ? (
-          <Link href="/conversation" aria-current={pathname === "/conversation" ? "page" : undefined}>
+        {featureFlags.AI_TUTOR && !runtime ? (
+          <Link
+            href="/conversation"
+            aria-current={pathname === "/conversation" ? "page" : undefined}
+          >
             <MessageCircle size={20} /> <span>Conversar</span>
           </Link>
         ) : (
-          <Link href={`/course/${course.slug}`} aria-current={pathname.startsWith("/course") ? "page" : undefined}>
+          <Link
+            href={`/course/${course.slug}`}
+            aria-current={pathname.startsWith("/course") ? "page" : undefined}
+          >
             <BookOpen size={20} /> <span>Curso</span>
           </Link>
         )}
-        <button type="button" aria-label="Abrir todos os recursos" onClick={() => setMenuOpen(true)}>
+        <button
+          type="button"
+          aria-label="Abrir todos os recursos"
+          onClick={() => setMenuOpen(true)}
+        >
           <Menu size={20} /> <span>Mais</span>
         </button>
       </nav>
-      {featureFlags.AI_TUTOR && (
+      {featureFlags.AI_TUTOR && !runtime && (
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}
       <SelectionAudio />

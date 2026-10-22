@@ -16,6 +16,13 @@ export function courseInstallationRuntime() {
     throw new InstallationError("NOT_AUTHORIZED", "resolution");
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SECRET_KEY;
+  if (
+    process.env.DESTRAVA_LOCAL_ONLY !== "1" ||
+    !process.env.DESTRAVA_LOCAL_PROJECT?.trim() ||
+    url !== "http://127.0.0.1:54321" ||
+    process.env.APP_ORIGIN !== "http://127.0.0.1:3000"
+  )
+    throw new InstallationError("NOT_AUTHORIZED", "resolution");
   if (!url || !key) throw new InstallationError("CATALOG_FAILED", "resolution");
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   return new CourseInstallationService({

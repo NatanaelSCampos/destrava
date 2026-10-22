@@ -18,6 +18,7 @@ import {
   InstallationError,
   type InstalledContentReference,
 } from "@/domain/course-installations/contracts";
+import { InstalledStudyError } from "@/domain/installed-study/contracts";
 
 export type StoredAssessmentRow = {
   id: string;
@@ -31,6 +32,7 @@ export type StoredAssessmentRow = {
     input?: unknown;
     unitId?: string;
     variantId?: string;
+    canonical?: ServerAssessmentResult;
   };
 };
 type AssessmentApiDependencies = {
@@ -39,13 +41,19 @@ type AssessmentApiDependencies = {
     versionSessionId?: string,
     userId?: string | null,
   ) =>
-    | { course: Course; language: LanguagePackage; versionReference?: InstalledContentReference }
+    | {
+        course: Course;
+        language: LanguagePackage;
+        versionReference?: InstalledContentReference;
+        versionSessionId?: string;
+      }
     | undefined
     | Promise<
         | {
             course: Course;
             language: LanguagePackage;
             versionReference?: InstalledContentReference;
+            versionSessionId?: string;
           }
         | undefined
       >;
@@ -66,7 +74,7 @@ type AssessmentApiDependencies = {
   variantPreference?: (
     userId: string | null,
     courseId: string,
-    bundle?: { course: Course; language: LanguagePackage },
+    bundle?: { course: Course; language: LanguagePackage; versionSessionId?: string },
   ) => Promise<unknown>;
 };
 
@@ -176,6 +184,19 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
         }
         return Response.json(result);
       } catch (error) {
+        if (error instanceof InstalledStudyError)
+          return Response.json(
+            { error: "Não foi possível acessar o contexto instalado.", code: error.code },
+            {
+              status: ["SESSION_CONFLICT", "NOT_AUTHORIZED"].includes(error.code)
+                ? 403
+                : error.code === "INVALID_INPUT"
+                  ? 400
+                  : error.code.endsWith("CONFLICT")
+                    ? 409
+                    : 503,
+            },
+          );
         if (error instanceof InstallationError)
           return Response.json(
             { error: "Não foi possível acessar a versão desta sessão.", code: error.code },
@@ -235,6 +256,20 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           )
             continue;
           try {
+            if (bundle.versionReference) {
+              const canonical = serverAssessmentResultSchema.parse(row.result.canonical);
+              if (
+                canonical.id !== row.id ||
+                canonical.assessmentId !== row.assessment_id ||
+                canonical.courseId !== bundle.course.id ||
+                canonical.installationId !== bundle.versionReference.installationId ||
+                canonical.artifactHash !== bundle.versionReference.artifactHash ||
+                canonical.versionSessionId !== input.data.versionSessionId
+              )
+                throw new Error("Mismatched installed evidence");
+              results.push(canonical);
+              continue;
+            }
             // Never use today's preference to replay historical evidence.
             if (
               row.result.variantId &&
@@ -258,6 +293,19 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
         }
         return Response.json({ results });
       } catch (error) {
+        if (error instanceof InstalledStudyError)
+          return Response.json(
+            { error: "Não foi possível acessar o contexto instalado.", code: error.code },
+            {
+              status: ["SESSION_CONFLICT", "NOT_AUTHORIZED"].includes(error.code)
+                ? 403
+                : error.code === "INVALID_INPUT"
+                  ? 400
+                  : error.code.endsWith("CONFLICT")
+                    ? 409
+                    : 503,
+            },
+          );
         if (error instanceof InstallationError)
           return Response.json(
             { error: "Não foi possível acessar a versão desta sessão.", code: error.code },

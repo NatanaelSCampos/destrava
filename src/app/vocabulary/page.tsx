@@ -19,6 +19,7 @@ export default function VocabularyPage() {
     resources,
     vocabularyItems,
     state,
+    runtime,
     markVocabulary,
     recordVocabularySearch,
     recordVocabularyAudio,
@@ -67,8 +68,8 @@ export default function VocabularyPage() {
             Explore os termos do curso e escolha quais quer aprender ou revisar.
           </p>
         </div>
-        <Link href="/review" className="primary-button">
-          Abrir flashcards <ArrowRight size={16} />
+        <Link href={runtime ? `/course/${course.slug}` : "/review"} className="primary-button">
+          {runtime ? "Continuar meu curso" : "Abrir flashcards"} <ArrowRight size={16} />
         </Link>
       </div>
       <div className="vocab-summary">
@@ -248,7 +249,7 @@ export default function VocabularyPage() {
                           ? "Conhecida"
                           : "Difícil"}
                 </span>
-                {!item.catalogOnly && (
+                {!item.catalogOnly && !runtime && (
                   <div>
                     <button
                       aria-label={`Marcar ${item.term} como difícil`}

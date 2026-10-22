@@ -72,6 +72,23 @@ function resolve(courseId: string, lessonId: string) {
   );
   return bundle && lesson && definition ? { bundle, definition } : null;
 }
+async function installedGuard(userId: string) {
+  if (process.env.DESTRAVA_LOCAL_ONLY !== "1" || process.env.NODE_ENV === "production") return null;
+  try {
+    const { isSelectedInstalled } = await import("@/lib/application-course-runtime");
+    return (await isSelectedInstalled(userId))
+      ? NextResponse.json(
+          {
+            error: "Aula particular ainda não integrada ao curso instalado.",
+            layer: "installed.integration",
+          },
+          { status: 422 },
+        )
+      : null;
+  } catch {
+    return NextResponse.json({ error: "Contexto de curso indisponível." }, { status: 503 });
+  }
+}
 
 export async function GET(request: Request) {
   const versionScope = unsupportedVersionScope(null, request);
@@ -79,6 +96,8 @@ export async function GET(request: Request) {
   const user = await getAuthenticatedUser();
   const db = await createSupabaseServerClient();
   if (!user || !db) return NextResponse.json({ error: "Entre na sua conta." }, { status: 401 });
+  const integrationScope = await installedGuard(user.id);
+  if (integrationScope) return integrationScope;
   const url = new URL(request.url);
   const courseId = url.searchParams.get("courseId") ?? "";
   const lessonId = url.searchParams.get("lessonId") ?? "";
@@ -117,6 +136,8 @@ export async function POST(request: Request) {
   }
   const versionScope = unsupportedVersionScope(body, request);
   if (versionScope) return versionScope;
+  const integrationScope = await installedGuard(user.id);
+  if (integrationScope) return integrationScope;
   const parsed = inputSchema.safeParse(body);
   if (!parsed.success)
     return NextResponse.json({ error: "Estado da aula inválido." }, { status: 400 });
