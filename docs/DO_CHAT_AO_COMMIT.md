@@ -35,6 +35,7 @@ O **ChatGPT** ajuda a discutir objetivos e decisões de produto; o **GitHub** pr
 - **Proporcionalidade.** Fix pequeno pode usar descrição/aceite na própria PR, se for autocontido. Mudança de contrato, regras pedagógicas, banco, IA ou segurança exige spec independente e critérios explícitos.
 - **Paralelo só com interfaces estáveis.** Duas frentes podem trabalhar ao mesmo tempo se não editarem definições compartilhadas sem acordo prévio.
 - **Testes por impacto.** Rodar verificadores rápidos por tarefa e gates completos no candidato integrado, após mudanças relevantes; nunca considerar testes antigos válidos para uma alteração que os invalida.
+- **Laboratório vivo do aluno.** Nas entregas relevantes, conferir a utilidade e disponibilidade real no [curso pessoal ES-A1](produto/CURSO_LABORATORIO_ES_A1.md): oferecer recurso compatível e pertinente, ou justificar claramente a limitação. Não substitui testes neutros de idioma nem aprovação editorial.
 - **Não transformar melhorias futuras em bloqueios artificiais.** Distinguir requisito do marco, necessidade de integração e backlog posterior.
 - **Sem autodeclaração de sucesso.** Alegações de "pronto" devem apontar para commit, ambiente e evidência do estado verificado.
 
@@ -44,7 +45,7 @@ Interromper e registrar impedimento se surgir mudança de escopo ou de produto n
 
 ## Git, ambientes e implantação gradual
 
-A reconciliação foi concluída pela PR #2 em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, com árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`. A main é a baseline oficial confirmada; checkouts locais podem continuar atrás e devem ser inventariados antes de atualização. Não fazer novos merges/rebases automaticamente. O planejamento A2/B2 está em [spec](features/fase4-ciclo2/spec.md), com execução autorizada posteriormente em 23/10/2026 sobre `b2e94ce`, mantendo merge/deploy/migrações fora da autorização.
+A PR #2 integrou o motor anterior, a PR #3 as decisões A2/B2, a PR #4 o roadmap e **a PR #6 integrou A2/B2 à `main` em `370c742c7d2feabed6e9d05a7a94281342d9f1c5`**. QA/Revisor deram GO no recorte local, conforme [relatório do Ciclo 2](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). Não equiparar merge/homologação local a Fly/Supabase remoto. Inventariar branches/checkouts antes de atualizá-los; nenhuma autorização de deploy, migração ou exclusão decorre destes merges.
 
 O Fly.io e Supabase remoto não fazem parte do ciclo padrão. O ambiente local isolado e comandos protegidos permanecem normativos em [AGENTS.md](../AGENTS.md).
 

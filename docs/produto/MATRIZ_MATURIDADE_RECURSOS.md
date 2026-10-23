@@ -1,6 +1,6 @@
 # Destrava — Matriz de maturidade de recursos
 
-> **Baseline documental para revisão, 23/10/2026.** Não é uma reexecução de 33 recursos em navegador/produção. O status do motor foi extraído da auditoria funcional de 04/10/2026; integração instalada foi confrontada com o I8, o perfil gerado de 44 capacidades e o F4-C1. A2/B2 foram autorizados, mas sua conclusão não foi comprovada no GitHub nesta consulta.
+> **Matriz de referência, atualizada em 23/10/2026:** 33 recursos da auditoria histórica, 44 capacidades do perfil I8 e evidências locais da PR #6 A2/B2 integrada à `main` `370c742c7d2feabed6e9d05a7a94281342d9f1c5`. Não equivale à reexecução dos 33 recursos, certificação de produção ou auditoria dos worktrees pessoais ES-A1.
 
 ## 1. Como interpretar um status
 
@@ -10,6 +10,7 @@ Um único rótulo `implementado` não basta para dizer `pronto para aluno real`.
 2. **Integração no curso instalado:** executa com dados/versão/evidências do pacote externo, bloqueada ou parcialmente integrada.
 3. **Homologação:** testes puros/VM, SQL local, HTTP/navegador, dispositivos físicos, provedores reais e revisão editorial/qualidade de IA, cada qual com data/candidato.
 4. **Operação real:** dependências configuradas e saudáveis, permissão, cotas, esquema remoto, publicação e suporte efetivo ao usuário.
+5. **Cobertura no curso laboratório pessoal ES-A1:** recurso acessível e útil nas duas unidades, disponível com limites, bloqueado com causa explícita, não pertinente com justificativa ou ainda não auditado. A nova [política permanente](CURSO_LABORATORIO_ES_A1.md) estabelece auditoria após marcos relevantes; **não inferir cobertura atual dos arquivos pessoais pela fixture da `main`**.
 
 Nunca promover o status em uma dimensão por evidência de outra. A matriz registra o *melhor estado comprovado nas fontes referidas*, não um SLA nem homologação de produção.
 
@@ -20,13 +21,13 @@ Nunca promover o status em uma dimensão por evidência de outra. A matriz regis
 | Roadmap funcional histórico — 33 itens | **22 implementados** no escopo do fluxo original; **8 parciais**; **1 pendente** (AI Bridge), **1 adiado** (oral oficial), **1 em andamento** (governança). Soma de categorias, **não porcentagem de conclusão do produto**. |
 | Registro técnico I8 — 44 capacidades | **29 implementadas e integradas**, **14 implementadas mas não integradas** e **1 parcial e não integrada** no perfil de execução de cursos externos. Inclui capacidades internas e dependências; **não são 44 features de aluno**. |
 | Perfil operacional | `productionReady=false`, ambiente de homologação local; saúde dos serviços/voz varia em execução. |
-| A2/B2 | Especificação aprovada e implementação autorizada em conversa; **sem evidência de conclusão funcional/PR** neste levantamento. |
+| A2/B2 | **PR #6 integrada** com QA/Revisor GO relatados: sessões/diagnóstico instalados e narração bilíngue compilada no recorte local. Dispositivos, vozes físicas e publicação remota não homologados. |
 
 ### Instalações: capacidades explicitamente não integradas no perfil I8
 
 `activity.speaking`, `review.spaced`, `lesson.interactive`, `speech.recording`, `media.presentation`, `speech.recognition`, `speech.pronunciation`, `ai.writing_feedback`, `ai.conversation`, `ai.conversation_mission`, `ai.micro_lesson`, `ai.tutor`, `ai.image_description`, `ai.interactive_support` e `numbers.dictation` (a única parcial no registro).
 
-Atividade `activity.review` integrada **não significa** `review.spaced` integrado. `assessment.adaptive` aparece integrada tecnicamente, mas a jornada completa de diagnóstico instalado é precisamente lacuna a homologar em A2.
+Atividade `activity.review` integrada **não significa** `review.spaced` integrado. `assessment.adaptive` já era integrada tecnicamente; a jornada completa de diagnóstico instalado foi **homologada localmente pelo A2**, não em produção.
 
 ## 3. Inventário dos 33 recursos pedagógicos
 
@@ -35,7 +36,7 @@ Atividade `activity.review` integrada **não significa** `review.spaced` integra
 | 1 | Perfil de domínio | Implementado | Parcial: dados objetivos integrados; sinais avançados não completos | Evidência por usuário/curso e competência; não atribuir nota sem avaliação |
 | 2 | Motor adaptativo | Implementado | Parcial: só recomenda ações elegíveis | A1 limita CTAs; SRS/IA/voz instalados ainda ausentes |
 | 3 | Treinar minhas dificuldades | Implementado | Parcial: prática básica, sem integrações opcionais bloqueadas | Plano deve oferecer alternativas realmente executáveis |
-| 4 | Sessões rápidas por tempo | Implementado | Parcial: ciclo completo/reload instalado em A2 | Validar plano, timer, pausa, idempotência e nova leitura |
+| 4 | Sessões rápidas por tempo | Implementado | **A2 integrado, validado localmente**: pausa/retomada, checkpoint/reload, tempo confirmado no instalado | Uso pessoal ES-A1, aparelhos físicos e ambiente remoto não homologados |
 | 5 | Caderno automático de erros | Implementado | Parcial: evidências objetivas; ciclo de review completo pendente | Separar histórico projetado de revisão espaçada |
 | 6 | Revisão espaçada unificada | Implementado | **Bloqueada no instalado**: `review.spaced` | Depende de evidência privada e agendamento/recuperação de review |
 | 7 | Dicionário contextual | Implementado | Consulta lexical integrada; domínio/review parcial | Não igualar consulta à integração de aprendizagem |
@@ -53,7 +54,7 @@ Atividade `activity.review` integrada **não significa** `review.spaced` integra
 | 19 | Memória ativa de comportamento | Implementado | Parcial: sinais de IA/voz instalados não completos | Sinais orientam recomendações, não substituem provas |
 | 20 | Evolução por tentativa | Parcial | Parcial: tentativas objetivas; fala livre não integrada | Séries numéricas exigem evidência comparável |
 | 21 | Três modos de conversa | Parcial | Fluxos de conversação instalados bloqueados | Avaliação oral oficial é decisão separada |
-| 22 | Prova adaptativa escrita/objetiva | Implementado | Capacidade integrada; jornada real A2 pendente | Final fixa I8 não comprova diagnóstico adaptativo no browser |
+| 22 | Prova adaptativa escrita/objetiva | Implementado | **A2 integrado/homologado localmente**: diagnóstico instalado com respostas submetidas e resultado canônico | Não inferir produção, qualidade de itens editoriais ou cobertura no piloto pessoal |
 | 23 | Relatório por competências | Implementado | Parcial: depende de diagnóstico instalado validado | Amostra insuficiente não vira domínio certificado |
 | 24 | Feedback pós-avaliação | Implementado | Parcial: erro básico sim; `review.spaced` bloqueado | Feedback não implica agendamento de revisão instalada |
 | 25 | Avaliação oral conversacional oficial | Adiado / em análise | Não integrado/não aprovado | Apenas decisão futura; sem score oficial |
@@ -83,7 +84,7 @@ A Aula Particular **não é um único botão de “implementada”**. O objetivo
 | Timeline, quadro, slides e player | **MVP implementado** | Mídia própria sincronizada, alinhamento e experiência final |
 | Intervenções e professor contextual em texto | **Base implementada** | Qualidade de explicação, turnos orais, follow-up, personalização e evals |
 | Checkpoints e evidências por segmento | **B1 integrado e homologado localmente** | Não confundir submissão de fala/áudio com nota acústica; validação em dispositivos reais |
-| Idioma de apoio/alvo e voz controlada | **B2 autorizado, ainda sem entrega verificada** | Troca correta de vozes, pausa/cancelamento, callbacks, fallback e browser |
+| Idioma de apoio/alvo e voz controlada | **B2 integrado na PR #6; testes de navegador com Web Speech simulado** | Voz/aparelho físico, qualidade acústica/editorial e publicação ainda pendentes |
 | Adaptação pedagógica profunda | **Parcial (reforço determinístico)** | AdaptationEngine contextual por evidência e políticas verificáveis |
 | Perguntas por voz e feedback acústico da aula | **Fluxo final não homologado** | STT, TTS por trecho, turn-taking, retomada, pontuação só quando confiável |
 | Mídia final, avatar e realtime | **Não implementado no objetivo final** | Conteúdo próprio/licenciado, alinhamento; avatar/realtime são **opcionais**, não requisito de MVP |
@@ -97,7 +98,7 @@ A Aula Particular **não é um único botão de “implementada”**. O objetivo
 ## 4. Rotina de manutenção da matriz
 
 - Atualizar somente com commit/PR/candidato, teste realmente executado e ambiente. Fonte do runtime instalado: `src/domain/installed-study/compatibility.ts` e perfil gerado `contracts/package-v1/installed-runtime.json`; não editar o perfil gerado manualmente para simular integração.
-- Quando A2/B2 terminarem, atualizar suas linhas afetadas, a decomposição da Aula Particular e [Progresso](../PROGRESSO_PRODUTO.md).
+- A2/B2 foram integrados via PR #6 e as linhas afetadas atualizadas **com base em evidências locais documentadas**. Reavaliar após testes reais/operacionais e a auditoria do ES-A1, sem promoção de suporte por inferência.
 - Recursos dependentes de IA exigem **evals**, observabilidade/custo e teste sem fabricação de score; recursos de fala exigem testes de áudio/voz/acústica além da tela.
 - Distinguir disponibilidade de configuração (`unknown` / `unavailable`), compatibilidade curricular, permissões e implementação.
 - Pilotos ES/EN são experimentais; o Foundry precisa homologar o conteúdo independentemente do código do motor.
