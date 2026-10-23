@@ -59,7 +59,7 @@ O aprendizado real e o desempenho do aluno orientam melhorias editoriais e de UX
 
 ## 6. Primeiro marco de atualização, após A2/B2
 
-Quando o Lead entregar A2/B2 e houver revisão/aceite do candidato (sem exigir publicação remota automática), realizar **auditoria do curso pessoal existente**, decidir se as duas unidades precisam ser reorganizadas/refeitas e preparar um escopo para atualizar a experiência com as capacidades realmente utilizáveis. Detalhamento e critérios: [Piloto ES-A1 pós-Ciclo 2](../features/piloto-es-a1-pos-ciclo2/spec.md).
+**Pré-condição técnica cumprida:** o Ciclo 2 A2/B2 entrou na `main` via PR #6 (`370c742c7d2feabed6e9d05a7a94281342d9f1c5`) com homologação local relatada. A auditoria do curso pessoal real, a decisão de reorganizar/refazer as duas unidades e a sua atualização são **propostas futuras, ainda sem autorização de execução**; ver [Piloto ES-A1 pós-Ciclo 2](../features/piloto-es-a1-pos-ciclo2/spec.md).
 
 O proprietário **autoriza discutir e planejar a reformulação completa das duas unidades**, sem exigir preservar exatamente a ordem antiga. A reescrita efetiva, mudanças de contratos e operações de publicação continuam fora desta PR documental.
 

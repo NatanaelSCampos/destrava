@@ -1,6 +1,6 @@
 # Destrava — Roadmap estratégico do Learning Engine até o lançamento
 
-> **Estado: PROPOSTA ESTRATÉGICA PARA REVISÃO DO PROPRIETÁRIO.** Este documento foi proposto em 23/10/2026 sobre a baseline `main` `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`. A criação de uma PR documental não aprova nem inicia automaticamente qualquer marco funcional futuro.
+> **Estado: ROADMAP ESTRATÉGICO INTEGRADO NA PR #4; POLÍTICA DO CURSO-LABORATÓRIO EM REVISÃO NA PR #5.** Atualizado em 23/10/2026 com `main` `370c742c7d2feabed6e9d05a7a94281342d9f1c5` (A2/B2). Nenhum marco futuro recebe autorização funcional automaticamente.
 
 ## 1. Objetivo e princípio
 
@@ -19,7 +19,7 @@ O pacote público faz a fronteira: **o Foundry produz e atesta qualidade editori
 ## 2. Ponto atual — evidência versus autorização
 
 - **Integrado à `main`:** Incrementos 1–8, Fase 4 Ciclo 1 (A1: disponibilidade contextual; B1: evidências independentes por segmento), correção R1P2 e metodologia Do Chat ao Commit. Há testes e homologações **locais** com limites, não certificação universal de produção.
-- **Fase 4 Ciclo 2 — A2 + B2:** especificações e seis decisões aprovadas, incorporadas na PR #3. O proprietário autorizou a implementação em conversa e recebeu handoff para o Codex; **nenhum resultado funcional, novo commit ou PR A2/B2 foi confirmado no GitHub nesta consulta**. Não converter a autorização em estado `concluído`.
+- **Fase 4 Ciclo 2 — A2 + B2:** integrado à `main` pela PR #6, com QA/Revisor GO e jornadas locais verificadas nos limites do [relatório](../features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). Diagnóstico/pausa em curso instalado; narração bilíngue em aula compilada com voz simulada. Sem deploy ou certificação de dispositivos/voz física.
 - **Cursos externos instalados:** caminho básico do aluno interoperável, com capacidades avançadas parcialmente integradas ou bloqueadas. Relatório do I8 e perfil de runtime distinguem `existe no motor` de `executa no instalado`.
 - **Produção:** merges Git não realizam deploy nem migração de banco. Pilotos pessoais ES/EN e release Fly de cinco pacotes não equivalem à `main` com três fixtures compiladas. A homologação remota e a integração editorial são demandas separadas.
 
@@ -32,7 +32,7 @@ Estado dos 33 itens e das 44 capacidades: [Matriz de maturidade](MATRIZ_MATURIDA
 ~~~mermaid
 flowchart TD
   BASE["Fundação integrada na main<br/>Incrementos 1-8 + F4 C1"]
-  C2["AGORA · F4 Ciclo 2<br/>A2 sessões/diagnóstico<br/>B2 narração bilíngue"]
+  C2["F4 Ciclo 2 · INTEGRADO LOCALMENTE<br/>A2 sessões/diagnóstico<br/>B2 narração bilíngue"]
   GATE{"QA + Revisor<br/>Critérios e candidato aprovados?"}
   MERGE["PR funcional aprovada<br/>Merge na main — sem deploy implícito"]
   MAT["Atualizar matriz de maturidade<br/>e lacunas por ambiente"]
@@ -66,15 +66,15 @@ flowchart TD
 
 **O diagrama indica dependências predominantes, não um cronograma rígido.** Foundry, avaliação de IA, design system base e ajustes de usabilidade podem avançar em paralelo. Uma integração mínima segura da Aula Particular pode ser homologada antes de toda a visão avançada, desde que o recorte seja explicitado. Nenhum bloco futuro autoriza trabalho sem spec, aceite e aprovação próprios.
 
-O bloco **LAB CONTÍNUO ES-A1** representa uso pessoal **a partir do motor atual**, não um novo ambiente nem um marco que só começa no lançamento. A cada recurso integrado e compatível, revisar a cobertura do curso e detectar lacunas editoriais. Bloqueios como a Aula Particular em curso instalado devem permanecer honestos; experiência pessoal de curso compilado e execução instalada são verificadas separadamente. Seu primeiro ajuste amplo é candidato **após** a conclusão de A2/B2, conforme [spec ES-A1](../features/piloto-es-a1-pos-ciclo2/spec.md).
+O bloco **LAB CONTÍNUO ES-A1** representa uso pessoal **a partir do motor atual**, não um novo ambiente nem um marco que só começa no lançamento. A cada recurso integrado e compatível, revisar a cobertura do curso e detectar lacunas editoriais. Bloqueios como a Aula Particular em curso instalado devem permanecer honestos; experiência pessoal de curso compilado e execução instalada são verificadas separadamente. **A2/B2 já foram integrados na PR #6**; a auditoria/revisão real das duas unidades é a próxima proposta [spec ES-A1](../features/piloto-es-a1-pos-ciclo2/spec.md), ainda não autorizada para execução.
 
 ## 4. Marcos, objetivos e critérios de saída
 
 | Marco | Trabalho principal | Condição para considerar atendido | Status |
 | --- | --- | --- | --- |
 | **M0 — Fundação** | Contratos, capacidades, versões, importação, instalação, progresso e avaliação no fluxo básico | Incrementos 1–8 + F4 C1 na main com limites locais documentados | **Integrado no recorte comprovado** |
-| **M1 — Jornada confiável (A2/B2)** | Pausar/retomar e diagnosticar em cursos instalados; apoio/alvo e controle de TTS na Aula Particular compilada | A2-01…08 e B2-01…07 comprovados em candidato, QA + Revisor, PR funcional e merge autorizado | **Implementação autorizada; conclusão não comprovada** |
-| **M2 — Matriz viva** | Catalogar cada recurso com implementação, integração, homologação e operação | Matriz atualizada após cada entrega, com código/hash, ambiente e lacunas | **Baseline proposta nesta PR** |
+| **M1 — Jornada confiável (A2/B2)** | Pausar/retomar e diagnosticar em cursos instalados; apoio/alvo e controle de TTS na Aula Particular compilada | A2-01…08 e B2-01…07 com evidências locais, QA/Revisor GO, PR #6 integrada | **Integrado na main e homologado localmente; produção/dispositivos físicos pendentes** |
+| **M2 — Matriz viva** | Catalogar cada recurso com implementação, integração, homologação e operação | Matriz atualizada após cada entrega, com código/hash, ambiente e lacunas | **Matriz documental integrada na PR #4; extensão ES-A1 em revisão na PR #5** |
 | **M3 — Núcleo pedagógico instalado** | Evidências, revisão espaçada, domínio, erros e recomendações completas no instalado | Correção e persistência privada verificadas por curso/versão, sem recomendar ação inexistente | **Futuro a especificar** |
 | **M4 — IA e fala instaladas** | Tutor/feedback de escrita, conversação, missões, gravação, STT e pronúncia | Guards/versionamento/cotas, autorização, evals, teste local e provedores verificados separadamente | **Futuro a especificar** |
 | **M5 — Aula Particular aprofundada** | Intervenções, voz por turno, adaptação pedagógica, mídia própria, memória e acompanhamento pós-aula | Aula realmente ensina e responde com evidência; não confundir evento com domínio; validação pedagógica e audiovisual | **Visão parcialmente implementada; ciclos futuros** |

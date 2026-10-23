@@ -132,7 +132,7 @@ export async function providerCallbackFixture(root: string, props: unknown) {
     plugins: [{ name: "qa-provider-hooks", setup(builder) {
       builder.onResolve({ filter: /^react$/ }, () => ({ path: "hooks", namespace: "qa" }));
       builder.onLoad({ filter: /.*/, namespace: "qa" }, () => ({ loader: "js", resolveDir: root, contents:
-        "export const createContext=()=>({Provider:()=>null});export const useContext=()=>null;export const useCallback=fn=>fn;export const useMemo=fn=>fn();export const useEffect=()=>{};export const useSyncExternalStore=(subscribe,get)=>get();export const useState=initial=>{const h=globalThis.__qaHooks,i=h.index++;if(!(i in h.states))h.states[i]=typeof initial==='function'?initial():initial;return[h.states[i],next=>{h.states[i]=typeof next==='function'?next(h.states[i]):next}]};"
+        "export const createContext=()=>({Provider:()=>null});export const useContext=()=>null;export const useCallback=fn=>fn;export const useMemo=fn=>fn();export const useEffect=()=>{};export const useRef=initial=>{const h=globalThis.__qaHooks,i=h.index++;if(!(i in h.states))h.states[i]={current:initial};return h.states[i]};export const useSyncExternalStore=(subscribe,get)=>get();export const useState=initial=>{const h=globalThis.__qaHooks,i=h.index++;if(!(i in h.states))h.states[i]=typeof initial==='function'?initial():initial;return[h.states[i],next=>{h.states[i]=typeof next==='function'?next(h.states[i]):next}]};"
       }));
     } }],
   });

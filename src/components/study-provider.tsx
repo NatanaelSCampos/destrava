@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -40,6 +41,8 @@ import {
   type ImageDescriptionAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
+import { checkpointSession } from "@/domain/study/session-lifecycle";
+import type { AdaptiveProgress } from "@/domain/assessments/adaptive-progress";
 import { boundedStudySeconds } from "@/domain/study/session-time";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
@@ -150,7 +153,9 @@ type StudyContextValue = {
     targetMinutes: number,
   ) => Promise<void>;
   updateActiveSessionDuration: (sessionId: string, seconds: number) => void;
-  finishSession: (seconds?: number) => void;
+  checkpointStudySession: (sessionId: string, input: { seconds?: number; cursor?: number; paused?: boolean }) => Promise<void>;
+  confirmAdaptiveProgress: (input: AdaptiveProgress) => Promise<AdaptiveProgress>;
+  finishSession: (seconds?: number) => Promise<void>;
   correctSessionDuration: (sessionId: string, minutes: number) => void;
 };
 
@@ -743,10 +748,11 @@ export function StudyProvider({
       })),
     [setState],
   );
-  const startSession = useCallback(
+  const startSessionOperation = useCallback(
     async (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
       const generation = sync.getSnapshot().generation;
-      if (sync.getSnapshot().state.activeSessionId) return;
+      if (!["loaded", "absent"].includes(sync.getSnapshot().loadStatus)) throw new Error("Confirme a leitura do progresso antes de iniciar.");
+      if (sync.getSnapshot().state.activeSessionId) { await sync.flush(generation); return; }
       if (runtime) {
         const response = await fetch("/api/course/active", { cache: "no-store" });
         if (!response.ok)
@@ -770,6 +776,7 @@ export function StudyProvider({
               operationId: crypto.randomUUID(),
             }),
           });
+          if (!sync.isCurrent(generation)) throw new Error("Sua conta mudou durante a seleção.");
           if (!selected.ok)
             throw new Error(
               "Não foi possível iniciar a versão ativa. Seu progresso foi preservado.",
@@ -800,6 +807,8 @@ export function StudyProvider({
               wrong: 0,
               wordsReviewed: 0,
               plan,
+              cursor: 0,
+              paused: false,
             },
             ...current.sessions,
           ],
@@ -815,9 +824,46 @@ export function StudyProvider({
           ],
         };
       });
+      await sync.flush(generation);
     },
     [setState, course.id, runtime, sync],
   );
+  const starting = useRef<Promise<void> | null>(null);
+  const startSession = useCallback((unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
+    if (starting.current) return starting.current;
+    const operation = startSessionOperation(unitId, plan, mode, targetMinutes);
+    starting.current = operation;
+    void operation.finally(() => { if (starting.current === operation) starting.current = null; }).catch(() => undefined);
+    return operation;
+  }, [startSessionOperation]);
+  const checkpointStudySession = useCallback(async (sessionId: string, input: { seconds?: number; cursor?: number; paused?: boolean }) => {
+    const generation = sync.getSnapshot().generation;
+    setState(current => checkpointSession(current, sessionId, input));
+    await sync.flush(generation);
+  }, [sync, setState]);
+  const confirmAdaptiveProgress = useCallback(async (input: AdaptiveProgress): Promise<AdaptiveProgress> => {
+    const owner = sync.getSnapshot();
+    if (!runtime) throw new Error("Retomada de respostas confirmadas disponível no curso instalado.");
+    const { answers: ignored, ...submitted } = input;
+    void ignored;
+    setState(current => ({ ...current, adaptiveProgress: [submitted,
+      ...(current.adaptiveProgress ?? []).filter(value => value.assessmentId !== input.assessmentId)] }));
+    await sync.flush(owner.generation);
+    const response = await fetch("/api/course-installations/progress?versionSessionId=" + encodeURIComponent(runtime.versionSessionId), { cache: "no-store" });
+    if (!response.ok) throw new Error("Não foi possível confirmar as respostas submetidas. Tente novamente.");
+    const body = await response.json();
+    if (!sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
+      throw new Error("Sua conta ou contexto mudou durante a avaliação.");
+    if (body.versionSessionId !== runtime.versionSessionId || !matchingInstalledReference(body.reference, runtime.reference))
+      throw new Error("As respostas pertencem a outra instalação.");
+    const confirmed = body.state?.adaptiveProgress?.find((value: AdaptiveProgress) => value.attemptId === input.attemptId) as AdaptiveProgress | undefined;
+    if (!confirmed || confirmed.assessmentId !== input.assessmentId || confirmed.startedAt !== input.startedAt ||
+        JSON.stringify(confirmed.responses) !== JSON.stringify(input.responses) || !Array.isArray(confirmed.answers) ||
+        confirmed.answers.length !== input.responses.length) throw new Error("As respostas ainda não foram confirmadas.");
+    setState(current => ({ ...current, adaptiveProgress: [confirmed,
+      ...(current.adaptiveProgress ?? []).filter(value => value.assessmentId !== input.assessmentId)] }));
+    return confirmed;
+  }, [runtime, sync, setState]);
   const updateActiveSessionDuration = useCallback(
     (sessionId: string, seconds: number) =>
       setState((current) => {
@@ -835,7 +881,8 @@ export function StudyProvider({
     [setState],
   );
   const finishSession = useCallback(
-    (seconds = 0) =>
+    async (seconds = 0) => {
+      const generation = sync.getSnapshot().generation;
       setState((current) => {
         if (!current.activeSessionId) return current;
         const now = new Date();
@@ -862,8 +909,10 @@ export function StudyProvider({
             ...current.events,
           ],
         };
-      }),
-    [setState, course.id],
+      });
+      await sync.flush(generation);
+    },
+    [setState, course.id, sync],
   );
   const correctSessionDuration = useCallback(
     (sessionId: string, minutes: number) =>
@@ -923,6 +972,8 @@ export function StudyProvider({
       recordStudyEvent,
       startSession,
       updateActiveSessionDuration,
+      checkpointStudySession,
+      confirmAdaptiveProgress,
       finishSession,
       correctSessionDuration,
     }),
@@ -967,6 +1018,8 @@ export function StudyProvider({
       recordStudyEvent,
       startSession,
       updateActiveSessionDuration,
+      checkpointStudySession,
+      confirmAdaptiveProgress,
       finishSession,
       correctSessionDuration,
     ],

@@ -61,7 +61,11 @@
     "installations:local": "node scripts/run-course-installations-local.mjs manage",
     "runtime:verify": "node --import tsx scripts/verify-installed-runtime.tsx",
     "runtime:verify:local": "node scripts/run-installed-runtime-local.mjs",
-    "runtime:profile": "node --import tsx scripts/export-installed-runtime-profile.ts"
+    "runtime:profile": "node --import tsx scripts/export-installed-runtime-profile.ts",
+    "ciclo2:a2:verify": "node --import tsx scripts/verify-ciclo2-a2.tsx",
+    "ciclo2:b2:verify": "node --import tsx scripts/verify-ciclo2-b2.tsx",
+    "ciclo2:verify": "node --import tsx --test scripts/verify-ciclo2-independent.tsx",
+    "ciclo2:verify:local": "node scripts/run-ciclo2-local.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

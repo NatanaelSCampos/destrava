@@ -4,7 +4,7 @@
 
 Decisão de produto: o curso pessoal de espanhol A1 com **duas unidades já usadas para estudos** deve refletir o **melhor conjunto funcional e honesto do motor em seu caminho de execução**. Ver política permanente: [Curso laboratório ES-A1](../../produto/CURSO_LABORATORIO_ES_A1.md).
 
-**Gatilho:** receber relatório/candidato final da execução A2/B2, conferir o que passou por QA/Revisor, consultar a `main` e **então** auditar os pilotos pessoais reais. Não adotar automaticamente uma PR funcional ainda não integrada; trabalhar com candidato versionado no ambiente de teste somente após autorização apropriada.
+**Pré-condição técnica atendida (23/10/2026):** PR #6 A2/B2 integrada à `main` em `370c742c7d2feabed6e9d05a7a94281342d9f1c5`, com QA/Revisor GO no recorte local. **A auditoria das duas unidades e sua reformulação continuam não iniciadas e sem autorização de execução própria.** Antes da tarefa, reconfirmar baseline, trabalho local pendente e a versão efetivamente usada para estudar, compilada/instalada.
 
 ## 1. Escopo de descoberta obrigatório
 
@@ -57,7 +57,7 @@ As duas unidades devem constituir uma **experiência de aprendizagem A1**, com o
 | **ESLAB-09** | Alterações de conteúdo e integração somente nos arquivos aprovados; pilotos EN preservados, sem movimento automático de outros worktrees |
 | **ESLAB-10** | Sem deploy, migração, reset, operação paga ou merge por inferência; retorno de STOP para mudanças públicas ou de segurança |
 
-## 4. Sequência após o fechamento técnico de A2/B2
+## 4. Sequência proposta após a PR #6 integrada
 
 1. **Descoberta + decisão editorial:** auditar curso real, inventariar capacidades e lacunas; propor estrutura nova das duas unidades se for o melhor caminho.
 2. **Spec/planejamento aprovados:** detalhar paths, owners, critérios e alterações necessárias. Reusar o que já existe antes de criar contrato novo.

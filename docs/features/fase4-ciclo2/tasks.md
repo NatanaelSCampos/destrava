@@ -1,10 +1,10 @@
-# Ciclo 2 — tarefas propostas
+# Ciclo 2 — tarefas e evidências
 
-**Implementação não iniciada.** Aceite canônico: [spec](spec.md). Abordagem/ownership: [plan](plan.md). Todos os itens futuros permanecem abertos até autorização expressa. Referências de decisões: [DUVIDAS](../../DUVIDAS.md).
+**Implementação autorizada e iniciada em 23/10/2026, baseline `b2e94ce`.** Aceite canônico: [spec](spec.md). Abordagem/ownership: [plan](plan.md). A autorização expressa foi recebida; itens só serão concluídos com evidência do candidato integrado. Referências de decisões: [DUVIDAS](../../DUVIDAS.md).
 
 ## Pré-condições sequenciais
 
-| ID | Dono futuro | Entrega | Conclusão exigida |
+| ID | Dono | Entrega | Conclusão exigida |
 | --- | --- | --- | --- |
 | G0 | Proprietário + Lead | Confirmar seis decisões de produto já aprovadas, integrar documentação mediante autorização e aprovar escopo executável | Decisões registradas; **tarefa só concluída após spec integrada e autorização separada de implementação** |
 | G1 | Lead | Baseline, preservação, worktrees A2/B2/QA e stack local conforme C2-O01 | Após G0; comprovar workdir/labels/loopback/portas e preservar pilotos, sem migrar/resetar/alterar políticas sem autorização |
@@ -12,7 +12,7 @@
 
 ## A2
 
-| ID | Dono futuro | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
+| ID | Dono | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
 | --- | --- | --- | --- |
 | A2-T1 | Implementador A2 + QA | Jornada início/encerramento; `scripts/verify-installed-runtime*`, fixture/produtor independente | G2; A2-01/03; contagem de sessões/eventos, plano e leitura nova; reproduzir negativo antes de corrigir lacuna |
 | A2-T2 | Implementador A2 | Botão de pausa+pausa automática; retomar plano/etapa/tempo confirmados após reload nos componentes existentes | A2-02; tempo inativo congelado, sem persistência de rascunhos incompletos; `session:verify`, `sync:verify` |
@@ -22,7 +22,7 @@
 
 ## B2
 
-| ID | Dono futuro | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
+| ID | Dono | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
 | --- | --- | --- | --- |
 | B2-T1 | Implementador B2 + QA | Idioma/papel por metadados source/target/textPresentation; fixture não pessoal | G2; B2-01/04; apoio não PT-BR, alvo ES/EN/sintético, linha mista sem anotação textual |
 | B2-T2 | Implementador B2 | Narração manual (sem autoplay), uma voz ativa, pausar mídia conflitante e fallback textual nos componentes existentes | B2-02/03; locais compatíveis, catálogo vazio/tardio/falhas, sem escolher voz errada |
@@ -32,7 +32,7 @@
 
 ## Integração sequencial
 
-| ID | Dono futuro | Entrega | Critério |
+| ID | Dono | Entrega | Critério |
 | --- | --- | --- | --- |
 | I1 | Lead | Patches completos A2/B2 + manifesto integrado | Novos arquivos incluídos, ownership conferido, sem alteração incidental de piloto/schema/contrato público |
 | I2 | QA + Lead | Gates por impacto, TS/ESLint/arquitetura/build e SQL/HTTP/browser necessários | Mesmo candidato, isolamento comprovado, sem script destrutivo por inferência |
@@ -41,4 +41,8 @@
 
 A2-T1…T4 e B2-T1…T4 podem avançar em worktrees distintas após G2, dentro do limite do plano; dependências internas são sequenciais conforme necessário. A2-T5/B2-T5/I1…I4 compartilham serviços e são agendadas pelo Lead.
 
-Cada entrega liga tarefa→aceite→candidato→comando/exits→artefato/hash. Flag sem comprovante ou sucesso visual sem persistência não encerram tarefa. Distinguir testes puros, VM, SQL real, HTTP, browser emulado e pendências físicas. Não marcar execução como concluída nesta PR documental.
+Cada entrega liga tarefa→aceite→candidato→comando/exits→artefato/hash. Flag sem comprovante ou sucesso visual sem persistência não encerram tarefa. Distinguir testes puros, VM, SQL real, HTTP, browser emulado e pendências físicas. Não marcar execução como concluída sem evidências e pareceres independentes.
+
+## Registro da execução funcional
+
+G0/G1/G2, A2-T1…T5, B2-T1…T5 e I1/I2 concluídos no recorte local dos [resultados por aceite](RELATORIO_IMPLEMENTACAO.md). I3 concluído: QA/Revisor GO no candidato congelado. I4: relatório funcional entregue; commit/push/PR autorizados e registrados na entrega Git após conferência do staging. Não implica merge/release ou início de outro ciclo.

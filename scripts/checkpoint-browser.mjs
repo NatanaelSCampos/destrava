@@ -189,6 +189,9 @@ export async function checkpointBrowser({ appOrigin = localApp } = {}) {
         runtimeErrors: failures.length,
       };
     },
+    async initScript(source) {
+      await send("Page.addScriptToEvaluateOnNewDocument", { source });
+    },
     async close() {
       try {
         await send("Browser.close");
