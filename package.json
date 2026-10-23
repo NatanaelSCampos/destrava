@@ -32,6 +32,7 @@
     "journey:verify": "node --import tsx scripts/verify-course-journey.tsx",
     "actions:verify": "node --import tsx scripts/verify-fase4-actions.tsx",
     "interactive:segments:verify": "node --import tsx scripts/verify-fase4-segments.tsx",
+    "interactive:availability:verify": "node --import tsx --test scripts/verify-interactive-availability.tsx",
     "fase4:verify": "node --import tsx scripts/verify-fase4-independent.tsx",
     "fase4:verify:local": "node scripts/run-fase4-local.mjs verify",
     "fase4:verify:browser": "node scripts/run-fase4-local.mjs browser",
