@@ -141,6 +141,10 @@ export async function checkpointBrowser({ appOrigin = localApp } = {}) {
     async insertText(text) {
       await send("Input.insertText", { text });
     },
+    async pointerClick(x, y) {
+      await send("Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: "left", clickCount: 1 });
+      await send("Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: "left", clickCount: 1 });
+    },
     async waitText(expected) {
       for (let i = 0; i < 120; i++) {
         try {

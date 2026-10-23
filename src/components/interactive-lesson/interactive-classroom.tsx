@@ -21,6 +21,7 @@ import {
   Sparkles,
   Volume2,
 } from "lucide-react";
+import type { GradeResult } from "@/domain/activities/grader";
 import type { InteractiveLessonDefinition, LessonAction } from "@/content/contracts";
 import { lessonActionSchema } from "@/content/contracts";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
@@ -47,6 +48,13 @@ type TeachingReply = {
   followUp: string;
   actions: LessonAction[];
 };
+const lessonUiError = (code: string) => {
+  if (/VERSION|SESSION|REVISION|CONFLICT/.test(code)) return "A aula mudou em outra aba ou versão. Recarregue para continuar.";
+  if (code === "LESSON_INVALID_AUDIO") return "A gravação é inválida. Grave novamente antes de salvar.";
+  if (code === "LESSON_WRITING_INCOMPLETE") return "O texto ainda não atende à entrega exigida.";
+  if (code.startsWith("LESSON_") || code === "EVIDENCE_MISMATCH") return "Não foi possível confirmar a etapa. Recarregue a aula e tente novamente.";
+  return code;
+};
 const seconds = (ms: number) =>
   `${Math.floor(ms / 60000)}:${String(Math.floor((ms % 60000) / 1000)).padStart(2, "0")}`;
 
@@ -64,7 +72,7 @@ export function InteractiveClassroom({
   curatedExamples: CuratedExample[];
 }) {
   const textAttrs = useTextPresentation();
-  const { course, language, submitAttempt } = useStudy();
+  const { course, language, submitAttempt, captureInteractiveLessonOwner, applyInteractiveLessonReceipt } = useStudy();
   const lesson = course.units
     .flatMap((unit) => unit.lessons)
     .find((item) => item.id === definition.lessonId);
@@ -75,6 +83,7 @@ export function InteractiveClassroom({
     initialRuntime,
   );
   const [loading, setLoading] = useState(true);
+  const [segmentBusy, setSegmentBusy] = useState(false);
   const [loadError, setLoadError] = useState("");
   const [saveError, setSaveError] = useState("");
   const [completionSaved, setCompletionSaved] = useState(false);
@@ -99,6 +108,9 @@ export function InteractiveClassroom({
   const lastClock = useRef(0);
   const requestId = useRef(0);
   const readyRef = useRef(false);
+  const submittingRef = useRef(false);
+  const saveFailureRef = useRef("");
+  const pendingAttemptRef = useRef<{ key: string; input: Record<string, string | number>; audio?: Blob } | null>(null);
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
@@ -154,7 +166,7 @@ export function InteractiveClassroom({
           { cache: "no-store" },
         );
         const body = await response.json();
-        if (!response.ok) throw new Error(body.error ?? "Não foi possível abrir a aula.");
+        if (!response.ok) throw new Error(lessonUiError(body.error ?? "Não foi possível abrir a aula."));
         if (cancelled) return;
         if (body.session) {
           revisionRef.current = body.session.revision;
@@ -189,36 +201,88 @@ export function InteractiveClassroom({
   }, [courseId, contentVersion, definition]);
 
   const persist = useCallback(
-    (snapshot: LessonRuntimeState) => {
-      if (!readyRef.current || snapshot.phase === "idle" || saveError) return;
+    (snapshot: LessonRuntimeState, force = false) => {
+      if (!readyRef.current || snapshot.phase === "idle" || saveFailureRef.current || (submittingRef.current && !force)) return;
       const serialized = JSON.stringify(snapshot);
-      if (serialized === lastQueued.current) return;
+      if (!force && serialized === lastQueued.current) return;
       lastQueued.current = serialized;
-      saveQueue.current = saveQueue.current
-        .then(async () => {
-          const response = await fetch("/api/interactive-lessons/session", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              courseId,
-              lessonId: definition.lessonId,
-              revision: revisionRef.current,
-              runtime: snapshot,
-            }),
-            keepalive: true,
-          });
-          const body = await response.json();
-          if (!response.ok) throw new Error(body.error ?? "Não foi possível salvar a aula.");
-          revisionRef.current = body.revision;
-          if (snapshot.phase === "completed") setCompletionSaved(true);
-        })
-        .catch((error) => {
-          lastQueued.current = "";
-          setSaveError(error instanceof Error ? error.message : "Falha ao salvar a aula.");
+      saveQueue.current = saveQueue.current.then(async () => {
+        if (saveFailureRef.current) return;
+        const current = stateRef.current;
+        const response = await fetch("/api/interactive-lessons/session", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseId, contentVersion, lessonId: definition.lessonId,
+            revision: revisionRef.current, runtime: current }), keepalive: true,
         });
-    },
-    [courseId, definition.lessonId, saveError, setSaveError, setCompletionSaved],
+        const body = await response.json();
+        if (!response.ok) throw new Error(lessonUiError(body.error ?? "Não foi possível salvar a aula."));
+        revisionRef.current = body.revision;
+        if (!stateRef.current.evidenceScope) {
+          const scoped = { ...stateRef.current, evidenceScope: body.runtime.evidenceScope };
+          stateRef.current = scoped;
+          dispatch({ type: "RESTORE", state: scoped });
+        }
+        if (current.phase === "completed") setCompletionSaved(true);
+      }).catch((error) => {
+        lastQueued.current = "";
+        saveFailureRef.current = error instanceof Error ? error.message : "Falha ao salvar a aula.";
+        setSaveError(saveFailureRef.current);
+      });
+    }, [courseId, contentVersion, definition.lessonId, dispatch, setCompletionSaved, setSaveError],
   );
+  async function submitSegment(answer: string, audio?: Blob) {
+    if (submittingRef.current || saveFailureRef.current) throw new Error("Aguarde a gravação da etapa ou recarregue a aula.");
+    const owner = captureInteractiveLessonOwner();
+    submittingRef.current = true;
+    setSegmentBusy(true);
+    try {
+      const audioHash = audio ? Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", await audio.arrayBuffer())))
+        .map((byte) => byte.toString(16).padStart(2, "0")).join("") : "";
+      const key = JSON.stringify([segment.id, answer, audioHash]);
+      if (pendingAttemptRef.current?.key !== key) {
+        persist(stateRef.current, true);
+        await saveQueue.current;
+        if (saveFailureRef.current) throw new Error(saveFailureRef.current);
+        const scope = stateRef.current.evidenceScope;
+        if (!scope || revisionRef.current === null || !activity) throw new Error("A etapa ainda não foi salva.");
+        pendingAttemptRef.current = { key, audio, input: { courseId, lessonId: definition.lessonId,
+          contentVersion, sessionId: scope.sessionId, revision: revisionRef.current,
+          segmentId: segment.id, activityId: activity.id, attemptId: crypto.randomUUID(), answer } };
+      }
+      const pending = pendingAttemptRef.current;
+      const operation = saveQueue.current.then(async () => {
+        let body: string | FormData;
+        if (pending.audio) {
+          body = new FormData();
+          for (const [name, value] of Object.entries(pending.input)) body.append(name, String(value));
+          body.append("audio", pending.audio, "attempt.wav");
+        } else body = JSON.stringify(pending.input);
+        const response = await fetch("/api/interactive-lessons/segment", { method: "POST",
+          ...(pending.audio ? {} : { headers: { "Content-Type": "application/json" } }), body });
+        const result = await response.json();
+        if (!response.ok) {
+          if (response.status < 500) pendingAttemptRef.current = null;
+          if (response.status === 409) {
+            saveFailureRef.current = "A aula mudou em outra aba ou versão. Recarregue para continuar.";
+            setSaveError(saveFailureRef.current);
+          }
+          throw new Error(lessonUiError(result.error ?? "Não foi possível registrar a etapa."));
+        }
+        if (result.sessionId !== stateRef.current.evidenceScope?.sessionId || !result.runtime?.evidenceScope ||
+          result.runtime.evidenceScope.definitionHash !== stateRef.current.evidenceScope?.definitionHash)
+          throw new Error("A resposta não corresponde à sessão da aula.");
+        applyInteractiveLessonReceipt(result.progressReceipt, owner);
+        revisionRef.current = result.revision;
+        stateRef.current = result.runtime;
+        lastQueued.current = JSON.stringify(result.runtime);
+        dispatch({ type: "RESTORE", state: result.runtime });
+        pendingAttemptRef.current = null;
+        return result;
+      });
+      saveQueue.current = operation.then(() => undefined, () => undefined);
+      return await operation;
+    } finally { submittingRef.current = false; setSegmentBusy(false); }
+  }
   useEffect(
     () => () => {
       persist(stateRef.current);
@@ -425,16 +489,20 @@ export function InteractiveClassroom({
             className="secondary-button"
             onClick={() => {
               setCompletionSaved(false);
-              dispatch({ type: "RESTORE", state: initialRuntime(definition) });
+              dispatch({ type: "RESTORE", state: { ...initialRuntime(definition, state.evidenceScope),
+                segmentEvidence: state.segmentEvidence, segmentFailures: state.segmentFailures,
+                segmentAttemptSequences: state.segmentAttemptSequences,
+                message: "Esta revisão mantém suas entregas anteriores. Você pode enviar novas tentativas em cada etapa." } });
             }}
           >
-            <RotateCcw size={16} /> Refazer aula
+            <RotateCcw size={16} /> Rever aula
           </button>
         </div>
       </div>
     );
 
   const canContinue =
+    !saveError && !segmentBusy &&
     (segment.type !== "checkpoint" || !segment.required || state.checkpointPassed) &&
     (segment.type !== "speaking" || !segment.required || state.speakingSaved) &&
     (!segment.presentation || state.positionMs >= segment.presentation.durationMs);
@@ -479,6 +547,7 @@ export function InteractiveClassroom({
           {saveError} <button onClick={() => window.location.reload()}>Recarregar aula</button>
         </div>
       )}
+      {state.message && state.phase !== "intervening" && <p className="live-alert" role="status">{state.message}</p>}
       <div className="live-grid">
         <div className="live-primary">
           <div className="live-stage">
@@ -624,21 +693,21 @@ export function InteractiveClassroom({
                 </span>
                 <p>
                   {segment.type === "speaking"
-                    ? "Grave sua resposta. A correção usa a prática de fala do curso."
+                    ? "Grave e salve sua tentativa. A entrega não recebe nota; a avaliação de pronúncia é opcional."
                     : "Responda antes de avançar. Se precisar, você pode tentar de novo."}
                 </p>
               </div>
               <ActivityRenderer
                 key={segment.id}
                 activity={activity}
-                onAssessed={(answer, result) => {
-                  submitAttempt(activity, answer, result);
-                  dispatch({ type: "CHECKPOINT_RESULT", correct: result.correct });
-                  setLastAssessment(result.correct ? "correct" : "incorrect");
+                onSubmitAnswer={async (answer) => {
+                  const result = await submitSegment(answer);
+                  if (typeof result.grade?.correct !== "boolean") throw new Error("Correção inválida.");
+                  return result.grade as GradeResult;
                 }}
-                onSpeakingSaved={(result) => {
-                  if (result?.submissionId) dispatch({ type: "SPEAKING_SAVED" });
-                }}
+                onAssessed={(_answer, result) => setLastAssessment(result.correct ? "correct" : "incorrect")}
+                onSubmitWriting={async (text) => { await submitSegment(text); }}
+                onSubmitSpeaking={async (transcription, audio) => { await submitSegment(transcription, audio); }}
               />
               {lastAssessment === "incorrect" && (
                 <p className="live-feedback">Ainda não. Veja a explicação e tente novamente.</p>
@@ -754,7 +823,7 @@ export function InteractiveClassroom({
               <div className="live-next">
                 <span>
                   {segment.type === "checkpoint" && !state.checkpointPassed
-                    ? "Acerte o exercício para continuar."
+                    ? activity && activity.type === "writing" ? "Salve seu texto para continuar." : "Acerte o exercício para continuar."
                     : segment.type === "speaking" && !state.speakingSaved
                       ? "Salve uma tentativa de fala para continuar."
                       : state.phase === "presenting"

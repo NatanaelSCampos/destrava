@@ -25,8 +25,10 @@ export function SpeakingRecorder({
   numberPromptId,
   onNumberAssessed,
   onSaved,
+  onSubmitSpeaking,
 }: {
   activity: Speaking;
+  onSubmitSpeaking?: (transcription: string, audio: Blob) => Promise<void>;
   practiceMode?: NonNullable<SpeakingSubmission["practiceMode"]>;
   showReference?: boolean;
   showReferenceAudio?: boolean;
@@ -134,7 +136,20 @@ export function SpeakingRecorder({
     stream.current?.getTracks().forEach((track) => track.stop());
     setRecording(false);
   }
-  function save() {
+  async function save() {
+    if (onSubmitSpeaking) {
+      if (!audioBlob || !transcription.trim() || assessing) return;
+      setAssessing(true);
+      setError("");
+      try {
+        await onSubmitSpeaking(transcription.trim(), await audioToWav(audioBlob));
+        setSaved(true);
+        onSaved?.();
+      } catch (caught) {
+        setError(caught instanceof Error ? caught.message : "Não foi possível salvar a fala.");
+      } finally { setAssessing(false); }
+      return;
+    }
     if (numberPromptId) {
       if (!feedback || !onNumberAssessed) return;
       onNumberAssessed(feedback);
@@ -354,7 +369,7 @@ export function SpeakingRecorder({
           saved ||
           (requireAssessment && !feedback)
         }
-        onClick={save}
+        onClick={() => void save()}
       >
         <Check size={16} /> {numberPromptId ? "Registrar tentativa" : "Salvar prática oral"}
       </button>

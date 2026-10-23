@@ -1,3 +1,4 @@
+import { sameEvidenceScope, type LessonEvidenceScope, type SegmentEvidence } from "./evidence";
 import type { BoardElement, InteractiveLessonDefinition, LessonAction } from "@/content/contracts";
 import type { TextPresentation } from "@/content/text-presentation";
 
@@ -121,6 +122,11 @@ export type LessonPhase =
   | "completed"
   | "error";
 export type LessonRuntimeState = {
+  schemaVersion: 2;
+  evidenceScope: LessonEvidenceScope | null;
+  segmentEvidence: Record<string, SegmentEvidence>;
+  segmentFailures: Record<string, number>;
+  segmentAttemptSequences: Record<string, number>;
   phase: LessonPhase;
   segmentIndex: number;
   positionMs: number;
@@ -134,8 +140,13 @@ export type LessonRuntimeState = {
   runtimePath: RuntimeNode[];
   message: string;
 };
-export function initialRuntime(lesson: InteractiveLessonDefinition): LessonRuntimeState {
+export function initialRuntime(lesson: InteractiveLessonDefinition, scope: LessonEvidenceScope | null = null): LessonRuntimeState {
   return {
+    schemaVersion: 2,
+    evidenceScope: scope,
+    segmentEvidence: {},
+    segmentFailures: {},
+    segmentAttemptSequences: {},
     phase: "idle",
     segmentIndex: 0,
     positionMs: 0,
@@ -165,8 +176,7 @@ export type RuntimeEvent =
   | { type: "INTERVENE"; reason: string; anchorMs: number }
   | { type: "SET_MESSAGE"; message: string }
   | { type: "RESUME"; board: BoardState }
-  | { type: "CHECKPOINT_RESULT"; correct: boolean }
-  | { type: "SPEAKING_SAVED" }
+  | { type: "SEGMENT_EVIDENCE"; evidence: SegmentEvidence }
   | { type: "REINFORCE" }
   | { type: "REINFORCEMENT_DONE" }
   | { type: "SLOWER_REQUESTED" }
@@ -241,16 +251,23 @@ export function reduceRuntime(
             message: "",
           }
         : state;
-    case "CHECKPOINT_RESULT": {
-      if (state.phase !== "checkpoint") return state;
-      return {
+    case "SEGMENT_EVIDENCE": {
+      const proof = event.evidence;
+      if (!state.evidenceScope || !sameEvidenceScope(state.evidenceScope, proof) ||
+        proof.segmentId !== segment.id || proof.activityId !== segment.activityRef ||
+        !["checkpoint", "speaking"].includes(state.phase) ||
+        (segment.type === "speaking") !== (proof.kind === "speaking_submitted")) return state;
+      const previous = state.segmentEvidence[segment.id];
+      if (proof.sequence <= (state.segmentAttemptSequences[segment.id] ?? 0)) return state;
+      const failures = (state.segmentFailures[segment.id] ?? 0) + Number(!proof.accepted);
+      const next = {
         ...state,
-        checkpointPassed: state.checkpointPassed || event.correct,
-        checkpointFailures: state.checkpointFailures + Number(!event.correct),
+        segmentEvidence: { ...state.segmentEvidence, [segment.id]: previous?.accepted ? previous : proof },
+        segmentFailures: { ...state.segmentFailures, [segment.id]: failures },
+        segmentAttemptSequences: { ...state.segmentAttemptSequences, [segment.id]: proof.sequence },
       };
+      return projectSegmentEvidence(lesson, next);
     }
-    case "SPEAKING_SAVED":
-      return state.phase === "speaking" ? { ...state, speakingSaved: true } : state;
     case "SLOWER_REQUESTED":
       return { ...state, slowdownCount: state.slowdownCount + 1 };
     case "REINFORCE": {
@@ -271,15 +288,15 @@ export function reduceRuntime(
     case "REINFORCEMENT_DONE":
       return state.phase === "reinforcement" ? { ...state, phase: "checkpoint" } : state;
     case "NEXT": {
-      if (segment.type === "checkpoint" && segment.required && !state.checkpointPassed)
+      if (segment.type === "checkpoint" && segment.required && !projectSegmentEvidence(lesson, state).checkpointPassed)
         return state;
-      if (segment.type === "speaking" && segment.required && !state.speakingSaved) return state;
+      if (segment.type === "speaking" && segment.required && !projectSegmentEvidence(lesson, state).speakingSaved) return state;
       if (segment.presentation && state.positionMs < segment.presentation.durationMs) return state;
       const completedSegmentIds = [...new Set([...state.completedSegmentIds, segment.id])];
       if (state.segmentIndex === lesson.segments.length - 1)
         return { ...state, phase: "completed", completedSegmentIds };
       const next = lesson.segments[state.segmentIndex + 1];
-      return {
+      return projectSegmentEvidence(lesson, {
         ...state,
         phase: next.presentation
           ? "paused"
@@ -293,11 +310,40 @@ export function reduceRuntime(
         board: event.nextBoard,
         completedSegmentIds,
         message: "",
-      };
+        checkpointPassed: false,
+        speakingSaved: false,
+        checkpointFailures: 0,
+      });
     }
     case "RESTORE":
-      return event.state;
+      return event.state.schemaVersion === 2 && event.state.segmentEvidence && event.state.segmentFailures && event.state.segmentAttemptSequences
+        ? projectSegmentEvidence(lesson, event.state)
+        : legacyRuntime(lesson, state.evidenceScope);
     case "ERROR":
       return { ...state, phase: "error", message: event.message };
   }
+}
+
+// These flags are UI projections. Server persistence independently corroborates every receipt.
+export function projectSegmentEvidence(lesson: InteractiveLessonDefinition, state: LessonRuntimeState): LessonRuntimeState {
+  const segment = lesson.segments[state.segmentIndex];
+  const proof = state.segmentEvidence[segment?.id];
+  const accepted = Boolean(proof?.accepted && state.evidenceScope && sameEvidenceScope(state.evidenceScope, proof)
+    && proof.segmentId === segment.id && proof.activityId === segment.activityRef
+    && (segment.type === "speaking") === (proof.kind === "speaking_submitted"));
+  return { ...state, checkpointPassed: segment?.type === "checkpoint" && accepted,
+    speakingSaved: segment?.type === "speaking" && accepted,
+    checkpointFailures: state.segmentFailures[segment?.id] ?? 0 };
+}
+
+export function legacyRuntime(lesson: InteractiveLessonDefinition, scope: LessonEvidenceScope | null) {
+  const runtime = initialRuntime(lesson, scope);
+  const index = lesson.segments.findIndex((segment) => segment.required && ["checkpoint", "speaking"].includes(segment.type));
+  if (index >= 0) {
+    runtime.segmentIndex = index;
+    runtime.phase = lesson.segments[index].type === "speaking" ? "speaking" : "checkpoint";
+    runtime.completedSegmentIds = lesson.segments.slice(0, index).map((segment) => segment.id);
+  }
+  runtime.message = "A sessão anterior não possui comprovantes por etapa. Refaça esta etapa para continuar com segurança.";
+  return runtime;
 }

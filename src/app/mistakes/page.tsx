@@ -1,4 +1,5 @@
 "use client";
+import { learningActionAvailability } from "@/domain/study/learning-action-availability";
 import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
@@ -7,7 +8,6 @@ import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
-import { featureFlags } from "@/lib/feature-flags";
 import { mistakeHistory } from "@/domain/study/mistake-history";
 
 const skillNames: Record<string, string> = {
@@ -21,7 +21,10 @@ const skillNames: Record<string, string> = {
 };
 
 export default function MistakesPage() {
-  const { course, state } = useStudy();
+  const { course, state, runtime } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
   const contexts = new Map(
     course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) =>
@@ -55,9 +58,7 @@ export default function MistakesPage() {
             Cada dúvida registrada vira uma oportunidade de praticar com intenção.
           </p>
         </div>
-        <Link href="/review" className="primary-button">
-          <RotateCcw size={16} /> Revisar agora
-        </Link>
+        {reviewAction.eligible ? <Link href="/review" className="primary-button"><RotateCcw size={16} /> Revisar agora</Link> : <><p role="status">{reviewAction.reasons.join(" ")}</p><Link href={`/course/${course.slug}`} className="primary-button">Continuar meu curso</Link></>}
       </div>
       <div className="mistake-summary">
         <div className="panel">
@@ -147,7 +148,7 @@ export default function MistakesPage() {
                     </ol>
                   </details>
                 )}
-                {context && (
+                {context && learningActionAvailability(course, { kind: "activity", activityId: item.activityId }, actionContext).eligible && (
                   <div className="mistake-actions">
                     <Link href={context.href} className="text-link">
                       {item.category === "speaking"
@@ -155,12 +156,12 @@ export default function MistakesPage() {
                         : "Praticar novamente"}{" "}
                       <ArrowRight size={15} />
                     </Link>
-                    {featureFlags.AI_TUTOR && (
+                    {microAction.eligible && (
                       <Link
                         href={`/micro-lesson?activity=${encodeURIComponent(item.activityId)}`}
                         className="text-link"
                       >
-                        Fazer microlição <ArrowRight size={15} />
+                        {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Fazer microlição"} <ArrowRight size={15} />
                       </Link>
                     )}
                   </div>

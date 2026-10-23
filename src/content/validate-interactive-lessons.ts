@@ -1,3 +1,4 @@
+import { objectiveActivityTypes } from "./activity-data";
 import type { CoursePackage, LanguagePackage, LessonAction } from "./contracts";
 import { supportedCourseSchemaVersions } from "./contracts";
 
@@ -79,6 +80,13 @@ export function validateInteractiveLessons(course: CoursePackage, language: Lang
           throw new Error(`Unknown audio media ${action.mediaId}`);
         if (action.type === "activity.open" || action.type === "speech.request")
           validateActivity(action.activityRef, action.type === "speech.request", ownActivityIds);
+      }
+      if (segment.type === "speaking" && !segment.activityRef)
+        throw new Error(`Speaking needs activityRef: ${segment.id}`);
+      if (segment.type === "checkpoint" && segment.activityRef) {
+        const activity = activities.get(segment.activityRef);
+        if (activity && activity.type !== "writing" && !objectiveActivityTypes.some((type) => type === activity.type))
+          throw new Error(`Unsupported checkpoint activity: ${segment.activityRef}`);
       }
       if (segment.type === "checkpoint" && !segment.activityRef)
         throw new Error(`Checkpoint needs activityRef: ${segment.id}`);

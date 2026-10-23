@@ -1,5 +1,7 @@
 "use client";
 
+import { interactiveLessonProgressReceiptSchema, type InteractiveLessonProgressReceipt } from "@/domain/interactive-lesson/progress-receipt";
+
 import {
   createContext,
   useCallback,
@@ -16,6 +18,7 @@ import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import {
   markActivityComplete,
   recordAttempt,
+  recordInteractiveLessonReceipt,
   recordEvaluatedSpeaking,
   recordEvaluatedWriting,
   recordMicroLessonAttempt,
@@ -73,6 +76,8 @@ export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
   runtime?: InstalledRuntimeContext;
+  captureInteractiveLessonOwner: () => { generation: number; userId: string };
+  applyInteractiveLessonReceipt: (receipt: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => void;
   assessActivity: (
     activity: PublicActivity,
     answer: string,
@@ -282,6 +287,20 @@ export function StudyProvider({
                 serverAssessmentResultSchema.parse(result),
               );
             },
+          }, {
+            course,
+            load: async () => {
+              const response = await fetch("/api/interactive-lessons/session?courseId=" + encodeURIComponent(course.id) + "&receipts=1", { cache: "no-store" });
+              if (!response.ok) throw new Error("Não foi possível recuperar as tentativas da aula.");
+              const body = await response.json();
+              if (!Array.isArray(body.receipts)) throw new Error("Recibos da aula inválidos.");
+              return body.receipts.map((value: unknown) => {
+                const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+                if (receipt.evidence.userId !== accountId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
+                  throw new Error("A tentativa da aula pertence a outro contexto.");
+                return receipt;
+              });
+            },
           });
           await sync.load(generation, accountId, {
             load: () => repository.load(course.id, course.languageCode),
@@ -374,6 +393,19 @@ export function StudyProvider({
     [course, runtime, setState, sync],
   );
 
+  const captureInteractiveLessonOwner = useCallback(() => {
+    const current = sync.getSnapshot();
+    if (runtime || !current.userId || !["loaded", "absent"].includes(current.loadStatus)) throw new Error("A aula requer uma conta autenticada no curso embutido.");
+    return { generation: current.generation, userId: current.userId };
+  }, [sync, runtime]);
+  const applyInteractiveLessonReceipt = useCallback((value: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => {
+    if (runtime || !sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
+      throw new Error("Sua conta ou contexto mudou durante a tentativa da aula.");
+    const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+    if (receipt.evidence.userId !== owner.userId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
+      throw new Error("A tentativa não corresponde ao curso e à conta atuais.");
+    setState((current) => recordInteractiveLessonReceipt(current, course, receipt));
+  }, [runtime, sync, course, setState]);
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
       setState((current) => ({ ...current, profile: { ...current.profile, ...profile } })),
@@ -853,6 +885,8 @@ export function StudyProvider({
     () => ({
       runtime,
       assessActivity,
+      captureInteractiveLessonOwner,
+      applyInteractiveLessonReceipt,
       course: visibleCourse,
       resources,
       language,
@@ -896,6 +930,8 @@ export function StudyProvider({
       visibleCourse,
       runtime,
       assessActivity,
+      captureInteractiveLessonOwner,
+      applyInteractiveLessonReceipt,
       resources,
       language,
       assessments,

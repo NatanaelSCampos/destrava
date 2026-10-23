@@ -15,25 +15,27 @@ const configuredService = (configured: boolean, reason: string): AvailabilitySta
           "Configuração presente; serviço, permissão, modelo e cota serão verificados na execução.",
       }
     : { state: "unavailable", reason };
+/** Configuration only; unknown means runtime still checks health, permissions, quota and locale. */
+export function serverServiceAvailability(): NonNullable<CapabilityEnvironment["dependencies"]> {
+  const speechConfigured = Boolean(process.env.AZURE_SPEECH_KEY && speechEndpoint());
+  return {
+    "ai.text_service": configuredService(Boolean(process.env.OPENAI_API_KEY), "O serviço de IA não está configurado neste ambiente."),
+    "learning.session_store": configuredService(Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY), "O armazenamento autenticado de sessões não está configurado."),
+    "speech.recognition_service": configuredService(speechConfigured, "O reconhecimento de fala está indisponível neste ambiente."),
+    "speech.pronunciation_service": configuredService(speechConfigured, "A avaliação de pronúncia está indisponível neste ambiente."),
+  };
+}
 /** Server boundary: return conditions only. No key, endpoint, model ID or provider configuration escapes. */
 export function serverCapabilityEnvironment(
   language: LanguagePackage,
   variant?: string,
   course: VariantCourse = {},
 ): CapabilityEnvironment {
-  const speechConfigured = Boolean(process.env.AZURE_SPEECH_KEY && speechEndpoint());
+  const services = serverServiceAvailability();
+  const speechConfigured = services["speech.recognition_service"]?.state !== "unavailable";
   return {
     dependencies: {
-      "ai.text_service": configuredService(
-        Boolean(process.env.OPENAI_API_KEY),
-        "O serviço de IA não está configurado neste ambiente.",
-      ),
-      "learning.session_store": configuredService(
-        Boolean(
-          process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-        ),
-        "O armazenamento autenticado de sessões não está configurado.",
-      ),
+      ...services,
       "speech.recognition_service": configuredService(
         speechConfigured &&
           language.speech.support.speechRecognition &&

@@ -103,6 +103,7 @@ export function installedPublicView(
       exposed.availability?.scopeLocations,
       exposed.availability?.interactiveLessonLocations,
     ),
+    actionStates: exposed.availability?.actionStates,
     spacedRepetition: false,
   };
   const media = (path: string) => {

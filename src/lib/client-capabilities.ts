@@ -134,6 +134,7 @@ export function courseWithDeviceAvailability(
         diagnostics.filter((item) => !item.condition?.startsWith("client.")),
         course.availability?.scopeLocations,
         course.availability?.interactiveLessonLocations,
+        course.availability?.interactiveLessonScopes,
       )
     : course.availability;
   const device = projectCapabilityAvailability(
@@ -144,6 +145,7 @@ export function courseWithDeviceAvailability(
     ],
     course.availability?.scopeLocations,
     course.availability?.interactiveLessonLocations,
+    course.availability?.interactiveLessonScopes,
   );
   return {
     ...course,

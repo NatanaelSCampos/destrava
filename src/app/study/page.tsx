@@ -1,4 +1,5 @@
 "use client";
+import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -52,10 +53,15 @@ function StudyContent() {
     state,
     vocabularyItems,
     ready,
+    runtime,
     startSession,
     updateActiveSessionDuration,
     finishSession,
   } = useStudy();
+  const actionSource = runtime ? "installed" as const : "compiled" as const;
+  const actionContext = useMemo(() => ({ source: actionSource, permitted: ready }), [actionSource, ready]);
+  const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
+  const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const mode: SessionMode = searchParams.get("mode") === "difficulties" ? "difficulties" : "guided";
   const durationValue = searchParams.get("duration");
   const duration: Duration =
@@ -67,8 +73,8 @@ function StudyContent() {
   const unit = currentUnit(course, state)!;
   const planned = useMemo(
     () =>
-      buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode),
-    [course, state, targetMinutes, vocabularyItems, resources, mode],
+      buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode, actionContext),
+    [course, state, targetMinutes, vocabularyItems, resources, mode, actionContext],
   );
   const focusedMistakeId = planned.find(
     (entry) => entry.kind === "activity" && Boolean(state.mistakes[entry.id]),
@@ -81,10 +87,11 @@ function StudyContent() {
       profile,
       vocabularyItems,
       resources,
+      { actionContext },
     )
       .filter((entry) => entry.kind === "conversation" || entry.kind === "image")
       .slice(0, 2);
-  }, [course, state, vocabularyItems, resources]);
+  }, [course, state, vocabularyItems, resources, actionContext]);
   const activeSession = state.sessions.find((session) => session.id === state.activeSessionId);
   const [startingSession, setStartingSession] = useState(false);
   const [startError, setStartError] = useState("");
@@ -156,6 +163,7 @@ function StudyContent() {
           .flatMap((entry) => entry.lessons.flatMap((lesson) => lesson.activities))
           .find((entry) => entry.id === item.id)
       : undefined;
+  const itemAction = item ? learningActionAvailability(course, item.kind === "activity" ? { kind: "activity", activityId: item.id } : { kind: item.kind }, actionContext) : undefined;
   const lastSession = state.sessions.find((session) => session.finishedAt);
   const lastFocusedMistakeId =
     lastSession?.mode === "difficulties"
@@ -174,6 +182,7 @@ function StudyContent() {
   if (!activeSession)
     return (
       <div className="study-page">
+        {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
         <div className="page-heading">
           <div>
             <span className="eyebrow">
@@ -287,12 +296,12 @@ function StudyContent() {
               <Play size={17} fill="currentColor" /> Começar sessão <ArrowRight size={17} />
             </button>
             {startError && <p role="alert">{startError}</p>}
-            {mode === "difficulties" && focusedMistakeId && (
+            {microAction.eligible && mode === "difficulties" && focusedMistakeId && (
               <Link
                 href={`/micro-lesson?activity=${encodeURIComponent(focusedMistakeId)}`}
                 className="text-link"
               >
-                Entender um erro antes do treino <ArrowRight size={15} />
+                {microAction.operation === "unknown" ? "Tentar apoio para este erro (condicional)" : "Entender um erro antes do treino"} <ArrowRight size={15} />
               </Link>
             )}
           </section>
@@ -375,12 +384,12 @@ function StudyContent() {
                   <Link href="/history" className="text-link">
                     Ver evolução por tentativa <ArrowRight size={15} />
                   </Link>
-                  {lastFocusedMistakeId && (
+                  {microAction.eligible && lastFocusedMistakeId && (
                     <Link
                       href={`/micro-lesson?activity=${encodeURIComponent(lastFocusedMistakeId)}`}
                       className="text-link"
                     >
-                      Reforçar uma dificuldade com microlição <ArrowRight size={15} />
+                      {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Reforçar uma dificuldade com microlição"} <ArrowRight size={15} />
                     </Link>
                   )}
                 </>
@@ -400,6 +409,7 @@ function StudyContent() {
 
   return (
     <div className="study-page">
+        {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="study-running-head">
         <div>
           <span className="eyebrow">AULA EM ANDAMENTO</span>
@@ -443,14 +453,14 @@ function StudyContent() {
           <div className="progress-track">
             <span style={{ width: `${Math.round((100 * index) / Math.max(1, plan.length))}%` }} />
           </div>
-          {item?.kind === "review" ? (
+          {itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
             <ReviewQueue
               key={item.id}
               plannedItems={item.reviewItems}
               onComplete={() => setIndex((current) => Math.min(current + 1, plan.length))}
             />
           ) : item?.kind === "conversation" ? (
-            <FocusedConversation key={item.id} scenarioId={item.id} />
+            <><p className="helper-note">Tentativa condicional: a disponibilidade da conversa será verificada ao enviar sua resposta.</p><FocusedConversation key={item.id} scenarioId={item.id} /></>
           ) : activity ? (
             <ActivityRenderer key={activity.id} activity={activity} />
           ) : (

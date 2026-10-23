@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import assert from "node:assert/strict";
 import { loadContent } from "./content-loader";
 import { lessonActionSchema, type CoursePackage } from "../src/content/contracts";
@@ -88,7 +89,16 @@ assert.equal(effectsEngine.tick(4000).effects.length, 1);
 assert.equal(effectsEngine.tick(4000).effects.length, 0);
 assert.equal(resumeAnchor([0, 8000, 17000, 25000], 18400), 17000);
 
-let state = initialRuntime(definition);
+const scope = { userId: "00000000-0000-4000-8000-000000000001", courseId: course.id,
+  lessonId: definition.lessonId, sessionId: "00000000-0000-4000-8000-000000000002",
+  contentVersion: course.contentVersion ?? "fixture", definitionHash: "a".repeat(64) };
+let sequence = 0;
+let state = initialRuntime(definition, scope);
+function evidence(accepted: boolean, speaking = false) {
+  const segment = definition.segments[state.segmentIndex];
+  return { ...scope, segmentId: segment.id, activityId: segment.activityRef!, attemptId: randomUUID(),
+    sequence: ++sequence, kind: speaking ? "speaking_submitted" as const : "objective_correct" as const, accepted };
+}
 const canonicalSegments = JSON.stringify(definition.segments);
 const firstEvents = deriveLessonEvents(null, reduceRuntime(definition, state, { type: "START" }), definition);
 assert.deepEqual(firstEvents.map((event) => event.type), ["lesson.started", "lesson.segment.started"]);
@@ -113,20 +123,20 @@ state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.get
 assert.equal(state.phase, "checkpoint");
 state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.getStateAt(0) });
 assert.equal(state.segmentIndex, 2, "required checkpoint blocks progress");
-state = reduceRuntime(definition, state, { type: "CHECKPOINT_RESULT", correct: false });
-state = reduceRuntime(definition, state, { type: "CHECKPOINT_RESULT", correct: false });
+state = reduceRuntime(definition, state, { type: "SEGMENT_EVIDENCE", evidence: evidence(false) });
+state = reduceRuntime(definition, state, { type: "SEGMENT_EVIDENCE", evidence: evidence(false) });
 state = reduceRuntime(definition, state, { type: "REINFORCE" });
 assert.equal(state.runtimePath.filter((node) => node.kind === "reinforcement").length, 1);
 assert.equal(JSON.stringify(definition.segments), canonicalSegments, "runtime adaptation does not edit authored content");
 state = reduceRuntime(definition, state, { type: "REINFORCE" });
 assert.equal(state.runtimePath.filter((node) => node.kind === "reinforcement").length, 1, "no reinforcement loop");
 state = reduceRuntime(definition, state, { type: "REINFORCEMENT_DONE" });
-state = reduceRuntime(definition, state, { type: "CHECKPOINT_RESULT", correct: true });
+state = reduceRuntime(definition, state, { type: "SEGMENT_EVIDENCE", evidence: evidence(true) });
 state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.getStateAt(0) });
 assert.equal(state.phase, "speaking");
 state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.getStateAt(0) });
 assert.equal(state.segmentIndex, 3, "required speaking blocks progress");
-state = reduceRuntime(definition, state, { type: "SPEAKING_SAVED" });
+state = reduceRuntime(definition, state, { type: "SEGMENT_EVIDENCE", evidence: evidence(true, true) });
 state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.getStateAt(0) });
 state = reduceRuntime(definition, state, { type: "NEXT", nextBoard: timeline.getStateAt(0) });
 assert.equal(state.phase, "completed");

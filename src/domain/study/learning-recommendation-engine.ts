@@ -1,3 +1,4 @@
+import { learningActionAvailability, type LearningActionContext } from "./learning-action-availability";
 import type { PublicCourse } from "@/content/public";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
@@ -44,13 +45,13 @@ export class LearningRecommendationEngine {
     profile: LearningProfile,
     vocabularyItems: ReadonlyArray<{ id: string }>,
     resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "conversationScenarios" | "imageScenes" | "learningOptions">,
-    options: { now?: Date; includeReviews?: boolean } = {},
+    options: { now?: Date; includeReviews?: boolean; actionContext?: LearningActionContext } = {},
   ): LearningRecommendation[] {
     const now = options.now ?? new Date();
     const recommendations = new Map<string, LearningRecommendation>();
     const activities = course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) =>
-        lesson.activities.map((activity) => ({ activity, lesson, unit })),
+        lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, options.actionContext).eligible).map((activity) => ({ activity, lesson, unit })),
       ),
     );
     const pendingPolicyIds = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));
@@ -61,13 +62,20 @@ export class LearningRecommendationEngine {
     const conceptScores = new Map(profile.concepts.map((item) => [item.id, item.score]));
     const preferences = state.profile.learningPreferences;
 
+    const reviewEligible = options.includeReviews !== false && learningActionAvailability(course, { kind: "review" }, options.actionContext).eligible;
+
     function add(item: LearningRecommendation) {
+      const availability = learningActionAvailability(course, item.kind === "activity"
+        ? { kind: "activity", activityId: item.id }
+        : { kind: item.kind === "number" ? "numbers" : item.kind }, options.actionContext);
+      if (!availability.eligible) return;
+      if (availability.operation === "unknown") item = { ...item, reason: `${item.reason} ${availability.reasons.join(" ")}` };
       const key = `${item.kind}:${item.id}`;
       const current = recommendations.get(key);
       if (!current || current.priority < item.priority) recommendations.set(key, item);
     }
 
-    if (options.includeReviews !== false) {
+    if (reviewEligible) {
       const due = dueReviewCounts(
         {
           vocabulary: state.vocabulary,
@@ -100,7 +108,7 @@ export class LearningRecommendationEngine {
         (mistake.schedule.masteryScore >= 75 && mistake.timesCorrect >= mistake.timesMissed)
       )
         continue;
-      if (options.includeReviews !== false && ReviewScheduler.isDue(mistake.schedule, now))
+      if (reviewEligible && ReviewScheduler.isDue(mistake.schedule, now))
         continue;
       const daysSinceError = Math.max(
         0,

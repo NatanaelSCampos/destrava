@@ -21,8 +21,10 @@ type WritingFeedback = {
 export function WritingEditor({
   activity,
   onSaved,
+  onSubmitWriting,
 }: {
   activity: Writing;
+  onSubmitWriting?: (text: string) => Promise<void>;
   onSaved?: (text: string) => void;
 }) {
   const { course, language, state, saveWriting, runtime } = useStudy();
@@ -42,11 +44,18 @@ export function WritingEditor({
   }
   const canSubmit = measurement?.accepted === true && !composing;
 
-  function save() {
-    if (!canSubmit) return;
-    saveWriting(activity.id, text);
-    setSaved(true);
-    onSaved?.(text);
+  async function save() {
+    if (!canSubmit || loading) return;
+    setLoading(true);
+    setError("");
+    try {
+      if (onSubmitWriting) await onSubmitWriting(text);
+      else saveWriting(activity.id, text);
+      setSaved(true);
+      onSaved?.(text);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Não foi possível salvar o texto.");
+    } finally { setLoading(false); }
   }
   async function correct() {
     if (!canSubmit || loading) return;
@@ -61,7 +70,8 @@ export function WritingEditor({
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
       setFeedback(data.feedback as WritingFeedback);
-      saveWriting(activity.id, text, data.feedback);
+      if (onSubmitWriting) await onSubmitWriting(text);
+      else saveWriting(activity.id, text, data.feedback);
       setSaved(true);
       onSaved?.(text);
     } catch (caught) {
@@ -119,7 +129,7 @@ export function WritingEditor({
             : measureError}
         </span>
         <div>
-          <button type="button" className="secondary-button" disabled={!canSubmit} onClick={save}>
+          <button type="button" className="secondary-button" disabled={!canSubmit || loading} onClick={() => void save()}>
             <Check size={16} /> Salvar texto
           </button>
           {featureFlags.AI_WRITING && !runtime && (

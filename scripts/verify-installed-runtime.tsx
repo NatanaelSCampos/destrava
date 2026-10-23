@@ -96,6 +96,9 @@ async function main() {
     >("src/engine/import/validate-package.ts");
     const { publicCourse } =
       await importCandidate<typeof import("../src/content/public")>("src/content/public.ts");
+    const { projectActionAvailability } = await importCandidate<
+      typeof import("../src/engine/capabilities/availability-projection")
+    >("src/engine/capabilities/availability-projection.ts");
     const { gradeActivity } = await importCandidate<
       typeof import("../src/domain/activities/grader")
     >("src/domain/activities/grader.ts");
@@ -1393,6 +1396,12 @@ async function main() {
                     },
                   };
                 if (id === "@/lib/versioned-operation-guard") return versionExports;
+                // Positive control models a configured service, not verified health.
+                // This suite isolates installed-context admission; F4 tests missing services.
+                if (id === "@/lib/capability-environment")
+                  return { serverServiceAvailability: () => ({ "ai.text_service": { state: "unknown" } }) };
+                if (id === "@/engine/capabilities/availability-projection")
+                  return { projectActionAvailability };
                 if (id === "@/lib/supabase/server")
                   return {
                     isSupabaseConfigured: () => true,

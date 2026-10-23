@@ -153,7 +153,7 @@ void window.journey.reset();`,
               path === "study"
                 ? studyMock
                 : path === "navigation"
-                  ? `export const usePathname=()=>'/dashboard';export const useRouter=()=>({replace:path=>window.journey.routes.push(path)});`
+                  ? `export const usePathname=()=>'/dashboard';export const useRouter=()=>({replace:path=>window.journey.routes.push(path)});export const useSearchParams=()=>new URLSearchParams();`
                   : path === "link"
                     ? `import React from 'react'; export default function Link({children,href,...props}){return <a href={href} {...props}>{children}</a>}`
                     : `export const PageTour=()=>null;export const WhatsNewDialog=()=>null;export const TutorDrawer=()=>null;export const SelectionAudio=()=>null;`,

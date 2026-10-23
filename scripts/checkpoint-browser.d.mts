@@ -8,6 +8,7 @@ export function checkpointBrowser(options?: { appOrigin?: string }): Promise<{
     options?: { modifiers?: number; windowsVirtualKeyCode?: number; nativeVirtualKeyCode?: number },
   ): Promise<void>;
   insertText(text: string): Promise<void>;
+  pointerClick(x: number, y: number): Promise<void>;
   waitText(expected: string): Promise<void>;
   viewport(width: number, height: number): Promise<void>;
   screenshot(name: string): Promise<void>;

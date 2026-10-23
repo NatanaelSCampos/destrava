@@ -374,6 +374,9 @@ async function expectCode(run: () => Promise<unknown>, code: InstallationErrorCo
   });
 }
 async function main() {
+  const { projectActionAvailability } = await importCandidate<
+    typeof import("../src/engine/capabilities/availability-projection")
+  >("src/engine/capabilities/availability-projection.ts");
   ({ InstallationError: DomainError } = await importCandidate<DomainModule>(
     "src/domain/course-installations/contracts.ts",
   ));
@@ -798,6 +801,12 @@ async function main() {
                     },
                   };
                 if (id === "@/lib/versioned-operation-guard") return versionExports;
+                // A configured synthetic service keeps the positive control admitted;
+                // version-scope assertions below remain unchanged, with no real provider.
+                if (id === "@/lib/capability-environment")
+                  return { serverServiceAvailability: () => ({ "ai.text_service": { state: "unknown" } }) };
+                if (id === "@/engine/capabilities/availability-projection")
+                  return { projectActionAvailability };
                 if (id === "@/lib/supabase/server")
                   return {
                     isSupabaseConfigured: () => configured,

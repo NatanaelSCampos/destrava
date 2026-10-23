@@ -1,4 +1,6 @@
 "use client";
+import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
+
 import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
@@ -53,7 +55,11 @@ function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[]
 }
 
 export default function ProgressPage() {
-  const { course, resources, state, vocabularyItems, recordStudyEvent } = useStudy();
+  const { course, resources, state, vocabularyItems, recordStudyEvent, runtime } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
+  const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems, course);
   const totalProgress = courseStudyProgress(course, state);
@@ -77,12 +83,13 @@ export default function ProgressPage() {
     learningProfile,
     vocabularyItems,
     resources,
-    { includeReviews: featureFlags.SPACED_REPETITION },
+    { includeReviews: featureFlags.SPACED_REPETITION, actionContext },
   )
     .filter((item) => item.source !== "curriculum")
     .slice(0, 3);
   return (
     <div className="progress-page">
+      {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(item => <li key={item.id}>{item.label}: {item.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="page-heading">
         <div>
           <span className="eyebrow">
@@ -93,9 +100,7 @@ export default function ProgressPage() {
             Acompanhe atividades concluídas, desempenho e domínio por habilidade.
           </p>
         </div>
-        <Link href="/review" className="secondary-button">
-          Revisar pontos fracos <ArrowRight size={16} />
-        </Link>
+        {reviewAction.eligible ? <Link href="/review" className="secondary-button">Revisar pontos fracos <ArrowRight size={16} /></Link> : <Link href={`/course/${course.slug}`} className="secondary-button">Continuar meu curso <ArrowRight size={16} /></Link>}
       </div>
       <div className="progress-top-grid">
         <section className="progress-main-card">
@@ -181,12 +186,12 @@ export default function ProgressPage() {
                         </p>
                       )}
                     </details>
-                    {featureFlags.AI_TUTOR && lessonActivityId && (
+                    {microAction.eligible && lessonActivityId && (
                       <Link
                         href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
                         className="text-link"
                       >
-                        Fazer microlição <ArrowRight size={15} />
+                        {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Fazer microlição"} <ArrowRight size={15} />
                       </Link>
                     )}
                     {item.kind === "number" && (
@@ -293,13 +298,13 @@ export default function ProgressPage() {
               ? "Veja os pontos que merecem outra revisão."
               : "Ao terminar as lições, confira o que já consegue usar sem consultar o conteúdo."}
           </p>
-          {unit.assessmentRefs.final && (
+          {unit.assessmentRefs.final && learningActionAvailability(course, { kind: "assessment", id: unit.assessmentRefs.final }, actionContext).eligible && (
             <Link href={assessmentLink(unit.assessmentRefs.final)} className="primary-button">
               {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
               <ArrowRight size={16} />
             </Link>
           )}
-          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && (
+          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && learningActionAvailability(course, { kind: "assessment", id: unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic }, actionContext).eligible && (
             <Link
               href={assessmentLink(
                 unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic!,

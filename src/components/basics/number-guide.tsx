@@ -1,4 +1,5 @@
 "use client";
+import { learningActionAvailability } from "@/domain/study/learning-action-availability";
 
 import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
 
@@ -20,7 +21,8 @@ function normalize(value: string) {
 
 export function NumberGuide() {
   const textAttrs = useTextPresentation();
-  const { resources, language } = useStudy();
+  const { resources, language, course, runtime } = useStudy();
+  const numberAction = learningActionAvailability(course, { kind: "numbers" }, { source: runtime ? "installed" : "compiled", permitted: true });
   const numberPrompts = resources.numbers;
   const numberCategoryLabels = resources.numberCategoryLabels;
   const categories = Object.keys(numberCategoryLabels);
@@ -50,26 +52,24 @@ export function NumberGuide() {
             Um número em cada situação.
           </h2>
           <p className="section-subtitle">
-            Veja como se escreve e se usa, escute o número e depois pratique.
+            Consulte a escrita e os exemplos. O áudio depende de uma voz compatível no dispositivo.
           </p>
         </div>
-        <Link href="/numbers" className="primary-button">
-          Praticar números <ArrowRight size={16} />
-        </Link>
+        {numberAction.eligible ? <Link href="/numbers" className="primary-button">Praticar números (condicional) <ArrowRight size={16} /></Link> : <p role="status">{numberAction.reasons.join(" ")} Você pode continuar consultando os exemplos abaixo.</p>}
       </div>
 
       <div className="alphabet-summary number-guide-summary">
         <div className="panel">
           <strong>{numberPrompts.length}</strong>
-          <span>exemplos com áudio</span>
+          <span>exemplos para consultar</span>
         </div>
         <div className="panel">
           <strong>{categories.length}</strong>
           <span>situações do dia a dia</span>
         </div>
         <div className="panel">
-          <strong>3</strong>
-          <span>formas de praticar</span>
+          <strong>{numberAction.eligible ? "3" : "Consulta"}</strong>
+          <span>{numberAction.eligible ? "modos de prática no alcance suportado" : "escrita e exemplos disponíveis"}</span>
         </div>
       </div>
 
@@ -140,9 +140,7 @@ export function NumberGuide() {
                   <LearningText textRole="source" text={item.exampleTranslation} />
                 </small>
               </div>
-              <Link href={numberPracticeLink(item.id)} className="text-link">
-                Praticar este número <ArrowRight size={15} />
-              </Link>
+              {numberAction.eligible && <Link href={numberPracticeLink(item.id)} className="text-link">Praticar este número (condicional) <ArrowRight size={15} /></Link>}
             </article>
           ))}
         </div>

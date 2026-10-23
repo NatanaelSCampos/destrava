@@ -28,7 +28,7 @@ export function deriveLessonEvents(previous: LessonRuntimeState | null, current:
   if (previous.phase === "intervening" && current.phase !== "intervening") add("lesson.resumed");
   if (current.slowdownCount > previous.slowdownCount) add("lesson.slower_requested");
   if (current.checkpointFailures > previous.checkpointFailures) add("lesson.checkpoint.failed", before?.type === "checkpoint" ? before : segment);
-  if (!previous.checkpointPassed && current.checkpointPassed) add("lesson.checkpoint.passed", before?.type === "checkpoint" ? before : segment);
+  if (!previous.checkpointPassed && current.checkpointPassed) add(current.segmentEvidence[segment.id]?.kind === "writing_submitted" ? "lesson.checkpoint.submitted" : "lesson.checkpoint.passed", before?.type === "checkpoint" ? before : segment);
   if (!previous.speakingSaved && current.speakingSaved) add("lesson.speaking.attempted", before?.type === "speaking" ? before : segment);
   if (!previous.runtimePath.some((node) => node.kind === "reinforcement") &&
       current.runtimePath.some((node) => node.kind === "reinforcement")) add("lesson.reinforcement.inserted");

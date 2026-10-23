@@ -1,9 +1,10 @@
 "use client";
+import { learningActionAvailability, learningActionForPath } from "@/domain/study/learning-action-availability";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BookOpen,
   CaseUpper,
@@ -51,7 +52,7 @@ const navigation = (courseSlug: string) => [
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
   { href: "/conversation", label: "Conversar", icon: MessageCircle },
   { href: "/describe", label: "Explicar imagem", icon: ImageIcon },
-  { href: "/assessment", label: "Diagnóstico", icon: ChartNoAxesCombined },
+  { href: "/assessment", label: "Avaliações", icon: ChartNoAxesCombined },
   { href: "/vocabulary", label: "Vocabulário", icon: GraduationCap },
   { href: "/mistakes", label: "Meus erros", icon: NotebookPen },
   { href: "/history", label: "Histórico", icon: Clock3 },
@@ -61,6 +62,25 @@ const navigation = (courseSlug: string) => [
 function isNavActive(href: string, pathname: string) {
   if (href === "/basics" && (pathname === "/alphabet" || pathname === "/numbers")) return true;
   return pathname.startsWith(href) && (href !== "/dashboard" || pathname === href);
+}
+
+/** The assessment route is a selector unless the URL explicitly identifies an assessment. */
+export function AssessmentAvailabilityGate({ children }: { children: ReactNode }) {
+  const { course, runtime } = useStudy();
+  const searchParams = useSearchParams();
+  const action = learningActionForPath("/assessment", searchParams)!;
+  const availability = learningActionAvailability(course, action, {
+    source: runtime ? "installed" : "compiled", permitted: true,
+  });
+  if (!availability.eligible) return (
+    <section className="panel" role="status">
+      <h1>Esta avaliação está indisponível no curso atual</h1>
+      <p>{availability.reasons.join(" ")} Nenhuma nota será registrada.</p>
+      <Link className="secondary-button" href="/assessment">Escolher outra avaliação</Link>
+      <Link className="text-link" href={`/course/${course.slug}`}>Consultar meu curso</Link>
+    </section>
+  );
+  return <>{children}</>;
 }
 
 export function AppShell({
@@ -183,38 +203,30 @@ export function AppShell({
     activityIds,
     resources.structures,
   ).total;
-  const navItems = navigation(course.slug)
-    .filter(
-      (item) =>
-        (item.href !== "/speaking" ||
-          (featureFlags.SPEAKING &&
-            course.units.some((unit) =>
-              unit.lessons.some((lesson) =>
-                lesson.activities.some((activity) => activity.type === "speaking"),
-              ),
-            ))) &&
-        (item.href !== "/conversation" || (featureFlags.AI_TUTOR && !runtime)) &&
-        (item.href !== "/review" || !runtime) &&
-        (item.href !== "/describe" ||
-          (featureFlags.AI_TUTOR && resources.imageScenes.length > 0)) &&
-        (item.href !== "/basics" ||
-          Object.values(language.modules).some((module) => module.enabled)),
-    )
-    .filter(
-      (item) =>
-        item.href !== "/live-classes" ||
-        course.units.some((unit) =>
-          unit.lessons.some((lesson) => Boolean(lesson.interactiveLessonRef)),
-        ),
-    );
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const conversationAction = learningActionAvailability(course, { kind: "conversation" }, actionContext);
+  const tutorAction = learningActionAvailability(course, { kind: "tutor" }, actionContext);
+  const navItems = navigation(course.slug).filter(item => {
+    const action = learningActionForPath(item.href);
+    return (!action || learningActionAvailability(course, action, actionContext).eligible) &&
+      (item.href !== "/describe" || resources.imageScenes.length > 0) &&
+      (item.href !== "/basics" || Object.values(language.modules).some(module => module.enabled));
+  }).map(item => {
+    const action = learningActionForPath(item.href);
+    return action && learningActionAvailability(course, action, actionContext).operation === "unknown"
+      ? { ...item, label: item.label + " (condicional)" } : item;
+  });
   const studyNavCount = navItems.findIndex((item) => item.href === "/vocabulary");
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
   const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
+  const pathAction = pathname === "/assessment" ? undefined : learningActionForPath(pathname);
+  const pathAvailability = pathAction ? learningActionAvailability(course, pathAction, actionContext) : undefined;
   const installedBlockedPath =
     runtime &&
     ["/review", "/speaking", "/conversation", "/describe", "/micro-lesson", "/numbers"].some(
       (path) => pathname === path,
-    );
+    ) || Boolean(pathAvailability && !pathAvailability.eligible);
 
   return (
     <div className="app-frame" aria-busy={switchingCourse}>
@@ -385,7 +397,7 @@ export function AppShell({
           ))}
         </nav>
         <div className="sidebar-bottom">
-          {featureFlags.AI_TUTOR && !runtime && (
+          {tutorAction.eligible && (
             <button className="sidebar-tutor" onClick={() => setTutorOpen(true)}>
               <span className="sidebar-tutor-icon">
                 <Sparkles size={18} />
@@ -440,9 +452,9 @@ export function AppShell({
                 <CircleHelp size={16} /> <span>Ver guia</span>
               </button>
             )}
-            {featureFlags.AI_TUTOR && !runtime && (
+            {tutorAction.eligible && (
               <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
-                <Sparkles size={16} /> Perguntar ao professor
+                <Sparkles size={16} /> {tutorAction.operation === "unknown" ? "Tentar professor (condicional)" : "Perguntar ao professor"}
               </button>
             )}
             <Link href="/settings" className="avatar" aria-label="Configurações">
@@ -457,13 +469,16 @@ export function AppShell({
               <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
               <h1>Este recurso ainda não está disponível neste curso</h1>
               <p>
-                A integração com cursos instalados está em preparação. Nenhuma nota ou progresso
-                será alterado por isso.
+                {pathAvailability?.reasons.join(" ") ?? "Este caminho não está integrado ao curso atual."} Nenhuma nota ou progresso será alterado por isso.
               </p>
               <Link className="secondary-button" href={`/course/${course.slug}`}>
                 Continuar meu curso
               </Link>
             </section>
+          ) : pathname === "/assessment" ? (
+            <Suspense fallback={<div className="page-loading">Verificando avaliação…</div>}>
+              <AssessmentAvailabilityGate>{children}</AssessmentAvailabilityGate>
+            </Suspense>
           ) : (
             children
           )}
@@ -477,17 +492,17 @@ export function AppShell({
           <Play size={20} /> <span>Aula</span>
         </Link>
         <Link
-          href={runtime ? "/history" : "/review"}
-          aria-current={pathname === (runtime ? "/history" : "/review") ? "page" : undefined}
+          href={reviewAction.eligible ? "/review" : "/history"}
+          aria-current={pathname === (reviewAction.eligible ? "/review" : "/history") ? "page" : undefined}
         >
-          <RotateCcw size={20} /> <span>{runtime ? "Histórico" : "Revisar"}</span>
+          <RotateCcw size={20} /> <span>{reviewAction.eligible ? "Revisar" : "Histórico"}</span>
         </Link>
-        {featureFlags.AI_TUTOR && !runtime ? (
+        {conversationAction.eligible ? (
           <Link
             href="/conversation"
             aria-current={pathname === "/conversation" ? "page" : undefined}
           >
-            <MessageCircle size={20} /> <span>Conversar</span>
+            <MessageCircle size={20} /> <span>{conversationAction.operation === "unknown" ? "Conversar (condicional)" : "Conversar"}</span>
           </Link>
         ) : (
           <Link
@@ -505,7 +520,7 @@ export function AppShell({
           <Menu size={20} /> <span>Mais</span>
         </button>
       </nav>
-      {featureFlags.AI_TUTOR && !runtime && (
+      {tutorAction.eligible && (
         <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
       )}
       <SelectionAudio />

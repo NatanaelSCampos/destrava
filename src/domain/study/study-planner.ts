@@ -1,3 +1,4 @@
+import { learningActionAvailability, type LearningActionContext } from "./learning-action-availability";
 import type { PublicCourse, PublicActivity } from "@/content/public";
 import type { PlannedItem, PlannedReviewItem, SessionMode, StudyState } from "./study-state";
 import { buildLearningProfile } from "./learning-profile";
@@ -15,10 +16,11 @@ function reviewCandidates(
   now: Date,
   mode: SessionMode,
   resources: Pick<LanguageResources, "structures">,
+  actionContext?: LearningActionContext,
 ): PlannedReviewItem[] {
   const activityIds = new Set(
     course.units.flatMap((unit) =>
-      unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
+      unit.lessons.flatMap((lesson) => lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible).map((activity) => activity.id)),
     ),
   );
   const lessonIds = new Set(
@@ -89,6 +91,7 @@ export function buildStudyPlan(
   resources: LanguageResources,
   now = new Date(),
   mode: SessionMode = "guided",
+  actionContext?: LearningActionContext,
 ): PlannedItem[] {
   const profile = buildLearningProfile(course, state, vocabularyItems, resources, now);
   const recommendations = LearningRecommendationEngine.recommend(
@@ -97,12 +100,12 @@ export function buildStudyPlan(
     profile,
     vocabularyItems,
     resources,
-    { now, includeReviews: false },
+    { now, includeReviews: false, actionContext },
   );
   const plan: PlannedItem[] = [];
   const budget = Math.max(1, Math.round(dailyMinutes));
   const focusedConversation =
-    mode === "difficulties" && budget >= 10
+    mode === "difficulties" && budget >= 10 && learningActionAvailability(course, { kind: "conversation" }, actionContext).eligible
       ? (orderByLearningAffinity(
           resources.conversationScenarios,
           state.profile.learningPreferences,
@@ -120,8 +123,8 @@ export function buildStudyPlan(
       : undefined;
   const activityBudget = budget - (focusedConversation ? 3 : 0);
   const candidates =
-    featureFlags.SPACED_REPETITION && course.availability?.spacedRepetition !== false
-      ? reviewCandidates(course, state, vocabularyItems, now, mode, resources)
+    featureFlags.SPACED_REPETITION && learningActionAvailability(course, { kind: "review" }, actionContext).eligible
+      ? reviewCandidates(course, state, vocabularyItems, now, mode, resources, actionContext)
       : [];
   if (candidates.length) {
     const count = Math.min(candidates.length, Math.max(1, Math.floor(budget / 3)), 5);
@@ -175,9 +178,9 @@ export function buildStudyPlan(
   return plan;
 }
 
-export function nextActivity(course: PublicCourse, state: StudyState): PublicActivity | undefined {
+export function nextActivity(course: PublicCourse, state: StudyState, actionContext?: LearningActionContext): PublicActivity | undefined {
   const activities = course.units.flatMap((unit) =>
-    unit.lessons.flatMap((lesson) => lesson.activities),
+    unit.lessons.flatMap((lesson) => lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible)),
   );
   const required = new Set(
     course.units.flatMap((unit) => [...outstandingPolicyActivityIds(unit, state, course)]),

@@ -1,5 +1,5 @@
 import type { Activity, Course, Lesson, Unit } from "./schema";
-import type { LanguagePackage } from "./contracts";
+import { interactiveLessonSchema, type LanguagePackage } from "./contracts";
 import { featureFlags } from "@/lib/feature-flags";
 import { publicRequirements } from "./capability-contracts";
 export { publicRequirements } from "./capability-contracts";
@@ -7,7 +7,7 @@ import {
   negotiateCapabilities,
   type CapabilityEnvironment,
 } from "@/engine/capabilities/compatibility";
-import { projectCapabilityAvailability } from "@/engine/capabilities/availability-projection";
+import { projectCapabilityAvailability, projectActionAvailability, type ActionAvailabilityState, type InteractiveLessonAvailabilityScope } from "@/engine/capabilities/availability-projection";
 import { serverCapabilityEnvironment } from "@/lib/capability-environment";
 
 export type PublicActivity = Activity extends infer A
@@ -27,8 +27,10 @@ export type LearningAvailability = {
   unavailableInteractiveLessonIds?: string[];
   scopeLocations?: Record<string, string>;
   interactiveLessonLocations?: Record<string, string>;
+  interactiveLessonScopes?: Record<string, InteractiveLessonAvailabilityScope>;
   reasons?: Record<string, string[]>;
   spacedRepetition: boolean;
+  actionStates?: Record<string, ActionAvailabilityState>;
 };
 export type PublicCourse = Omit<Course, "units" | "capabilityRequests"> & {
   units: PublicUnit[];
@@ -88,11 +90,25 @@ export function publicCourse(
       .filter((item) => item.requirement.id === "lesson.interactive")
       .map((item) => [String(item.requirement.data?.id), item.location]),
   );
+  const interactiveLessonScopes: Record<string, InteractiveLessonAvailabilityScope> = {};
+  for (const request of course.capabilityRequests ?? []) {
+    if (request.requirement.id !== "lesson.interactive") continue;
+    const parsed = interactiveLessonSchema.safeParse(request.requirement.data);
+    if (!parsed.success) continue;
+    const definition = parsed.data;
+    interactiveLessonScopes[definition.id] = {
+      unitId: definition.unitId,
+      lessonId: definition.lessonId,
+      requiredActivityIds: [...new Set(definition.segments.flatMap(segment =>
+        segment.required && segment.activityRef ? [segment.activityRef] : []))],
+    };
+  }
   const projected = projectCapabilityAvailability(
     course,
     report?.diagnostics ?? [],
     undefined,
     interactiveLessonLocations,
+    interactiveLessonScopes,
   );
   // Explicit destructuring prevents private capability request payloads crossing the SSR boundary.
   const { capabilityRequests: privateRequests, ...safeCourse } = course;
@@ -108,6 +124,7 @@ export function publicCourse(
     capabilityReport: report,
     availability: {
       ...projected,
+      actionStates: projectActionAvailability(environment ?? (language ? serverCapabilityEnvironment(language, typeof preference === "string" ? preference : undefined, course) : {})),
       spacedRepetition: featureFlags.SPACED_REPETITION,
     },
     units: course.units

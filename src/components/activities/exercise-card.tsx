@@ -25,8 +25,10 @@ type Exercise = Extract<
 export function ExerciseCard({
   activity,
   onAssessed,
+  onSubmitAnswer,
 }: {
   activity: Exercise;
+  onSubmitAnswer?: (answer: string) => Promise<GradeResult>;
   onAssessed?: (answer: string, result: GradeResult) => void;
 }) {
   const { language, assessActivity } = useStudy();
@@ -49,7 +51,10 @@ export function ExerciseCard({
     setLoading(true);
     setError("");
     try {
-      const feedback = await assessActivity(activity, selectedAnswer, onAssessed);
+      const feedback = onSubmitAnswer
+        ? await onSubmitAnswer(selectedAnswer)
+        : await assessActivity(activity, selectedAnswer, onAssessed);
+      if (onSubmitAnswer) onAssessed?.(selectedAnswer, feedback);
       setResult(feedback);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível corrigir agora.");

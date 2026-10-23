@@ -19,8 +19,14 @@ export function ActivityRenderer({
   onAssessed,
   onSpeakingSaved,
   onWritingSaved,
+  onSubmitAnswer,
+  onSubmitWriting,
+  onSubmitSpeaking,
 }: {
   activity: PublicActivity;
+  onSubmitAnswer?: (answer: string) => Promise<GradeResult>;
+  onSubmitWriting?: (text: string) => Promise<void>;
+  onSubmitSpeaking?: (transcription: string, audio: Blob) => Promise<void>;
   onAssessed?: (answer: string, result: GradeResult) => void;
   onWritingSaved?: (text: string) => void;
   onSpeakingSaved?: (result?: {
@@ -247,15 +253,16 @@ export function ActivityRenderer({
               key={activity.id}
               activity={activity as Parameters<typeof ExerciseCard>[0]["activity"]}
               onAssessed={onAssessed}
+              onSubmitAnswer={onSubmitAnswer}
             />
           )
         )}
         {activity.type === "writing" && (
-          <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} />
+          <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} onSubmitWriting={onSubmitWriting} />
         )}
         {activity.type === "speaking" &&
           (featureFlags.SPEAKING ? (
-            <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} />
+            <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} onSubmitSpeaking={onSubmitSpeaking} />
           ) : (
             <p className="muted">A prática oral está temporariamente indisponível.</p>
           ))}

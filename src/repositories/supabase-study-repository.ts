@@ -1,3 +1,5 @@
+import type { InteractiveLessonProgressReceipt } from "@/domain/interactive-lesson/progress-receipt";
+import { recordInteractiveLessonReceipt } from "@/domain/study/study-state";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { PublicCourse } from "@/content/public";
 import type { VocabularyItem } from "@/components/study-provider";
@@ -19,6 +21,7 @@ export class SupabaseStudyRepository {
     private db: SupabaseClient,
     private userId: string,
     private assessmentSync?: { course: PublicCourse; load: () => Promise<ServerAssessmentResult[]> },
+    private interactiveSync?: { course: PublicCourse; load: () => Promise<InteractiveLessonProgressReceipt[]> },
   ) {}
 
   async load(courseId: string, languageCode: string): Promise<StudyState | null> {
@@ -41,6 +44,13 @@ export class SupabaseStudyRepository {
     if (this.assessmentSync) {
       const results = await this.assessmentSync.load();
       if (state || results.length) state = restoreServerAssessmentResults(state ?? readCourseState(null, courseId, languageCode), this.assessmentSync.course, results);
+    }
+    if (this.interactiveSync) {
+      const receipts = await this.interactiveSync.load();
+      if (state || receipts.length) {
+        state ??= readCourseState(null, courseId, languageCode);
+        for (const receipt of receipts) state = recordInteractiveLessonReceipt(state, this.interactiveSync.course, receipt);
+      }
     }
     if (state === null) return null;
     const speaking = await Promise.all(
@@ -179,7 +189,7 @@ export class SupabaseStudyRepository {
     );
     await this.upsert(
       "exercise_attempts",
-      state.attempts.map((attempt) => ({
+      state.attempts.filter((attempt) => !attempt.interactiveReceipt).map((attempt) => ({
         id: attempt.id,
         user_id: uid,
         activity_id: attempt.activityId,
@@ -274,7 +284,7 @@ export class SupabaseStudyRepository {
     );
     await this.upsert(
       "writing_submissions",
-      state.writing.map((item) => ({
+      state.writing.filter((item) => !item.interactiveReceipt).map((item) => ({
         id: item.id,
         user_id: uid,
         activity_id: item.activityId,
@@ -284,7 +294,7 @@ export class SupabaseStudyRepository {
     );
     await this.upsert(
       "speaking_submissions",
-      state.speaking.map((item) => ({
+      state.speaking.filter((item) => !item.interactiveReceipt).map((item) => ({
         id: item.id,
         user_id: uid,
         activity_id: item.activityId,

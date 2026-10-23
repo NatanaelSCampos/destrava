@@ -1,4 +1,5 @@
 "use client";
+import { learningActionAvailability } from "@/domain/study/learning-action-availability";
 
 import { useTextPresentation } from "@/components/learning/text-presentation";
 
@@ -24,6 +25,8 @@ export default function VocabularyPage() {
     recordVocabularySearch,
     recordVocabularyAudio,
   } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   useEffect(() => {
@@ -68,8 +71,8 @@ export default function VocabularyPage() {
             Explore os termos do curso e escolha quais quer aprender ou revisar.
           </p>
         </div>
-        <Link href={runtime ? `/course/${course.slug}` : "/review"} className="primary-button">
-          {runtime ? "Continuar meu curso" : "Abrir flashcards"} <ArrowRight size={16} />
+        <Link href={reviewAction.eligible ? "/review" : `/course/${course.slug}`} className="primary-button">
+          {reviewAction.eligible ? "Abrir flashcards" : "Continuar meu curso"} <ArrowRight size={16} />
         </Link>
       </div>
       <div className="vocab-summary">
