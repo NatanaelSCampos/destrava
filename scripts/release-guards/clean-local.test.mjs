@@ -4,7 +4,7 @@ import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } fro
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { CLEAN_LOCAL_PROFILE as P, validateCleanLocal, validateCleanDocker } from "./clean-local.mjs";
+import { CLEAN_LOCAL_PROFILE as P, canonicalCleanWorkspace, validateCleanLocal, validateCleanDocker } from "./clean-local.mjs";
 
 const workspace = process.platform === "win32" ?
   "D:\\synthetic-f1\\destrava-release-clean" : "/synthetic-f1/destrava-release-clean";
@@ -78,6 +78,34 @@ test("local validation is deterministic, pure and never returns credentials", ()
   assert.equal(JSON.stringify(original), before);
   assert.equal(JSON.stringify(result).includes("synthetic-secret"), false);
 });
+
+for (const root of [
+  "D:\\Documents\\espanhol-plataform\\destrava-release-clean",
+  "D:\\Documents\\espanhol-plataform\\nested\\destrava-release-clean",
+  "D:\\Documents\\ESPANHOL-PLATAFORM\\destrava-release-clean",
+  "/home/test/espanhol-plataform/destrava-release-clean",
+  "/home/test/espanhol-plataform/nested/destrava-release-clean",
+  "/home/test/ESPANHOL-PLATAFORM/destrava-release-clean",
+  "D:\\Documents\\espanholPlataform\\destrava-release-clean",
+  "/home/test/espanholPlataform/destrava-release-clean",
+]) test("workspace ancestry rejects legacy project: " + root, () => {
+  assert.throws(() => canonicalCleanWorkspace(root), /workspace/u);
+  // Align every identity field: rejection must come from ancestry, not mismatch.
+  const candidate = input({ workspace: root, expectedWorkspace: root, values: values(root) });
+  assert.throws(() => validateCleanLocal(candidate), /workspace/u);
+});
+
+for (const root of [
+  "D:\\Documents\\destrava-worktrees\\destrava-release-clean",
+  "/home/test/destrava-worktrees/destrava-release-clean",
+  "D:\\Documents\\espanhol-plataform-reference\\destrava-release-clean",
+  "/home/test/espanhol-plataform-reference/destrava-release-clean",
+]) test("workspace ancestry accepts independent project: " + root, () => {
+  assert.equal(canonicalCleanWorkspace(root), root);
+  const candidate = input({ workspace: root, expectedWorkspace: root, values: values(root) });
+  assert.equal(validateCleanLocal(candidate).ok, true);
+});
+
 for (const [name, modify] of [
   ["old project", (x) => { x.values.DESTRAVA_LOCAL_PROJECT = "espanhol-plataform"; }],
   ["production API", (x) => { x.values.NEXT_PUBLIC_SUPABASE_URL = "https://synthetic.supabase.co"; }],

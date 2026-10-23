@@ -42,7 +42,8 @@ export function canonicalCleanWorkspace(workspace) {
       (windows && (workspace.slice(2).includes(":") || /[<>"|?*]/u.test(workspace) ||
         workspace.split("\\").some((part) => /[. ]$/u.test(part)))) ||
       flavor.basename(workspace) !== CLEAN_LOCAL_PROFILE.id ||
-      workspace.split(/[/\\]/u).some((part) => part.toLowerCase() === "espanholplataform"))
+      workspace.split(/[/\\]/u).some((part) =>
+        ["espanholplataform", "espanhol-plataform"].includes(part.toLowerCase())))
     reject("workspace");
   return workspace;
 }
