@@ -35,6 +35,7 @@ O **ChatGPT** ajuda a discutir objetivos e decisões de produto; o **GitHub** pr
 - **Proporcionalidade.** Fix pequeno pode usar descrição/aceite na própria PR, se for autocontido. Mudança de contrato, regras pedagógicas, banco, IA ou segurança exige spec independente e critérios explícitos.
 - **Paralelo só com interfaces estáveis.** Duas frentes podem trabalhar ao mesmo tempo se não editarem definições compartilhadas sem acordo prévio.
 - **Testes por impacto.** Rodar verificadores rápidos por tarefa e gates completos no candidato integrado, após mudanças relevantes; nunca considerar testes antigos válidos para uma alteração que os invalida.
+- **Laboratório vivo do aluno.** Para mudanças visíveis ao estudante, verificar impacto e elegibilidade no [curso ES-A1 pessoal](produto/CURSO_LABORATORIO_ES_A1.md): atualizar conteúdo compatível, ou registrar claramente por que o recurso está bloqueado/não pertinente. Isso não substitui testes neutros de idioma nem torna o ES-A1 autoridade sobre o motor.
 - **Não transformar melhorias futuras em bloqueios artificiais.** Distinguir requisito do marco, necessidade de integração e backlog posterior.
 - **Sem autodeclaração de sucesso.** Alegações de "pronto" devem apontar para commit, ambiente e evidência do estado verificado.
 

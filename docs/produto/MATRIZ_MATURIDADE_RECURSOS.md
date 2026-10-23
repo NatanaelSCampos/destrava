@@ -10,6 +10,7 @@ Um único rótulo `implementado` não basta para dizer `pronto para aluno real`.
 2. **Integração no curso instalado:** executa com dados/versão/evidências do pacote externo, bloqueada ou parcialmente integrada.
 3. **Homologação:** testes puros/VM, SQL local, HTTP/navegador, dispositivos físicos, provedores reais e revisão editorial/qualidade de IA, cada qual com data/candidato.
 4. **Operação real:** dependências configuradas e saudáveis, permissão, cotas, esquema remoto, publicação e suporte efetivo ao usuário.
+5. **Cobertura no curso laboratório pessoal ES-A1:** recurso acessível e útil nas duas unidades, disponível com limites, bloqueado com causa explícita, não pertinente com justificativa ou ainda não auditado. A nova [política permanente](CURSO_LABORATORIO_ES_A1.md) estabelece auditoria após marcos relevantes; **não inferir cobertura atual dos arquivos pessoais pela fixture da `main`**.
 
 Nunca promover o status em uma dimensão por evidência de outra. A matriz registra o *melhor estado comprovado nas fontes referidas*, não um SLA nem homologação de produção.
 

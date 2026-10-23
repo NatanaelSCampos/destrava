@@ -25,6 +25,8 @@ O pacote público faz a fronteira: **o Foundry produz e atesta qualidade editori
 
 Estado dos 33 itens e das 44 capacidades: [Matriz de maturidade](MATRIZ_MATURIDADE_RECURSOS.md). Estado operacional breve: [Progresso do produto](../PROGRESSO_PRODUTO.md).
 
+**Dogfooding contínuo do produto:** o curso pessoal ES-A1 (duas unidades) é o [laboratório vivo do Destrava](CURSO_LABORATORIO_ES_A1.md). Após marcos relevantes, auditar o recurso no caminho real do aluno, atualizar o curso quando útil/disponível, testar pedagogia e registrar limitações. O laboratório pessoal **já existe**; não confundi-lo com o piloto com alunos reais de M9. Não exigir segundo curso para preservar dados experimentais.
+
 ## 3. Fluxograma de evolução
 
 ~~~mermaid
@@ -34,6 +36,7 @@ flowchart TD
   GATE{"QA + Revisor<br/>Critérios e candidato aprovados?"}
   MERGE["PR funcional aprovada<br/>Merge na main — sem deploy implícito"]
   MAT["Atualizar matriz de maturidade<br/>e lacunas por ambiente"]
+  LAB["LAB CONTÍNUO · ES-A1<br/>duas unidades reais, recursos atuais,<br/>limites explícitos e feedback"]
   CORE["Fechar integração pedagógica instalada<br/>SRS, erros, domínio e recomendações"]
   AI["Integrar IA e speech nos instalados<br/>Tutoria, escrita, conversação, STT"]
   CLASS["Aula Particular amadurecida<br/>Voz, intervenção, adaptação,<br/>mídia e memória longitudinal"]
@@ -47,10 +50,14 @@ flowchart TD
   BASE --> C2 --> GATE
   GATE -->|AJUSTES| C2
   GATE -->|GO e autorização| MERGE --> MAT
+  MAT --> LAB
   MAT --> CORE --> AI
   MAT --> CLASS
   CLASS --> CLASSINST
   AI --> CLASSINST
+  CORE -. "atualizar quando compatível" .-> LAB
+  AI -. "atualizar quando compatível" .-> LAB
+  CLASS -. "atualizar quando compatível" .-> LAB
   MAT --> FOUNDRY
   FOUNDRY --> ADMIN
   CLASSINST --> ADMIN
@@ -58,6 +65,8 @@ flowchart TD
 ~~~
 
 **O diagrama indica dependências predominantes, não um cronograma rígido.** Foundry, avaliação de IA, design system base e ajustes de usabilidade podem avançar em paralelo. Uma integração mínima segura da Aula Particular pode ser homologada antes de toda a visão avançada, desde que o recorte seja explicitado. Nenhum bloco futuro autoriza trabalho sem spec, aceite e aprovação próprios.
+
+O bloco **LAB CONTÍNUO ES-A1** representa uso pessoal **a partir do motor atual**, não um novo ambiente nem um marco que só começa no lançamento. A cada recurso integrado e compatível, revisar a cobertura do curso e detectar lacunas editoriais. Bloqueios como a Aula Particular em curso instalado devem permanecer honestos; experiência pessoal de curso compilado e execução instalada são verificadas separadamente. Seu primeiro ajuste amplo é candidato **após** a conclusão de A2/B2, conforme [spec ES-A1](../features/piloto-es-a1-pos-ciclo2/spec.md).
 
 ## 4. Marcos, objetivos e critérios de saída
 

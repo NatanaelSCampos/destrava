@@ -34,6 +34,9 @@
 
 ## Norte estratégico proposto
 
+- **Política decidida pelo proprietário em 23/10/2026:** o curso pessoal **ES-A1 de duas unidades** é o [laboratório vivo do Destrava](produto/CURSO_LABORATORIO_ES_A1.md): usar o melhor conjunto disponível de recursos, não omitir capacidade pertinente por conteúdo antigo, registrar indisponibilidades e aprender com uso real. Sem duplicar curso pessoal apenas para manter histórico experimental.
+- **Próximo ciclo editorial candidato:** [auditar e atualizar o ES-A1 após A2/B2](features/piloto-es-a1-pos-ciclo2/spec.md); nenhuma implementação ou publicação autorizada por esta PR documental.
+
 - [Roadmap até piloto/lançamento](produto/ROADMAP_ESTRATEGICO.md): consolidação pedagógica instalada, IA/voz, Aula Particular aprofundada, Foundry/Admin, UI/UX e piloto.
 - [Matriz de maturidade](produto/MATRIZ_MATURIDADE_RECURSOS.md): 33 recursos pedagógicos (auditoria histórica) versus 44 capacidades técnicas do perfil instalado. O status desta matriz é **baseline documental para revisão**, não homologação nova.
 - **Decisão de priorização visual:** corrigir UX bloqueante/essencial a cada ciclo; reservar redesign completo e design system consolidado para o marco pré-lançamento, com auditoria por telas antes de implementar.
