@@ -53,7 +53,7 @@ Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/REL
 | **COMP-D02** | Geração `G` e writer B1 sob lock compartilhado de usuário, validação na transação; retry e leitura também isolados | Projeto SQL/código, Auth/MFA/owner, privilégio e QA próprios |
 | **COMP-D03** | Escopo B1 versionado: usuário + G + curso + lição + `contentVersion` + `definitionHash` | Ajustar índices/RPCs/lookup após revisão de schema, sem atribuir recibos antigos ao novo |
 | **COMP-D04** | Reset administrativo com `operationId`, freeze e incremento idempotente de geração, falha fechada | Procedimento canônico atual ainda não identificado; desenho e dados/Storage exigem análise |
-| **COMP-D05** | Composição **sele­tiva** do acervo ES sobre motor atual com B1/A2/B2, EN intacto | Worktrees/SQL/código ainda não autorizados; P1 pedagógico só depois da integração segura |
+| **COMP-D05** | Composição **seletiva** do acervo ES sobre motor atual com B1/A2/B2, EN intacto | Worktrees/SQL/código ainda não autorizados; P1 pedagógico só depois da integração segura |
 
 O relatório P0 não executou SQL, QA/browser, migração, reset nem testou concorrência em runtime. **"PLANO SUFICIENTE" é um parecer de planejamento, não um GO funcional ou operacional.**
 
