@@ -29,6 +29,7 @@
     "text:verify:ui": "node --import tsx scripts/verify-text-ui.tsx",
     "capabilities:catalog": "node --import tsx scripts/export-capability-catalog.ts",
     "session:verify": "node --import tsx scripts/verify-session-time.ts",
+    "journey:verify": "node --import tsx scripts/verify-course-journey.tsx",
     "sync:verify": "node --import tsx scripts/verify-study-sync.ts",
     "checkpoint:prepare": "node scripts/prepare-local-checkpoint.mjs",
     "checkpoint:restart": "node scripts/run-local-checkpoint.mjs restart",

@@ -94,7 +94,7 @@ export function unitProgress(
     completed,
     total: activities.length,
     percentage: completion.percentage,
-    participationPercentage: activities.length ? Math.round((100 * completed) / activities.length) : 0,
+    participationPercentage: activities.length ? Math.floor((1000 * completed) / activities.length) / 10 : 0,
     completion,
     mastery,
     isCompleted,
@@ -115,6 +115,22 @@ export function courseProgress(course: PublicCourse, state: StudyState) {
   const units = course.units.filter((unit) => unit.active);
   return units.length ? Math.round(units.reduce((sum,unit) =>
     sum + unitProgress(unit,state,[],course).percentage,0)/units.length) : 0;
+}
+
+/** Content coverage is independent of passing the course's completion policy. */
+export function courseStudyProgress(course: PublicCourse, state: StudyState) {
+  if (state.courseId && state.courseId !== course.id) return 0;
+  const activityIds = new Set(
+    course.units.filter((unit) => unit.active).flatMap((unit) =>
+      unit.lessons.filter((lesson) => lesson.active).flatMap((lesson) =>
+        lesson.activities.map((activity) => activity.id),
+      ),
+    ),
+  );
+  if (!activityIds.size) return 0;
+  const completed = new Set(state.completedActivityIds.filter((id) => activityIds.has(id)));
+  // Keep early progress visible in large courses and never round an unfinished course to 100%.
+  return Math.floor((1000 * completed.size) / activityIds.size) / 10;
 }
 
 export function currentUnit(course: PublicCourse, state: StudyState) {

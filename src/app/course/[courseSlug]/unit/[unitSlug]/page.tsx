@@ -53,10 +53,10 @@ export default function UnitPage() {
           </Link>
         </div>
         <div className="unit-hero-score">
-          <strong>{progress.percentage}%</strong>
-          <span>dos requisitos de conclusão</span>
+          <strong>{progress.participationPercentage}%</strong>
+          <span>do conteúdo estudado</span>
           <div className="progress-track">
-            <span style={{ width: `${progress.percentage}%` }} />
+            <span style={{ width: `${progress.participationPercentage}%` }} />
           </div>
         </div>
       </div>

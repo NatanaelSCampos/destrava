@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, ChartNoAxesCombined, Target } from "lucide-react";
 import { PolicyChecklist, policyStatusLabels } from "@/components/activities/policy-checklist";
 import { useStudy } from "@/components/study-provider";
-import { courseProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
+import { courseStudyProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
 import { buildLearningProfile, type MasteryMetric } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import type { Skill } from "@/content/schema";
@@ -56,7 +56,7 @@ export default function ProgressPage() {
   const { course, resources, state, vocabularyItems, recordStudyEvent } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems, course);
-  const totalProgress = courseProgress(course, state);
+  const totalProgress = courseStudyProgress(course, state);
   const skillData = skillLabels.map((item) => ({
     ...item,
     ...skillProgress(course, state, item.id),
@@ -101,7 +101,7 @@ export default function ProgressPage() {
         <section className="progress-main-card">
           <span className="eyebrow">{course.title.toUpperCase()}</span>
           <h2>
-            Você cumpriu <strong>{totalProgress}%</strong> dos requisitos de conclusão.
+            Você estudou <strong>{totalProgress}%</strong> do conteúdo disponível.
           </h2>
           <p>Continue praticando para transformar conhecimento em confiança.</p>
           <div className="progress-track">

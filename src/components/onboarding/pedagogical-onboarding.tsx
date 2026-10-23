@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
+import { CourseTransitionNotice } from "@/components/layout/course-transition-notice";
 import { buildStudyPlan } from "@/domain/study/study-planner";
 import {
   createLearningPreferences,
@@ -37,9 +38,11 @@ const steps = [
 export function PedagogicalOnboarding({
   courseOptions,
   selectionRevision = 0,
+  onSavingChange,
 }: {
   courseOptions: CourseOption[];
   selectionRevision?: number;
+  onSavingChange?: (saving: boolean) => void;
 }) {
   const router = useRouter();
   const {
@@ -53,6 +56,9 @@ export function PedagogicalOnboarding({
   } = useStudy();
   const [step, setStep] = useState(Math.min(7, Math.max(0, state.profile.onboardingStep)));
   const [switching, setSwitching] = useState(false);
+  const [pendingCourseId, setPendingCourseId] = useState("");
+  const [finishing, setFinishing] = useState(false);
+  const mounted = useRef(true);
   const [error, setError] = useState("");
   const preferences = state.profile.learningPreferences;
   const contexts = resources.learningOptions.contexts.filter(
@@ -72,6 +78,14 @@ export function PedagogicalOnboarding({
           resources,
         )
       : [];
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      onSavingChange?.(false);
+    };
+  }, [onSavingChange]);
 
   useEffect(() => {
     if (
@@ -97,6 +111,7 @@ export function PedagogicalOnboarding({
   async function chooseCourse(courseId: string) {
     if (courseId === course.id || switching) return;
     setSwitching(true);
+    setPendingCourseId(courseId);
     setError("");
     try {
       await flushStudyState();
@@ -130,17 +145,39 @@ export function PedagogicalOnboarding({
       });
   }
 
-  function finish(startDiagnostic: boolean) {
+  async function finish(startDiagnostic: boolean) {
+    if (finishing || switching) return;
+    setFinishing(true);
+    onSavingChange?.(true);
+    setError("");
     updateProfile({
       onboarded: true,
       onboardingStep: 7,
       dailyMinutes: preferences.preferredSessionMinutes,
       goal: goalLabels[preferences.goal],
     });
-    recordStudyEvent("onboarding_completed", undefined, { courseId: course.id });
-    if (!startDiagnostic)
+    if (!state.events.some((event) => event.type === "onboarding_completed" && event.metadata?.courseId === course.id))
+      recordStudyEvent("onboarding_completed", undefined, { courseId: course.id });
+    if (!startDiagnostic && !state.events.some((event) => event.type === "diagnostic_skipped" && event.metadata?.courseId === course.id))
       recordStudyEvent("diagnostic_skipped", undefined, { courseId: course.id });
-    router.replace(startDiagnostic ? "/assessment" : "/dashboard");
+    try {
+      await flushStudyState();
+      if (!mounted.current) return;
+      router.replace(startDiagnostic ? "/assessment" : "/dashboard");
+    } catch (caught) {
+      if (!mounted.current) return;
+      updateProfile({ onboarded: false });
+      setError(
+        caught instanceof Error
+          ? `Não foi possível concluir a configuração: ${caught.message} Tente novamente.`
+          : "Não foi possível salvar sua configuração. Tente novamente.",
+      );
+    } finally {
+      if (mounted.current) {
+        setFinishing(false);
+        onSavingChange?.(false);
+      }
+    }
   }
 
   function togglePriority(skill: LearningSkill) {
@@ -156,7 +193,12 @@ export function PedagogicalOnboarding({
 
   const canContinue = step !== 1 || state.profile.selfReportedLevel !== null;
   return (
-    <main className="pedagogical-onboarding">
+    <main className="pedagogical-onboarding" aria-busy={switching || finishing}>
+      {switching && (
+        <CourseTransitionNotice
+          title={courseOptions.find((option) => option.id === pendingCourseId)?.title ?? "seu curso"}
+        />
+      )}
       <div className="onboarding-card">
         <span className="eyebrow">SEU PRIMEIRO PASSO · {resources.languageLabel}</span>
         <div
@@ -349,10 +391,10 @@ export function PedagogicalOnboarding({
               resultado.
             </p>
             <div className="onboarding-actions final">
-              <button type="button" className="primary-button" onClick={() => finish(true)}>
+              <button type="button" className="primary-button" disabled={finishing || switching} onClick={() => void finish(true)}>
                 Fazer diagnóstico <ArrowRight size={16} />
               </button>
-              <button type="button" className="secondary-button" onClick={() => finish(false)}>
+              <button type="button" className="secondary-button" disabled={finishing || switching} onClick={() => void finish(false)}>
                 Ir para meu curso
               </button>
             </div>
@@ -363,12 +405,14 @@ export function PedagogicalOnboarding({
             {error}
           </p>
         )}
+        {finishing && <p role="status">Salvando sua configuração…</p>}
         {step < 7 && (
           <div className="onboarding-actions">
             {step > 0 && (
               <button
                 type="button"
                 className="secondary-button"
+                disabled={switching || finishing}
                 onClick={() => go(step === 4 && !hasContextStep ? 2 : step - 1)}
               >
                 <ArrowLeft size={16} /> Voltar

@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
-import { courseProgress } from "@/domain/study/progress";
+import { courseStudyProgress } from "@/domain/study/progress";
 import { cx } from "@/lib/utils";
 import { TutorDrawer } from "@/components/tutor/tutor-drawer";
 import { WhatsNewDialog } from "@/components/layout/whats-new-dialog";
@@ -39,6 +39,7 @@ import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboarding";
 import { StudySyncNotice } from "@/components/study-sync-notice";
 import type { RuntimeCourseOption } from "@/lib/installed-runtime-types";
+import { CourseTransitionNotice } from "./course-transition-notice";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -83,8 +84,11 @@ export function AppShell({
     authUserId,
     flushStudyState,
     runtime,
+    progressLoadStatus,
   } = useStudy();
   const [switchingCourse, setSwitchingCourse] = useState(false);
+  const [pendingCourseId, setPendingCourseId] = useState("");
+  const [finishingOnboarding, setFinishingOnboarding] = useState(false);
   const [courseError, setCourseError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const [tutorOpen, setTutorOpen] = useState(false);
@@ -147,17 +151,26 @@ export function AppShell({
         Não foi possível verificar sua sessão. Recarregue a página.
       </div>
     );
-  if (!state.profile.onboarded)
+  if (progressLoadStatus === "failed")
+    return (
+      <main className="page-loading">
+        <h1>Não foi possível carregar seu progresso</h1>
+        <p>Tente novamente para continuar de onde parou.</p>
+        <StudySyncNotice />
+      </main>
+    );
+  if (!state.profile.onboarded || finishingOnboarding)
     return (
       <>
         <StudySyncNotice />
         <PedagogicalOnboarding
           courseOptions={courseOptions}
           selectionRevision={selectionRevision}
+          onSavingChange={setFinishingOnboarding}
         />
       </>
     );
-  const progress = courseProgress(course, state);
+  const progress = courseStudyProgress(course, state);
   const activityIds = new Set(
     course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
@@ -204,7 +217,12 @@ export function AppShell({
     );
 
   return (
-    <div className="app-frame">
+    <div className="app-frame" aria-busy={switchingCourse}>
+      {switchingCourse && (
+        <CourseTransitionNotice
+          title={courseOptions.find((option) => option.id === pendingCourseId)?.title ?? course.title}
+        />
+      )}
       {menuOpen && (
         <button
           className="mobile-backdrop"
@@ -252,6 +270,7 @@ export function AppShell({
                 disabled={switchingCourse}
                 onClick={async () => {
                   setSwitchingCourse(true);
+                  setPendingCourseId(course.id);
                   setCourseError("");
                   try {
                     await flushStudyState();
@@ -287,12 +306,13 @@ export function AppShell({
               Trocar curso
               <select
                 data-course-selector
-                value={course.id}
+                value={switchingCourse && pendingCourseId ? pendingCourseId : course.id}
                 disabled={switchingCourse}
                 onChange={async (event) => {
                   const courseId = event.target.value;
-                  if (courseId === course.id) return;
+                  if (courseId === course.id || switchingCourse) return;
                   setSwitchingCourse(true);
+                  setPendingCourseId(courseId);
                   setCourseError("");
                   try {
                     await flushStudyState();
@@ -328,7 +348,7 @@ export function AppShell({
             </label>
           )}
           <div className="sidebar-course-progress">
-            <span>Seu progresso</span>
+            <span>Conteúdo estudado</span>
             <strong>{progress}%</strong>
           </div>
           <div className="progress-track">

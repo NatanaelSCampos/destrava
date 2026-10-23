@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { buildStudyPlan } from "@/domain/study/study-planner";
-import { courseProgress, currentUnit, unitProgress } from "@/domain/study/progress";
+import { courseStudyProgress, currentUnit, unitProgress } from "@/domain/study/progress";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { buildLearningProfile } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
@@ -41,7 +41,7 @@ export default function DashboardPage() {
   const { course, resources, state, ready, vocabularyItems } = useStudy();
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems, course);
-  const totalProgress = courseProgress(course, state);
+  const totalProgress = courseStudyProgress(course, state);
   const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const focus = LearningRecommendationEngine.recommend(
     course,
@@ -237,11 +237,11 @@ export default function DashboardPage() {
             <h3>{unit.title}</h3>
             <p>{unit.description}</p>
             <div className="rail-progress-label">
-              <span>Progresso da unidade</span>
-              <strong>{progress.percentage}%</strong>
+              <span>Conteúdo estudado</span>
+              <strong>{progress.participationPercentage}%</strong>
             </div>
             <div className="progress-track">
-              <span style={{ width: `${progress.percentage}%` }} />
+              <span style={{ width: `${progress.participationPercentage}%` }} />
             </div>
             <span className="rail-progress-foot">
               {progress.completed} de {progress.total} atividades
