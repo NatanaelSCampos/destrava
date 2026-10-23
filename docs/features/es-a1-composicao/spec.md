@@ -1,10 +1,10 @@
 # ES-A1 — Especificação proposta de composição segura do motor e piloto pessoal
 
-> **Estado (23/10/2026): P0 E COM-0 CONCLUÍDOS EM SEUS ESCOPOS, COM-1 APENAS PROPOSTO.** PR #8 integrada à `main` em `df17c5d8adeb337ac886876183194e946b446a8a`. O Codex realizou **COM-0 somente leitura do Supabase local mediante autorização própria** e encontrou schema **`parcial/divergente`**; ver [relatório COM-0](RELATORIO_COM0.md). O proprietário autorizou apenas **esta PR documental** para registrar a evidência e atualizar a proposta técnica. Não há autorização de novas consultas, implementação, testes escritores, migração, reset, worktrees ou deploy. Decisão editorial **ESLAB-D01** (evoluir acervo, U2 primeiro) permanece aprovada como direção.
+> **Estado (23/10/2026): P0 + COM-0 ENCERRADOS; COM-1 ENTREGUE POR ANÁLISE ESTÁTICA COM `DECISÕES PENDENTES`.** A PR #9 já foi integrada à `main` em `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`. O proprietário autorizou o COM-1 **somente de leitura**, recebeu [relatório COM-1](RELATORIO_COM1.md) e concordou em registrar as **cinco diretrizes de arquitetura** de [DECISOES_COM1.md](DECISOES_COM1.md). Essas diretrizes **não aprovam** seis tabelas `_v2`, migrações sugeridas, política detalhada de áudio, SQL concreto nem COM-2. A presente PR é apenas documental; **COM-1B** (fechar matriz SQL/continuidade EN/áudio) permanece proposta, não iniciada.
 >
 > Fonte: [relatório P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md) — parecer do Codex **PLANO SUFICIENTE**, obtido por leitura; [auditoria de conteúdo](../piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md); [política do curso laboratório](../../produto/CURSO_LABORATORIO_ES_A1.md); [plano desta composição](plan.md) e [tarefas](tasks.md).
 >
-> **Baselines distintas:** P0 auditou `cacbacb6b6c2e5308885f6174e660f8c9c23bd19` (PR #7). COM-0 verificou `df17c5d8adeb337ac886876183194e946b446a8a` (PR #8, somente documental). Confirmar SHA novamente em COM-1/etapas futuras. O ES `espanhol-a1-pessoal` (conteúdo 0.1.0/contrato 1.5) permanece no caminho pessoal compilado em worktrees locais; a versão publicada no Fly e schema remoto não foram inspecionados.
+> **Baselines de evidência:** P0 `cacbacb6...` (PR #7); COM-0 `df17c5d8...` (PR #8); COM-1 `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1` (PR #9). Confirmar `main` antes de execução futura. O ES `espanhol-a1-pessoal` (conteúdo 0.1.0/contrato 1.5) permanece no caminho compilado pessoal em worktrees locais; Fly e schema remoto não foram inspecionados. Os resultados QA/Revisor mencionados no COM-1 são **análise estática do desenho**, não execução funcional.
 
 ## 1. Problema, objetivo e escopo
 
@@ -45,6 +45,22 @@ O piloto pessoal possui políticas de **geração persistida e reset**, além de
 - **COMP-R11 — integração confirmada como pendente:** writer B1 e I7/I8 não verificam geração; lock do reset é por usuário, lock B1 por usuário/curso/lição. Unicidade B1 segue apenas `(user_id, course_id, lesson_id)`. O protocolo versionado e transacional permanece **não implementado**.
 
 **Gate:** COM-0 é **concluído somente por metadados locais**, com classificação `parcial/divergente`; o próximo trabalho proposto é **COM-1: desenho estático** baseado nessa evidência, sem banco/SQL executado. Não repetir COM-0 sem justificativa e nova autorização de acesso.
+
+## 2.2. COM-1 — desenho estático produzido; diretrizes aprovadas, decisões ainda abertas
+
+O [relatório COM-1](RELATORIO_COM1.md) propõe contexto imutável de operação com `G`, época local, revisão CAS, origem compilado/instalado, `contentVersion`, `definitionHash` e `operationId`. Ele separa **recibo imutável da operação** de **snapshot atual**: retry A depois de B não restaura snapshot antigo. Desenha lock de geração compartilhado, recuperação idempotente de ACK perdido antes do CAS, leituras e paginação com corte consistente (watermark, ordinal, manifesto de hashes e cursor vinculado), e escopo versionado B1. **Nada disso foi implementado ou testado**.
+
+O proprietário concordou com cinco **diretrizes de arquitetura** em [DECISOES_COM1.md](DECISOES_COM1.md):
+
+1. Preservar sem geração como **histórico**, sem atribuição automática de `G` ou nota atual; adoção seletiva exige critérios por objeto.
+2. Preservar a **continuidade funcional do piloto inglês** — não basta preservar os arquivos. **STOP de cutover** até existir caminho e testes EN.
+3. Registrar objetos de reset herdados com **proveniência indeterminada**, sem inventar aplicação histórica; convergir por migrações futuras novas e únicas.
+4. Manter acesso ao **áudio histórico** apenas para proprietários autorizados e não prometer revogação retroativa de URLs já assinadas; **reset permanece desabilitado** até política específica de acesso/revogação/expiração.
+5. Comparar **alterar tabelas existentes** e **seis tabelas privadas `_v2`** (ou solução híbrida) com matriz SQL por objeto, em vez de aceitar automaticamente a proposta mais extensa.
+
+A [MATRIZ_ALTERNATIVAS_SQL_COM1.md](MATRIZ_ALTERNATIVAS_SQL_COM1.md) é **preliminar**. Seus campos de PK/FK, colunas, privilégios, impacto EN, legado, autoria e testes **não foram ainda preenchidos exaustivamente com prova por tabela**. As seis tabelas `_v2` e cinco migrações citadas no relatório são **hipóteses de design, não decisões fechadas**.
+
+**Próximo gate proposto:** **COM-1B**, detalhar matriz por objeto/arquivos e selecionar alternativa justificada para posterior revisão do proprietário, sem consultas ao banco, sem novos arquivos de migração, sem SQL executado, sem worktrees e sem alterações no motor/ES/EN. O COM-1 encerrou com **`DECISÕES PENDENTES`**; autorizar COM-1B e sua futura execução dependerão de aprovação específica após esta PR.
 
 ## 3. Invariantes de autoridade e persistência
 
@@ -128,6 +144,6 @@ O **COM-0 já inspecionou por leitura de metadados do banco local** histórico/o
 
 **Em revisão nesta PR:** escolher esta arquitetura como **hipótese de trabalho para futuras implementações**, com invariantes e testes acima, **não aprovar a execução por merge documental**.
 
-**COM-0 já teve autorização própria restrita à leitura de metadados locais e foi encerrado.** Qualquer nova consulta (inclusive agregados de geração), acesso remoto, leitura de dados individuais, teste escritor, alteração de schema/grants/Storage ou mudança de rede requer nova autorização correspondente. O próximo desenho COM-1 será proposto apenas em documentação/análise estática; implementar SQL/código, criar worktrees, executar testes, abrir PR funcional/merge, migrar, resetar ou publicar exige gate específico.
+**COM-0 teve autorização própria de leitura local, já encerrada; COM-1 teve autorização para análise estática, também encerrada após entrega do relatório.** Qualquer consulta nova, inclusive agregados de geração, acesso remoto, leitura individual, teste escritor, alteração de schema/grants/Storage ou rede requer aprovação nova. **Próximo COM-1B apenas como futura proposta** para completar matriz por objeto, continuidade EN e áudio. Nenhum SQL/código, worktree, PR funcional, merge, migração, reset ou publicação está autorizado por esta PR documental.
 
-**Sequência atualizada:** registrar/mesclar relatório COM-0 → **solicitar autorização para COM-1 somente desenho estático** do estado local `parcial/divergente` (protocolo + plano SQL sem executar) → resolver decisões pendentes e autorizar separadamente consulta agregada de geração se indispensável → aprovar SQL/código e testes locais delimitados → QA/Revisor e PR funcional → autorização própria de merge/migração/deploy → fatia pedagógica U2 em demanda futura.
+**Sequência atualizada:** COM-0 documentado/mesclado → **COM-1 entregue e agora documentado em PR própria** (desenho estático, decisões técnicas pendentes) → **COM-1B**, se autorizado, fechar matriz SQL A/in-place versus B/_v2 versus C/híbrido, critérios de legado, continuidade EN e áudio histórico → revisão/decisão técnica específica → autorizar à parte SQL/código, testes locais e eventual consulta agregada de geração → QA/Revisor e PR funcional → merge/migração/deploy com permissões próprias → fatia pedagógica U2 em demanda posterior.

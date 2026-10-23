@@ -1,6 +1,6 @@
 # ES-A1 — Plano de composição segura motor + piloto pessoal
 
-**Estado em 23/10/2026: P0 concluído por leitura; COM-0 concluído com inspeção de metadados SQL local autorizada; COM-1 ainda não iniciado.** Fontes: [relatório P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), [relatório COM-0](RELATORIO_COM0.md), [spec](spec.md), [tarefas](tasks.md). O Codex classificou o Supabase local como **`parcial/divergente`**, sem alterar o banco. **Esta PR documenta o resultado, não autoriza implementação, nova consulta nem operação.** Baseline verificada no relatório COM-0: `df17c5d8adeb337ac886876183194e946b446a8a`; reconfirmar Git antes de qualquer tarefa futura.
+**Estado em 23/10/2026: P0 concluído por leitura; COM-0 concluído com metadados SQL locais; COM-1 entregou desenho estático com `DECISÕES PENDENTES`.** Fontes: [P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), [COM-0](RELATORIO_COM0.md), [COM-1](RELATORIO_COM1.md), [cinco diretrizes aprovadas para especificação](DECISOES_COM1.md), [matriz SQL preliminar](MATRIZ_ALTERNATIVAS_SQL_COM1.md), [spec](spec.md), [tarefas](tasks.md). O PostgreSQL local foi classificado `parcial/divergente` no COM-0; **nenhuma composição foi implementada**. Baseline estática do COM-1: `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`. Esta PR **somente documenta**, sem autorização de novas consultas, código, SQL, worktree, migração, reset ou deploy.
 
 ## O que preservar
 
@@ -19,9 +19,9 @@
 4. **Entregue:** [relatório COM-0](RELATORIO_COM0.md), com 21 SELECT Q01–Q21, cinco transações somente leitura, 20 registros de migração, objetos reset e B1 presentes, apenas B1 no histórico, constraint divergente e grant `TRUNCATE` remanescente. **Nenhuma correção realizada**; estado divergente exige desenho e autorização para qualquer alteração.
 5. Nenhum `supabase db push/pull` escritor, `migration repair`, reset, `ALTER`, `UPDATE`, `INSERT`, `DELETE`, `GRANT`, alteração de Storage ou migração em COM-0.
 
-## COM-1 — próximo gate PROPOSTO: desenho técnico estático, sem banco/código
+## COM-1 — desenho técnico entregue por análise estática; decisões detalhadas pendentes
 
-**Autorização COM-1 não está concedida por esta PR.** Quando autorizada, COM-1 poderá **ler código e documentação e produzir proposta** de contrato/protocolo/SQL; não acessar mais bancos (nem executar SELECT adicionais), alterar schema/configuração, criar worktrees nem implementar. **Congelar propostas** com base no [COM-0](RELATORIO_COM0.md):
+**COM-1 já foi autorizado separadamente e executado somente por análise de arquivos**, conforme [relatório](RELATORIO_COM1.md). Seu parecer foi **`DECISÕES PENDENTES`**: o protocolo foi desenhado, mas falta fechar matriz por objeto, continuidade do inglês, áudio histórico e opções in-place versus `_v2`. As diretrizes [COMP-AD01…05](DECISOES_COM1.md) foram aceitas como **premissas de revisão**, não como SQL/contratos finais. O detalhamento histórico abaixo deve ser lido como requisitos, **não como novo comando**. O COM-1 não acessou o banco, alterou worktrees ou executou código:
 - Identidades distintas `G`, época local, owner/curso/origem, `contentVersion`/`definitionHash`, sessão, tentativa/`operationId`, revisão CAS.
 - Writer B1 e reset usam mesma trava **por usuário**; validação da geração `G` e `resetting` na transação privilegiada. Helper `SECURITY DEFINER` com autoridade explícita e restrita, não confiar em `auth.uid()` do service_role.
 - Antes do CAS, recuperar recibo **idêntico e válido** sob geração/versão/owner; ACK perdido não cria novo efeito. Mesmo ID/payload divergente conflita.
@@ -35,6 +35,19 @@
 - **Convergência SQL por migrações novas e únicas**, sem renomear/marcar aplicados os originais; estado inesperado exige STOP.
 
 Contratos públicos, DDL, RLS/grants, migrações locais e mudanças reais de código exigem escopo e permissão futuros específicos; plano não equivale a aprovação desses comandos.
+
+## COM-1B — próximo gate PROPOSTO: concluir a matriz e as escolhas de arquitetura
+
+**Não autorizado a executar por esta PR.** Depois de revisar/mesclar os documentos do COM-1, o proprietário poderá autorizar **investigação e proposta exclusivamente estáticas** para:
+
+1. Completar a [matriz SQL por tabela](MATRIZ_ALTERNATIVAS_SQL_COM1.md): esquema/FKs/PKs/grants de fonte comprovável, titular do dado, `G`/versão, RLS, legado, EN, testes e rollback. Comparar **in-place**, **`_v2`** e **híbrida** por objeto, com justificativa para cada escolha. Não criar seis tabelas `_v2` por padrão.
+2. Definir critérios de adoção ou exclusão **lógica** de dados legados sem geração; preservar o histórico físico e não inventar nota, evidência ou promoção à `G` atual.
+3. Demonstrar um **plano de continuidade funcional do inglês** para o mesmo banco compartilhado (antes/depois da desativação dos writers V1); não basta conservar bytes. Plano e cenários, **não testes executados** nesta etapa.
+4. Definir política segura de acesso owner-only a áudio histórico e novos downloads, com TTL de URLs previamente assinadas e papel do reset. Manter reset administrativo desabilitado enquanto não for viável.
+5. Especificar preflight de esquema local divergente, histórico não atribuído, consulta agregada do teto, `TRUNCATE`, lock/recibo/paginação; separar scripts ilustrativos de DDL proposta ainda não aprovada.
+6. Entregar conclusão **`DESENHO PRONTO PARA PEDIR EXECUÇÃO`** ou **`DECISÕES AINDA PENDENTES`** e delimitar autorizações SQL, local sintético, worktrees, code/QA e publicação.
+
+**Proibido:** banco local/remoto, credenciais, novas consultas (inclusive agregados), alterações de arquivos/código, migrações, reset, mudança de rede, testes escritores, criação de worktrees/PR funcional, custo pago ou deploy sem outra autorização.
 
 ## COM-2 — Composição controlada (futura autorização separada)
 
@@ -61,10 +74,11 @@ Continuar com o **mesmo curso pessoal**, sem duplicação de ambiente estável p
 | Passagem | Condição exigida |
 | --- | --- |
 | P0 → COM-0 | **Concluído por COM-0 local**, após PR #8 integrada e autorização própria; ambiente identificado e SELECTs somente leitura conforme relatório |
-| COM-0 → COM-1 | **COM-0 concluído `parcial/divergente`; COM-1 desenho estático depende de aprovação do proprietário após PR documental.** Permissões de COM-0 não se prorrogam |
-| COM-1 → COM-2 | Projeto SQL/autoridade/legacy, revogação de TRUNCATE e escopo B1 revisados; **autorização separada** de worktrees, alterações locais e testes escritores; consulta agregada de geração requer permissão própria |
+| COM-0 → COM-1 | **Concluído:** COM-1 foi autorizado e entregue por análise estática; relatório `DECISÕES PENDENTES`. Não herdou acesso ao banco do COM-0 |
+| COM-1 → COM-1B | **Próxima proposta:** depois de PR documental revista/mesclada e autorização específica de leitura de código, fechar matriz/legado/EN/áudio; sem novas consultas SQL |
+| COM-1B → COM-2 | Exigir desenho completo e aprovado **por objeto**, continuidade funcional EN, áudio/Storage, SQL/grants/TRUNCATE/legado e QAs definidos; novas autorizações separadas de worktrees, código, SQL e testes escritores |
 | COM-2 → COM-3 | Candidato reproduzível e negativos executáveis |
 | COM-3 → COM-4 | QA/Revisor e decisões de PR/merge/ambiente aprovadas independentemente |
 | COM-4 → P1 | Caminho pessoal ES validado e autorização editorial funcional específica |
 
-**Nenhuma etapa futura é automaticamente autorizada pela integração desta documentação.** O COM-0 não autoriza um segundo acesso ao banco, e o estado local não informa o estado do Supabase remoto. A U2 pessoal permanece não reformulada.
+**Nenhuma etapa futura é automaticamente autorizada pela integração desta documentação.** COM-0 foi leitura local já encerrada; COM-1 entregou somente desenho estático. A `main` não recebe migração/código por mesclar documentos, o schema remoto não foi examinado, o cutover EN não foi comprovado e a U2 pessoal permanece não reformulada.
