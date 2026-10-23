@@ -1,13 +1,13 @@
 # Destrava — decisões aprovadas e questões futuras
 
-Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-ciclo2/spec.md). As seis recomendações C2 foram aprovadas expressamente pelo proprietário. A autorização funcional posterior, em 23/10/2026, permite executar A2/B2 sobre `b2e94ce`, testar localmente sem destruição e publicar PR funcional após QA/Revisor. Merge, migração e publicação em produção permanecem proibidos.
+Atualização documental: 23/10/2026. Decisões anteriores C2 de [Ciclo 2](features/fase4-ciclo2/spec.md) permanecem válidas; o código A2/B2 foi **integrado pela PR #6**, e a política do laboratório ES-A1 pela **PR #5**, com `main` em `6bdd26c336ce50d59569a74581044fe3ddc89284`. Esses merges não autorizam deploy/migração nem novas tarefas automaticamente.
 
 ## Confirmado
 
 - Reconciliação: PR #2 integrada em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`.
 - Metodologia Do Chat ao Commit adotada na PR #1 e confirmada pelo proprietário; não criar processo paralelo.
 - PR #3 integrada; as decisões aprovadas constam na baseline `b2e94ce`. O proprietário autorizou depois a implementação no escopo do Ciclo 2.
-- Os requisitos de spec integrada e autorização funcional expressa foram satisfeitos. Isso não autoriza merge da PR funcional nem operações sensíveis fora do escopo.
+- Os requisitos de spec integrada e autorização funcional do Ciclo 2 foram satisfeitos; **o merge da PR #6 já ocorreu**. Não implica publicação operacional, migração, custos ou autorização para um ciclo novo.
 
 - A PR #4 integrou roadmap/matriz na main `4a9a5e918d345cf7a8d37d176068ea8ae4892810` durante esta execução. Seu delta é documental e não altera as seis decisões abaixo.
 
@@ -29,3 +29,22 @@ As seis alternativas ficaram decididas; a autorização expressa posterior permi
 Conciliar motor e pilotos ES/EN com cinco pacotes, homologar schema remoto e preparar rollback operacional são demandas próprias. Não bloquear artificialmente revisão documental por release futura nem autorizar deploy automático.
 
 Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). As seis decisões C2-A01/A02/B01/B02/B03/O01 foram aplicadas sem alterar as escolhas aprovadas.
+
+## Laboratório pessoal ES-A1 — decisão editorial aprovada
+
+| ID | Decisão | Limite |
+| --- | --- | --- |
+| **ESLAB-D01** | **Evoluir o acervo existente**, preservar bons materiais, reorganizar profundamente os percursos **U2 antes de U1** e priorizar feedback por erro, explicação recuperável e variedade significativa. A decisão foi confirmada pelo proprietário depois da [auditoria estática](features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md). | Aprovação da **direção editorial e documentação**, não de implementação, migração, reset, publicação ou merge funcional. |
+
+**Questões e bloqueios que exigem plano antes de execução:**
+
+- **ESLAB-B01:** conflito de identificador de migração `20261022000100` entre `learning_reset_generation.sql` do piloto e `interactive_segment_evidence.sql` do motor; sem verificar banco nem presumir correção por renomeação.
+- **ESLAB-B02:** reconciliar proteção da geração/reset do piloto com autorização/CAS e comprovantes B1 do motor, sem permitir escrita por aba antiga ou replay.
+- **ESLAB-B03:** decidir, a partir da auditoria e do contrato público, o menor mecanismo seguro de **feedback editorial por alternativa errada**, sem gabarito público antes da submissão. Se exigir novo contrato/schema, STOP.
+- **ESLAB-B04:** qual é a versão remota realmente em uso e o estado do schema/provedores? A auditoria estática não comprova; investigar só com permissão operacional delimitada.
+
+**Próxima tarefa recomendada:** P0 — relatório técnico **somente de leitura**, detalhado no [plano do laboratório](features/piloto-es-a1-pos-ciclo2/plan.md). Não iniciar automaticamente. O estudo pessoal pode tolerar perda de progresso experimental, mas operações destrutivas precisam de autorização expressa e escopo verificado.
+
+## Ideia futura — Língua Viva / Idioma nas Ruas
+
+**Conceito acolhido para estudo, sem implementação aprovada nesta demanda:** ensinar naturalidade, registros, intenções comunicativas e variantes regionais/contextuais; reutilizar particularidades regionais, role-play e missões. A autoria/verificação linguística pertence ao Language Foundry; incluir em U1/U2 somente em recorte editorial posteriormente aprovado. **Não adicioná-la a ESLAB-P0/P1 por inferência.**

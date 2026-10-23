@@ -1,6 +1,6 @@
 # Política de produto — Curso ES-A1 como laboratório vivo do Destrava
 
-**Decisão de produto do proprietário: 23/10/2026.** Estado deste registro: **proposta documental para integração**, sem autorização nesta PR para editar conteúdo, implementar recursos, mexer em banco ou publicar. Contexto: [Roadmap estratégico](ROADMAP_ESTRATEGICO.md), [matriz de maturidade](MATRIZ_MATURIDADE_RECURSOS.md), [preparação do próximo ciclo editorial](../features/piloto-es-a1-pos-ciclo2/spec.md).
+**Decisão de produto do proprietário: 23/10/2026; política integrada pela PR #5 em `6bdd26c`.** A auditoria estática posterior fundamenta a escolha editorial **ESLAB-D01: evoluir o acervo atual e reorganizar U2 antes de U1**. Nenhuma implementação, migração ou publicação é autorizada por esta política. Ver [roadmap](ROADMAP_ESTRATEGICO.md), [matriz de maturidade](MATRIZ_MATURIDADE_RECURSOS.md), [auditoria](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md) e [plano](../features/piloto-es-a1-pos-ciclo2/plan.md).
 
 ## 1. Princípio permanente
 
@@ -59,7 +59,7 @@ O aprendizado real e o desempenho do aluno orientam melhorias editoriais e de UX
 
 ## 6. Primeiro marco de atualização, após A2/B2
 
-**Pré-condição técnica cumprida:** o Ciclo 2 A2/B2 entrou na `main` via PR #6 (`370c742c7d2feabed6e9d05a7a94281342d9f1c5`) com homologação local relatada. A auditoria do curso pessoal real, a decisão de reorganizar/refazer as duas unidades e a sua atualização são **propostas futuras, ainda sem autorização de execução**; ver [Piloto ES-A1 pós-Ciclo 2](../features/piloto-es-a1-pos-ciclo2/spec.md).
+**A2/B2 integrados e auditoria pessoal concluída estaticamente.** A `main` contém o Ciclo 2 e a política ES-A1 (PRs #6/#5). O Codex investigou o curso compilado pessoal e recomendou **evoluir**, não substituir integralmente, as duas unidades; o proprietário **aprovou essa estratégia editorial (ESLAB-D01)**. **A próxima fase é P0, plano técnico de reconciliação de migrações e geração/B1, somente de leitura e ainda sem execução autorizada.** Consulte [relatório](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [spec](../features/piloto-es-a1-pos-ciclo2/spec.md) e [plano](../features/piloto-es-a1-pos-ciclo2/plan.md).
 
 O proprietário **autoriza discutir e planejar a reformulação completa das duas unidades**, sem exigir preservar exatamente a ordem antiga. A reescrita efetiva, mudanças de contratos e operações de publicação continuam fora desta PR documental.
 

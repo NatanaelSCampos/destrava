@@ -12,6 +12,8 @@ Um único rótulo `implementado` não basta para dizer `pronto para aluno real`.
 4. **Operação real:** dependências configuradas e saudáveis, permissão, cotas, esquema remoto, publicação e suporte efetivo ao usuário.
 5. **Cobertura no curso laboratório pessoal ES-A1:** recurso acessível e útil nas duas unidades, disponível com limites, bloqueado com causa explícita, não pertinente com justificativa ou ainda não auditado. A nova [política permanente](CURSO_LABORATORIO_ES_A1.md) estabelece auditoria após marcos relevantes; **não inferir cobertura atual dos arquivos pessoais pela fixture da `main`**.
 
+A cobertura do **curso pessoal real foi examinada estaticamente pelo Codex** em 23/10/2026: ver [relatório ES-A1](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md). Essa fonte apresenta um recorte editorial **compilado** de duas unidades e suas limitações, diferente do perfil I8 de cursos **instalados**. Nenhum recurso ganhou status operacional/produção apenas pela auditoria.
+
 Nunca promover o status em uma dimensão por evidência de outra. A matriz registra o *melhor estado comprovado nas fontes referidas*, não um SLA nem homologação de produção.
 
 ## 2. Recortes quantitativos que não devem ser confundidos

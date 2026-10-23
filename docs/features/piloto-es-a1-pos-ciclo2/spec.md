@@ -1,19 +1,36 @@
 # Próximo ciclo candidato — atualização do laboratório pessoal ES-A1 após A2/B2
 
-**Estado: proposta de especificação futura — NÃO IMPLEMENTAR AGORA.**
+**Estado (23/10/2026): AUDITORIA ESTÁTICA CONCLUÍDA; DECISÃO EDITORIAL APROVADA; IMPLEMENTAÇÃO E PUBLICAÇÃO NÃO AUTORIZADAS.**
 
 Decisão de produto: o curso pessoal de espanhol A1 com **duas unidades já usadas para estudos** deve refletir o **melhor conjunto funcional e honesto do motor em seu caminho de execução**. Ver política permanente: [Curso laboratório ES-A1](../../produto/CURSO_LABORATORIO_ES_A1.md).
 
-**Pré-condição técnica atendida (23/10/2026):** PR #6 A2/B2 integrada à `main` em `370c742c7d2feabed6e9d05a7a94281342d9f1c5`, com QA/Revisor GO no recorte local. **A auditoria das duas unidades e sua reformulação continuam não iniciadas e sem autorização de execução própria.** Antes da tarefa, reconfirmar baseline, trabalho local pendente e a versão efetivamente usada para estudar, compilada/instalada.
+**Base do relatório estático:** `main` `6bdd26c336ce50d59569a74581044fe3ddc89284`, PRs #6 e #5 integradas. O Codex auditou por leitura o piloto pessoal `espanhol-a1-pessoal` (`0.1.0`, contrato `1.5`) e recomendou **evoluir o acervo com reorganização profunda**, preservando o conteúdo útil. O proprietário **aprovou esta alternativa A** em conversa posterior. Ver [relatório de auditoria](RELATORIO_AUDITORIA.md). **Não houve teste de navegador, SQL, Fly nem edição de arquivos** nessa auditoria; esta aprovação não autoriza implementar, mesclar, migrar ou publicar.
 
-## 1. Escopo de descoberta obrigatório
+## 1. Descoberta estática realizada e reconfirmação obrigatória
 
-- Inspecionar os worktrees, commits, mudanças rastreadas/não rastreadas e os **arquivos reais das duas unidades pessoais**. No GitHub, a `main` contém fixtures e não representa automaticamente a versão completa do curso do aluno.
-- Descobrir se o curso em uso é **compilado, instalado ou ambos**; registrar a versão efetivamente estudada e o caminho de cada recurso. A2 testa sessões/diagnóstico **instalados**; B2 melhora narração da Aula Particular, inicialmente no caminho **compilado**. Não prometer que um instala automaticamente o outro.
-- Fazer inventário de capacidades (motor/configuração/integração), da variedade de exercícios por unidade, de regras de explicação, feedback por erro, IA/fala, dicionário, revisão, tempo e diagnóstico.
-- Em matriz local versionável, para cada recurso pedagogicamente aplicável registrar `motor`, `caminho`, `configuração`, `no-curso`, `evidência`, `limitação`, `motivo` e `ação`. **Não preencher por inferência**. Recursos ausentes devem ter justificativa verificável.
-- Identificar conteúdos preserváveis e lacunas antes de optar por reestruturação total. Pode ser preferível **refazer as duas unidades** se isso melhorar a aprendizagem e reduzir remendos, sem impor compatibilidade editorial desnecessária com os rascunhos.
+- **O Codex já inspecionou estaticamente** os worktrees e os arquivos das duas unidades: 20 worktrees/249 pendências preservados conforme o relatório (arquivos ignorados não integralmente inventariados). **Reconfirmar o inventário real ao iniciar uma etapa operacional**, sem tocar nos rascunhos dos especialistas. A `main` contém fixtures, não a versão completa do curso pessoal.
+- **O caminho de entrega encontrado no código foi compilado/embutido**; a versão usada na conta/Fly **não foi confirmada**. Confirmar ambiente e artefato antes de qualquer publicação. A2 testa sessões/diagnóstico **instalados**, B2 narração na Aula Particular **compilada**; não promover de um caminho ao outro por inferência.
+- **Inventário estático concluído** no [relatório](RELATORIO_AUDITORIA.md). Antes de implementar, validar o estado técnico do destino e as dependências realmente disponíveis; não inferir disponibilidade operacional de IA, gravação, SRS ou voz a partir do conteúdo.
+- Manter matriz de recursos com `motor`, `caminho`, `configuração`, `no-curso`, `evidência`, `limitação`, `motivo` e `ação`. **O relatório fornece a fotografia estática inicial**, não a confirmação do que está em produção; revisá-la a cada marco sem preenchimento por inferência.
+- **Decisão de produto aprovada — ESLAB-D01:** evoluir o acervo existente, preservar exemplos bons, reescrever itens problemáticos e **reorganizar profundamente a jornada**, primeiro U2 e depois U1. Não reescrever o banco inteiro por padrão nem impor compatibilidade editorial artificial.
 - Proteger trabalhos pendentes de ES/EN; nenhum `reset --hard`, `git clean`, `stash` automático, exclusão silenciosa ou substituição massiva sem manifesto e autorização.
+
+## 1.1. Evidências quantitativas e lacunas do acervo real
+
+O [relatório estático](RELATORIO_AUDITORIA.md) identifica **703 atividades / 119 lições**: U1 277 atividades e 48 lições; U2 426 atividades e 71 lições. São **255 múltiplas escolhas, 61 lacunas, 21 ordenações, 47 escritas, 45 falas, 44 listenings, 24 verdadeiro/falso, 20 respostas curtas, 159 flashcards e 25 explicações**; há ainda 21 roteiros de Aula Particular, 64 avaliações fixas, 45 conceitos, 159 itens de léxico, duas missões e um roleplay.
+
+A **U2 coloca 78 múltiplas escolhas antes da primeira lacuna**; escrita aparece na lição 19, listening na 22, resposta curta na 47, cartões a partir da 50 e aulas particulares nas lições 59–70. A maior deficiência é a **sequência pedagógica**, não a inexistência de formatos.
+
+Há **517 campos de explicação**, sendo **101 mensagens** do tipo "Confira o contexto", e o caso real `En mi calle hay ___ tiendas` com `mucha/muchas/muchos` ilustra feedback que não esclarece concordância. Os **119 objetivos de lição repetem o título**; avaliações finais reutilizam itens de prática, com sobreposição do diagnóstico U1 e final. O acervo contém bons contrastes e correções que justificam preservação seletiva.
+
+**Confiança:** contagens e observações foram relatadas por Codex em investigação estática de worktrees locais. Não foram reproduzidas no GitHub ou em navegador por esta atualização documental. O curso completo não está integrado à `main`.
+
+## 1.2. Dois STOPs técnicos antes da composição motor/piloto
+
+- **ESLAB-B01 — colisão de identificador de migração:** o piloto local e o motor têm arquivos diferentes sob `20261022000100` (`learning_reset_generation.sql` versus `interactive_segment_evidence.sql`). **Não** renomear arquivos, marcar versões como aplicadas, migrar, resetar ou tocar banco antes de um plano de reconciliação com histórico/schema do destino autorizado.
+- **ESLAB-B02 — geração/autoridade B1:** o piloto protege abas de geração antiga; o novo escritor de evidências por segmento usa outro protocolo de lock/autoridade. Precisamos provar que não ocorrem replay, cross-generation write ou aprovação cruzada após composição. Não copiar componentes antigos nem promover flags globais de conclusão como recibos B1.
+
+Ambos são **riscos relatados pela leitura**, não provas de incidente em banco. A tarefa imediata recomendada é uma **reconciliação técnica exclusivamente de leitura** e proposta de plano, definida em [plan.md](plan.md); implementação depende de nova autorização e gates de QA.
 
 ## 2. Resultado pedagógico esperado
 
@@ -57,7 +74,11 @@ As duas unidades devem constituir uma **experiência de aprendizagem A1**, com o
 | **ESLAB-09** | Alterações de conteúdo e integração somente nos arquivos aprovados; pilotos EN preservados, sem movimento automático de outros worktrees |
 | **ESLAB-10** | Sem deploy, migração, reset, operação paga ou merge por inferência; retorno de STOP para mudanças públicas ou de segurança |
 
-## 4. Sequência proposta após a PR #6 integrada
+## 4. Sequência aprovada de priorização — execução ainda não autorizada
+
+O proprietário aprovou **A (evoluir acervo)**, em vez de reescrever tudo. A prioridade é **U2 primeiro**, validando uma fatia completa antes de aplicar o padrão ao restante. A ordem é: (P0) reconciliação técnica B01/B02 por leitura; (P1) mapa curricular/revisão editorial e um percurso vertical U2; (P2) evoluir toda U2; (P3) reorganizar U1; (P4) QA real, dogfooding e eventual publicação separada.
+
+Ver [plano](plan.md) e [tarefas](tasks.md).
 
 1. **Descoberta + decisão editorial:** auditar curso real, inventariar capacidades e lacunas; propor estrutura nova das duas unidades se for o melhor caminho.
 2. **Spec/planejamento aprovados:** detalhar paths, owners, critérios e alterações necessárias. Reusar o que já existe antes de criar contrato novo.
@@ -67,8 +88,8 @@ As duas unidades devem constituir uma **experiência de aprendizagem A1**, com o
 
 ## 5. Limites
 
-- O modelo de dados exato das duas unidades pessoais **não foi auditado neste documento**: repositório GitHub não expõe alterações ainda locais dos worktrees. Não alegar contagens/tipos por unidade pessoal a partir de fixtures do motor.
+- O acervo pessoal foi **inspecionado estaticamente pelo Codex**, conforme [relatório](RELATORIO_AUDITORIA.md); o GitHub não contém necessariamente os arquivos locais. A versão em execução na sua conta e o schema remoto não foram auditados. Não declarar esses estados como homologados.
 - Este ciclo não autoriza implementação imediata e não determina que todos os recursos estejam em todas as atividades.
 - O Language Foundry é responsável por qualidade/editorial de pacotes definitivos; o piloto pessoal pode validar pedagogia, mas não certifica automaticamente um curso público.
 - A aceitação de eventual perda de progresso **não autoriza** reset ou escrita em base remota sem confirmação de destino/escopo e autorização expressa da operação.
-- O primeiro marco é condicionado ao relatório A2/B2 e à avaliação de seus resultados; não executar em paralelo no mesmo código por conveniência.
+- A2/B2 e a auditoria estática já foram concluídos nos escopos relatados. **O próximo gate é P0 (plano de reconciliação de migrações e proteção de geração), sem executar alterações**; etapas editoriais/funcionais subsequentes aguardam autorização delimitada.

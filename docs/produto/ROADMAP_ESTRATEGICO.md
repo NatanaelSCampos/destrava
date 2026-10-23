@@ -1,6 +1,6 @@
 # Destrava — Roadmap estratégico do Learning Engine até o lançamento
 
-> **Estado: ROADMAP ESTRATÉGICO INTEGRADO NA PR #4; POLÍTICA DO CURSO-LABORATÓRIO EM REVISÃO NA PR #5.** Atualizado em 23/10/2026 com `main` `370c742c7d2feabed6e9d05a7a94281342d9f1c5` (A2/B2). Nenhum marco futuro recebe autorização funcional automaticamente.
+> **Estado: ROADMAP ESTRATÉGICO INTEGRADO NA PR #4 E POLÍTICA DO CURSO-LABORATÓRIO INTEGRADA NA PR #5.** Baseline verificada em 23/10/2026: `main` `6bdd26c336ce50d59569a74581044fe3ddc89284`. A auditoria estática ES-A1 foi concluída e a direção editorial de **evoluir o acervo, U2 primeiro** foi aprovada; P0 técnico e implementação ainda dependem de autorizações futuras.
 
 ## 1. Objetivo e princípio
 
@@ -26,6 +26,8 @@ O pacote público faz a fronteira: **o Foundry produz e atesta qualidade editori
 Estado dos 33 itens e das 44 capacidades: [Matriz de maturidade](MATRIZ_MATURIDADE_RECURSOS.md). Estado operacional breve: [Progresso do produto](../PROGRESSO_PRODUTO.md).
 
 **Dogfooding contínuo do produto:** o curso pessoal ES-A1 (duas unidades) é o [laboratório vivo do Destrava](CURSO_LABORATORIO_ES_A1.md). Após marcos relevantes, auditar o recurso no caminho real do aluno, atualizar o curso quando útil/disponível, testar pedagogia e registrar limitações. O laboratório pessoal **já existe**; não confundi-lo com o piloto com alunos reais de M9. Não exigir segundo curso para preservar dados experimentais.
+
+**Auditoria ES-A1 (23/10/2026):** [relatório](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [decisão e spec](../features/piloto-es-a1-pos-ciclo2/spec.md), [plano](../features/piloto-es-a1-pos-ciclo2/plan.md). O acervo pessoal contém 703 atividades e variedade de formatos, mas concentra reconhecimento em blocos; a ordem aprovada é **reconciliação técnica P0 → fatia vertical U2 → U2 completa → U1**. Os riscos de migração duplicada e geração/B1 são STOP antes de compor motor e piloto. **Sem nova autorização de implementação por este registro.**
 
 ## 3. Fluxograma de evolução
 
