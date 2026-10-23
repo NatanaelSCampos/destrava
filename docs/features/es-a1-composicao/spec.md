@@ -1,14 +1,14 @@
 # ES-A1 — Especificação proposta de composição segura do motor e piloto pessoal
 
-> **Estado (23/10/2026): DOCUMENTAÇÃO EM REVISÃO.** O proprietário autorizou **registrar P0 em PR documental**, não aprovou aqui implementação, desenho definitivo de banco, leitura de banco, criação de worktrees, testes com escrita, merge funcional, migração ou deploy. Decisão editorial **ESLAB-D01** (evoluir acervo, U2 primeiro) já aprovada e independente deste gate.
+> **Estado (23/10/2026): P0 E COM-0 CONCLUÍDOS EM SEUS ESCOPOS, COM-1 APENAS PROPOSTO.** PR #8 integrada à `main` em `df17c5d8adeb337ac886876183194e946b446a8a`. O Codex realizou **COM-0 somente leitura do Supabase local mediante autorização própria** e encontrou schema **`parcial/divergente`**; ver [relatório COM-0](RELATORIO_COM0.md). O proprietário autorizou apenas **esta PR documental** para registrar a evidência e atualizar a proposta técnica. Não há autorização de novas consultas, implementação, testes escritores, migração, reset, worktrees ou deploy. Decisão editorial **ESLAB-D01** (evoluir acervo, U2 primeiro) permanece aprovada como direção.
 >
 > Fonte: [relatório P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md) — parecer do Codex **PLANO SUFICIENTE**, obtido por leitura; [auditoria de conteúdo](../piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md); [política do curso laboratório](../../produto/CURSO_LABORATORIO_ES_A1.md); [plano desta composição](plan.md) e [tarefas](tasks.md).
 >
-> **Baseline auditada:** `main` `cacbacb6b6c2e5308885f6174e660f8c9c23bd19`, merge da PR #7. Verificar novamente os refs ao iniciar qualquer tarefa. Piloto ES `espanhol-a1-pessoal` (versão 0.1.0 / contrato 1.5) continua em worktrees locais, distinto da `main` e da publicação remota não verificada.
+> **Baselines distintas:** P0 auditou `cacbacb6b6c2e5308885f6174e660f8c9c23bd19` (PR #7). COM-0 verificou `df17c5d8adeb337ac886876183194e946b446a8a` (PR #8, somente documental). Confirmar SHA novamente em COM-1/etapas futuras. O ES `espanhol-a1-pessoal` (conteúdo 0.1.0/contrato 1.5) permanece no caminho pessoal compilado em worktrees locais; a versão publicada no Fly e schema remoto não foram inspecionados.
 
 ## 1. Problema, objetivo e escopo
 
-O piloto pessoal possui políticas de **geração persistida e reset**, além de conteúdo ES/EN, enquanto a `main` possui escritor privilegiado de **comprovantes B1**, sessões/diagnóstico A2 e narração B2. Copiar arquivos em bloco entre worktrees viola invariantes de segurança e pode regredir funcionalidades. Existem **duas migrações SQL diferentes com a versão `20261022000100`**, histórico efetivamente aplicado desconhecido.
+O piloto pessoal possui políticas de **geração persistida e reset**, além de conteúdo ES/EN, enquanto a `main` possui escritor privilegiado de **comprovantes B1**, sessões/diagnóstico A2 e narração B2. Copiar arquivos em bloco entre worktrees viola invariantes de segurança e pode regredir funcionalidades. Existem **duas migrações SQL diferentes com a versão `20261022000100`**. O **COM-0 identificou no banco local objetos de ambas**, mas o histórico local registra **somente `interactive_segment_evidence`**, com divergência de constraint e privilégios; o histórico/proveniência reais do reset continuam indeterminados. Não inferir o estado do remoto a partir do local.
 
 **Objetivo futuro:** permitir que o mesmo curso pessoal ES seja executado sobre o motor atual, com autorização, identidade, geração, versão, provas e persistência corretas, sem curso pessoal duplicado para preservar histórico. O EN, versões anteriores e worktrees não podem ser danificados por composição automática.
 
@@ -25,14 +25,26 @@ O piloto pessoal possui políticas de **geração persistida e reset**, além de
 
 | ID | Achado P0 | Evidência/limite |
 | --- | --- | --- |
-| **COMP-R01** | Piloto e motor possuem migrações diferentes com ID `20261022000100` | Arquivos lidos localmente pelo Codex; **nenhum histórico/schema atual de destino consultado** |
+| **COMP-R01** | Piloto e motor possuem migrações diferentes com ID `20261022000100` | **COM-0 local por SELECT:** ambos os conjuntos de objetos existem, mas 20 entradas de histórico registram só a migração B1 para essa versão. Proveniência do reset desconhecida; remoto não consultado |
 | **COMP-R02** | Piloto usa lock por usuário (seed `731984`), geração consultada após lock; B1 usa lock por usuário+curso+lição e RPC sem geração | Código comparado; corrida **modelada, não reproduzida em SQL** |
 | **COMP-R03** | Rota B1 devolve comprovante já existente antes da RPC transacional | Código observado; precisa validação de geração/contexto também nesse caminho |
 | **COMP-R04** | Hash B1 inclui definição + pacote inteiro + idioma; unicidade histórica por usuário/curso/lição | Edição da U2 pode alterar hash de sessão U1; **resultado no navegador não reproduzido** |
 | **COMP-R05** | Reset legado não abrange explicitamente dados privados I8 e seus leitores/replay | Escopo antigo insuficiente; procedimento administrativo canônico não identificado pelo P0 |
 | **COMP-R06** | Checkout ES/EN e motor divergiram, com mudanças reais a conciliar | Inventário Codex: 20 worktrees / 249 pendências; não é permissão para sobrescrevê-las |
 
-**Não comprovado:** qual das migrações está aplicada no banco local/piloto/remoto, catálogo real de objetos/políticas e permissões, qual build/versão o usuário estuda, dispositivos físicos, qualidade acústica, provedores, comportamento efetivo do reset ou compatibilidade integrada no navegador. Não promover hipótese a fato.
+**Comprovado apenas no recorte de metadados local, conforme Codex:** presença de objetos reset e B1, permissões/constraints/funções listadas no [COM-0](RELATORIO_COM0.md). **Ainda não comprovado:** origem e ordem do reset, equivalência exata da geração, schema e histórico remotos, valores reais de geração, build/versão estudada no Fly, teste de exploração, dispositivos, provedor, reset funcional ou composição no navegador. Não promover metadados a homologação de execução.
+
+## 2.1. Descobertas COM-0 — local `parcial/divergente`
+
+[Relatório recebido do Codex](RELATORIO_COM0.md): inspeção em 23/10/2026, cinco transações `REPEATABLE READ READ ONLY` encerradas com `ROLLBACK`, 21 consultas SELECT Q01–Q21 de metadados (sem leitura de respostas/áudios/progresso individual).
+
+- **COMP-R07 — constraint de geração:** no banco local `generation >= 0`; migração do piloto declara **também limite superior `9007199254740991`**. Dados de geração fora do limite **não** foram consultados. Verificação agregada mínima exige autorização específica; não alterar constraint por inferência.
+- **COMP-R08 — grants `TRUNCATE`:** `anon` e `authenticated` possuem privilégio `TRUNCATE` nas sessões interativas. RLS não restringe `TRUNCATE`. **Revisar e projetar revogação explícita/testes de privilégios** no desenho de segurança, sem inferir exploração HTTP ou executar revogação neste ciclo.
+- **COMP-R09 — rede:** o mapeamento do PostgreSQL publicado por Docker permite bind em `0.0.0.0` e `::`; a conexão usada foi local. **Exposição real não foi testada.** Avaliar plano de restrição à interface local por autorização operacional posterior; não alterar rede por este registro.
+- **COMP-R10 — objetos de proteção:** 66 políticas restritivas em 22 tabelas públicas e três políticas de Storage; as **21 RPCs I7/I8/B1** examinadas são `SECURITY DEFINER`, `search_path` vazio e execução restrita a `service_role` entre papéis de aplicação testados por metadados. Essas propriedades são **estados de catálogo**, não prova de ausência de corrida no escritor.
+- **COMP-R11 — integração confirmada como pendente:** writer B1 e I7/I8 não verificam geração; lock do reset é por usuário, lock B1 por usuário/curso/lição. Unicidade B1 segue apenas `(user_id, course_id, lesson_id)`. O protocolo versionado e transacional permanece **não implementado**.
+
+**Gate:** COM-0 é **concluído somente por metadados locais**, com classificação `parcial/divergente`; o próximo trabalho proposto é **COM-1: desenho estático** baseado nessa evidência, sem banco/SQL executado. Não repetir COM-0 sem justificativa e nova autorização de acesso.
 
 ## 3. Invariantes de autoridade e persistência
 
@@ -74,9 +86,9 @@ Duas migrações de origem com número `20261022000100`:
 | Somente B1 efetivo | Introduzir geração e adaptar o writer e leitores em novas versões |
 | Ambos completos | Não reaplicar originais; integrar apenas escopo/transação/leitura necessários |
 | Destino novo | Cadeia canônica versionada e validada desde a base, sem colisão |
-| Parcial, divergente ou ambíguo | **STOP.** Inventariar e obter decisão própria antes de reparo de histórico |
+| **Local COM-0: parcial/divergente conhecido** | **STOP operacional.** Projetar migração de convergência *nova/única* para esse estado identificado, com precondições estritas, verificação da constraint/privilégios e tratamento de proveniência não atribuída; só após revisão/autorização específica para SQL e testes locais. Se objetos divergirem do cenário identificado: STOP novamente |
 
-O inventário futuro autorizado deve verificar **histórico de migrações e objetos reais**, colunas, índices/FKs/cascatas, políticas RLS, grants/ACL, RPCs/overloads, proprietários, `SECURITY DEFINER`, `search_path`, dependências I8/Storage, dados legados e caminho de rollback. `IF NOT EXISTS` **não** comprova equivalência. É proibido inventar migrações aplicadas, aplicar uma sobre outra ou executar `migration repair` por inferência.
+O **COM-0 já inspecionou por leitura de metadados do banco local** histórico/objetos/colunas/constraints/índices/RLS/grants/RPCs/Storage; ver [relatório COM-0](RELATORIO_COM0.md). Antes de escrever SQL, **COM-1 deve confrontar o desenho com a fotografia de objetos já verificados, detalhar precondições e rollback**; valores de geração/dados legados não foram inspecionados e qualquer consulta agregada adicional exige autorização própria. A mesma inspeção de metadados não foi realizada no remoto. `IF NOT EXISTS` **não** comprova equivalência. É proibido inventar migrações aplicadas, aplicar uma sobre outra ou executar `migration repair` por inferência.
 
 **STOP de desenho:** definições exatas de helpers privilegiados, migração corretiva, formato/compatibilidade de payload e tratamento de dados sem geração requerem confronto com schema real + revisão de segurança e aprovação específica antes de SQL. Este documento não é a autorização de banco.
 
@@ -93,9 +105,9 @@ O inventário futuro autorizado deve verificar **histórico de migrações e obj
 
 | ID | Aceite — oráculo observável |
 | --- | --- |
-| **COMP-01** | Inventário verificável e autorizado de schema/histórico por ambiente, explicitando cenário real de migração; nenhuma equivalência inferida apenas por ID |
-| **COMP-02** | Versões SQL novas e únicas, convergência correta em reset-only, B1-only, ambos, bootstrap limpo; estado parcial falha com STOP |
-| **COMP-03** | Auth/MFA/RLS/grants: anônimo, outra conta e AAL incorreto não acessam sessão, comprovante ou RPC; DML direto segue bloqueado |
+| **COMP-01** | Inventário autorizado de schema/histórico com **local classificado `parcial/divergente` por COM-0** (20 versões, ambos os conjuntos de objetos, apenas B1 no histórico, constraint divergente); outro destino requer leitura autorizada própria |
+| **COMP-02** | Versões SQL futuras **novas/únicas**, plano de convergência verificável para **estado local `parcial/divergente` explicitamente reconhecido**, mais reset-only/B1-only/ambos/novo em QA; **qualquer divergência inesperada deve parar**, nunca reparo de histórico implícito |
+| **COMP-03** | Auth/MFA/RLS/grants: anônimo/outra conta/AAL incorreto sem acesso; DML direto bloqueado; **revogação explícita de `TRUNCATE` e verificação de grants efetivos/herdados/default privileges**, sem alegação de exploração confirmada |
 | **COMP-04** | Writer B1 e reset compartilham lock de usuário e validam `G` na transação; writer antigo não atravessa reset após esperar |
 | **COMP-05** | Mesmo retry/ACK perdido retorna único comprovante/geração resultante, mesmo payload; ID igual com dados diferentes conflita |
 | **COMP-06** | CAS só para operação nova; concorrência com mesmo revision produz um vencedor e erro controlado, sem duplicação |
@@ -116,6 +128,6 @@ O inventário futuro autorizado deve verificar **histórico de migrações e obj
 
 **Em revisão nesta PR:** escolher esta arquitetura como **hipótese de trabalho para futuras implementações**, com invariantes e testes acima, **não aprovar a execução por merge documental**.
 
-**Exigem autorização própria e eventual STOP:** ambiente e credencial para leitura de schema/histórico (local/remoto separados); desenho de SQL/migração e dados legados; edição de código/contrato; testes que escrevam dados sintéticos; uso de worktrees e publicação de PR funcional; merge funcional; operação remota, reset, `migration repair`, Fly, serviços pagos ou storage.
+**COM-0 já teve autorização própria restrita à leitura de metadados locais e foi encerrado.** Qualquer nova consulta (inclusive agregados de geração), acesso remoto, leitura de dados individuais, teste escritor, alteração de schema/grants/Storage ou mudança de rede requer nova autorização correspondente. O próximo desenho COM-1 será proposto apenas em documentação/análise estática; implementar SQL/código, criar worktrees, executar testes, abrir PR funcional/merge, migrar, resetar ou publicar exige gate específico.
 
-**Sequência canônica:** revisar/mesclar documentação → autorizar leitura do schema/histórico do destino identificado → validar plano SQL sobre o estado real e autorizar implementação em isolamento → QA/Revisor e PR funcional → autorizar integração → somente depois habilitar fatia U2 e, separadamente, eventual deploy.
+**Sequência atualizada:** registrar/mesclar relatório COM-0 → **solicitar autorização para COM-1 somente desenho estático** do estado local `parcial/divergente` (protocolo + plano SQL sem executar) → resolver decisões pendentes e autorizar separadamente consulta agregada de geração se indispensável → aprovar SQL/código e testes locais delimitados → QA/Revisor e PR funcional → autorização própria de merge/migração/deploy → fatia pedagógica U2 em demanda futura.
