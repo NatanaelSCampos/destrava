@@ -2,15 +2,18 @@
 
 import type { BoardState } from "@/domain/interactive-lesson/runtime";
 import { LearningText } from "@/components/learning/text-presentation";
+import { Volume2 } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 
 /** Shared board renderer; board execution, cue order and persisted logical values stay unchanged. */
 export function LearningBoard({
   board,
   showTranslation,
+  onNarrate,
 }: {
   board: BoardState;
   showTranslation: boolean;
+  onNarrate?: (element: BoardState["elements"][number]) => void;
 }) {
   return (
     <div className="live-board-elements">
@@ -40,7 +43,10 @@ export function LearningBoard({
                     presentation={{ content: element.textPresentation }}
                     text={element.text}
                   />
-                  <SpeakButton text={element.text} label={`Ouvir ${element.text}`} />
+                  {onNarrate ? (
+                    <button type="button" className="speak-button" aria-label={`Ouvir ${element.text}`}
+                      onClick={() => onNarrate(element)}><Volume2 size={17} aria-hidden="true" /></button>
+                  ) : <SpeakButton text={element.text} label={`Ouvir ${element.text}`} />}
                 </div>
                 {(showTranslation || board.translationVisible) && element.translation && (
                   <small>

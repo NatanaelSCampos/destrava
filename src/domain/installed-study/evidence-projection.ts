@@ -1,3 +1,4 @@
+import { canonicalAdaptiveProgress } from "@/domain/assessments/adaptive-progress";
 import { createHash } from "node:crypto";
 import { z } from "zod";
 import { evaluateWritingText } from "@/engine/text/representation";
@@ -68,6 +69,8 @@ const sessionSchema = z
     wrong: z.number().int().nonnegative(),
     wordsReviewed: z.number().int().nonnegative(),
     plan: z.array(plannedSchema).max(1000),
+    cursor: z.number().int().nonnegative().optional(),
+    paused: z.boolean().optional(),
   })
   .strict();
 const writingSchema = z
@@ -202,7 +205,7 @@ export function sanitizeInstalledDraft(raw: unknown, resolved: ResolvedSession):
       .max(10000)
       .parse(parsed.sessions)
       .map((session) => {
-        if (!units.has(session.unitId)) throw new Error();
+        if (!units.has(session.unitId) || (session.cursor ?? 0) > session.plan.length) throw new Error();
         for (const item of session.plan) {
           if (item.kind === "conversation")
             throw new InstalledStudyError("INTEGRATION_UNAVAILABLE");
@@ -231,7 +234,7 @@ export function sanitizeInstalledDraft(raw: unknown, resolved: ResolvedSession):
     const activeSessionId = parsed.activeSessionId;
     if (
       activeSessionId !== null &&
-      (!z.uuid().safeParse(activeSessionId).success || !sessionIds.has(activeSessionId))
+      (!z.uuid().safeParse(activeSessionId).success || !sessionIds.has(activeSessionId) || sessions.find(s => s.id === activeSessionId)?.finishedAt)
     )
       throw new Error();
     const completed = z
@@ -255,6 +258,11 @@ export function sanitizeInstalledDraft(raw: unknown, resolved: ResolvedSession):
       writing,
       completedActivityIds: [...new Set(completed)],
       activeSessionId,
+      adaptiveProgress: canonicalAdaptiveProgress(parsed.adaptiveProgress, course, resolved.content.prepared.bundle.language, profile.variantId),
+      events: sessions.flatMap(session => [
+        { id: session.id, type: "lesson_started", itemId: session.id, createdAt: session.startedAt, metadata: { courseId: course.id, unitId: session.unitId } },
+        ...(session.finishedAt ? [{ id: session.id + ":finished", type: "lesson_finished", itemId: session.id, createdAt: session.finishedAt, metadata: { courseId: course.id, unitId: session.unitId } }] : []),
+      ]),
     };
   } catch (error) {
     if (error instanceof InstalledStudyError) throw error;

@@ -1,11 +1,13 @@
 # Destrava — progresso do produto e desenvolvimento
 
-**Atualizado documentalmente em 23/10/2026. Distinguir Git verificado, auditoria histórica, autorização de execução e implementação comprovada.**
+**Atualizado em 23/10/2026. Distinguir Git verificado, evidência histórica e proposta.**
 
 ## Baseline oficial
 
-- `origin/main`: `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d` (PR #3 integrada; conferido em 23/10/2026). A PR #2 havia integrado o motor com o commit `dccbdec` e árvore homologada `24b3119`.
-- O histórico de inventário dos 14 worktrees e respectivas pendências refere-se à preparação documental anterior (ver relatório); **não houve atualização nem revalidação dos worktrees Windows nesta PR de roadmap**.
+- Baseline documental atual da PR funcional: `4a9a5e918d345cf7a8d37d176068ea8ae4892810`, merge da PR #4. Código, contratos, migrações e critérios não mudaram desde a baseline inicial. O roadmap e a matriz permanecem preservados.
+
+- Baseline de execução confirmada em `origin/main`: `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`, após integração das decisões aprovadas pela PR #3. A PR #2 permanece integrada em `dccbdec`, sem alteração da release Fly por inferência.
+- Baseline confirmada antes de implementar. Checkouts históricos não foram atualizados automaticamente; o principal é usado temporariamente para os serviços protegidos e suas pendências são preservadas.
 - Planejamento: branch `docs/fase4-ciclo2-planejamento`, worktree `D:\Documents\destrava-worktrees\fase4-ciclo2-planejamento`, criado da main confirmada; sem env/deps copiados ou implementação.
 - Inventário e preservação: [relatório desta preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md).
 
@@ -17,20 +19,19 @@
 - R1P2 em `18a67c5`, incorporado pela PR #2: ausência de chave privada bloqueia aula; configuração completa continua condicional. [Relatório](features/pr2-r1p2/RELATORIO_EXECUCAO.md).
 - Merge integrou código na main, sem homologar Fly/banco remoto/bootstrap exato/pilotos. Release de cinco pacotes continua separada.
 
-## Próxima etapa funcional — autorização existente, conclusão não comprovada
+## Ciclo 2 — implementação e homologação local
 
-[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): seis escolhas de produto aprovadas e **integradas na PR #3**. O proprietário autorizou o início de A2/B2 em conversa posterior e recebeu o handoff ao Codex. **Não há PR funcional nem commit A2/B2 confirmado no GitHub nesta revisão**; a autorização não é prova de execução:
+[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): **seis decisões aprovadas e execução autorizada expressamente em 23/10/2026:**
 
 - A2: sessões pedagógicas e diagnóstico adaptativo real, pausa explícita+automática, recuperação de sessão/plano/etapa/tempo confirmados e respostas submetidas. Sem rascunhos incompletos ou novo diagnóstico fixo.
 - B2: apoio/alvo pelo curso, TTS por ação do aluno, uma reprodução ativa, mídia pausada e retomada por frase/âncora, fallback textual e provas B1 preservadas; sem realtime/avatar/avaliação acústica.
-- Investigação por leitura, nenhum teste de runtime novo. Final I8 não comprova diagnóstico; botão TTS não é controlador bilíngue completo.
+- A2/B2 implementados e testes locais concluídos: [relatório funcional](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). QA/Revisor GO no candidato local; publicação Git autorizada, sem merge ou publicação operacional.
 
 ## Próximos marcos
 
-1. **A2/B2:** aguardar entrega real do Codex Lead, com baseline, candidato, QA/Revisor, testes e PR funcional. Não inferir resultado a partir do prompt de autorização.
-2. **Roadmap e matriz:** revisar [roadmap estratégico](produto/ROADMAP_ESTRATEGICO.md) e [matriz de maturidade](produto/MATRIZ_MATURIDADE_RECURSOS.md), propostos na PR documental atual, sem transformar isso em autorização de novas fases.
-3. **Após o Ciclo 2:** atualizar a matriz com evidências reais, escolher a próxima integração vertical (SRS, IA, speech e Aula Particular instalada) e abrir spec/PR documental próprias.
-4. **Pré-lançamento:** reformulação visual ampla após estabilização dos fluxos principais; usabilidade essencial, acessibilidade e segurança são obrigatórias ao longo dos ciclos.
+1. Proprietário revisar a PR funcional com QA/Revisor GO e seus limites.
+2. Merge, release e outro ciclo dependem de autorização própria; nenhuma dessas operações é iniciada pela homologação.
+3. Preservar o roadmap e a matriz da PR #4; atualizar a maturidade com esta entrega somente em revisão documental própria. A próxima integração vertical e o redesign amplo dependem de especificação e autorização separadas.
 
 ## Norte estratégico proposto
 

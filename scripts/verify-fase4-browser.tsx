@@ -1,3 +1,6 @@
+import { writeFileSync, renameSync } from "node:fs";
+import { resolve } from "node:path";
+import { runNarrationBrowser, syntheticSpeechSetup } from "./ciclo2-narration-browser";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
@@ -13,6 +16,7 @@ import {
   localApi,
   localApp,
   localFetch,
+  workspace,
 } from "./local-environment.mjs";
 
 async function main() {
@@ -49,7 +53,14 @@ async function main() {
     bundle.resources.vocabulary,
   );
   const browser = await checkpointBrowser();
+  await browser.viewport(1280,900);
   let checks = 0;
+  let syntheticMedia: string | null = null;
+  if(process.env.C2_LOCAL_JOURNEY === "1") {
+    syntheticMedia=`c2-synthetic-${randomUUID()}.wav`;
+    const wav=Buffer.alloc(320044);wav.write("RIFF",0);wav.writeUInt32LE(wav.length-8,4);wav.write("WAVEfmt ",8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(16000,24);wav.writeUInt32LE(32000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write("data",36);wav.writeUInt32LE(wav.length-44,40);
+    writeFileSync(resolve(workspace,"public",syntheticMedia),wav);
+  }
   async function until(expression: string, label: string, attempts = 180, dismiss = false) {
     for (let count = 0; count < attempts; count++) {
       if (dismiss) await dismissOverlays();
@@ -85,6 +96,7 @@ async function main() {
     );
   }
   try {
+    if (process.env.C2_LOCAL_JOURNEY === "1") await browser.initScript(syntheticSpeechSetup);
     await browser.cookies([...cookies].map(([name, value]) => ({ name, value })));
     await browser.cookies([{ name: "destrava-active-course", value: bundle.course.id }]);
     await browser.navigate(`/live-classes?lesson=${encodeURIComponent(definition.id)}`);
@@ -92,6 +104,7 @@ async function main() {
     await browser.evaluate("document.querySelector('.page-tour-close')?.click()");
     await click("Iniciar aula");
     await browser.waitText("Próxima etapa");
+    if (process.env.C2_LOCAL_JOURNEY === "1") checks += await runNarrationBrowser(browser, click, until, "/"+syntheticMedia!);
     for (const segment of definition.segments) {
       if (segment.type === "checkpoint") break;
       if (segment.presentation) {
@@ -215,8 +228,16 @@ async function main() {
         ],
       }),
     );
+  } catch(error) {
+    await browser.screenshot("ciclo2-narration-failure.png");
+    console.error(JSON.stringify(await browser.evaluate("({path:location.pathname,alerts:[...document.querySelectorAll('[role=alert]')].map(e=>e.textContent),buttons:[...document.querySelectorAll('.live-page button')].map(e=>({text:e.textContent.trim(),disabled:e.disabled}))})")));
+    throw error;
   } finally {
     await browser.close();
+    if(syntheticMedia) {
+      assert(/^c2-synthetic-[a-f0-9-]+\.wav$/.test(syntheticMedia));
+      renameSync(resolve(workspace,"public",syntheticMedia),resolve(workspace,".tmp",syntheticMedia));
+    }
   }
 }
 main().catch((error) => {

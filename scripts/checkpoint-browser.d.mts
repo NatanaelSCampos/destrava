@@ -2,6 +2,7 @@ export function checkpointBrowser(options?: { appOrigin?: string }): Promise<{
   cookies(entries: { name: string; value: string }[]): Promise<void>;
   navigate(path: string): Promise<void>;
   evaluate(expression: string): Promise<unknown>;
+  initScript(source: string): Promise<void>;
   key(
     key: string,
     code?: string,

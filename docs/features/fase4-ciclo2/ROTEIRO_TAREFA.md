@@ -1,6 +1,6 @@
 # Roteiro proposto — execução futura do Ciclo 2
 
-**NÃO EXECUTAR nesta PR documental.** Complementa [spec](spec.md), [plan](plan.md) e [tasks](tasks.md), sem ampliar autorizações. Procedimento de agentes: [canônico](../../../DESTRAVA_MULTIAGENTE.md).
+**Execução funcional autorizada pelo proprietário em 23/10/2026, baseline `b2e94ce`.** Complementa [spec](spec.md), [plan](plan.md) e [tasks](tasks.md), sem ampliar autorizações. Procedimento de agentes: [canônico](../../../DESTRAVA_MULTIAGENTE.md).
 
 ## Handoff curto, somente após aprovação
 
@@ -21,7 +21,7 @@ Lead acrescenta baseline/commit, papel, workdir absoluto, paths, aceite, recurso
 - **C2-O01 aprovado:** o Lead comprova stack local/labels/workdir/loopback e relata políticas adicionais; bootstrap, migração, reset, exclusão ou mudança de políticas exigem autorização específica.
 - Usar perfil local isolado, loopback e contas sintéticas; não copiar backup remoto ou imprimir credenciais. Testes determinísticos sem provedores externos.
 - Reservar serviços sequencialmente; typecheck não concorre com geração de tipos/build. Encerrar só processos identificados do checkout.
-- Inspecionar harness antes de executar. Nome `local` não autoriza exclusão/reset/seed/migração. Esta preparação não concede tais operações.
+- Inspecionar harness antes de executar. Nome `local` não autoriza exclusão/reset/seed/migração. A autorização funcional mantém tais operações proibidas.
 
 ## Verificações planejadas, não executadas aqui
 
@@ -35,4 +35,6 @@ Interromper operação afetada e informar proprietário se houver decisão pende
 
 ## Encerramento
 
-Congelar candidato integrado, obter QA/Revisor e registrar comandos reais/saídas/limites. Preservar pilotos/pendências. Commit/push/PR funcional/merge/deploy dependem da autorização futura; publicação da PR documental não autoriza publicar A2/B2.
+Congelar candidato integrado, obter QA/Revisor e registrar comandos reais/saídas/limites. Preservar pilotos/pendências. Commit/push do candidato aprovado por QA/Revisor e abertura de PR funcional estão autorizados. Merge/deploy continuam proibidos; esta execução não inicia outro ciclo.
+
+Execução funcional: [relatório](RELATORIO_IMPLEMENTACAO.md). Os testes locais terminaram e QA/Revisor deram GO; commit/push/PR são limitados ao candidato conferido. Merge/deploy/migrações e novo ciclo continuam fora da autorização.

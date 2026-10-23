@@ -25,7 +25,14 @@ import type { GradeResult } from "@/domain/activities/grader";
 import type { InteractiveLessonDefinition, LessonAction } from "@/content/contracts";
 import { lessonActionSchema } from "@/content/contracts";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
-import { SpeakButton } from "@/components/audio/speak-button";
+import { SpeechPlaybackScope } from "@/components/audio/speak-button";
+import { claimAudioPlayback, speakText, type PlaybackHandle } from "@/lib/speak-text";
+import { textToSpeechLocale } from "@/content/language-variant";
+import { resolveLearningVariant } from "@/engine/variants/resolution";
+import {
+  NarrationController, narrationLine, transcriptNarration, teachingNarration,
+  type NarrationLine, type NarrationSnapshot, type TeachingNarration,
+} from "@/domain/interactive-lesson/narration-controller";
 import { useStudy } from "@/components/study-provider";
 import {
   applyBoardAction,
@@ -41,11 +48,7 @@ import { LearningBoard } from "./learning-board";
 import { LearningText, LearningTextarea } from "@/components/learning/text-presentation";
 
 type Media = Record<string, { src: string; type: string }>;
-type TeachingReply = {
-  message: string;
-  example: string;
-  translation: string;
-  followUp: string;
+type TeachingReply = TeachingNarration & {
   actions: LessonAction[];
 };
 const lessonUiError = (code: string) => {
@@ -72,7 +75,7 @@ export function InteractiveClassroom({
   curatedExamples: CuratedExample[];
 }) {
   const textAttrs = useTextPresentation();
-  const { course, language, submitAttempt, captureInteractiveLessonOwner, applyInteractiveLessonReceipt } = useStudy();
+  const { course, language, authUserId, state: studyState, submitAttempt, captureInteractiveLessonOwner, applyInteractiveLessonReceipt } = useStudy();
   const lesson = course.units
     .flatMap((unit) => unit.lessons)
     .find((item) => item.id === definition.lessonId);
@@ -99,6 +102,10 @@ export function InteractiveClassroom({
   const [showTranslation, setShowTranslation] = useState(false);
   const [lastAssessment, setLastAssessment] = useState<"correct" | "incorrect" | null>(null);
   const [mediaError, setMediaError] = useState(false);
+  const [narration, setNarration] = useState<NarrationSnapshot>({ status: "idle", line: null, message: "" });
+  const playbackRef = useRef<PlaybackHandle | null>(null);
+  const transientRef = useRef<HTMLAudioElement | null>(null);
+  const nativePlaybackRef = useRef<{ element: HTMLMediaElement; owner: PlaybackHandle } | null>(null);
   const engine = useRef(new TimelineEngine());
   const mediaRef = useRef<HTMLMediaElement | null>(null);
   const stateRef = useRef(state);
@@ -115,6 +122,68 @@ export function InteractiveClassroom({
     stateRef.current = state;
   }, [state]);
   const segment = definition.segments[state.segmentIndex];
+  const variantResolution = resolveLearningVariant(language, course, studyState.profile.variantId);
+  const targetLocale = variantResolution.status === "resolved" && language.speech.support.textToSpeech
+    ? textToSpeechLocale(language, variantResolution.variantId, course) : null;
+  const narrationContext = {
+    sourceLanguage: course.sourceLanguage ?? "", targetLanguage: course.languageCode,
+    targetLocale, targetFallbackAllowed: variantResolution.speechFallback === "same_language",
+  };
+  const transcriptLines = transcriptNarration(segment.presentation?.transcript ?? [], narrationContext);
+  const narrator = useMemo(() => {
+    // The identity invalidates callbacks on account/course/version/segment/variant changes.
+    void [authUserId, courseId, contentVersion, definition.lessonId, segment.id, targetLocale, studyState.profile.variantId];
+    return new NarrationController((line, callbacks) => {
+      let handle: PlaybackHandle | null = null;
+      const started = speakText(line.text, line.locale!, callbacks.error, undefined, {
+        fallbackAllowed: line.fallbackAllowed,
+        onHandle: (owner) => { handle = owner; },
+        onEnd: callbacks.end, onCancel: callbacks.cancel,
+        onSelection: (selection) => {
+          if (selection.fallback) setNarration({ status: "speaking", line,
+            message: `Áudio em ${selection.operationalLocale}: outra variante; use apenas como apoio.` });
+        },
+      });
+      return started ? handle : null;
+    }, setNarration);
+  }, [authUserId, courseId, contentVersion, definition.lessonId, segment.id, targetLocale, studyState.profile.variantId]);
+  useEffect(() => {
+    if (narration.status !== "speaking" || !narration.line?.id.startsWith("transcript:")) return;
+    const anchorMs = narration.line.anchorMs;
+    const board = engine.current.seek(anchorMs);
+    if (mediaRef.current) new HtmlMediaPresentationController(mediaRef.current).seek(anchorMs);
+    dispatch({ type: "SEEK", positionMs: anchorMs, board });
+  }, [narration.status, narration.line, dispatch]);
+  useEffect(() => () => {
+    narrator.cancel();
+    playbackRef.current?.cancel();
+    transientRef.current?.pause();
+    requestId.current += 1;
+  }, [narrator]);
+  const pausePlayback = useCallback(() => {
+    narrator.pause();
+    playbackRef.current?.cancel();
+    mediaRef.current?.pause();
+    transientRef.current?.pause();
+    if (stateRef.current.phase === "presenting") {
+      stateRef.current = { ...stateRef.current, phase: "paused" };
+      dispatch({ type: "PAUSE" });
+    }
+  }, [narrator, dispatch]);
+  useEffect(() => {
+    const hide = () => { if (document.visibilityState === "hidden") pausePlayback(); };
+    document.addEventListener("visibilitychange", hide);
+    window.addEventListener("pagehide", pausePlayback);
+    return () => {
+      document.removeEventListener("visibilitychange", hide);
+      window.removeEventListener("pagehide", pausePlayback);
+    };
+  }, [pausePlayback]);
+  function startNarration(lines: NarrationLine[]) {
+    pausePlayback();
+    narrator.start(lines);
+  }
+  function cancelPlayback() { pausePlayback(); narrator.cancel(); }
   const currentMedia = segment.presentation?.mediaId
     ? media[segment.presentation.mediaId]
     : undefined;
@@ -142,8 +211,23 @@ export function InteractiveClassroom({
       for (const action of effects) {
         if (action.type === "audio.play") {
           const asset = media[action.mediaId];
-          if (asset?.type === "audio") void new Audio(asset.src).play().catch(() => undefined);
+          if (asset?.type === "audio") {
+            const audio = new Audio(asset.src);
+            transientRef.current = audio;
+            const owner = claimAudioPlayback(() => { audio.pause(); });
+            playbackRef.current = owner;
+            dispatch({ type: "PAUSE" });
+            stateRef.current = { ...stateRef.current, phase: "paused" };
+            audio.onplaying = () => { if (!owner.isCurrent()) audio.pause(); };
+            audio.onended = () => { if (owner.isCurrent()) owner.release(); };
+            audio.onerror = () => { if (owner.isCurrent()) owner.release(); };
+            void audio.play().catch(() => owner.release());
+          }
         } else if (action.type === "activity.open" || action.type === "speech.request") {
+          narrator.cancel();
+          playbackRef.current?.cancel();
+          mediaRef.current?.pause();
+          transientRef.current?.pause();
           setPracticeActivityRef(action.activityRef);
           setSupportMode("practice");
           dispatch({
@@ -154,7 +238,7 @@ export function InteractiveClassroom({
         }
       }
     },
-    [media, segment, setPracticeActivityRef, setSupportMode, dispatch],
+    [media, segment, narrator, setPracticeActivityRef, setSupportMode, dispatch],
   );
 
   useEffect(() => {
@@ -317,13 +401,23 @@ export function InteractiveClassroom({
   }, [segment.id, segment.cues]);
   useEffect(() => {
     const element = mediaRef.current;
-    if (!element) return;
-    const player = new HtmlMediaPresentationController(element);
-    player.setPlaybackRate(speed);
-    if (Math.abs(player.currentTimeMs - state.positionMs) > 1000) player.seek(state.positionMs);
-    if (state.phase === "presenting") void player.play().catch(() => dispatch({ type: "PAUSE" }));
-    else player.pause();
-  }, [state.phase, state.segmentIndex, state.positionMs, speed, currentMedia?.src]);
+    const player = element ? new HtmlMediaPresentationController(element) : null;
+    player?.setPlaybackRate(speed);
+    if (state.phase !== "presenting") { player?.pause(); return; }
+    const owner = claimAudioPlayback(() => {
+      player?.pause();
+      if (stateRef.current.phase === "presenting") {
+        stateRef.current = { ...stateRef.current, phase: "paused" };
+        dispatch({ type: "PAUSE" });
+      }
+    });
+    playbackRef.current = owner;
+    player?.seek(stateRef.current.positionMs);
+    if (player) void player.play().catch(() => {
+      if (owner.isCurrent()) { owner.cancel(); dispatch({ type: "PAUSE" }); }
+    });
+    return () => { owner.release(); player?.pause(); };
+  }, [state.phase, state.segmentIndex, speed, currentMedia?.src]);
   useEffect(() => {
     if (
       state.phase !== "presenting" ||
@@ -337,6 +431,7 @@ export function InteractiveClassroom({
         lastClock.current = performance.now();
         return;
       }
+      if (stateRef.current.phase !== "presenting") return;
       const now = performance.now();
       const elapsed = Math.min(500, now - lastClock.current);
       lastClock.current = now;
@@ -353,11 +448,13 @@ export function InteractiveClassroom({
   }, [state.phase, segment, speed, handleTransient, mediaError]);
 
   function seek(positionMs: number) {
+    cancelPlayback();
     const board = engine.current.seek(positionMs);
     if (mediaRef.current) new HtmlMediaPresentationController(mediaRef.current).seek(positionMs);
     dispatch({ type: "SEEK", positionMs, board });
   }
   function next() {
+    cancelPlayback();
     const upcoming = definition.segments[state.segmentIndex + 1];
     const nextEngine = new TimelineEngine();
     nextEngine.load(upcoming?.cues ?? []);
@@ -369,6 +466,7 @@ export function InteractiveClassroom({
   }
   function intervene(mode: typeof supportMode) {
     if (!segment.allowInterruption || !["presenting", "paused"].includes(state.phase)) return;
+    cancelPlayback();
     setSupportMode(mode);
     setPracticeActivityRef(nextActivity ?? null);
     setTeaching(null);
@@ -380,6 +478,7 @@ export function InteractiveClassroom({
   }
   function resume() {
     if (!state.resumePoint) return;
+    cancelPlayback();
     const board = engine.current.seek(state.resumePoint.anchorMs);
     if (mediaRef.current)
       new HtmlMediaPresentationController(mediaRef.current).seek(state.resumePoint.anchorMs);
@@ -391,6 +490,7 @@ export function InteractiveClassroom({
     setSpeed((current) => (current === 1 ? 0.75 : 1));
   }
   function onMediaPosition(ms: number) {
+    if (stateRef.current.phase !== "presenting" || !playbackRef.current?.isCurrent()) return;
     const duration = segment.presentation?.durationMs ?? 0;
     const next = Math.min(ms, duration);
     const result = engine.current.tick(next);
@@ -436,6 +536,7 @@ export function InteractiveClassroom({
     } catch (error) {
       if (ownRequest === requestId.current)
         setTeaching({
+          unannotatedMessage: true,
           message: `${segment.explanation ?? "Revise o exemplo no quadro e tente novamente."} ${error instanceof Error ? error.message : ""}`,
           example: alternative?.text ?? "",
           translation: alternative?.translation ?? "",
@@ -525,7 +626,20 @@ export function InteractiveClassroom({
       </div>
     );
   return (
-    <div className="live-page">
+    <SpeechPlaybackScope.Provider value={(owner) => { playbackRef.current = owner; }}>
+    <div className="live-page" onPlayCapture={(event) => {
+      const element = event.target;
+      if (!(element instanceof HTMLMediaElement)) return;
+      if (element === mediaRef.current) {
+        if (!playbackRef.current?.isCurrent() || stateRef.current.phase !== "presenting") element.pause();
+        return;
+      }
+      if (nativePlaybackRef.current?.element === element && nativePlaybackRef.current.owner.isCurrent()) return;
+      pausePlayback();
+      const owner = claimAudioPlayback(() => element.pause());
+      nativePlaybackRef.current = { element, owner };
+      playbackRef.current = owner;
+    }}>
       <div className="live-heading">
         <div>
           <Link className="live-back" href={`/course/${course.slug}`}>
@@ -557,6 +671,8 @@ export function InteractiveClassroom({
               !mediaError ? (
                 segment.presentation.mode === "video" ? (
                   <video
+                    key={segment.id}
+                    onPlay={(event) => { if (!playbackRef.current?.isCurrent() || stateRef.current.phase !== "presenting") event.currentTarget.pause(); }}
                     ref={(node) => {
                       mediaRef.current = node;
                     }}
@@ -571,6 +687,8 @@ export function InteractiveClassroom({
                   />
                 ) : (
                   <audio
+                    key={segment.id}
+                    onPlay={(event) => { if (!playbackRef.current?.isCurrent() || stateRef.current.phase !== "presenting") event.currentTarget.pause(); }}
                     ref={(node) => {
                       mediaRef.current = node;
                     }}
@@ -613,7 +731,9 @@ export function InteractiveClassroom({
                   }
                 />
                 {activeCaption && (
-                  <SpeakButton text={activeCaption} label="Ouvir esta fala" withLabel />
+                  <button type="button" className="speak-button" onClick={() => startNarration(
+                    transcriptLines.filter((line) => line.anchorMs === captionLine?.startMs),
+                  )}><Volume2 size={17} aria-hidden="true" /> Ouvir esta fala</button>
                 )}
               </div>
             </div>
@@ -624,7 +744,10 @@ export function InteractiveClassroom({
                   {showTranslation ? "Ocultar tradução" : "Ver tradução"}
                 </button>
               </div>
-              <LearningBoard board={displayedBoard} showTranslation={showTranslation} />
+              <LearningBoard board={displayedBoard} showTranslation={showTranslation} onNarrate={(element) => {
+                if (element.kind === "comparison") return;
+                startNarration([narrationLine(`board:${element.id}`, element.text, element.textPresentation?.language, narrationContext)]);
+              }} />
             </div>
           </div>
 
@@ -633,13 +756,10 @@ export function InteractiveClassroom({
               <button
                 type="button"
                 className="live-play"
-                onClick={() =>
-                  state.phase === "presenting"
-                    ? dispatch({ type: "PAUSE" })
-                    : state.phase === "paused"
-                      ? dispatch({ type: "PLAY" })
-                      : undefined
-                }
+                onClick={() => {
+                  cancelPlayback();
+                  if (state.phase === "paused") dispatch({ type: "PLAY" });
+                }}
                 disabled={state.phase === "intervening"}
                 aria-label={state.phase === "presenting" ? "Pausar aula" : "Reproduzir aula"}
               >
@@ -664,6 +784,29 @@ export function InteractiveClassroom({
               >
                 {speed}×
               </button>
+            </div>
+          )}
+
+          {state.phase !== "idle" && (
+            <div className="live-support panel" aria-label="Narração da aula">
+              <p>A narração começa ao clicar em Ouvir. A retomada repete o início da frase; a apresentação fica pausada.</p>
+              {transcriptLines.length > 0 && <button type="button" className="secondary-button"
+                onClick={() => startNarration(transcriptLines)}><Volume2 size={17} aria-hidden="true" /> Ouvir apresentação</button>}
+              <button type="button" className="secondary-button" disabled={narration.status !== "speaking"}
+                onClick={() => { narrator.pause(); }}>Pausar narração</button>
+              <button type="button" className="secondary-button" disabled={!["paused", "text"].includes(narration.status)}
+                onClick={() => { pausePlayback(); narrator.resume(); }}>Retomar frase</button>
+              <button type="button" className="secondary-button" disabled={narration.status === "idle"}
+                onClick={() => narrator.cancel()}>Cancelar narração</button>
+              {narration.message && <p role="status">{narration.message}</p>}
+              {narration.line && <p lang={narration.line.language ?? undefined}>{narration.line.text}</p>}
+              {transcriptLines.length > 0 && <details><summary>Texto da apresentação</summary>
+                {transcriptLines.map((line) => <p key={line.id} lang={line.language ?? undefined}>
+                  {line.text}{" "}
+                  {line.locale ? <button type="button" onClick={() => startNarration([line])} aria-label={`Ouvir fala ${line.id.split(":")[1]}`}>Ouvir fala</button>
+                    : <small>Somente texto: idioma ou locale de voz não declarado com segurança.</small>}
+                </p>)}
+              </details>}
             </div>
           )}
 
@@ -735,7 +878,10 @@ export function InteractiveClassroom({
               {alternative && (
                 <div className="live-support-example" {...textAttrs()}>
                   {alternative.text}
-                  <SpeakButton text={alternative.text} label="Ouvir exemplo alternativo" />
+                  <button type="button" className="speak-button" aria-label="Ouvir exemplo alternativo"
+                    onClick={() => startNarration(teachingNarration({ message: "", example: alternative.text, translation: "", followUp: "" }, narrationContext))}>
+                    <Volume2 size={17} aria-hidden="true" /> Ouvir exemplo
+                  </button>
                   <small>
                     <LearningText textRole="source" text={alternative.translation} />
                   </small>
@@ -777,10 +923,10 @@ export function InteractiveClassroom({
               {(teaching?.example || alternative?.text) && (
                 <div className="live-support-example">
                   <span {...textAttrs()}>{teaching?.example || alternative?.text}</span>
-                  <SpeakButton
-                    text={teaching?.example || alternative?.text || ""}
-                    label="Ouvir exemplo"
-                  />
+                  <button type="button" className="speak-button" aria-label="Ouvir exemplo"
+                    onClick={() => startNarration(teachingNarration({ message: "", example: teaching?.example || alternative?.text || "", translation: "", followUp: "" }, narrationContext))}>
+                    <Volume2 size={17} aria-hidden="true" /> Ouvir exemplo
+                  </button>
                   <small>
                     <LearningText
                       textRole="source"
@@ -798,7 +944,11 @@ export function InteractiveClassroom({
                   />
                 </div>
               )}
-              {teaching?.followUp && <p className="live-follow-up">{teaching.followUp}</p>}
+              {teaching && <button type="button" className="secondary-button"
+                onClick={() => startNarration(teachingNarration(teaching, narrationContext))}>Ouvir resposta da professora</button>}
+              {alternative?.translation && <button type="button" className="secondary-button"
+                onClick={() => startNarration(teachingNarration({ message: "", example: "", translation: teaching?.translation || alternative.translation, followUp: "" }, narrationContext))}>Ouvir tradução</button>}
+              {teaching?.followUp && <p className="live-follow-up">{teaching.followUp}<small> Pergunta de acompanhamento disponível em texto.</small></p>}
               <button
                 type="button"
                 className="primary-button"
@@ -963,5 +1113,6 @@ export function InteractiveClassroom({
         </aside>
       </div>
     </div>
+    </SpeechPlaybackScope.Provider>
   );
 }

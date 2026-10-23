@@ -1,13 +1,15 @@
 # Destrava — decisões aprovadas e questões futuras
 
-Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-ciclo2/spec.md). As seis recomendações C2 foram aprovadas expressamente pelo proprietário. Esta aprovação cobre decisões de produto e sua documentação, não a execução, o merge, a migração ou a publicação.
+Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-ciclo2/spec.md). As seis recomendações C2 foram aprovadas expressamente pelo proprietário. A autorização funcional posterior, em 23/10/2026, permite executar A2/B2 sobre `b2e94ce`, testar localmente sem destruição e publicar PR funcional após QA/Revisor. Merge, migração e publicação em produção permanecem proibidos.
 
 ## Confirmado
 
 - Reconciliação: PR #2 integrada em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`.
 - Metodologia Do Chat ao Commit adotada na PR #1 e confirmada pelo proprietário; não criar processo paralelo.
-- A PR documental #3 foi integrada na `main` em `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`.
-- O proprietário autorizou a implementação A2/B2 posteriormente em conversa e recebeu um prompt ao Codex; **não há entrega funcional comprovada no GitHub** nesta revisão. Merge documental e autorização não equivalem a teste aprovado, merge de código, migração ou deploy.
+- PR #3 integrada; as decisões aprovadas constam na baseline `b2e94ce`. O proprietário autorizou depois a implementação no escopo do Ciclo 2.
+- Os requisitos de spec integrada e autorização funcional expressa foram satisfeitos. Isso não autoriza merge da PR funcional nem operações sensíveis fora do escopo.
+
+- A PR #4 integrou roadmap/matriz na main `4a9a5e918d345cf7a8d37d176068ea8ae4892810` durante esta execução. Seu delta é documental e não altera as seis decisões abaixo.
 
 ## Decisões do Ciclo 2 — APROVADAS pelo proprietário em 23/10/2026
 
@@ -20,8 +22,10 @@ Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-
 | **C2-B03** | Sem voz de locale compatível: **texto acessível** e aviso claro. Fala legada/mista não anotada: apenas texto, sem deduzir idioma por string. `followUp` exige papel/idioma explícito antes de TTS. | Não usar voz de idioma incorreto ou criar novo seletor de vozes por inferência. |
 | **C2-O01** | O Lead escolhe e comprova ambiente local isolado (workdir, Docker/projeto, labels, loopback, portas), com SQL/browser/build coordenados sequencialmente e diferenças reais de schema documentadas. | Não autoriza reset, bootstrap, migrações, alteração de políticas, deleções nem operações remotas. |
 
-As seis alternativas ficaram decididas; não há autorização implícita para **implementar A2/B2**. Novas decisões de negócio, mudanças de contrato/schema, custos ou operações sensíveis voltam ao proprietário.
+As seis alternativas ficaram decididas; a autorização expressa posterior permite **implementar A2/B2** no escopo aprovado. Novas decisões de negócio, mudanças de contrato/schema, custos ou operações sensíveis voltam ao proprietário.
 
 ## Release posterior
 
 Conciliar motor e pilotos ES/EN com cinco pacotes, homologar schema remoto e preparar rollback operacional são demandas próprias. Não bloquear artificialmente revisão documental por release futura nem autorizar deploy automático.
+
+Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). As seis decisões C2-A01/A02/B01/B02/B03/O01 foram aplicadas sem alterar as escolhas aprovadas.

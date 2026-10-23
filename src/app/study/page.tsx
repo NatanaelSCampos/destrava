@@ -57,6 +57,9 @@ function StudyContent() {
     startSession,
     updateActiveSessionDuration,
     finishSession,
+    checkpointStudySession,
+    progressLoadStatus,
+    syncError,
   } = useStudy();
   const actionSource = runtime ? "installed" as const : "compiled" as const;
   const actionContext = useMemo(() => ({ source: actionSource, permitted: ready }), [actionSource, ready]);
@@ -97,13 +100,31 @@ function StudyContent() {
   const [startError, setStartError] = useState("");
   const sessionUnit = course.units.find((entry) => entry.id === activeSession?.unitId) ?? unit;
   const plan = activeSession?.plan ?? planned;
-  const [index, setIndex] = useState(0);
+  const index = activeSession?.cursor ?? 0;
+  const paused = activeSession?.paused ?? false;
+  const [controlling, setControlling] = useState(false);
+  const [controlError, setControlError] = useState("");
+  const controlLock = useRef(false);
+  async function control(input: { cursor?: number; paused?: boolean }, finish = false) {
+    if (!activeSession || controlLock.current) return;
+    controlLock.current = true;
+    setControlling(true);
+    setControlError("");
+    try {
+      if (finish) await finishSession(elapsedRef.current);
+      else await checkpointStudySession(activeSession.id, { seconds: elapsedRef.current, ...input });
+    } catch (error) { setControlError(error instanceof Error ? error.message : "Não foi possível confirmar a sessão."); }
+    finally { controlLock.current = false; setControlling(false); }
+  }
+  const setIndex = (next: number | ((value: number) => number)) => {
+    void control({ cursor: typeof next === "function" ? next(index) : next });
+  };
   const [elapsed, setElapsed] = useState(0);
   const elapsedRef = useRef(0);
   const activeSessionId = activeSession?.id;
   const savedSeconds = activeSession?.durationSeconds ?? 0;
   useEffect(() => {
-    if (!activeSessionId) return;
+    if (!activeSessionId || progressLoadStatus === "failed") return;
     let seconds = savedSeconds;
     let lastSaved = Math.floor(seconds);
     let lastTick = performance.now();
@@ -119,11 +140,14 @@ function StudyContent() {
     };
     const tick = () => {
       const now = performance.now();
-      if (document.visibilityState === "visible" && seconds < MAX_STUDY_SESSION_SECONDS) {
+      if (!paused && document.visibilityState === "visible" && seconds < MAX_STUDY_SESSION_SECONDS) {
         seconds = advanceActiveStudySeconds(seconds, lastTick, now, lastInteraction, true);
         elapsedRef.current = seconds;
         setElapsed(Math.floor(seconds));
         if (seconds - lastSaved >= 30) checkpoint();
+      }
+      if (!paused && now - lastInteraction >= 300000) {
+        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
       }
       lastTick = now;
     };
@@ -132,11 +156,17 @@ function StudyContent() {
       lastTick = lastInteraction;
     };
     const visibilityChanged = () => {
-      if (document.visibilityState === "hidden") checkpoint();
+      if (document.visibilityState === "hidden") {
+        checkpoint();
+        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
+      }
       else markActivity();
       lastTick = performance.now();
     };
-    const pageHidden = () => checkpoint();
+    const pageHidden = () => {
+      checkpoint();
+      void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
+    };
     const interval = window.setInterval(tick, 1000);
     document.addEventListener("pointerdown", markActivity);
     document.addEventListener("keydown", markActivity);
@@ -155,7 +185,7 @@ function StudyContent() {
     };
     // The persisted duration is the starting point for this session. Checkpoints must not restart the timer.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSessionId, updateActiveSessionDuration]);
+  }, [activeSessionId, paused, progressLoadStatus, updateActiveSessionDuration, checkpointStudySession]);
   const item = plan[index];
   const activity =
     item?.kind === "activity"
@@ -182,6 +212,7 @@ function StudyContent() {
   if (!activeSession)
     return (
       <div className="study-page">
+        {syncError && <p role="alert">{syncError}</p>}
         {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
         <div className="page-heading">
           <div>
@@ -271,11 +302,10 @@ function StudyContent() {
             </p>
             <button
               className="study-start-button"
-              disabled={!plan.length || startingSession}
+              disabled={!plan.length || startingSession || progressLoadStatus === "failed"}
               onClick={async () => {
                 setStartingSession(true);
                 setStartError("");
-                setIndex(0);
                 const firstActivity = plan.find((entry) => entry.kind === "activity");
                 const planUnit = course.units.find((entry) =>
                   entry.lessons.some((lesson) =>
@@ -409,6 +439,7 @@ function StudyContent() {
 
   return (
     <div className="study-page">
+      {syncError && <p role="alert">{syncError}</p>}
         {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="study-running-head">
         <div>
@@ -429,14 +460,16 @@ function StudyContent() {
             <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
             {String(elapsed % 60).padStart(2, "0")}
           </div>
-          <small>O tempo pausa ao sair ou após 5 min sem interação.</small>
+          <small>{paused ? "Sessão pausada. O tempo está congelado." : "O tempo pausa ao sair ou após 5 min sem interação."}</small>
+          <button type="button" className="secondary-button" disabled={controlling}
+            onClick={() => void control({ paused: !paused })}>{paused ? "Retomar sessão" : "Pausar sessão"}</button>
+          {controlError && <p role="alert">{controlError}</p>}
+          {controlling && <p role="status">Confirmando sessão…</p>}
           <button
             type="button"
             className="text-link"
-            onClick={() => {
-              finishSession(elapsedRef.current);
-              setIndex(0);
-            }}
+            disabled={controlling}
+            onClick={() => void control({}, true)}
           >
             Encerrar sessão agora
           </button>
@@ -453,7 +486,7 @@ function StudyContent() {
           <div className="progress-track">
             <span style={{ width: `${Math.round((100 * index) / Math.max(1, plan.length))}%` }} />
           </div>
-          {itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
+          {paused ? <section className="panel" role="status">Retome a sessão para continuar a etapa confirmada.</section> : itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
             <ReviewQueue
               key={item.id}
               plannedItems={item.reviewItems}
@@ -475,22 +508,20 @@ function StudyContent() {
           <div className="lesson-controls">
             <button
               className="ghost-button"
-              disabled={index === 0}
+              disabled={index === 0 || paused || controlling}
               onClick={() => setIndex((current) => current - 1)}
             >
               <ChevronLeft size={17} /> Voltar
             </button>
             {index < plan.length - 1 ? (
-              <button className="primary-button" onClick={() => setIndex((current) => current + 1)}>
+              <button className="primary-button" disabled={paused || controlling} onClick={() => setIndex((current) => current + 1)}>
                 Próxima etapa <ChevronRight size={17} />
               </button>
             ) : (
               <button
                 className="primary-button"
-                onClick={() => {
-                  finishSession(elapsedRef.current);
-                  setIndex(0);
-                }}
+                disabled={controlling}
+                onClick={() => void control({}, true)}
               >
                 Encerrar aula <Check size={17} />
               </button>
@@ -502,6 +533,7 @@ function StudyContent() {
           {plan.map((entry, itemIndex) => (
             <button
               key={`${entry.kind}-${entry.id}`}
+              disabled={paused || controlling}
               onClick={() => setIndex(itemIndex)}
               className={`study-agenda-item ${itemIndex === index ? "active" : ""}`}
             >

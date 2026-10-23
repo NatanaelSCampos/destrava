@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Volume2 } from "lucide-react";
-import { speakText } from "@/lib/speak-text";
+import { speakText, type PlaybackHandle } from "@/lib/speak-text";
 import { textToSpeechLocale } from "@/content/language-variant";
 import { useStudy } from "@/components/study-provider";
 import type { ActivityVariant } from "@/content/variant-contracts";
 import { resolveLearningVariant } from "@/engine/variants/resolution";
 import { normalizedVoiceLocale } from "@/lib/speech-voice-preference";
 import { interfacePresentation } from "@/engine/presentation/text";
+
+/** Classroom ownership also covers buttons rendered by nested activities. */
+export const SpeechPlaybackScope = createContext<((handle: PlaybackHandle) => void) | null>(null);
 
 export function SpeakButton({
   text,
@@ -29,8 +32,10 @@ export function SpeakButton({
   rate?: number;
   variant?: ActivityVariant;
 }) {
-  const { state, language, course } = useStudy();
+  const { state, language, course, authUserId } = useStudy();
+  const registerPlayback = useContext(SpeechPlaybackScope);
   const [error, setError] = useState("");
+  const playback = useRef<PlaybackHandle | null>(null);
   const description = label ?? `Ouvir em ${language.identity.nativeName}: ${text.slice(0, 70)}`;
   const resolution = resolveLearningVariant(language, course, state.profile.variantId, variant);
   const declaredLocale =
@@ -46,6 +51,7 @@ export function SpeakButton({
       : resolution.status === "resolved"
         ? (locale ?? declaredLocale)
         : null;
+  useEffect(() => () => { playback.current?.cancel(); }, [course.id, authUserId, selectedLocale, text, state.profile.variantId]);
   if (!language.speech.support.textToSpeech || !selectedLocale) return null;
 
   return (
@@ -68,6 +74,7 @@ export function SpeakButton({
               () => setError("Não foi possível reproduzir o áudio."),
               rate,
               {
+                onHandle: (handle) => { playback.current = handle; registerPlayback?.(handle); },
                 fallbackAllowed: resolution.speechFallback === "same_language",
                 requestedVariant: resolution.variantId ?? undefined,
                 onSelection: (selection) =>
