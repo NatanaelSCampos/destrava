@@ -1,13 +1,27 @@
 # Destrava — decisões abertas
 
-Não preencher lacunas de produto com suposições. Documentar as opções e devolver ao proprietário quando a decisão for necessária.
+Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-ciclo2/spec.md). Recomendações técnicas não substituem escolhas do proprietário.
 
-## Prioridade para adoção do processo
+## Confirmado
 
-1. **Reconciliação com \`main\`:** quando integrar a branch de Fase 4, cuja baseline remota está adiante da \`main\`? Uma PR de reconciliação deve ter escopo e testes próprios.
-2. **Aprovação da documentação:** qual regra adotar para indicar que a spec saiu de \`PROPOSTA\` para \`APROVADA PARA EXECUÇÃO\` (merge autorizado, revisão formal, registro de decisão)?
-3. **Política de PR por tamanho/risco:** quando descrição e aceite na própria PR são suficientes, e quando exigir spec/plan/tasks separados? Proposta em [DO_CHAT_AO_COMMIT.md](DO_CHAT_AO_COMMIT.md).
-4. **Fase 4 Ciclo 2:** escopo A2/B2 ainda não autorizado para implementação. Confirmar prioridades, limites de provedores/voz e homologações obrigatórias antes do plano técnico final.
-5. **Release e pilotos:** como conciliar branches de motor e pilotos ES/EN sem incluir código experimental no lançamento errado? Não resolver por merge automático.
+- Reconciliação: PR #2 integrada em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`.
+- Metodologia Do Chat ao Commit adotada na PR #1 e confirmada pelo proprietário; não criar processo paralelo.
+- Tarefa atual autoriza sincronização e PR exclusivamente documental, não implementação ou merge.
+- Execução futura requer decisões/spec aprovadas e autorização expressa apontando para registro versionado. Merge desta proposta não inicia agentes automaticamente.
 
-O Lead não deve executar A2/B2, atualizar produção, decidir estas questões nem realizar merge por interpretar a abertura desta documentação como autorização.
+## Escolhas do proprietário para Ciclo 2
+
+| ID | Questão e alternativas | Recomendação para revisão, ainda não aprovada | Bloqueia |
+| --- | --- | --- | --- |
+| C2-A01 | Pausa só automática por visibilidade/inatividade ou botão explícito persistido? Retomar conserva plano/tempo ou também etapa? | Pausa/retomada explícitas, etapa/plano/tempo confirmados e tempo inativo congelado; delimitar campos internos antes de implementar | A2-T2 / A2-02 |
+| C2-A02 | Diagnóstico recupera respostas em andamento após reload ou somente resultado confirmado? Incluir diagnóstico fixo além do adaptativo principal? | Priorizar adaptativo real e resultado confirmado; decidir rascunho/matriz fixa separadamente, sem prometer persistência inexistente | A2-T3 e parte A2-02/07 |
+| C2-B01 | Apoio vem do curso ou aluno poderá sobrescrever? Narração por botão ou automática? | `course.sourceLanguage` e início sob demanda; sem nova preferência global nem dependência de autoplay | B2-T1/T2 / B2-01/03 |
+| C2-B02 | Retomar utterance ou reiniciar frase/âncora? TTS pausa mídia/timeline ou só silencia? Velocidade única? | Uma reprodução ativa, mídia pausada ao iniciar TTS e retomada explícita em frase/âncora; sem posição exata por palavra antes de testes | B2-T2/T3 / B2-03 |
+| C2-B03 | Fallback de apoio exato ou mesma língua? Tratamento de linha legada/mista e papel de followUp? Ampliar seletor de vozes de apoio? | Texto se idioma indeterminado, sem detecção por string; papel explícito de followUp; fallback mesma língua só se aprovado. Não criar tela nova de vozes por inferência | B2-T1/T4 / B2-02/04/05 |
+| C2-O01 | Qual checkout/stack local para integração e como tratar políticas extras do banco conhecido? | Lead comprova labels/workdir/loopback, agenda sequencial e testes retentivos. Bootstrap/schema/dados exigem autorização separada | G1 e SQL/HTTP/browser |
+
+Encerrar sessão mantém políticas declaradas; não se propõe domínio extra por tempo. Aula/IA/voz/SRS instalada continuam fora de escopo. As respostas deverão ser registradas e refletidas no aceite antes das tarefas dependentes; nenhuma recomendação foi aplicada ao runtime.
+
+## Release posterior
+
+Conciliar motor e pilotos ES/EN com cinco pacotes, homologar schema remoto e preparar rollback operacional são demandas próprias. Não bloquear artificialmente revisão documental por release futura nem autorizar deploy automático.

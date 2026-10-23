@@ -1,6 +1,6 @@
 # Destrava — metodologia "Do Chat ao Commit"
 
-**Status: proposta documental para revisão.** Adaptação ao repositório existente, sem alteração do código.
+**Status: metodologia adotada na PR #1 e confirmada pelo proprietário.** Atualização pós-merge da PR #2 em 23/10/2026; esta preparação altera somente documentação.
 
 ## Princípio
 
@@ -44,7 +44,7 @@ Interromper e registrar impedimento se surgir mudança de escopo ou de produto n
 
 ## Git, ambientes e implantação gradual
 
-A \`main\` remota está atrás da branch \`feat/fase4-first-parallel-cycle\` no momento da criação desta proposta. **Não fazer merge ou rebase automático da branch funcional na \`main\`**. A PR documental inicial usa a baseline recente, e a adoção definitiva na \`main\` exige reconciliação e autorização específicas.
+A reconciliação foi concluída pela PR #2 em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, com árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`. A main é a baseline oficial confirmada; checkouts locais podem continuar atrás e devem ser inventariados antes de atualização. Não fazer novos merges/rebases automaticamente. O planejamento A2/B2 está em [spec](features/fase4-ciclo2/spec.md), ainda sem autorização de implementação.
 
 O Fly.io e Supabase remoto não fazem parte do ciclo padrão. O ambiente local isolado e comandos protegidos permanecem normativos em [AGENTS.md](../AGENTS.md).
 
