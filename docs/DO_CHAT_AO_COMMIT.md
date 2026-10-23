@@ -44,7 +44,7 @@ Interromper e registrar impedimento se surgir mudança de escopo ou de produto n
 
 ## Git, ambientes e implantação gradual
 
-A reconciliação foi concluída pela PR #2 em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, com árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`. A main é a baseline oficial confirmada; checkouts locais podem continuar atrás e devem ser inventariados antes de atualização. Não fazer novos merges/rebases automaticamente. O planejamento A2/B2 está em [spec](features/fase4-ciclo2/spec.md), ainda sem autorização de implementação.
+A reconciliação foi concluída pela PR #2 em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`. A PR #3 integrou a documentação A2/B2 na `main` em `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`, HEAD verificado em 23/10/2026. Houve autorização de implementação pelo proprietário em conversa, mas **sem entrega de código A2/B2 comprovada no GitHub** nesta revisão. Checkouts locais podem continuar atrás e devem ser inventariados antes de atualização; não executar merge/rebase automático. Escopo em [spec](features/fase4-ciclo2/spec.md).
 
 O Fly.io e Supabase remoto não fazem parte do ciclo padrão. O ambiente local isolado e comandos protegidos permanecem normativos em [AGENTS.md](../AGENTS.md).
 

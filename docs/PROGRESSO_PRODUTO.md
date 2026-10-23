@@ -1,11 +1,11 @@
 # Destrava — progresso do produto e desenvolvimento
 
-**Atualizado em 23/10/2026. Distinguir Git verificado, evidência histórica e proposta.**
+**Atualizado documentalmente em 23/10/2026. Distinguir Git verificado, auditoria histórica, autorização de execução e implementação comprovada.**
 
 ## Baseline oficial
 
-- `origin/main`: `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, merge confirmado da PR #2; árvore `24b31199507e901bc9cacb9058756244bf4fa0c6`, igual à homologada em `18a67c5`.
-- Main não avançou desde esse merge na conferência desta preparação. Outros checkouts não foram atualizados automaticamente; principal permanece em `93ef6f2` com pendências preservadas.
+- `origin/main`: `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d` (PR #3 integrada; conferido em 23/10/2026). A PR #2 havia integrado o motor com o commit `dccbdec` e árvore homologada `24b3119`.
+- O histórico de inventário dos 14 worktrees e respectivas pendências refere-se à preparação documental anterior (ver relatório); **não houve atualização nem revalidação dos worktrees Windows nesta PR de roadmap**.
 - Planejamento: branch `docs/fase4-ciclo2-planejamento`, worktree `D:\Documents\destrava-worktrees\fase4-ciclo2-planejamento`, criado da main confirmada; sem env/deps copiados ou implementação.
 - Inventário e preservação: [relatório desta preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md).
 
@@ -17,9 +17,9 @@
 - R1P2 em `18a67c5`, incorporado pela PR #2: ausência de chave privada bloqueia aula; configuração completa continua condicional. [Relatório](features/pr2-r1p2/RELATORIO_EXECUCAO.md).
 - Merge integrou código na main, sem homologar Fly/banco remoto/bootstrap exato/pilotos. Release de cinco pacotes continua separada.
 
-## Próxima etapa — NÃO IMPLEMENTADA
+## Próxima etapa funcional — autorização existente, conclusão não comprovada
 
-[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): **seis escolhas de produto aprovadas, ainda em PR documental sem merge e sem autorização para implementação:**
+[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): seis escolhas de produto aprovadas e **integradas na PR #3**. O proprietário autorizou o início de A2/B2 em conversa posterior e recebeu o handoff ao Codex. **Não há PR funcional nem commit A2/B2 confirmado no GitHub nesta revisão**; a autorização não é prova de execução:
 
 - A2: sessões pedagógicas e diagnóstico adaptativo real, pausa explícita+automática, recuperação de sessão/plano/etapa/tempo confirmados e respostas submetidas. Sem rascunhos incompletos ou novo diagnóstico fixo.
 - B2: apoio/alvo pelo curso, TTS por ação do aluno, uma reprodução ativa, mídia pausada e retomada por frase/âncora, fallback textual e provas B1 preservadas; sem realtime/avatar/avaliação acústica.
@@ -27,10 +27,16 @@
 
 ## Próximos marcos
 
-1. Proprietário revisar PR documental com as [decisões já aprovadas](DUVIDAS.md) e autorizar separadamente o merge da especificação.
-2. Autorizar expressamente A2/B2; merge da proposta sozinho não inicia implementação.
-3. Lead estabilizar interfaces/ownership/isolamento e delegar conforme plano, até quatro agentes ativos.
-4. Executar só o autorizado e registrar candidato/comandos/resultados/limites antes de propor checkpoint/merge funcional.
+1. **A2/B2:** aguardar entrega real do Codex Lead, com baseline, candidato, QA/Revisor, testes e PR funcional. Não inferir resultado a partir do prompt de autorização.
+2. **Roadmap e matriz:** revisar [roadmap estratégico](produto/ROADMAP_ESTRATEGICO.md) e [matriz de maturidade](produto/MATRIZ_MATURIDADE_RECURSOS.md), propostos na PR documental atual, sem transformar isso em autorização de novas fases.
+3. **Após o Ciclo 2:** atualizar a matriz com evidências reais, escolher a próxima integração vertical (SRS, IA, speech e Aula Particular instalada) e abrir spec/PR documental próprias.
+4. **Pré-lançamento:** reformulação visual ampla após estabilização dos fluxos principais; usabilidade essencial, acessibilidade e segurança são obrigatórias ao longo dos ciclos.
+
+## Norte estratégico proposto
+
+- [Roadmap até piloto/lançamento](produto/ROADMAP_ESTRATEGICO.md): consolidação pedagógica instalada, IA/voz, Aula Particular aprofundada, Foundry/Admin, UI/UX e piloto.
+- [Matriz de maturidade](produto/MATRIZ_MATURIDADE_RECURSOS.md): 33 recursos pedagógicos (auditoria histórica) versus 44 capacidades técnicas do perfil instalado. O status desta matriz é **baseline documental para revisão**, não homologação nova.
+- **Decisão de priorização visual:** corrigir UX bloqueante/essencial a cada ciclo; reservar redesign completo e design system consolidado para o marco pré-lançamento, com auditoria por telas antes de implementar.
 
 ## Restrições persistentes
 

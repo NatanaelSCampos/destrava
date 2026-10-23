@@ -6,8 +6,8 @@ Atualização documental: 23/10/2026. Fonte de escopo: [Ciclo 2](features/fase4-
 
 - Reconciliação: PR #2 integrada em `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore homologada `24b31199507e901bc9cacb9058756244bf4fa0c6`.
 - Metodologia Do Chat ao Commit adotada na PR #1 e confirmada pelo proprietário; não criar processo paralelo.
-- A aprovação posterior autoriza registrar decisões de produto na PR documental, sem autorizar sua integração ou trabalho funcional.
-- A execução futura ainda exige especificação integrada na baseline e autorização expressa separada. Merge documental não inicia agentes.
+- A PR documental #3 foi integrada na `main` em `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`.
+- O proprietário autorizou a implementação A2/B2 posteriormente em conversa e recebeu um prompt ao Codex; **não há entrega funcional comprovada no GitHub** nesta revisão. Merge documental e autorização não equivalem a teste aprovado, merge de código, migração ou deploy.
 
 ## Decisões do Ciclo 2 — APROVADAS pelo proprietário em 23/10/2026
 
