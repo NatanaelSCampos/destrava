@@ -1,15 +1,15 @@
 # ES-A1 laboratório vivo — tarefas rastreáveis
 
-**Estado:** proposta documental, **nenhuma implementação autorizada**. Os resultados da **auditoria estática** estão em [RELATORIO_AUDITORIA.md](RELATORIO_AUDITORIA.md), o planejamento em [plan.md](plan.md), a spec em [spec.md](spec.md). Tarefas P0 são propostas **de investigação somente de leitura**; não são comandos para executar automaticamente.
+**Estado:** proposta documental, **nenhuma implementação autorizada**. Os resultados da **auditoria estática** estão em [RELATORIO_AUDITORIA.md](RELATORIO_AUDITORIA.md), o planejamento em [plan.md](plan.md), a spec em [spec.md](spec.md). Tarefas P0 **foram concluídas somente por leitura**, conforme [relatório P0](RELATORIO_P0.md). Nenhum banco ou runtime foi testado; próxima fase [COM-0](../es-a1-composicao/plan.md) requer autorização explícita de leitura do destino.
 
 | ID | Fase | Tarefa e entrega verificável | Situação |
 | --- | --- | --- | --- |
 | ESLAB-T00 | Descoberta | Inventariar worktrees pessoais, conteúdo e 249 pendências (relato Codex; hashes/arquivos ignorados com limites) | **Auditoria estática concluída, sem reprodução aqui** |
 | ESLAB-T01 | Decisão | Escolher **A: evoluir acervo**, U2 primeiro, preservar material válido | **Aprovado pelo proprietário** |
-| ESLAB-P0A | P0 | Mapear colisão `20261022000100` e propor reconciliação com condições de STOP | **Pendente — somente leitura** |
-| ESLAB-P0B | P0 | Comparar guardas de geração/reset com writer B1/CAS, definir negativos e ownership | **Pendente — somente leitura** |
-| ESLAB-P0C | P0 | Definir estratégia de composição motor/piloto e preservação ES/EN, auditando roteiros/versões | **Pendente — somente leitura** |
-| ESLAB-P0D | P0 | Entregar plano técnico, matriz de risco, testes, alterações requeridas e decisões do proprietário | **Pendente — sem escrita** |
+| ESLAB-P0A | P0 | Mapear colisão `20261022000100` e propor reconciliação com condições de STOP | **Concluído em leitura pelo Codex P0; não testado em runtime** |
+| ESLAB-P0B | P0 | Comparar guardas de geração/reset com writer B1/CAS, definir negativos e ownership | **Concluído em leitura pelo Codex P0; não testado em runtime** |
+| ESLAB-P0C | P0 | Definir estratégia de composição motor/piloto e preservação ES/EN, auditando roteiros/versões | **Concluído em leitura pelo Codex P0; não testado em runtime** |
+| ESLAB-P0D | P0 | Entregar plano técnico, matriz de risco, testes, alterações requeridas e decisões do proprietário | **Concluído em leitura pelo Codex P0; não testado em runtime** |
 | ESLAB-P1A | P1 | Aprovar objetivos observáveis e mapear percurso vertical U2 + reforços | **Futuro — nova autorização** |
 | ESLAB-P1B | P1 | Expor ajuda pública de conceito durante exercício, conservando estado sem gabarito | **Futuro — nova autorização** |
 | ESLAB-P1C | P1 | Melhorar correção editorial contextual `muchos/muchas` e alternativas `está/queda`, preservar avaliador privado | **Futuro — nova autorização** |

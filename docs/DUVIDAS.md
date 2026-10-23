@@ -43,7 +43,19 @@ Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/REL
 - **ESLAB-B03:** decidir, a partir da auditoria e do contrato público, o menor mecanismo seguro de **feedback editorial por alternativa errada**, sem gabarito público antes da submissão. Se exigir novo contrato/schema, STOP.
 - **ESLAB-B04:** qual é a versão remota realmente em uso e o estado do schema/provedores? A auditoria estática não comprova; investigar só com permissão operacional delimitada.
 
-**Próxima tarefa recomendada:** P0 — relatório técnico **somente de leitura**, detalhado no [plano do laboratório](features/piloto-es-a1-pos-ciclo2/plan.md). Não iniciar automaticamente. O estudo pessoal pode tolerar perda de progresso experimental, mas operações destrutivas precisam de autorização expressa e escopo verificado.
+**P0 técnico concluído apenas por leitura:** [relatório P0](features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md) com parecer PLANO SUFICIENTE. Riscos ESLAB-B01/B02 **não estão resolvidos no código ou banco**. Próxima proposta em revisão: [spec de composição](features/es-a1-composicao/spec.md), [plano COM-0→COM-4](features/es-a1-composicao/plan.md), [tarefas](features/es-a1-composicao/tasks.md). **COM-0 (consulta de schema/histórico do destino) depende de autorização específica**, separada da PR documental. Histórico experimental pode ser reconstruído, mas operações destrutivas continuam proibidas sem autorização explícita.
+
+## Propostas técnicas do P0 para revisão — NÃO autorizam implementação
+
+| ID | Desenho proposto | Condição pendente |
+| --- | --- | --- |
+| **COMP-D01** | Convergir SQL por versões **novas e únicas**; não reescrever históricos `20261022000100` | Confrontar com schema/histórico aplicado no ambiente explicitamente autorizado |
+| **COMP-D02** | Geração `G` e writer B1 sob lock compartilhado de usuário, validação na transação; retry e leitura também isolados | Projeto SQL/código, Auth/MFA/owner, privilégio e QA próprios |
+| **COMP-D03** | Escopo B1 versionado: usuário + G + curso + lição + `contentVersion` + `definitionHash` | Ajustar índices/RPCs/lookup após revisão de schema, sem atribuir recibos antigos ao novo |
+| **COMP-D04** | Reset administrativo com `operationId`, freeze e incremento idempotente de geração, falha fechada | Procedimento canônico atual ainda não identificado; desenho e dados/Storage exigem análise |
+| **COMP-D05** | Composição **seletiva** do acervo ES sobre motor atual com B1/A2/B2, EN intacto | Worktrees/SQL/código ainda não autorizados; P1 pedagógico só depois da integração segura |
+
+O relatório P0 não executou SQL, QA/browser, migração, reset nem testou concorrência em runtime. **"PLANO SUFICIENTE" é um parecer de planejamento, não um GO funcional ou operacional.**
 
 ## Ideia futura — Língua Viva / Idioma nas Ruas
 

@@ -12,7 +12,7 @@ O acervo contém 703 atividades, 159 flashcards, 21 roteiros e contrastes pedag�
 
 | Fase | Resultado e gate | Permissões que ainda faltam |
 | --- | --- | --- |
-| **P0 — Reconciliação técnica (PRÓXIMA)** | Inventário por leitura das divergências motor/piloto, migrações `20261022000100` e protocolos geração/B1; proposta de composição, plano de testes e ordem de alterações | Autorização para investigação no Codex. **Sem escrita no repo ou banco** |
+| **P0 — Reconciliação técnica (CONCLUÍDA EM LEITURA)** | [Relatório P0](RELATORIO_P0.md): PLANO SUFICIENTE, sem SQL/browser/runtime | O próximo gate é [COM-0](../es-a1-composicao/plan.md) com autorização de leitura do banco do ambiente identificado; nenhum código ou migração autorizado |
 | **P1 — Fatia vertical U2** | Mapa curricular revisado; um bloco curto de explicação → reconhecimento → recuperação → aplicação → revisão; ajuda pública acessível e feedback editorial contextual | Aprovação de escopo de código/conteúdo, necessidade de contrato e acesso de QA |
 | **P2 — U2 completa** | Reorganizar sequência das 71 lições usando o acervo útil; prática de reforço opcional, diagnóstico e avaliações sem vazamento de itens quando viável | PR funcional/editorial própria e QA |
 | **P3 — U1 completa** | Reaplicar padrão aos cumprimentos, apresentação, números/alfabeto, comunicação A1, variedade e avaliações | Nova aprovação de escopo e QA |
@@ -20,7 +20,9 @@ O acervo contém 703 atividades, 159 flashcards, 21 roteiros e contrastes pedag�
 
 A execução de P1–P4 **não começa** por merge do planejamento. Auditoria estática P0 também não é autorização para alterar codebase local nem schema.
 
-## P0 — investigação somente de leitura (próximo handoff)
+## P0 — investigação somente de leitura (histórico concluído; não repetir automaticamente)
+
+**P0 encerrado como investigação de leitura** conforme [relatório P0](RELATORIO_P0.md). O próximo trabalho proposto é a [composição segura](../es-a1-composicao/spec.md), começando por COM-0 **somente se** o proprietário autorizar leitura de schema/histórico do destino. Os comandos históricos abaixo não são handoff novo.
 
 O Lead deve usar `git worktree list --porcelain`, `git status --short`, `git log`, `git show` e diffs **sem modificar os checkouts**. Reconfirmar a linha de base e hashes nos worktrees reais. Não copiar `.env`, não mudar de branch, não executar scripts potencialmente escritores.
 
