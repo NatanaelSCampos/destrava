@@ -1,6 +1,6 @@
 # Fase 4 — Ciclo 2: A2 + B2
 
-**Estado: DECISÕES DE PRODUTO APROVADAS — DOCUMENTAÇÃO EM REVISÃO; IMPLEMENTAÇÃO NÃO AUTORIZADA.**
+**Estado: DECISÕES E ESCOPO INTEGRADOS PELA PR #3; HOUVE AUTORIZAÇÃO POSTERIOR DO PROPRIETÁRIO PARA A2/B2 EM CONVERSA, SEM RESULTADO FUNCIONAL AINDA COMPROVADO.**
 
 Baseline: `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore `24b31199507e901bc9cacb9058756244bf4fa0c6`, main após a PR #2. Origem preservada: seção G de [Fase 4 Ciclo 1](../../../DESTRAVA_FASE4_CICLO1.md). Este é o escopo canônico; [plano](plan.md), [tarefas](tasks.md) e [roteiro](ROTEIRO_TAREFA.md) o detalham sem criar outra metodologia.
 
@@ -19,7 +19,7 @@ Investigação estática; esta preparação não executou testes de produto. A2 
 
 **C2-B01:** apoio e alvo vêm do curso/variante; narração manual, sem autoplay. **C2-B02:** uma reprodução ativa; pausar mídia conflitante; retomada desde início de frase/âncora, sem precisão por palavra. **C2-B03:** texto se voz/idioma não estiver confiável; não detectar idioma por string; `followUp` tem papel/idioma explícito antes de falar. **C2-O01:** Lead comprova isolamento local; nenhuma permissão para migração, reset ou alteração de políticas.
 
-A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são **requisitos de produto aprovados**, mas esta PR ainda não está integrada e nenhuma implementação foi autorizada.
+A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são **requisitos de produto aprovados e versionados**, integrados na PR #3. Uma autorização de execução posterior foi dada pelo proprietário em conversa com handoff ao Codex; **esta especificação isoladamente não ordena trabalho nem certifica execução**.
 
 
 ## Invariantes compartilhados
@@ -85,7 +85,7 @@ A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são
 
 ## Decisões e autorização
 
-[DUVIDAS.md](../../DUVIDAS.md) registra C2-A01/A02/B01/B02/B03/O01 como **decisões aprovadas**. Os requisitos estão alinhados, mas **A2/B2 continuam NÃO AUTORIZADOS**: é necessário aprovar o merge documental e, separadamente, autorizar a implementação vinculada à spec versionada. Mudança nova de produto/schema/contrato exige STOP.
+[DUVIDAS.md](../../DUVIDAS.md) registra C2-A01/A02/B01/B02/B03/O01 como **decisões aprovadas**. A PR documental #3 foi mesclada e houve autorização separada em conversa para o Ciclo 2. A entrega funcional depende do Lead e da revisão de candidato real; **merge/deploy/migração/remoção de dados não foram autorizados**. Mudança nova de produto/schema/contrato exige STOP.
 
 ## Fora de escopo
 

@@ -18,9 +18,11 @@ Este índice organiza **onde encontrar decisões**, sem substituir contratos e r
 | Contrato para produtores externos | [contracts/package-v1/README.md](../contracts/package-v1/README.md) e schemas gerados |
 | Evidência da Fase 4 Ciclo 1 | [DESTRAVA_FASE4_CICLO1.md](../DESTRAVA_FASE4_CICLO1.md) |
 | Estado e próxima etapa | [PROGRESSO_PRODUTO.md](PROGRESSO_PRODUTO.md) |
+| Direção estratégica até lançamento (proposta documental) | [ROADMAP_ESTRATEGICO.md](produto/ROADMAP_ESTRATEGICO.md) |
+| Status real por recurso e integração instalada (baseline) | [MATRIZ_MATURIDADE_RECURSOS.md](produto/MATRIZ_MATURIDADE_RECURSOS.md) |
 | Processo de demanda | [DO_CHAT_AO_COMMIT.md](DO_CHAT_AO_COMMIT.md) |
 | Decisões pendentes | [DUVIDAS.md](DUVIDAS.md) |
-| Ciclo 2, proposta não autorizada | [spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md) |
+| Ciclo 2, documentos aprovados e execução autorizada em conversa (sem entrega funcional comprovada) | [spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md) |
 | Sincronização pós-merge | [relatório](features/fase4-ciclo2/RELATORIO_EXECUCAO.md) |
 
 ## Estados e hierarquia
