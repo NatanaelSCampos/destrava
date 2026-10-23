@@ -19,15 +19,15 @@
 
 ## Próxima etapa — NÃO IMPLEMENTADA
 
-[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md), em proposta para aprovação:
+[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): **seis escolhas de produto aprovadas, ainda em PR documental sem merge e sem autorização para implementação:**
 
-- A2: sessões pedagógicas e diagnóstico adaptativo real no curso instalado, reusando versão fixada/CAS/avaliador/persistência. Pausa/cursor/rascunho exigem decisões.
-- B2: apoio/alvo configuráveis e narração controlada, vozes/fallback e provas B1 preservadas; sem realtime/avatar/avaliação acústica.
+- A2: sessões pedagógicas e diagnóstico adaptativo real, pausa explícita+automática, recuperação de sessão/plano/etapa/tempo confirmados e respostas submetidas. Sem rascunhos incompletos ou novo diagnóstico fixo.
+- B2: apoio/alvo pelo curso, TTS por ação do aluno, uma reprodução ativa, mídia pausada e retomada por frase/âncora, fallback textual e provas B1 preservadas; sem realtime/avatar/avaliação acústica.
 - Investigação por leitura, nenhum teste de runtime novo. Final I8 não comprova diagnóstico; botão TTS não é controlador bilíngue completo.
 
 ## Próximos marcos
 
-1. Proprietário revisar PR documental, responder [DUVIDAS](DUVIDAS.md) e aprovar spec versionada.
+1. Proprietário revisar PR documental com as [decisões já aprovadas](DUVIDAS.md) e autorizar separadamente o merge da especificação.
 2. Autorizar expressamente A2/B2; merge da proposta sozinho não inicia implementação.
 3. Lead estabilizar interfaces/ownership/isolamento e delegar conforme plano, até quatro agentes ativos.
 4. Executar só o autorizado e registrar candidato/comandos/resultados/limites antes de propor checkpoint/merge funcional.

@@ -60,3 +60,9 @@ O primeiro preparo de diretórios de rascunho esbarrou no sandbox e foi repetido
 Sem reset/clean/stash automático/rebase/force-push, exclusão, migração local/remota, deploy, chamada paga, alteração de runtime/contratos ou pilotos. Commit/push/PR autorizados exclusivamente para este pacote documental; nenhum merge está autorizado.
 
 Commit/URL da PR documental constam da entrega para evitar autorreferência de SHA neste arquivo. Próximo passo do proprietário: revisar documentos, resolver decisões em DUVIDAS e autorizar separadamente a execução. Publicação e migrações permanecem outras demandas.
+
+## Adendo de decisões de produto aprovadas — 23/10/2026
+
+O proprietário aprovou C2-A01/A02/B01/B02/B03/O01 após a preparação descrita acima. Decisões registradas em [DUVIDAS.md](../../DUVIDAS.md) e refletidas em spec/plan/tasks/roteiro e progresso. O histórico anterior não foi reescrito: aprovação da escolha de produto não equivale a execução.
+
+Sem implementação, testes de produto adicionais, alteração de código, merge, migração ou deploy nesta atualização documental.

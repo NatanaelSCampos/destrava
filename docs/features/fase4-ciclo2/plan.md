@@ -1,6 +1,6 @@
 # Ciclo 2 — plano técnico proposto
 
-**Somente planejamento.** Aceite: [spec](spec.md). Baseline: `dccbdec` / árvore `24b3119`. Decisões: [DUVIDAS](../../DUVIDAS.md). Controles: [roteiro](ROTEIRO_TAREFA.md).
+**Somente planejamento — seis decisões de produto aprovadas, implementação não autorizada.** Aceite: [spec](spec.md). Baseline: `dccbdec` / árvore `24b3119`. Registro: [DUVIDAS](../../DUVIDAS.md). Controles: [roteiro](ROTEIRO_TAREFA.md).
 
 ## Investigação e reuso comprovado
 
@@ -25,13 +25,13 @@
 - A menção histórica de oito casos VM do callback real de início em `DESTRAVA_RUNTIME_INCREMENTO_8.md:90` não foi localizada nos scripts versionados. Localizar artefato antes de prometer reuso; caso contrário criar cobertura rastreável.
 - Reusar verificadores de runtime/instalações, sync, tempo, semântica de avaliações, jornada, variantes/vozes e B1. Cada evidência nova deve ser vinculada ao candidato realmente executado.
 - O piloto ES tem helper pequeno de idioma por linha e locale no botão; é referência parcial de leitura, sem lifecycle completo. Não copiar sala inteira de baseline antiga sobre B1.
-- Banco local conhecido contém políticas extras de geração ausentes da main. Não alegar bootstrap exato; preparação operacional tem decisão C2-O01 e autorização próprias.
+- Banco local conhecido contém políticas extras de geração ausentes da main. **C2-O01 aprovado:** Lead comprova checkout/stack/labels/loopback e relata divergência; preparação de schema, reset, migração ou alteração de políticas ainda exigem autorização própria.
 
 ## Abordagem recomendada
 
-**A2:** definir A01/A02; fixture de diagnóstico adaptativo/final distintos; reusar provider/planner/repositório/avaliador e exercitar navegação/HTTP reais. Corrigir só lacunas demonstradas por negativos após autorização. Se aprovado cursor/pausa/rascunho, preferir extensão interna mínima do estado com sanitização; schema/política/contrato público requer STOP. Provar nova leitura e contagens, não só HTTP 200.
+**A2 (C2-A01/A02 aprovados):** pausa explícita+automática, tempo inativo congelado e retomada de plano/etapa/tempo confirmados; diagnóstico adaptativo e final distintos. Reusar provider/planner/repositório/avaliador, recuperar respostas já submetidas e resultados confirmados, **sem rascunhos incompletos ou diagnóstico fixo novo**. Corrigir somente lacunas provadas após autorização. Estado interno mínimo com sanitização; schema/política/contrato público exige STOP. Provar nova leitura e contagens.
 
-**B2:** resolver idioma/papel antes da fala, reusando metadados/campos explícitos; adaptar reprodução com proprietário/generation e lifecycle testável. Fila/handle interno pequeno só se necessário. Reusar vozes/preferências/fallback; coordenar áudio transitório, mídia e timeline sem confundir relógio visual com posição acústica TTS. Eventos de reprodução não criam provas B1. Professor contextual/fallback usam a mesma política, testada sem provedor pago.
+**B2 (C2-B01/B02/B03 aprovados):** apoio/alvo por curso e variante, idioma/papel explícitos antes da fala; TTS **manual**, uma reprodução ativa, mídia conflitante pausada, retomada do início de frase/âncora. Reusar vozes/preferências/lifecycle e mecanismo de propriedade/generation; fallback textual quando voz ou idioma não confiável, sem reconhecimento por string. `followUp` precisa de papel explícito; sem novas preferências globais. Eventos de reprodução não criam provas B1. Testar sem provedor pago.
 
 | Alternativa | Decisão proposta |
 | --- | --- |

@@ -10,7 +10,7 @@ Lead acrescenta baseline/commit, papel, workdir absoluto, paths, aceite, recurso
 
 ## Antes da implementação
 
-1. Confirmar decisões e aprovação expressa de execução. Merge documental sozinho não basta.
+1. Confirmar as seis decisões **aprovadas** na spec integrada e **autorização funcional expressa separada**. Aprovação dessas decisões ou merge documental, isoladamente, não autoriza executar.
 2. Reconsultar main; inventariar índice/branches/worktrees/pendências e hashes. Não mover pilotos/branches ocupadas; sem reset hard, clean, stash automático ou force.
 3. Só agora criar worktrees de implementação, ownership sem sobreposição e contexto delimitado. Não compartilhar env/node_modules/cache por links.
 4. Revalidar baseline/delta e interfaces. Não integrar componente ES antigo sobre as provas B1 atuais.
@@ -18,7 +18,7 @@ Lead acrescenta baseline/commit, papel, workdir absoluto, paths, aceite, recurso
 ## Antes de banco/browser/build
 
 - Lead comprova checkout, Docker/projeto/labels, processos e portas. Runners devem passar integralmente; não relaxar guards para executar em novo worktree.
-- Resolver C2-O01: banco conhecido tem políticas extras; não comprova bootstrap exato da main. Preparação de schema/dados exige autorização própria.
+- **C2-O01 aprovado:** o Lead comprova stack local/labels/workdir/loopback e relata políticas adicionais; bootstrap, migração, reset, exclusão ou mudança de políticas exigem autorização específica.
 - Usar perfil local isolado, loopback e contas sintéticas; não copiar backup remoto ou imprimir credenciais. Testes determinísticos sem provedores externos.
 - Reservar serviços sequencialmente; typecheck não concorre com geração de tipos/build. Encerrar só processos identificados do checkout.
 - Inspecionar harness antes de executar. Nome `local` não autoriza exclusão/reset/seed/migração. Esta preparação não concede tais operações.

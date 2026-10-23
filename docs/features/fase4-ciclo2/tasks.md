@@ -6,8 +6,8 @@
 
 | ID | Dono futuro | Entrega | Conclusão exigida |
 | --- | --- | --- | --- |
-| G0 | Proprietário + Lead | Resolver C2-A01/A02/B01/B02/B03/O01 e ajustar aceite | Spec identificada por commit e execução expressamente autorizada |
-| G1 | Lead | Baseline, preservação, worktrees A2/B2/QA e checkout de integração | Após G0; isolamento de runners comprovado sem copiar env/deps ou alterar pilotos |
+| G0 | Proprietário + Lead | Confirmar seis decisões de produto já aprovadas, integrar documentação mediante autorização e aprovar escopo executável | Decisões registradas; **tarefa só concluída após spec integrada e autorização separada de implementação** |
+| G1 | Lead | Baseline, preservação, worktrees A2/B2/QA e stack local conforme C2-O01 | Após G0; comprovar workdir/labels/loopback/portas e preservar pilotos, sem migrar/resetar/alterar políticas sem autorização |
 | G2 | Lead + QA | Congelar interfaces/ownership/negativos; fixture instalada sintética com diagnóstico adaptativo e final distintos | Após G1; contrato existente validado, produtor independente do motor/Foundry operacional |
 
 ## A2
@@ -15,8 +15,8 @@
 | ID | Dono futuro | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
 | --- | --- | --- | --- |
 | A2-T1 | Implementador A2 + QA | Jornada início/encerramento; `scripts/verify-installed-runtime*`, fixture/produtor independente | G2; A2-01/03; contagem de sessões/eventos, plano e leitura nova; reproduzir negativo antes de corrigir lacuna |
-| A2-T2 | Implementador A2 | Pausa/retomada/reload conforme A01/A02; `src/app/study/page.tsx`, `src/components/study-provider.tsx`, `src/domain/study/study-state.ts` somente se necessário | A2-02; tempo/cursor/rascunho apenas aprovados; `session:verify`, `sync:verify`, visibilidade/inatividade |
-| A2-T3 | Implementador A2 + QA | Fixture/jornada de diagnóstico; produtor independente e runners/API somente se houver lacuna | A2-07; finalidade correta, final distinta, resultado canônico persistido; controles sem diagnóstico/incompatível |
+| A2-T2 | Implementador A2 | Botão de pausa+pausa automática; retomar plano/etapa/tempo confirmados após reload nos componentes existentes | A2-02; tempo inativo congelado, sem persistência de rascunhos incompletos; `session:verify`, `sync:verify` |
+| A2-T3 | Implementador A2 + QA | Fixture/jornada de diagnóstico adaptativo; produtor independente e runners/API apenas para lacunas comprovadas | A2-07; respostas submetidas/resultados confirmados persistem, final distinta, sem rascunhos ou novo diagnóstico fixo |
 | A2-T4 | Implementador A2 + QA | V1→V2, conta/curso, GET/POST/ACK perdido e retry; provider/repositório/installed-study apenas se necessário | A2-04/05/06; zero escrita após GET falho, pendência preservada e resposta antiga ignorada |
 | A2-T5 | QA + Lead | Jornada desktop/mobile browser/HTTP/SQL local autorizado | A2-01…08; evidência lida do banco e contagens; declarar emulação vs físico |
 
@@ -25,9 +25,9 @@
 | ID | Dono futuro | Tarefa e arquivos/áreas prováveis | Aceite / testes / evidência |
 | --- | --- | --- | --- |
 | B2-T1 | Implementador B2 + QA | Idioma/papel por metadados source/target/textPresentation; fixture não pessoal | G2; B2-01/04; apoio não PT-BR, alvo ES/EN/sintético, linha mista sem anotação textual |
-| B2-T2 | Implementador B2 | Adaptação de reprodução: `interactive-classroom`, `presentation-controller`, `speak-text`, `speak-button`; reusar seletor/preferências | B2-02/03 e B01/B02/B03; vozes compatíveis, catálogo vazio/tardio/falhas |
-| B2-T3 | Implementador B2 + QA | Corridas pausa/cancel/resume/interrupção/seek/troca/unmount | B2-03/06; callbacks velhos não avançam etapa, sem sobrepor áudio transitório/mídia/TTS |
-| B2-T4 | Implementador B2 | Professor contextual por campos semânticos no adaptador/UI existentes e fallback curado | B2-05; sem chamada paga/prometer correção linguística; guards/contrato público preservados |
+| B2-T2 | Implementador B2 | Narração manual (sem autoplay), uma voz ativa, pausar mídia conflitante e fallback textual nos componentes existentes | B2-02/03; locais compatíveis, catálogo vazio/tardio/falhas, sem escolher voz errada |
+| B2-T3 | Implementador B2 + QA | Corridas pausa/cancel/retomada por início de frase/âncora, interrupção/seek/troca/unmount | B2-03/06; callbacks antigos não avançam etapa, mídia/TTS exclusivos |
+| B2-T4 | Implementador B2 | Professor contextual por campos semânticos, `followUp` com papel/idioma explícitos e fallback curado | B2-05; sem TTS de idioma indeterminado ou chamada paga; preservar contratos/guards |
 | B2-T5 | QA + Lead | Browser narração e regressões variantes/B1/R1 | B2-01…07; `variants:verify`, `variants:verify:ui`, `interactive:verify`, `interactive:segments:verify`, `interactive:availability:verify`, harness F4; resultados separados por ambiente |
 
 ## Integração sequencial
