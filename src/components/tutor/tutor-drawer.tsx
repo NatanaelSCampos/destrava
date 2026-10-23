@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  LearningText,
+  LearningTextarea,
+  useTextPresentation,
+} from "@/components/learning/text-presentation";
+
 import { useState } from "react";
 import { Send, Sparkles, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
@@ -10,8 +16,10 @@ import { variantLabel } from "@/content/language-variant";
 type TutorFeedback = { answer: string; example: string; quickCheck: string };
 
 export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const textAttrs = useTextPresentation();
   const { course, language, state, recordStudyEvent } = useStudy();
   const [question, setQuestion] = useState("");
+  const [composing, setComposing] = useState(false);
   const [feedback, setFeedback] = useState<TutorFeedback | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,7 +41,7 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
     }));
 
   async function ask() {
-    if (!question.trim() || loading) return;
+    if (!question.trim() || loading || composing) return;
     setLoading(true);
     setError("");
     setFeedback(null);
@@ -87,12 +95,15 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
               <span className="eyebrow">
                 <Sparkles size={13} /> RESPOSTA
               </span>
-              <p>{feedback.answer}</p>
+              <LearningText as="p" textRole="source" text={feedback.answer} />
               <div>
                 <strong>Exemplo</strong>
                 <div className="text-audio-row">
-                  <p lang={language.id}>{feedback.example}</p>
-                  <SpeakButton text={feedback.example} label={`Ouvir exemplo em ${language.identity.nativeName}`} />
+                  <p {...textAttrs()}>{feedback.example}</p>
+                  <SpeakButton
+                    text={feedback.example}
+                    label={`Ouvir exemplo em ${language.identity.nativeName}`}
+                  />
                 </div>
               </div>
               <div>
@@ -109,17 +120,19 @@ export function TutorDrawer({ open, onClose }: { open: boolean; onClose: () => v
         </div>
         <div className="tutor-compose">
           <label htmlFor="tutor-question">Sua pergunta</label>
-          <textarea
+          <LearningTextarea
+            textRole="source"
+            onCompositionChange={setComposing}
             id="tutor-question"
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
-            placeholder="Por que aqui é tengo e não soy?"
+            placeholder="Qual é sua dúvida sobre esta atividade?"
             rows={3}
             maxLength={500}
           />
           <button
             className="primary-button"
-            disabled={!question.trim() || loading}
+            disabled={!question.trim() || loading || composing}
             onClick={() => void ask()}
           >
             <Send size={16} /> {loading ? "Pensando…" : "Enviar pergunta"}

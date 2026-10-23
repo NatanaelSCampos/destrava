@@ -7,6 +7,12 @@ import type { GradeResult } from "@/domain/activities/grader";
 import { useStudy } from "@/components/study-provider";
 import { AudioPlayer } from "./audio-player";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { orderingTokens, selectedTokens, orderingAnswer } from "@/engine/text/representation";
+import {
+  LearningText,
+  LearningInput,
+  useTextPresentation,
+} from "@/components/learning/text-presentation";
 
 type Exercise = Extract<
   PublicActivity,
@@ -19,34 +25,37 @@ type Exercise = Extract<
 export function ExerciseCard({
   activity,
   onAssessed,
+  onSubmitAnswer,
 }: {
   activity: Exercise;
+  onSubmitAnswer?: (answer: string) => Promise<GradeResult>;
   onAssessed?: (answer: string, result: GradeResult) => void;
 }) {
-  const { course, language, submitAttempt } = useStudy();
+  const { language, assessActivity } = useStudy();
   const [answer, setAnswer] = useState("");
   const [ordered, setOrdered] = useState<string[]>([]);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const selectedAnswer = activity.type === "ordering" ? ordered.join(" ") : answer;
+  const [composing, setComposing] = useState(false);
+  const textAttributes = useTextPresentation(activity.presentation);
+  const tokens = activity.type === "ordering" ? orderingTokens(activity.id, activity.words) : [];
+  const selected = selectedTokens(tokens, ordered);
+  const selectedAnswer =
+    activity.type === "ordering"
+      ? orderingAnswer(tokens, ordered, activity.reconstruction)
+      : answer;
 
   async function submit() {
-    if (!selectedAnswer.trim() || loading) return;
+    if (!selectedAnswer.trim() || loading || composing) return;
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/grade", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ courseId: course.id, activityId: activity.id, answer: selectedAnswer }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
-      const feedback = data as GradeResult;
+      const feedback = onSubmitAnswer
+        ? await onSubmitAnswer(selectedAnswer)
+        : await assessActivity(activity, selectedAnswer, onAssessed);
+      if (onSubmitAnswer) onAssessed?.(selectedAnswer, feedback);
       setResult(feedback);
-      if (onAssessed) onAssessed(selectedAnswer, feedback);
-      else submitAttempt(activity, selectedAnswer, feedback);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Não foi possível corrigir agora.");
     } finally {
@@ -64,7 +73,7 @@ export function ExerciseCard({
   return (
     <div className="exercise-content">
       {activity.type === "listening" && (
-        <AudioPlayer text={activity.transcript} media={activity.media} />
+        <AudioPlayer variant={activity.variant} text={activity.transcript} media={activity.media} />
       )}
       {(activity.type === "multiple_choice" ||
         activity.type === "listening" ||
@@ -87,11 +96,17 @@ export function ExerciseCard({
                 onClick={() => setAnswer(value)}
               >
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-                <span lang={activity.type === "true_false" ? undefined : course.languageCode}>{label}</span>
+                <LearningText
+                  as="span"
+                  presentation={activity.presentation}
+                  field="options"
+                  textRole={activity.type === "true_false" ? "interface" : "target"}
+                  text={label}
+                />
                 {answer === value && <Check size={17} />}
               </button>
               {activity.type !== "true_false" && (
-                <SpeakButton text={label} label={`Ouvir ${label}`} />
+                <SpeakButton variant={activity.variant} text={label} label={`Ouvir ${label}`} />
               )}
             </div>
           ))}
@@ -102,7 +117,9 @@ export function ExerciseCard({
           <label htmlFor={`answer-${activity.id}`}>
             {activity.type === "fill_blank" ? "Complete a lacuna" : "Sua resposta"}
           </label>
-          <input
+          <LearningInput
+            presentation={activity.presentation}
+            onCompositionChange={setComposing}
             id={`answer-${activity.id}`}
             aria-describedby={
               activity.type === "fill_blank" ? `answer-help-${activity.id}` : undefined
@@ -133,39 +150,62 @@ export function ExerciseCard({
       )}
       {activity.type === "ordering" && (
         <div className="ordering-workspace">
-          <div className="ordering-answer" aria-live="polite">
+          <div className="ordering-answer" {...textAttributes("answer")} aria-live="polite">
             {ordered.length ? (
-              ordered.map((word, index) => (
+              selected.map((token) => (
                 <button
-                  key={`${word}-${index}`}
+                  key={token.id}
+                  data-token-id={token.id}
                   type="button"
                   className="word-chip chosen"
                   disabled={!!result}
-                  onClick={() => setOrdered((current) => current.filter((_, i) => i !== index))}
+                  onClick={() => setOrdered((current) => current.filter((id) => id !== token.id))}
                 >
-                  {word}
+                  <LearningText
+                    presentation={activity.presentation}
+                    field="tokens"
+                    textRole="fragment"
+                    text={token.text}
+                  />
                   <X size={12} />
                 </button>
               ))
             ) : (
-              <span>Toque nas palavras para montar a frase</span>
+              <span lang="pt-BR" dir="ltr">
+                Toque nas palavras para montar a frase
+              </span>
             )}
           </div>
           {ordered.length > 0 && (
-            <SpeakButton text={ordered.join(" ")} label="Ouvir frase montada" withLabel />
+            <SpeakButton
+              variant={activity.variant}
+              text={selectedAnswer}
+              label="Ouvir frase montada"
+              withLabel
+            />
           )}
-          <div className="ordering-words">
-            {activity.words.map((word, index) => (
-              <span className="ordering-word-audio" key={`${word}-${index}`}>
+          <div className="ordering-words" {...textAttributes("tokens")}>
+            {tokens.map((token) => (
+              <span className="ordering-word-audio" key={token.id}>
                 <button
                   className="word-chip"
                   type="button"
-                  disabled={!!result || ordered.includes(word)}
-                  onClick={() => setOrdered((current) => [...current, word])}
+                  data-token-id={token.id}
+                  disabled={!!result || ordered.includes(token.id)}
+                  onClick={() => setOrdered((current) => [...current, token.id])}
                 >
-                  {word}
+                  <LearningText
+                    presentation={activity.presentation}
+                    field="tokens"
+                    textRole="fragment"
+                    text={token.text}
+                  />
                 </button>
-                <SpeakButton text={word} label={`Ouvir ${word}`} />
+                <SpeakButton
+                  variant={activity.variant}
+                  text={token.text}
+                  label={`Ouvir ${token.text}`}
+                />
               </span>
             ))}
           </div>
@@ -176,7 +216,7 @@ export function ExerciseCard({
           type="button"
           className="primary-button exercise-submit"
           onClick={() => void submit()}
-          disabled={!selectedAnswer.trim() || loading}
+          disabled={!selectedAnswer.trim() || loading || composing}
         >
           {loading ? "Corrigindo…" : "Verificar resposta"}
         </button>
@@ -195,18 +235,43 @@ export function ExerciseCard({
             <strong>
               {result.correct ? "Muito bem! Resposta correta." : "Ainda não. Vamos ajustar."}
             </strong>
-            <p>{result.explanation}</p>
+            <LearningText
+              as="p"
+              presentation={activity.presentation}
+              field="feedback"
+              textRole="source"
+              text={result.explanation}
+            />
             {!result.correct && (
               <>
                 <p className="correct-answer">
                   {activity.type === "fill_blank" ? "Trecho esperado: " : "Resposta esperada: "}
-                  <strong>{result.correctAnswer}</strong>
-                  <SpeakButton text={result.correctAnswer} label="Ouvir resposta esperada" />
+                  <LearningText
+                    as="strong"
+                    presentation={activity.presentation}
+                    field="answer"
+                    text={result.correctAnswer}
+                  />
+                  <SpeakButton
+                    variant={activity.variant}
+                    text={result.correctAnswer}
+                    label="Ouvir resposta esperada"
+                  />
                 </p>
                 {activity.type === "fill_blank" && result.completeAnswer && (
                   <p className="correct-answer">
-                    Frase completa: <strong lang={course.languageCode}>{result.completeAnswer}</strong>
-                    <SpeakButton text={result.completeAnswer} label="Ouvir frase completa" />
+                    Frase completa:{" "}
+                    <LearningText
+                      as="strong"
+                      presentation={activity.presentation}
+                      field="answer"
+                      text={result.completeAnswer}
+                    />
+                    <SpeakButton
+                      variant={activity.variant}
+                      text={result.completeAnswer}
+                      label="Ouvir frase completa"
+                    />
                   </p>
                 )}
               </>
@@ -215,8 +280,17 @@ export function ExerciseCard({
               <div className="transcript">
                 <span>TRANSCRIÇÃO</span>
                 <div className="text-audio-row">
-                  <p lang={course.languageCode}>{result.transcript}</p>
-                  <SpeakButton text={result.transcript} label="Ouvir transcrição" />
+                  <LearningText
+                    as="p"
+                    presentation={activity.presentation}
+                    field="transcript"
+                    text={result.transcript}
+                  />
+                  <SpeakButton
+                    variant={activity.variant}
+                    text={result.transcript}
+                    label="Ouvir transcrição"
+                  />
                 </div>
               </div>
             )}

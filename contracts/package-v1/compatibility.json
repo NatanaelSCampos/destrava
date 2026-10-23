@@ -1,0 +1,35 @@
+{
+  "format": "destrava.course-package",
+  "versions": {
+    "envelope": [
+      "1.0.0"
+    ],
+    "language": [
+      "1.1"
+    ],
+    "course": [
+      "1.3",
+      "1.4",
+      "1.5"
+    ]
+  },
+  "limits": {
+    "files": 256,
+    "totalBytes": 33554432,
+    "jsonBytes": 1048576,
+    "assetBytes": 16777216,
+    "depth": 16,
+    "jsonDepth": 64,
+    "jsonNodes": 100000,
+    "activities": 2000,
+    "concepts": 2000,
+    "lexicon": 5000
+  },
+  "semanticValidationRequired": true,
+  "unknownFields": "rejected",
+  "localizedInstructions": "not_supported_use_prompt",
+  "prerequisites": "validated_acyclic_metadata_not_execution_gates",
+  "mediaHealth": "signature_integrity_do_not_prove_decoding",
+  "editorialTrust": "unverified_no_publication",
+  "activation": "not_supported"
+}

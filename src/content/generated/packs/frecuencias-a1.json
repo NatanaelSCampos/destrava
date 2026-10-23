@@ -1,7 +1,7 @@
 {
   "course": {
-    "schemaVersion": "1.0",
-    "contentVersion": "1.0.0",
+    "schemaVersion": "1.3",
+    "contentVersion": "1.2.0",
     "id": "frecuencias-a1",
     "slug": "frecuencias-a1",
     "isDefault": true,
@@ -549,12 +549,40 @@
                     "status": "approved"
                   }
                 }
+              },
+              {
+                "id": "grammar-age-speaking",
+                "type": "speaking",
+                "skills": [
+                  "speaking",
+                  "pronunciation"
+                ],
+                "concepts": [
+                  "age-tener"
+                ],
+                "title": "Repita: tenho 26 anos",
+                "prompt": "Escute e repita: Tengo veintiséis años.",
+                "minutes": 2,
+                "payload": {
+                  "guidance": [
+                    "Ouça a frase antes de gravar.",
+                    "Diga a frase inteira e confira a avaliação."
+                  ],
+                  "referenceText": "Tengo veintiséis años."
+                },
+                "provenance": {
+                  "origin": "human",
+                  "review": {
+                    "status": "approved"
+                  }
+                }
               }
             ],
             "eyebrow": "Gramática",
             "description": "Ser, tener, llamarse, vivir e trabalhar.",
             "minutes": 15,
-            "active": true
+            "active": true,
+            "interactiveLessonRef": "aula-tener-idade"
           },
           {
             "id": "l-listening",
@@ -1649,7 +1677,221 @@
             "active": true
           }
         ],
-        "assessmentId": "frecuencias-a1.nos-presentamos.diagnostic",
+        "assessmentRefs": {
+          "diagnostic": "frecuencias-a1.nos-presentamos.diagnostic",
+          "final": "nos-presentamos-final",
+          "formative": []
+        },
+        "learningPolicy": {
+          "completion": {
+            "requirements": [
+              {
+                "id": "required-activities",
+                "label": "Realizar as atividades obrigatórias",
+                "kind": "participation",
+                "activityIds": [
+                  "intro-1",
+                  "objectives-1",
+                  "vocab-1",
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-1",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "grammar-age-speaking",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-1",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "writing-1",
+                  "speaking-1",
+                  "speaking-repeat-1",
+                  "review-1",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3",
+                  "assessment-intro",
+                  "assessment-1",
+                  "assessment-2",
+                  "assessment-3",
+                  "assessment-4",
+                  "assessment-5",
+                  "assessment-6",
+                  "assessment-writing"
+                ]
+              }
+            ]
+          },
+          "mastery": {
+            "requirements": [
+              {
+                "id": "completion",
+                "label": "Cumprir a conclusão da unidade",
+                "kind": "unit_completed"
+              },
+              {
+                "id": "objective",
+                "label": "Desempenho objetivo de pelo menos 80%",
+                "kind": "objective_score",
+                "activityIds": [
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3"
+                ],
+                "minimumScore": 80,
+                "minimumSamples": 1
+              },
+              {
+                "id": "reviews",
+                "label": "Evidência de revisão de pelo menos 80%",
+                "kind": "review_score",
+                "vocabularyIds": [
+                  "hola",
+                  "buenos-dias",
+                  "buenas-tardes",
+                  "hasta-luego",
+                  "hasta-manana",
+                  "llamarse",
+                  "tener",
+                  "vivir",
+                  "trabajar",
+                  "brasileno",
+                  "argentino",
+                  "profesor",
+                  "medico",
+                  "treinta",
+                  "donde",
+                  "de-donde",
+                  "cuantos",
+                  "hablar"
+                ],
+                "activityIds": [
+                  "intro-1",
+                  "objectives-1",
+                  "vocab-1",
+                  "vocab-2",
+                  "vocab-3",
+                  "vocab-4",
+                  "vocab-5",
+                  "grammar-1",
+                  "grammar-2",
+                  "grammar-3",
+                  "grammar-4",
+                  "grammar-5",
+                  "grammar-6",
+                  "grammar-age-speaking",
+                  "listening-1",
+                  "guided-1",
+                  "guided-2",
+                  "guided-3",
+                  "guided-4",
+                  "guided-5",
+                  "guided-6",
+                  "workbook-1",
+                  "workbook-2",
+                  "workbook-3",
+                  "workbook-4",
+                  "workbook-5",
+                  "writing-1",
+                  "speaking-1",
+                  "speaking-repeat-1",
+                  "review-1",
+                  "review-2",
+                  "review-3",
+                  "review-4",
+                  "diagnostic-listen-2",
+                  "diagnostic-listen-3",
+                  "diagnostic-read-2",
+                  "diagnostic-read-3",
+                  "diagnostic-write-3",
+                  "assessment-intro",
+                  "assessment-1",
+                  "assessment-2",
+                  "assessment-3",
+                  "assessment-4",
+                  "assessment-5",
+                  "assessment-6",
+                  "assessment-writing"
+                ],
+                "minimumScore": 80,
+                "minimumSamples": 1,
+                "minimumReviews": 1
+              },
+              {
+                "id": "writing",
+                "label": "Entregar a prática escrita",
+                "kind": "submission",
+                "activityIds": [
+                  "writing-1"
+                ],
+                "practice": "writing",
+                "minimumCount": 1
+              },
+              {
+                "id": "speaking",
+                "label": "Entregar uma prática de fala",
+                "kind": "submission",
+                "activityIds": [
+                  "grammar-age-speaking",
+                  "speaking-1",
+                  "speaking-repeat-1"
+                ],
+                "practice": "speaking",
+                "minimumCount": 1
+              },
+              {
+                "id": "final",
+                "label": "Atingir o critério da avaliação somativa",
+                "kind": "assessment",
+                "assessmentId": "nos-presentamos-final",
+                "purpose": "summative"
+              }
+            ]
+          }
+        },
         "description": "Aprenda a cumprimentar, falar de você e conhecer alguém em espanhol.",
         "active": true
       }
@@ -2922,15 +3164,10 @@
     "assessments": [
       {
         "id": "frecuencias-a1.nos-presentamos.diagnostic",
-        "type": "adaptive_diagnostic",
+        "title": "Diagnóstico do curso",
+        "purpose": "diagnostic",
         "unitId": "nos-presentamos",
-        "skillWeights": {
-          "vocabulary": 0.2,
-          "grammar": 0.2,
-          "listening": 0.2,
-          "writing": 0.2,
-          "reading": 0.2
-        },
+        "objectiveIds": [],
         "passingPolicy": {
           "overall": 0.75,
           "minimumBySkill": {
@@ -2940,6 +3177,14 @@
             "writing": 0.6,
             "reading": 0.6
           }
+        },
+        "method": "adaptive",
+        "skillWeights": {
+          "vocabulary": 0.2,
+          "grammar": 0.2,
+          "listening": 0.2,
+          "writing": 0.2,
+          "reading": 0.2
         },
         "skillPlan": [
           "vocabulary",
@@ -3069,8 +3314,29 @@
             "skill": "writing",
             "difficulty": 1
           }
-        ],
-        "activities": []
+        ]
+      },
+      {
+        "id": "nos-presentamos-final",
+        "title": "Avaliação final da unidade",
+        "purpose": "summative",
+        "unitId": "nos-presentamos",
+        "lessonId": "l-assessment",
+        "objectiveIds": [],
+        "passingPolicy": {
+          "overall": 0.75
+        },
+        "method": "fixed",
+        "gradingStrategy": "objective_mean",
+        "activityIds": [
+          "assessment-1",
+          "assessment-2",
+          "assessment-3",
+          "assessment-4",
+          "assessment-5",
+          "assessment-6",
+          "assessment-writing"
+        ]
       }
     ],
     "media": [
@@ -3109,6 +3375,258 @@
             "plantas",
             "toldo vermelho"
           ]
+        }
+      }
+    ],
+    "assessmentRefs": {
+      "diagnostic": "frecuencias-a1.nos-presentamos.diagnostic"
+    },
+    "interactiveLessons": [
+      {
+        "id": "aula-tener-idade",
+        "courseId": "frecuencias-a1",
+        "unitId": "nos-presentamos",
+        "lessonId": "l-grammar",
+        "title": "Tener para falar de idade",
+        "objectives": [
+          "Dizer a idade em espanhol usando tener"
+        ],
+        "concepts": [
+          "age-tener"
+        ],
+        "skills": [
+          "grammar",
+          "speaking"
+        ],
+        "estimatedMinutes": 6,
+        "alternativeExamples": [
+          {
+            "conceptId": "age-tener",
+            "text": "Mi hermana tiene veinte años.",
+            "translation": "Minha irmã tem vinte anos."
+          },
+          {
+            "conceptId": "age-tener",
+            "text": "¿Cuántos años tienes? Tengo treinta años.",
+            "translation": "Quantos anos você tem? Tenho trinta anos."
+          }
+        ],
+        "segments": [
+          {
+            "id": "intro",
+            "title": "Introdução",
+            "type": "presentation",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "presentation": {
+              "mode": "slides",
+              "durationMs": 14000,
+              "transcript": [
+                {
+                  "startMs": 0,
+                  "endMs": 7000,
+                  "text": "Hoje vamos aprender a dizer a idade em espanhol."
+                },
+                {
+                  "startMs": 7000,
+                  "endMs": 14000,
+                  "text": "Para falar de idade, usamos o verbo tener."
+                }
+              ]
+            },
+            "cues": [
+              {
+                "id": "intro-title",
+                "atMs": 0,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "text",
+                    "id": "topic",
+                    "text": "TENER + idade",
+                    "translation": "TER + idade"
+                  }
+                }
+              },
+              {
+                "id": "intro-example",
+                "atMs": 7000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "example",
+                    "id": "age-example",
+                    "text": "Tengo veintiséis años.",
+                    "translation": "Tenho vinte e seis anos."
+                  }
+                }
+              }
+            ],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0,
+              7000
+            ],
+            "explanation": "Em espanhol, a idade é expressa com tener: tengo + número + años."
+          },
+          {
+            "id": "explanation",
+            "title": "Como funciona",
+            "type": "explanation",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "presentation": {
+              "mode": "slides",
+              "durationMs": 20000,
+              "transcript": [
+                {
+                  "startMs": 0,
+                  "endMs": 8500,
+                  "text": "Eu tenho: yo tengo. Você tem: tú tienes."
+                },
+                {
+                  "startMs": 8500,
+                  "endMs": 16000,
+                  "text": "Ela tem: ella tiene. Veja como a forma muda."
+                },
+                {
+                  "startMs": 16000,
+                  "endMs": 20000,
+                  "text": "Ana tiene veintiséis años."
+                }
+              ]
+            },
+            "cues": [
+              {
+                "id": "form-yo",
+                "atMs": 0,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "yo",
+                    "left": "yo",
+                    "right": "tengo"
+                  }
+                }
+              },
+              {
+                "id": "form-tu",
+                "atMs": 4000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "tu",
+                    "left": "tú",
+                    "right": "tienes"
+                  }
+                }
+              },
+              {
+                "id": "form-ella",
+                "atMs": 8500,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "comparison",
+                    "id": "ella",
+                    "left": "ella",
+                    "right": "tiene"
+                  }
+                }
+              },
+              {
+                "id": "form-highlight",
+                "atMs": 11500,
+                "action": {
+                  "type": "board.highlight",
+                  "targetId": "ella"
+                }
+              },
+              {
+                "id": "form-sentence",
+                "atMs": 16000,
+                "action": {
+                  "type": "board.show",
+                  "element": {
+                    "kind": "example",
+                    "id": "ana",
+                    "text": "Ana tiene 26 años.",
+                    "translation": "Ana tem 26 anos."
+                  }
+                }
+              }
+            ],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0,
+              8500,
+              16000
+            ],
+            "explanation": "A forma muda com a pessoa. Com yo usamos tengo; com ella usamos tiene."
+          },
+          {
+            "id": "check-age",
+            "title": "Confira o que aprendeu",
+            "type": "checkpoint",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "activityRef": "grammar-3",
+            "required": true,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ],
+            "explanation": "Com Ana, use a forma tiene."
+          },
+          {
+            "id": "say-age",
+            "title": "Sua vez de falar",
+            "type": "speaking",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "activityRef": "grammar-age-speaking",
+            "required": true,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ]
+          },
+          {
+            "id": "summary",
+            "title": "Resumo",
+            "type": "summary",
+            "objectives": [],
+            "concepts": [
+              "age-tener"
+            ],
+            "cues": [],
+            "required": false,
+            "allowInterruption": true,
+            "resumeAnchorsMs": [
+              0
+            ],
+            "explanation": "Para falar de idade: yo tengo, tú tienes, ella tiene. Volte quando quiser para praticar novamente."
+          }
+        ],
+        "provenance": {
+          "origin": "human",
+          "review": {
+            "status": "approved"
+          }
         }
       }
     ],
@@ -3160,7 +3678,7 @@
     }
   },
   "language": {
-    "schemaVersion": "1.0",
+    "schemaVersion": "1.1",
     "contentVersion": "1.0.0",
     "id": "es",
     "identity": {
@@ -3194,16 +3712,17 @@
         "name": "Argentina"
       }
     ],
-    "capabilities": {
-      "speechRecognition": true,
-      "textToSpeech": true,
-      "pronunciationAssessment": true,
-      "regionalVariants": true,
+    "linguisticFeatures": {
       "romanization": false,
       "tones": false,
       "grammaticalGender": true
     },
     "speech": {
+      "support": {
+        "speechRecognition": true,
+        "textToSpeech": true,
+        "pronunciationAssessment": true
+      },
       "defaultVariant": "general",
       "providers": {
         "azure": {
@@ -3250,11 +3769,6 @@
         "enabled": true,
         "source": "fundamentals/regional-variants.json"
       }
-    },
-    "strategies": {
-      "textTokenizer": "latin-word-v1",
-      "answerNormalizer": "default-latin-v1",
-      "numberParser": "spanish-numbers-v1"
     }
   },
   "moduleData": {

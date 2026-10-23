@@ -5,6 +5,7 @@ import { ArrowLeft, Check, MessageCircle, Send, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { ConversationVoiceInput } from "@/components/conversation/conversation-voice-input";
+import { LearningText, LearningTextarea } from "@/components/learning/text-presentation";
 import type { ConversationScenario } from "@/content/conversation-scenarios";
 import { orderByLearningAffinity } from "@/domain/study/learning-preferences";
 import {
@@ -42,9 +43,11 @@ export default function ConversationPage() {
     completeConversation,
     recordStudyEvent,
   } = useStudy();
-  const conversationScenarios = useMemo(() =>
-    orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences),
-    [resources.conversationScenarios, state.profile.learningPreferences]);
+  const conversationScenarios = useMemo(
+    () =>
+      orderByLearningAffinity(resources.conversationScenarios, state.profile.learningPreferences),
+    [resources.conversationScenarios, state.profile.learningPreferences],
+  );
   const handledLink = useRef(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<ConversationMode>("mission");
@@ -53,6 +56,7 @@ export default function ConversationPage() {
   const [pace, setPace] = useState<ConversationPace>("beginner");
   const [correction, setCorrection] = useState<ConversationCorrection>("important_only");
   const [draft, setDraft] = useState("");
+  const [draftComposing, setDraftComposing] = useState(false);
   const [draftInputMode, setDraftInputMode] = useState<"text" | "speech">("text");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -84,7 +88,8 @@ export default function ConversationPage() {
   }, [ready, state.conversations, course.id, conversationScenarios]);
 
   function begin() {
-    const chosenScenario = mode === "mission" ? findScenario(conversationScenarios, scenarioId) : undefined;
+    const chosenScenario =
+      mode === "mission" ? findScenario(conversationScenarios, scenarioId) : undefined;
     if (mode === "free" && topic.trim().length < 3) {
       setError("Escreva um assunto com pelo menos 3 caracteres.");
       return;
@@ -105,6 +110,7 @@ export default function ConversationPage() {
   }
 
   async function send() {
+    if (draftComposing) return;
     if (!selected || selected.finishedAt || !draft.trim() || loading || turnsUsed >= 16) return;
     const message = draft.trim();
     setLoading(true);
@@ -208,7 +214,11 @@ export default function ConversationPage() {
                     {turn.role === "student" && turn.inputMode === "speech" ? " · voz" : ""}
                   </span>
                   <div className="text-audio-row">
-                    <p lang={course.languageCode}>{turn.text}</p>
+                    <LearningText
+                      as="p"
+                      textRole={turn.role === "student" ? "user" : "target"}
+                      text={turn.text}
+                    />
                     {turn.role === "partner" && (
                       <SpeakButton
                         text={turn.text}
@@ -227,7 +237,8 @@ export default function ConversationPage() {
                     selected.correction !== "end_of_conversation" &&
                     selected.correction !== "off" && (
                       <p className="conversation-correction">
-                        <strong>Ajuste:</strong> {turn.correction}
+                        <strong>Ajuste:</strong>{" "}
+                        <LearningText textRole="source" text={turn.correction} />
                       </p>
                     )}
                 </div>
@@ -261,8 +272,11 @@ export default function ConversationPage() {
               </div>
             ) : (
               <div className="conversation-compose">
-                <label htmlFor="conversation-draft">Sua resposta em {resources.languageLabel.toLowerCase()}</label>
-                <textarea
+                <label htmlFor="conversation-draft">
+                  Sua resposta em {resources.languageLabel.toLowerCase()}
+                </label>
+                <LearningTextarea
+                  onCompositionChange={setDraftComposing}
                   id="conversation-draft"
                   value={draft}
                   onChange={(event) => setDraft(event.target.value)}
@@ -283,7 +297,7 @@ export default function ConversationPage() {
                   <button
                     type="button"
                     className="primary-button"
-                    disabled={!draft.trim() || loading || turnsUsed >= 16}
+                    disabled={!draft.trim() || loading || turnsUsed >= 16 || draftComposing}
                     onClick={() => void send()}
                   >
                     <Send size={16} /> Enviar
@@ -379,7 +393,9 @@ export default function ConversationPage() {
               className="conversation-mode-panel"
               id="conversation-mode-panel"
               role="tabpanel"
-              aria-labelledby={mode === "mission" ? "conversation-mission-tab" : "conversation-free-tab"}
+              aria-labelledby={
+                mode === "mission" ? "conversation-mission-tab" : "conversation-free-tab"
+              }
             >
               <h2>{mode === "mission" ? "Escolha uma missão" : "Escolha o assunto"}</h2>
               <p>
@@ -444,7 +460,9 @@ export default function ConversationPage() {
                   <select
                     id="conversation-correction"
                     value={correction}
-                    onChange={(event) => setCorrection(event.target.value as ConversationCorrection)}
+                    onChange={(event) =>
+                      setCorrection(event.target.value as ConversationCorrection)
+                    }
                   >
                     {correctionOptions.map((item) => (
                       <option key={item.id} value={item.id}>

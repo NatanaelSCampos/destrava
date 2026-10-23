@@ -1,20 +1,34 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "contentVersion": "1.0.0",
   "id": "xx-Test",
-  "identity": { "name": "Testês", "nativeName": "Testês" },
-  "writingSystem": { "direction": "ltr", "scripts": ["Latin"], "caseSensitive": false },
-  "variants": [{ "id": "general", "name": "Testês geral", "default": true }],
-  "capabilities": {
-    "speechRecognition": false,
-    "textToSpeech": false,
-    "pronunciationAssessment": false,
-    "regionalVariants": false,
-    "romanization": false,
-    "tones": false,
-    "grammaticalGender": false
+  "identity": {
+    "name": "Testês",
+    "nativeName": "Testês"
   },
-  "speech": { "defaultVariant": "general", "providers": {} },
+  "writingSystem": {
+    "direction": "ltr",
+    "scripts": [
+      "Latin"
+    ],
+    "caseSensitive": false
+  },
+  "variants": [
+    {
+      "id": "general",
+      "name": "Testês geral",
+      "default": true
+    }
+  ],
+  "speech": {
+    "defaultVariant": "general",
+    "providers": {},
+    "support": {
+      "speechRecognition": false,
+      "textToSpeech": false,
+      "pronunciationAssessment": false
+    }
+  },
   "normalization": {
     "trimWhitespace": true,
     "collapseWhitespace": true,
@@ -22,6 +36,15 @@
     "ignoreTerminalPunctuation": true,
     "ignoreDiacritics": false
   },
-  "modules": { "alphabet": { "enabled": true, "source": "fundamentals/alphabet.json" } },
-  "strategies": { "textTokenizer": "latin-word-v1", "answerNormalizer": "default-latin-v1" }
+  "modules": {
+    "alphabet": {
+      "enabled": true,
+      "source": "fundamentals/alphabet.json"
+    }
+  },
+  "linguisticFeatures": {
+    "romanization": false,
+    "tones": false,
+    "grammaticalGender": false
+  }
 }

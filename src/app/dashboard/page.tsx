@@ -1,4 +1,6 @@
 "use client";
+import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
+
 
 import Link from "next/link";
 import {
@@ -16,7 +18,7 @@ import {
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { buildStudyPlan } from "@/domain/study/study-planner";
-import { courseProgress, currentUnit, unitProgress } from "@/domain/study/progress";
+import { courseStudyProgress, currentUnit, unitProgress } from "@/domain/study/progress";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { buildLearningProfile } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
@@ -38,10 +40,13 @@ function currentStreak(dates: string[]) {
 }
 
 export default function DashboardPage() {
-  const { course, resources, state, ready, vocabularyItems } = useStudy();
+  const { course, resources, state, ready, vocabularyItems, runtime } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const unit = currentUnit(course, state)!;
-  const progress = unitProgress(unit, state, vocabularyItems);
-  const totalProgress = courseProgress(course, state);
+  const progress = unitProgress(unit, state, vocabularyItems, course);
+  const totalProgress = courseStudyProgress(course, state);
   const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const focus = LearningRecommendationEngine.recommend(
     course,
@@ -49,9 +54,9 @@ export default function DashboardPage() {
     learningProfile,
     vocabularyItems,
     resources,
-    { includeReviews: featureFlags.SPACED_REPETITION },
+    { includeReviews: featureFlags.SPACED_REPETITION, actionContext },
   )[0];
-  const plan = buildStudyPlan(course, state, state.profile.learningPreferences.preferredSessionMinutes, vocabularyItems, resources);
+  const plan = buildStudyPlan(course, state, state.profile.learningPreferences.preferredSessionMinutes, vocabularyItems, resources, new Date(), "guided", actionContext);
   const minutes = Math.round(
     state.sessions.reduce((sum, session) => sum + countedStudySeconds(session), 0) / 60,
   );
@@ -68,6 +73,7 @@ export default function DashboardPage() {
 
   return (
     <div className="dashboard-page">
+      {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(item => <li key={item.id}>{item.label}: {item.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="page-heading">
         <div>
           <span className="eyebrow">
@@ -237,11 +243,11 @@ export default function DashboardPage() {
             <h3>{unit.title}</h3>
             <p>{unit.description}</p>
             <div className="rail-progress-label">
-              <span>Progresso da unidade</span>
-              <strong>{progress.percentage}%</strong>
+              <span>Conteúdo estudado</span>
+              <strong>{progress.participationPercentage}%</strong>
             </div>
             <div className="progress-track">
-              <span style={{ width: `${progress.percentage}%` }} />
+              <span style={{ width: `${progress.participationPercentage}%` }} />
             </div>
             <span className="rail-progress-foot">
               {progress.completed} de {progress.total} atividades
@@ -275,9 +281,7 @@ export default function DashboardPage() {
               <b>{dueWords}</b> palavras · <b>{dueStructures}</b> estruturas · <b>{dueErrors}</b>{" "}
               erros pendentes
             </p>
-            <Link href="/review">
-              Revisar agora <ArrowRight size={14} />
-            </Link>
+            {reviewAction.eligible ? <Link href="/review">Revisar agora <ArrowRight size={14} /></Link> : <><p role="status">{reviewAction.reasons.join(" ")}</p><Link href={`/course/${course.slug}`}>Continuar meu curso <ArrowRight size={14} /></Link></>}
           </div>
           <div className="rail-tip">
             <Lightbulb size={18} />

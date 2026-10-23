@@ -1,5 +1,7 @@
 "use client";
 
+import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
+
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Image as ImageIcon, Mic, Square, Sparkles } from "lucide-react";
@@ -7,19 +9,24 @@ import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { audioToWav } from "@/lib/audio-to-wav";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
+import { LearningTextarea } from "@/components/learning/text-presentation";
 
 export default function DescribePage() {
   const { resources } = useStudy();
   if (!resources.imageScenes.length)
-    return <div className="empty-state panel">Este curso ainda não inclui descrição de imagens.</div>;
+    return (
+      <div className="empty-state panel">Este curso ainda não inclui descrição de imagens.</div>
+    );
   return <DescribeContent />;
 }
 
 function DescribeContent() {
+  const textAttrs = useTextPresentation();
   const { course, language, resources, state, saveImageDescription } = useStudy();
   const imageDescriptionScenes = resources.imageScenes;
   const [sceneId, setSceneId] = useState(imageDescriptionScenes[0].id);
   const [draft, setDraft] = useState("");
+  const [composing, setComposing] = useState(false);
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -106,6 +113,7 @@ function DescribeContent() {
   }
 
   async function evaluate(mode: "speech" | "text") {
+    if (mode === "text" && composing) return;
     if (loading || (mode === "speech" ? !audioBlob : draft.trim().length < 5)) return;
     setLoading(true);
     setError("");
@@ -143,7 +151,8 @@ function DescribeContent() {
           </span>
           <h1 className="page-title">Olhe. Fale. Destrave.</h1>
           <p className="page-subtitle">
-            Descreva a cena em {language.identity.nativeName}. Escreva sua resposta e receba dicas para melhorar.
+            Descreva a cena em {language.identity.nativeName}. Escreva sua resposta e receba dicas
+            para melhorar.
           </p>
         </div>
       </div>
@@ -166,42 +175,49 @@ function DescribeContent() {
           </div>
           <h2>{scene.title}</h2>
           <p>{scene.prompt}</p>
-          {language.capabilities.speechRecognition && <div className="describe-actions">
-            {recording ? (
-              <button type="button" className="secondary-button" onClick={stop}>
-                <Square size={16} /> Parar gravação
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="primary-button"
-                disabled={loading}
-                onClick={() => void start()}
-              >
-                <Mic size={16} /> {audioBlob ? "Gravar novamente" : "Gravar descrição"}
-              </button>
-            )}
-            {audioUrl && !recording && (
-              <audio controls src={audioUrl} aria-label="Ouvir sua descrição" />
-            )}
-            {audioBlob && !recording && (
-              <button
-                type="button"
-                className="secondary-button"
-                disabled={loading}
-                onClick={() => void evaluate("speech")}
-              >
-                {loading ? "Analisando…" : "Analisar minha fala"}
-              </button>
-            )}
-          </div>}
-          {language.capabilities.speechRecognition && <p className="helper-note">
-            Grave até 20 segundos. O áudio é enviado para transcrição, mas apenas o texto e as dicas
-            ficam no histórico.
-          </p>}
+          {language.speech.support.speechRecognition && (
+            <div className="describe-actions">
+              {recording ? (
+                <button type="button" className="secondary-button" onClick={stop}>
+                  <Square size={16} /> Parar gravação
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="primary-button"
+                  disabled={loading}
+                  onClick={() => void start()}
+                >
+                  <Mic size={16} /> {audioBlob ? "Gravar novamente" : "Gravar descrição"}
+                </button>
+              )}
+              {audioUrl && !recording && (
+                <audio controls src={audioUrl} aria-label="Ouvir sua descrição" />
+              )}
+              {audioBlob && !recording && (
+                <button
+                  type="button"
+                  className="secondary-button"
+                  disabled={loading}
+                  onClick={() => void evaluate("speech")}
+                >
+                  {loading ? "Analisando…" : "Analisar minha fala"}
+                </button>
+              )}
+            </div>
+          )}
+          {language.speech.support.speechRecognition && (
+            <p className="helper-note">
+              Grave até 20 segundos. O áudio é enviado para transcrição, mas apenas o texto e as
+              dicas ficam no histórico.
+            </p>
+          )}
           <div className="field">
-            <label htmlFor="describe-draft">Ou escreva sua descrição em {language.identity.nativeName}</label>
-            <textarea
+            <label htmlFor="describe-draft">
+              Ou escreva sua descrição em {language.identity.nativeName}
+            </label>
+            <LearningTextarea
+              onCompositionChange={setComposing}
               id="describe-draft"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
@@ -213,7 +229,7 @@ function DescribeContent() {
           <button
             type="button"
             className="secondary-button"
-            disabled={loading || draft.trim().length < 5}
+            disabled={loading || draft.trim().length < 5 || composing}
             onClick={() => void evaluate("text")}
           >
             {loading ? "Analisando…" : "Analisar texto"}
@@ -232,22 +248,22 @@ function DescribeContent() {
             <>
               <h2>Você descreveu a cena</h2>
               <div className="text-audio-row">
-                <p lang={course.languageCode}>{result.transcript}</p>
+                <LearningText as="p" textRole="user" text={result.transcript} />
                 <SpeakButton text={result.transcript} label="Ouvir transcrição" />
               </div>
               <h3>O que observou</h3>
-              <p>{result.feedback.observed}</p>
+              <LearningText as="p" textRole="source" text={result.feedback.observed} />
               <h3>Um acerto</h3>
-              <p>{result.feedback.strength}</p>
+              <LearningText as="p" textRole="source" text={result.feedback.strength} />
               {result.feedback.correction && (
                 <>
                   <h3>Um ajuste</h3>
-                  <p>{result.feedback.correction}</p>
+                  <LearningText as="p" textRole="source" text={result.feedback.correction} />
                 </>
               )}
               <h3>Tente mais uma frase</h3>
               <div className="text-audio-row">
-                <p lang={course.languageCode}>{result.feedback.nextSentence}</p>
+                <LearningText as="p" text={result.feedback.nextSentence} />
                 <SpeakButton text={result.feedback.nextSentence} label="Ouvir frase sugerida" />
               </div>
             </>
@@ -260,7 +276,7 @@ function DescribeContent() {
           <hr className="divider" />
           <strong>Suas tentativas nesta cena: {history.length}</strong>
           {history.slice(0, 3).map((item) => (
-            <p key={item.id} className="describe-history" lang={course.languageCode}>
+            <p key={item.id} className="describe-history" {...textAttrs()}>
               {item.transcript}
             </p>
           ))}

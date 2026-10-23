@@ -1,9 +1,13 @@
 "use client";
+import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
+
+import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
-import { ArrowRight, ChartNoAxesCombined, Check, Circle, Target } from "lucide-react";
+import { ArrowRight, ChartNoAxesCombined, Target } from "lucide-react";
+import { PolicyChecklist, policyStatusLabels } from "@/components/activities/policy-checklist";
 import { useStudy } from "@/components/study-provider";
-import { courseProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
+import { courseStudyProgress, currentUnit, skillProgress, unitProgress } from "@/domain/study/progress";
 import { buildLearningProfile, type MasteryMetric } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import type { Skill } from "@/content/schema";
@@ -12,6 +16,7 @@ import { recommendationLink } from "@/lib/recommendation-link";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { recommendationGuidance } from "@/domain/study/recommendation-guidance";
 import { SpeakButton } from "@/components/audio/speak-button";
+import { assessmentLink } from "@/content/assessment-references";
 
 const skillLabels: Array<{ id: Skill; label: string }> = [
   { id: "vocabulary", label: "Vocabulário" },
@@ -50,10 +55,14 @@ function MasteryColumn({ title, items }: { title: string; items: MasteryMetric[]
 }
 
 export default function ProgressPage() {
-  const { course, resources, state, vocabularyItems, recordStudyEvent } = useStudy();
+  const { course, resources, state, vocabularyItems, recordStudyEvent, runtime } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
+  const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const unit = currentUnit(course, state)!;
-  const progress = unitProgress(unit, state, vocabularyItems);
-  const totalProgress = courseProgress(course, state);
+  const progress = unitProgress(unit, state, vocabularyItems, course);
+  const totalProgress = courseStudyProgress(course, state);
   const skillData = skillLabels.map((item) => ({
     ...item,
     ...skillProgress(course, state, item.id),
@@ -74,12 +83,13 @@ export default function ProgressPage() {
     learningProfile,
     vocabularyItems,
     resources,
-    { includeReviews: featureFlags.SPACED_REPETITION },
+    { includeReviews: featureFlags.SPACED_REPETITION, actionContext },
   )
     .filter((item) => item.source !== "curriculum")
     .slice(0, 3);
   return (
     <div className="progress-page">
+      {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(item => <li key={item.id}>{item.label}: {item.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="page-heading">
         <div>
           <span className="eyebrow">
@@ -90,15 +100,13 @@ export default function ProgressPage() {
             Acompanhe atividades concluídas, desempenho e domínio por habilidade.
           </p>
         </div>
-        <Link href="/review" className="secondary-button">
-          Revisar pontos fracos <ArrowRight size={16} />
-        </Link>
+        {reviewAction.eligible ? <Link href="/review" className="secondary-button">Revisar pontos fracos <ArrowRight size={16} /></Link> : <Link href={`/course/${course.slug}`} className="secondary-button">Continuar meu curso <ArrowRight size={16} /></Link>}
       </div>
       <div className="progress-top-grid">
         <section className="progress-main-card">
           <span className="eyebrow">{course.title.toUpperCase()}</span>
           <h2>
-            Você já percorreu <strong>{totalProgress}%</strong> do curso disponível.
+            Você estudou <strong>{totalProgress}%</strong> do conteúdo disponível.
           </h2>
           <p>Continue praticando para transformar conhecimento em confiança.</p>
           <div className="progress-track">
@@ -109,7 +117,7 @@ export default function ProgressPage() {
               Unidade {unit.number} · {unit.title}
             </span>
             <strong>
-              {progress.completed} de {progress.total} atividades
+              {progress.completed} de {progress.total} atividades realizadas
             </strong>
           </div>
         </section>
@@ -117,31 +125,10 @@ export default function ProgressPage() {
           <span className="eyebrow">
             <Target size={13} /> DOMÍNIO DA UNIDADE
           </span>
-          <h3>
-            {progress.isMastered
-              ? "Dominada"
-              : progress.isCompleted
-                ? "Concluída, em revisão"
-                : "Em construção"}
-          </h3>
-          <p>Completar a trilha é o primeiro passo; domínio pede prática e revisão.</p>
-          <div className="mastery-checks">
-            {[
-              { label: "Trilha concluída", done: progress.isCompleted },
-              { label: "Exercícios ≥ 80%", done: progress.exerciseScore >= 80 },
-              { label: "Revisão ≥ 80%", done: progress.reviewScore >= 80 },
-              { label: "Writing e speaking", done: progress.writingDone && progress.speakingDone },
-              {
-                label: "Teste final ≥ 75%",
-                done: progress.assessmentFinished && progress.assessmentScore >= 75,
-              },
-            ].map((item) => (
-              <div key={item.label}>
-                {item.done ? <Check size={16} /> : <Circle size={15} />}
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          <h3>{progress.isMastered ? "Dominada" : policyStatusLabels[progress.mastery.status]}</h3>
+          <p>Realizar atividades, concluir a unidade e demonstrar domínio são marcos distintos.</p>
+          <PolicyChecklist title="Conclusão" result={progress.completion} />
+          <PolicyChecklist title="Domínio estimado" result={progress.mastery} />
         </section>
       </div>
       <section className="panel improvement-panel">
@@ -159,53 +146,60 @@ export default function ProgressPage() {
           <div className="improvement-list">
             {improvements.map((item, index) => {
               const guidance = recommendationGuidance(course, state, item, resources);
-              const lessonActivityId = item.kind === "activity" && state.mistakes[item.id]
-                ? item.id
-                : item.kind === "review" ? firstDueMistake?.activityId : undefined;
-              return <div className="improvement-item" key={`${item.kind}-${item.id}`}>
-                <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <strong>{item.title}</strong>
-                  <p>{item.reason}</p>
-                </div>
-                <div className="improvement-actions">
-                  <Link href={recommendationLink(course.slug, item)} className="secondary-button">
-                    Praticar agora <ArrowRight size={15} />
-                  </Link>
-                  <details
-                    className="improvement-explanation"
-                    onToggle={(event) => {
-                      if (event.currentTarget.open)
-                        recordStudyEvent("explanation_opened", item.id, { courseId: course.id });
-                    }}
-                  >
-                    <summary>Ver explicação</summary>
-                    <p>{guidance.explanation}</p>
-                    {guidance.example && (
-                      <p>
-                        <strong>{item.kind === "image" ? "Observe:" : "Exemplo:"}</strong>{" "}
-                        <span lang={item.kind === "image" ? "pt-BR" : course.languageCode}>
-                          {guidance.example}
-                        </span>{" "}
-                        {item.kind !== "image" && (
-                          <SpeakButton text={guidance.example} label="Ouvir exemplo" />
-                        )}
-                      </p>
-                    )}
-                  </details>
-                  {featureFlags.AI_TUTOR && lessonActivityId && (
-                    <Link
-                      href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
-                      className="text-link"
-                    >
-                      Fazer microlição <ArrowRight size={15} />
+              const lessonActivityId =
+                item.kind === "activity" && state.mistakes[item.id]
+                  ? item.id
+                  : item.kind === "review"
+                    ? firstDueMistake?.activityId
+                    : undefined;
+              return (
+                <div className="improvement-item" key={`${item.kind}-${item.id}`}>
+                  <span className="improvement-rank">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <strong>{item.title}</strong>
+                    <p>{item.reason}</p>
+                  </div>
+                  <div className="improvement-actions">
+                    <Link href={recommendationLink(course.slug, item)} className="secondary-button">
+                      Praticar agora <ArrowRight size={15} />
                     </Link>
-                  )}
-                  {item.kind === "number" && (
-                    <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
-                  )}
+                    <details
+                      className="improvement-explanation"
+                      onToggle={(event) => {
+                        if (event.currentTarget.open)
+                          recordStudyEvent("explanation_opened", item.id, { courseId: course.id });
+                      }}
+                    >
+                      <summary>Ver explicação</summary>
+                      <p>{guidance.explanation}</p>
+                      {guidance.example && (
+                        <p>
+                          <strong>{item.kind === "image" ? "Observe:" : "Exemplo:"}</strong>{" "}
+                          <LearningText
+                            as="span"
+                            textRole={item.kind === "image" ? "source" : "target"}
+                            text={guidance.example}
+                          />{" "}
+                          {item.kind !== "image" && (
+                            <SpeakButton text={guidance.example} label="Ouvir exemplo" />
+                          )}
+                        </p>
+                      )}
+                    </details>
+                    {microAction.eligible && lessonActivityId && (
+                      <Link
+                        href={`/micro-lesson?activity=${encodeURIComponent(lessonActivityId)}`}
+                        className="text-link"
+                      >
+                        {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Fazer microlição"} <ArrowRight size={15} />
+                      </Link>
+                    )}
+                    {item.kind === "number" && (
+                      <span className="helper-note">O treino inclui escuta, ditado e fala.</span>
+                    )}
+                  </div>
                 </div>
-              </div>;
+              );
             })}
           </div>
         ) : (
@@ -273,12 +267,20 @@ export default function ProgressPage() {
                     }}
                   />
                 </div>
-                <b>{item.performance === null ? "Sem nota" : `${item.performance}%`}</b>
+                <b>
+                  {!item.applicable
+                    ? "Não aplicável"
+                    : item.unavailable
+                      ? "Indisponível"
+                      : item.performance === null
+                        ? "Sem nota"
+                        : `${item.performance}%`}
+                </b>
               </div>
             ))}
           </div>
           <p className="helper-note">
-            A barra mostra conclusão; a nota mostra acertos nas atividades corrigidas. Produções
+            A barra mostra participação; a nota mostra acertos nas atividades corrigidas. Produções
             livres ficam sem nota automática.
           </p>
         </section>
@@ -287,23 +289,31 @@ export default function ProgressPage() {
           <h2>
             {progress.assessmentFinished
               ? `${progress.assessmentScore}% de acertos`
-              : "Um teste para fechar o ciclo"}
+              : progress.assessmentDefined
+                ? "Um teste para fechar o ciclo"
+                : "Sem avaliação final declarada"}
           </h2>
           <p>
             {progress.assessmentFinished
               ? "Veja os pontos que merecem outra revisão."
               : "Ao terminar as lições, confira o que já consegue usar sem consultar o conteúdo."}
           </p>
-          <Link
-            href={`/course/${course.slug}/unit/${unit.number}/lesson/${unit.lessons.find((lesson) => lesson.activities.some((activity) => activity.type === "quiz"))?.slug ?? unit.lessons.at(-1)?.slug}`}
-            className="primary-button"
-          >
-            {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
-            <ArrowRight size={16} />
-          </Link>
-          <Link href="/assessment" className="secondary-button">
-            Fazer diagnóstico adaptativo <ArrowRight size={16} />
-          </Link>
+          {unit.assessmentRefs.final && learningActionAvailability(course, { kind: "assessment", id: unit.assessmentRefs.final }, actionContext).eligible && (
+            <Link href={assessmentLink(unit.assessmentRefs.final)} className="primary-button">
+              {progress.assessmentFinished ? "Refazer avaliação" : "Abrir avaliação"}{" "}
+              <ArrowRight size={16} />
+            </Link>
+          )}
+          {(unit.assessmentRefs.diagnostic || course.assessmentRefs.diagnostic) && learningActionAvailability(course, { kind: "assessment", id: unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic }, actionContext).eligible && (
+            <Link
+              href={assessmentLink(
+                unit.assessmentRefs.diagnostic ?? course.assessmentRefs.diagnostic!,
+              )}
+              className="secondary-button"
+            >
+              Fazer diagnóstico adaptativo <ArrowRight size={16} />
+            </Link>
+          )}
           {progress.assessmentFinished && (
             <div className="assessment-strength">
               <strong>{weakSkills.length ? "Para revisar" : "Seu ponto forte"}</strong>

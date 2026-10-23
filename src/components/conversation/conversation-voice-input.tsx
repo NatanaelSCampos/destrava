@@ -80,7 +80,7 @@ export function ConversationVoiceInput({
       <button
         type="button"
         className="secondary-button"
-        disabled={!recording && (disabled || transcribing || !language.capabilities.speechRecognition)}
+        disabled={!recording && (disabled || transcribing || !language.speech.support.speechRecognition)}
         onClick={() => (recording ? recorder.current?.stop() : void start())}
       >
         {recording ? <Square size={16} /> : <Mic size={16} />}

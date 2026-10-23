@@ -526,12 +526,40 @@
               "status": "approved"
             }
           }
+        },
+        {
+          "id": "grammar-age-speaking",
+          "type": "speaking",
+          "skills": [
+            "speaking",
+            "pronunciation"
+          ],
+          "concepts": [
+            "age-tener"
+          ],
+          "title": "Repita: tenho 26 anos",
+          "prompt": "Escute e repita: Tengo veintiséis años.",
+          "minutes": 2,
+          "payload": {
+            "guidance": [
+              "Ouça a frase antes de gravar.",
+              "Diga a frase inteira e confira a avaliação."
+            ],
+            "referenceText": "Tengo veintiséis años."
+          },
+          "provenance": {
+            "origin": "human",
+            "review": {
+              "status": "approved"
+            }
+          }
         }
       ],
       "eyebrow": "Gramática",
       "description": "Ser, tener, llamarse, vivir e trabalhar.",
       "minutes": 15,
-      "active": true
+      "active": true,
+      "interactiveLessonRef": "aula-tener-idade"
     },
     {
       "id": "l-listening",
@@ -1626,7 +1654,220 @@
       "active": true
     }
   ],
-  "assessmentId": "frecuencias-a1.nos-presentamos.diagnostic",
   "description": "Aprenda a cumprimentar, falar de você e conhecer alguém em espanhol.",
-  "active": true
+  "active": true,
+  "assessmentRefs": {
+    "diagnostic": "frecuencias-a1.nos-presentamos.diagnostic",
+    "final": "nos-presentamos-final"
+  },
+  "learningPolicy": {
+    "completion": {
+      "requirements": [
+        {
+          "id": "required-activities",
+          "label": "Realizar as atividades obrigatórias",
+          "kind": "participation",
+          "activityIds": [
+            "intro-1",
+            "objectives-1",
+            "vocab-1",
+            "vocab-2",
+            "vocab-3",
+            "vocab-4",
+            "vocab-5",
+            "grammar-1",
+            "grammar-2",
+            "grammar-3",
+            "grammar-4",
+            "grammar-5",
+            "grammar-6",
+            "grammar-age-speaking",
+            "listening-1",
+            "guided-1",
+            "guided-2",
+            "guided-3",
+            "guided-4",
+            "guided-5",
+            "guided-6",
+            "workbook-1",
+            "workbook-2",
+            "workbook-3",
+            "workbook-4",
+            "workbook-5",
+            "writing-1",
+            "speaking-1",
+            "speaking-repeat-1",
+            "review-1",
+            "review-2",
+            "review-3",
+            "review-4",
+            "diagnostic-listen-2",
+            "diagnostic-listen-3",
+            "diagnostic-read-2",
+            "diagnostic-read-3",
+            "diagnostic-write-3",
+            "assessment-intro",
+            "assessment-1",
+            "assessment-2",
+            "assessment-3",
+            "assessment-4",
+            "assessment-5",
+            "assessment-6",
+            "assessment-writing"
+          ]
+        }
+      ]
+    },
+    "mastery": {
+      "requirements": [
+        {
+          "id": "completion",
+          "label": "Cumprir a conclusão da unidade",
+          "kind": "unit_completed"
+        },
+        {
+          "id": "objective",
+          "label": "Desempenho objetivo de pelo menos 80%",
+          "kind": "objective_score",
+          "activityIds": [
+            "vocab-2",
+            "vocab-3",
+            "vocab-4",
+            "vocab-5",
+            "grammar-2",
+            "grammar-3",
+            "grammar-4",
+            "grammar-5",
+            "grammar-6",
+            "listening-1",
+            "guided-1",
+            "guided-2",
+            "guided-3",
+            "guided-4",
+            "guided-5",
+            "guided-6",
+            "workbook-2",
+            "workbook-3",
+            "workbook-4",
+            "workbook-5",
+            "review-2",
+            "review-3",
+            "review-4",
+            "diagnostic-listen-2",
+            "diagnostic-listen-3",
+            "diagnostic-read-2",
+            "diagnostic-read-3",
+            "diagnostic-write-3"
+          ],
+          "minimumScore": 80,
+          "minimumSamples": 1
+        },
+        {
+          "id": "reviews",
+          "label": "Evidência de revisão de pelo menos 80%",
+          "kind": "review_score",
+          "vocabularyIds": [
+            "hola",
+            "buenos-dias",
+            "buenas-tardes",
+            "hasta-luego",
+            "hasta-manana",
+            "llamarse",
+            "tener",
+            "vivir",
+            "trabajar",
+            "brasileno",
+            "argentino",
+            "profesor",
+            "medico",
+            "treinta",
+            "donde",
+            "de-donde",
+            "cuantos",
+            "hablar"
+          ],
+          "activityIds": [
+            "intro-1",
+            "objectives-1",
+            "vocab-1",
+            "vocab-2",
+            "vocab-3",
+            "vocab-4",
+            "vocab-5",
+            "grammar-1",
+            "grammar-2",
+            "grammar-3",
+            "grammar-4",
+            "grammar-5",
+            "grammar-6",
+            "grammar-age-speaking",
+            "listening-1",
+            "guided-1",
+            "guided-2",
+            "guided-3",
+            "guided-4",
+            "guided-5",
+            "guided-6",
+            "workbook-1",
+            "workbook-2",
+            "workbook-3",
+            "workbook-4",
+            "workbook-5",
+            "writing-1",
+            "speaking-1",
+            "speaking-repeat-1",
+            "review-1",
+            "review-2",
+            "review-3",
+            "review-4",
+            "diagnostic-listen-2",
+            "diagnostic-listen-3",
+            "diagnostic-read-2",
+            "diagnostic-read-3",
+            "diagnostic-write-3",
+            "assessment-intro",
+            "assessment-1",
+            "assessment-2",
+            "assessment-3",
+            "assessment-4",
+            "assessment-5",
+            "assessment-6",
+            "assessment-writing"
+          ],
+          "minimumScore": 80,
+          "minimumSamples": 1,
+          "minimumReviews": 1
+        },
+        {
+          "id": "writing",
+          "label": "Entregar a prática escrita",
+          "kind": "submission",
+          "practice": "writing",
+          "activityIds": [
+            "writing-1"
+          ],
+          "minimumCount": 1
+        },
+        {
+          "id": "speaking",
+          "label": "Entregar uma prática de fala",
+          "kind": "submission",
+          "practice": "speaking",
+          "activityIds": [
+            "grammar-age-speaking",
+            "speaking-1",
+            "speaking-repeat-1"
+          ],
+          "minimumCount": 1
+        },
+        {
+          "id": "final",
+          "label": "Atingir o critério da avaliação somativa",
+          "kind": "assessment",
+          "assessmentId": "nos-presentamos-final",
+          "purpose": "summative"
+        }
+      ]
+    }
+  }
 }

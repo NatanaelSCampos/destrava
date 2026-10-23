@@ -1,5 +1,7 @@
 "use client";
 
+import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CaseUpper, Search } from "lucide-react";
@@ -16,6 +18,7 @@ function normalizeSearch(value: string) {
 }
 
 export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
+  const textAttrs = useTextPresentation();
   const { resources, language } = useStudy();
   const alphabet = resources.alphabet;
   const vowelCount = alphabet.filter((item) => item.kind === "vowel").length;
@@ -123,18 +126,17 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             <div className="alphabet-card-top">
               <span className="pill gray">{item.kind === "vowel" ? "VOGAL" : "CONSOANTE"}</span>
               <span className="alphabet-position">
-                {String(alphabet.indexOf(item) + 1).padStart(2, "0")} /{" "}
-                {alphabet.length}
+                {String(alphabet.indexOf(item) + 1).padStart(2, "0")} / {alphabet.length}
               </span>
             </div>
             <div className="alphabet-letter-row">
-              <div className="alphabet-symbol" lang={language.id}>
+              <div className="alphabet-symbol" {...textAttrs()}>
                 {item.letter}
                 <span>{item.letter.toLowerCase()}</span>
               </div>
               <div className="alphabet-name">
                 <span>NOME DA LETRA</span>
-                <strong lang={language.id}>{item.name}</strong>
+                <strong {...textAttrs()}>{item.name}</strong>
                 <SpeakButton
                   text={item.name}
                   label={`Ouvir o nome da letra ${item.letter}`}
@@ -145,13 +147,15 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             <div className="alphabet-word-row">
               <div>
                 <span>EXEMPLO</span>
-                <strong lang={language.id}>{item.word}</strong>
-                <small>{item.translation}</small>
+                <strong {...textAttrs()}>{item.word}</strong>
+                <small>
+                  <LearningText textRole="source" text={item.translation} />
+                </small>
               </div>
               <SpeakButton text={item.word} label={`Ouvir a palavra ${item.word}`} />
             </div>
             <div className="alphabet-example-row">
-              <p lang={language.id}>“{item.example}”</p>
+              <p {...textAttrs()}>“{item.example}”</p>
               <SpeakButton text={item.example} label={`Ouvir a frase ${item.example}`} />
             </div>
             {item.note && <p className="alphabet-tip">{item.note}</p>}

@@ -2,6 +2,8 @@
 
 **Aprenda. Pratique. Destrave.**
 
+O desenvolvimento usa coordenação nativa com Lead, Implementador, QA e Revisor, worktrees isoladas para escrita e integração central. Consulte [o procedimento multiagente](DESTRAVA_MULTIAGENTE.md) para perfis, evidências de homologação e limites de permissões.
+
 O **Destrava** é uma plataforma multilíngua de aprendizado orientada por prática, adaptação e contexto real.
 
 O projeto começou com espanhol A1, mas a direção atual é mais ampla: construir um **motor de aprendizagem reutilizável entre idiomas**, no qual novos cursos e novas línguas entram principalmente como conteúdo e configuração, sem recriar a aplicação para cada idioma.
@@ -709,6 +711,8 @@ Abra:
 http://localhost:3000
 ```
 
+Para entrar localmente, abra `/login` e use sua conta do Supabase remoto. Se o Turnstile mostrar o erro `110200`, o hostname local não está autorizado no widget. Use o login por Google ou configure um ambiente de desenvolvimento separado para testar o CAPTCHA com senha. A Cloudflare recomenda não autorizar `localhost` em widgets de produção. O login por Google pode ser habilitado apenas no ambiente local com `NEXT_PUBLIC_GOOGLE_LOGIN_ENABLED=true` em `.env.local`; reinicie `npm.cmd run dev` depois de alterar a variável.
+
 ---
 
 # Banco e autenticação
@@ -779,6 +783,14 @@ Os locales de reconhecimento e avaliação são resolvidos pelo `LanguagePackage
 
 ---
 
+# Aula Particular Interativa
+
+A opção **Aula particular** abre `/live-classes`. A primeira aula interativa está ligada à lição de espanhol sobre `tener` para falar de idade. Ela reúne apresentação em slides com quadro sincronizado, explicações alternativas, exercício corrigido, prática de fala e retomada da sessão. O motor aceita mídia de vídeo ou áudio declarada no pacote; a demonstração atual usa a imagem e o roteiro do protótipo fornecido.
+
+Para criar outra aula, adicione uma definição em `content/courses/<course-id>/interactive-lessons/` e associe-a com `interactiveLessonRef` na lição correspondente. As referências e capacidades do idioma são validadas pelo pipeline normal. Veja [a implementação do MVP](DESTRAVA_IMPLEMENTACAO_AULA_PARTICULAR_INTERATIVA_MVP.md) para decisões, testes e limitações.
+
+---
+
 # Segurança
 
 O projeto inclui mecanismos como:
@@ -813,6 +825,40 @@ Detalhes operacionais de domínio, SMTP, OAuth, CAPTCHA e segurança devem ser c
 
 # Validação
 
+## Checkpoint integrado dos Incrementos 1–3
+
+O ambiente atual da aplicação é **local**, com Supabase em
+`http://127.0.0.1:54321` e Next em `http://127.0.0.1:3000`.
+As credenciais remotas foram preservadas em `.env.remote.backup.local`, ignorado
+pelo Git. `.env.integration.local` contém somente o perfil de integração local,
+sem chaves de OpenAI/Azure, Google OAuth ou Turnstile.
+
+```powershell
+npm.cmd run checkpoint:prepare
+npm.cmd run checkpoint:migrate
+npm.cmd run checkpoint:seed
+npm.cmd run dev:local
+# Em outro terminal, com a aplicação local em execução:
+npm.cmd run checkpoint:verify
+npm.cmd run build:local
+```
+
+Os comandos verificam projeto, daemon Docker, diretório, portas e destino
+loopback; migrações usam `--local` explicitamente. Não use `supabase db push`
+genérico para estes testes: o CLI continua vinculado ao projeto remoto.
+O verificador cria e remove suas próprias contas sintéticas e testa APIs reais,
+RLS, MFA, recuperação, persistência e navegador desktop/mobile. Requer Docker,
+o CLI instalado pelo projeto e Chrome ou Edge instalado.
+
+TOTP está habilitado em `supabase/config.toml`. Após mudar configurações locais,
+`checkpoint:restart` reinicia apenas este stack e preserva volumes; depois use
+`checkpoint:prepare` e reinicie `dev:local` para recarregar o ambiente.
+As migrações dos incrementos 2 e 3 foram aplicadas **somente localmente**.
+Contas de produção não existem neste banco; para revisão manual, cadastre uma
+conta local pela tela de login.
+
+Veja [o relatório e a proposta de checkpoint Git](DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md).
+
 Execute antes de considerar uma entrega concluída:
 
 ```powershell
@@ -823,13 +869,51 @@ npm.cmd run content:pedagogy
 npm.cmd run content:compile
 npm.cmd run content:preview -- --course pt-BR.xx-Test.a1.general
 npm.cmd run learning:verify
+npm.cmd run policies:verify
+npm.cmd run assessment:verify
+npm.cmd run assessment:semantics:verify
 npm.cmd run multilingual:verify
+npm.cmd run interactive:verify
 npm.cmd run architecture:check
+npm.cmd run contracts:verify
 npm.cmd run session:verify
+npm.cmd run sync:verify
 npm.cmd run build
 ```
 
 `predev` e `prebuild` compilam os pacotes automaticamente. Após aplicar as migrações e executar `npm.cmd run db:seed`, use `npm.cmd run db:verify:remote` para conferir o conteúdo no Supabase remoto. A revisão pedagógica emite avisos que exigem decisão editorial, mesmo quando a validação estrutural passa.
+
+### Avaliações — Fase 2, Incremento 2
+
+O schema de curso 1.3 preserva as finalidades, métodos e referências de avaliação
+introduzidos no Incremento 2 e acrescenta políticas de conclusão/domínio.
+O diagnóstico inicial vem de `course.assessmentRefs.diagnostic`; a final da
+unidade vem de `unit.assessmentRefs.final`. Quiz e nomes de IDs não definem
+esses papéis. Resultados sem evidência suficiente têm nota null.
+
+Para revisar a seleção local, use `http://localhost:3000/assessment` ou
+`http://localhost:3000/assessment?assessmentId=nos-presentamos-final` no curso
+espanhol. A gravação completa autenticada depende do conteúdo instalado no banco.
+`20261010000100_assessment_semantics.sql` e o seed correspondente estão
+preparados, **não aplicados remotamente**. Não execute instalação remota como
+parte da validação local sem autorização. Veja [a entrega do incremento](DESTRAVA_AVALIACOES_INCREMENTO_2.md)
+para arquivos, testes sintéticos, alterações nas fixtures e limites de persistência.
+
+### Políticas — Fase 2, Incremento 3
+
+Cada unidade declara `learningPolicy.completion` e `learningPolicy.mastery`.
+Participação não equivale a aprovação; atividades opcionais não bloqueiam a
+conclusão. Critérios medidos sem evidência suficiente têm nota null. Um recurso
+obrigatório indisponível permanece no cálculo e aparece na interface.
+
+Revise os critérios em `http://localhost:3000/progress` e na página da unidade.
+`policies:verify` usa dados sintéticos e repositório simulado. A migração
+`20261010000200_learning_policies.sql` foi aplicada no Supabase local durante o
+checkpoint integrado; continua sem aplicação remota nesta entrega. O app usa
+o perfil local protegido. Veja [a entrega original](DESTRAVA_POLITICAS_INCREMENTO_3.md)
+e [a homologação integrada](DESTRAVA_CHECKPOINT_INTEGRACAO_1_2_3.md).
+
+Para conferir também a sessão interativa autenticada no Supabase remoto, execute `npm.cmd run interactive:verify:remote`. O script cria e remove uma conta descartável, sem enviar e-mail.
 
 ---
 
@@ -867,3 +951,87 @@ O idioma muda.
 O aluno muda.
 
 **O motor continua o mesmo.**
+
+### Capacidades — Fase 2, Incremento 4
+
+O motor possui registro estático de capacidades, versões exatas, schemas compartilhados e negociação de requisitos. Características do idioma, cobertura/configuração de voz, suporte do motor e políticas permanecem separados. Atividades obrigatórias indisponíveis ficam visíveis; não geram nota ou conclusão.
+
+```powershell
+npm.cmd run capabilities:verify
+npm.cmd run capabilities:catalog
+npm.cmd run architecture:check
+```
+
+O catálogo portável é [engine-capabilities-v1.json](contracts/engine-capabilities-v1.json). Consulte [inventário, decisões, testes e explicação didática](DESTRAVA_CAPACIDADES_INCREMENTO_4.md). O perfil de língua é schema 1.1; o curso permanece no schema experimental 1.3. Não foi implementado importador completo, API do Foundry ou Incremento 5. As mudanças desta etapa estão somente no ambiente local.
+
+### Texto — Incremento 5A
+
+Ordenação usa identidades por ocorrência, junção literal declarada e prova canônica privada. Escrita pode declarar medida e limites; `minWords` mantém o comportamento legado. O catálogo 1.1.0 publica schemas por versão para `activity.ordering`/`activity.writing` e as capacidades `text.reconstruction`/`text.measurement`.
+
+```powershell
+npm.cmd run text:verify
+npm.cmd run text:verify:ui
+```
+
+Veja [diagnóstico, exemplos, propriedades e limitações](DESTRAVA_TEXTO_INCREMENTO_5A.md). Essa entrega preservou língua 1.1 e curso 1.3. O estado posterior de variantes está descrito abaixo.
+
+### Variantes — Incremento 5B
+
+O curso preserva seu padrão no runtime. A resolução central aplica a exigência da atividade, a preferência válida e o padrão do curso/idioma, com diagnósticos. Alternativas autorizadas são dados privados; normalização e IA não criam equivalências. Áudio de outra variante tem aviso e é bloqueado quando a atividade exige fidelidade. Avaliações recuperam a variante originalmente persistida.
+
+```powershell
+npm.cmd run variants:verify
+npm.cmd run variants:verify:ui
+npm.cmd run checkpoint:verify
+```
+
+[Entrega, contratos, testes e explicação didática](DESTRAVA_VARIANTES_INCREMENTO_5B.md). Curso 1.4 exige os novos campos contextuais; cursos 1.3 continuam aceitos. Catálogo 1.2.0 com 41 entradas. IA e voz foram testadas com mocks; persistência foi homologada no Supabase local com contas sintéticas. Revisão local em `http://127.0.0.1:3000/settings`. O estado posterior de 5C está descrito abaixo.
+
+### Apresentação multilíngue — Incremento 5C
+
+A interface permanece em português/LTR. Textos e entradas educacionais usam a direção do perfil e metadados por campo, com isolamento bidirecional e preservação dos valores lógicos. Enter não envia a resposta durante composição; tokens mantêm suas identidades/reconstrução do 5A. O quadro da aula particular separa exemplos, comparações, traduções e legendas.
+
+```powershell
+npm.cmd run presentation:verify
+npm.cmd run presentation:verify:ui
+```
+
+[Diagnóstico, exemplos, testes, referências W3C e desafio de aprendizado](DESTRAVA_APRESENTACAO_INCREMENTO_5C.md). Curso 1.5 exige os metadados novos; 1.3/1.4 continuam aceitos. Catálogo 1.3.0 com 44 entradas. A apresentação RTL usa fixtures sintéticas; não foi instalado um curso real novo. Revisão normal em `http://127.0.0.1:3000`; IMEs, fontes e leitores de tela reais continuam pendentes.
+
+### Pacotes externos — Fase 3, Incremento 6
+
+A fronteira pública usa diretório declarativo, manifesto 1.0.0, documentos JSON e recursos locais com hash/tamanho. Os artefatos em [contracts/package-v1](contracts/package-v1/README.md) são gerados dos schemas existentes e podem ser usados por um produtor independente, sem imports privados, Supabase ou estrutura do runtime.
+
+```powershell
+npm.cmd run package:contracts
+npm.cmd run package:verify
+npm.cmd run package:validate -- C:\caminho\pacote --dry-run
+```
+
+A biblioteca/CLI valida estrutura, referências, capacidades e integridade e prepara um runtime temporário. A CLI de validação é sempre somente leitura; não instala ou ativa cursos. Aprovação declarada, confiança do produtor, disponibilidade operacional e publicação permanecem distintas. [Relatório A–G, testes, limites e aprendizado](DESTRAVA_IMPORTACAO_INCREMENTO_6.md); [experimento reproduzível](contracts/package-v1/README.md#produtor-simulado-e-experimento). Checkpoint do Incremento 6: `0e2c988`.
+
+### Instalações versionadas — Incremento 7
+
+O catálogo persistente mantém snapshots privados por instalação/hash, versões coexistentes, preparação e aprovação local separadas. Ativação e rollback usam revisão concorrente e recibo idempotente. Sessões e evidências preservam a versão original. A execução reutiliza os avaliadores e políticas existentes; o seletor normal de cursos continua compilado. IA, voz e aula interativa ainda não aceitam uma sessão instalada e rejeitam esse escopo explicitamente.
+
+```powershell
+npm.cmd run installations:verify
+npm.cmd run installations:verify:local
+npm.cmd run installations:local -- list <courseId>
+```
+
+Os dois últimos comandos exigem o perfil isolado `.env.integration.local` e comprovam o Docker/projeto/loopback. Aprovação e ativação reais continuam bloqueadas por padrão; o emissor de autoridade de teste existe somente em scripts locais, sem rota administrativa HTTP. Consulte [entrega, procedimento, evidências e limitações](DESTRAVA_INSTALACOES_INCREMENTO_7.md). A rota `/installed-courses/<sessionId>` permite inspecionar uma sessão própria e seu áudio com o player existente. Nenhuma publicação remota foi realizada.
+
+### Runtime instalado e interoperabilidade — Incremento 8
+
+O seletor e o onboarding normais passam a listar cursos instalados ativos, íntegros e aprovados exclusivamente no ambiente local. Curso, unidade, lição, correção, escrita manual, avaliação e progresso usam o mesmo motor. Reload mantém a sessão fixada; **Estudar versão atual** captura o ponteiro ativo. Progresso é separado por usuário/instalação, e notas são recompostas das evidências do servidor.
+
+```powershell
+npm.cmd run runtime:verify
+npm.cmd run runtime:verify:local
+npm.cmd run runtime:profile
+```
+
+O produtor experimental executa fora do repositório somente com contratos públicos. O [perfil de integração](contracts/package-v1/installed-runtime.json) distingue capacidades do motor e caminhos instalados. IA, oral, revisão persistida e Aula Particular ainda são bloqueados nesse contexto; implementação do recurso não significa disponibilidade ou homologação.
+
+Consulte [arquitetura, matriz, evidências, segurança e explicação educacional A–H](DESTRAVA_RUNTIME_INCREMENTO_8.md). Revisão local: `http://127.0.0.1:3000`. Produção instalada permanece bloqueada; não há publicação remota nem commit deste incremento.

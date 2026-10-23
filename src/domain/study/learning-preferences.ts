@@ -1,10 +1,13 @@
 import { z } from "zod";
+import { learningGoalSchema, learningSkillSchema, type LearningGoal, type LearningSkill } from "@/content/contract-vocabulary";
 
-export const learningGoalSchema = z.enum(["general", "travel", "work", "study", "conversation"]);
+// Keep existing public imports compatible, using the same schema instances.
+export { learningGoalSchema, learningSkillSchema };
+export type { LearningGoal, LearningSkill };
+
 export const selfReportedLevelSchema = z.enum([
   "zero", "basic", "simple_conversation", "comfortable", "advanced", "unknown",
 ]);
-export const learningSkillSchema = z.enum(["speaking", "listening", "reading", "writing"]);
 export const sessionMinutesSchema = z.union([z.literal(5), z.literal(15), z.literal(30), z.literal(45)]);
 const skillWeightsSchema = z.object({
   speaking: z.number().min(0).max(1), listening: z.number().min(0).max(1),
@@ -17,8 +20,6 @@ export const learningPreferencesSchema = z.object({
   skillWeights: skillWeightsSchema,
   preferredSessionMinutes: sessionMinutesSchema,
 });
-export type LearningGoal = z.infer<typeof learningGoalSchema>;
-export type LearningSkill = z.infer<typeof learningSkillSchema>;
 export type SelfReportedLevel = z.infer<typeof selfReportedLevelSchema>;
 export type LearningPreferences = z.infer<typeof learningPreferencesSchema>;
 export const learningSkills = learningSkillSchema.options;

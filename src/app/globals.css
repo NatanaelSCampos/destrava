@@ -258,6 +258,27 @@ select:focus-visible {
 .course-switcher small {
   color: #ffd2d8;
 }
+.course-transition-notice {
+  position: fixed;
+  z-index: 2000;
+  inset: auto 16px max(20px, env(safe-area-inset-bottom));
+  width: min(440px, calc(100% - 32px));
+  margin-inline: auto;
+  display: grid;
+  gap: 6px;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+  color: #19191c;
+  box-shadow: 0 8px 32px #0003;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.course-transition-notice span {
+  color: #535862;
+  font-size: 13px;
+}
 .sidebar-course-progress {
   display: flex;
   justify-content: space-between;
@@ -1025,3 +1046,13 @@ select:focus-visible {
     font-size: 27px;
   }
 }
+/* Pending progress stays visible while remote writes are blocked or recovering. */
+.study-sync-notice {
+  margin-bottom: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+.study-sync-notice p { margin: 0 0 0.625rem; }
+.study-sync-notice > div { display: flex; flex-wrap: wrap; gap: 0.5rem; }

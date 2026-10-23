@@ -1,0 +1,5462 @@
+{
+  "catalogVersion": "1.3.0",
+  "versionRule": "explicit-exact-allowlist",
+  "packageSchemas": {
+    "language": "1.1",
+    "course": "1.5",
+    "acceptedCourseVersions": [
+      "1.3",
+      "1.4",
+      "1.5"
+    ]
+  },
+  "requirementsSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "maxItems": 100,
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "data": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        "required": {
+          "default": true,
+          "type": "boolean"
+        },
+        "fallback": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "data": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "id",
+            "version"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "version"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "rules": [
+    "Native content implies mandatory capabilities; optional additions never waive native requirements or evidence policies.",
+    "Optional requirements always need a validated alternative. Selection does not fabricate evidence or execute external code.",
+    "Provider/browser availability is a separate environment check; configuration does not prove a live provider is healthy.",
+    "Package references, activity ownership and declarative policies must also pass package semantic validation."
+  ],
+  "capabilities": [
+    {
+      "id": "presentation.direction",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Resolve explicit horizontal text direction from language and content metadata; interface controls remain separate.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": [
+              "ltr",
+              "rtl",
+              "auto"
+            ]
+          }
+        },
+        "required": [
+          "direction"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "LTR, RTL and auto only; no vertical typography or language-specific writing algorithm."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "presentation.bidi",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Isolate plain educational text using HTML dir/bdi and logical CSS; retain logical Unicode data.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "ltr",
+                  "rtl",
+                  "auto"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "fields": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "enum": [
+                "title",
+                "prompt",
+                "body",
+                "guidance",
+                "example",
+                "options",
+                "tokens",
+                "answer",
+                "transcript",
+                "referenceText",
+                "feedback",
+                "input",
+                "front",
+                "back",
+                "highlights"
+              ]
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 80
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "ltr",
+                    "rtl",
+                    "auto"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Plain text and independent fragments only; no arbitrary rich markup or guarantee of editorial correctness. Directional controls are preserved and flagged, not made harmless by isolation."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "text.input",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Native text inputs with auto direction, original values, selection and composition-aware keyboard handling.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 80
+              },
+              "direction": {
+                "type": "string",
+                "enum": [
+                  "ltr",
+                  "rtl",
+                  "auto"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "fields": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "enum": [
+                "title",
+                "prompt",
+                "body",
+                "guidance",
+                "example",
+                "options",
+                "tokens",
+                "answer",
+                "transcript",
+                "referenceText",
+                "feedback",
+                "input",
+                "front",
+                "back",
+                "highlights"
+              ]
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "language": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 80
+                },
+                "direction": {
+                  "type": "string",
+                  "enum": [
+                    "ltr",
+                    "rtl",
+                    "auto"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Native browser input; tested in Chromium with synthetic composition. Real device IMEs and screen readers require manual qualification."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "linguistic.variant",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Resolve declared activity variant restrictions; operational availability never changes the pedagogical variant.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "requiredVariant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acceptedVariants": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "speechFallback": {
+            "type": "string",
+            "enum": [
+              "exact",
+              "same_language"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "linguistic.answers",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Filter author-declared answer alternatives by effective variant and explicit required whole forms; never infer equivalences.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "variants": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "requiredForms": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "text.reconstruction",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Join supplied elements using an explicit literal separator, including no separator.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "const": "separator"
+          },
+          "separator": {
+            "type": "string",
+            "maxLength": 32
+          }
+        },
+        "required": [
+          "strategy",
+          "separator"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "text.measurement",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Count whitespace units, Unicode code points, graphemes or locale-dependent word-like segments.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "const": "whitespace_units"
+              }
+            },
+            "required": [
+              "strategy"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "const": "code_points"
+              }
+            },
+            "required": [
+              "strategy"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "const": "graphemes"
+              }
+            },
+            "required": [
+              "strategy"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "const": "intl_words"
+              },
+              "locale": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              }
+            },
+            "required": [
+              "strategy",
+              "locale"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Intl strategies require native Intl.Segmenter; intl_words also requires an explicitly supported BCP 47 locale. Results depend on runtime Unicode/ICU data; not universal linguistic correctness."
+      ],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.lesson_content",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute lesson_content using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "body": {
+            "type": "string"
+          },
+          "highlights": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.multiple_choice",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute multiple_choice using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "options": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "options",
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Options are distinct and contain the canonical answer."
+      ],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.true_false",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute true_false using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "answer": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.fill_blank",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute fill_blank using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "answer": {
+            "type": "string"
+          },
+          "accepted": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fullAnswers": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.ordering",
+      "supportedVersions": [
+        "1.0.0",
+        "1.1.0"
+      ],
+      "support": "implemented",
+      "description": "Execute ordering using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "words": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "answer": {
+            "type": "string"
+          },
+          "reconstruction": {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "const": "separator"
+              },
+              "separator": {
+                "type": "string",
+                "maxLength": 32
+              }
+            },
+            "required": [
+              "strategy",
+              "separator"
+            ],
+            "additionalProperties": false
+          },
+          "answerOrder": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "required": [
+          "words",
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "dataSchemasByVersion": {
+        "1.0.0": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "explanation": {
+              "type": "string"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "book": {
+                  "type": "string",
+                  "enum": [
+                    "student",
+                    "workbook"
+                  ]
+                },
+                "pages": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "book",
+                "pages"
+              ]
+            },
+            "media": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "tts"
+                    },
+                    "language": {
+                      "type": "string",
+                      "minLength": 2
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "language"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "audio"
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "transcriptAvailableAfterAttempt": {
+                      "default": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "words": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "answer": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "words",
+            "answer"
+          ],
+          "additionalProperties": false
+        },
+        "1.1.0": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "explanation": {
+              "type": "string"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "book": {
+                  "type": "string",
+                  "enum": [
+                    "student",
+                    "workbook"
+                  ]
+                },
+                "pages": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "book",
+                "pages"
+              ]
+            },
+            "media": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "tts"
+                    },
+                    "language": {
+                      "type": "string",
+                      "minLength": 2
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "language"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "audio"
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "transcriptAvailableAfterAttempt": {
+                      "default": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "words": {
+              "minItems": 2,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "answer": {
+              "type": "string"
+            },
+            "reconstruction": {
+              "type": "object",
+              "properties": {
+                "strategy": {
+                  "type": "string",
+                  "const": "separator"
+                },
+                "separator": {
+                  "type": "string",
+                  "maxLength": 32
+                }
+              },
+              "required": [
+                "strategy",
+                "separator"
+              ],
+              "additionalProperties": false
+            },
+            "answerOrder": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            }
+          },
+          "required": [
+            "words",
+            "answer"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [
+        "The canonical answer uses exactly the supplied tokens, including repetitions.",
+        "Version 1.0.0 preserves space joining; 1.1.0 supports a literal separator and a private canonical source permutation. Occurrences have separate identities."
+      ],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.short_answer",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute short_answer using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "answer": {
+            "type": "string"
+          },
+          "accepted": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.writing",
+      "supportedVersions": [
+        "1.0.0",
+        "1.1.0"
+      ],
+      "support": "implemented",
+      "description": "Execute writing using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "guidance": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minWords": {
+            "type": "number",
+            "minimum": 0
+          },
+          "textRequirement": {
+            "type": "object",
+            "properties": {
+              "measure": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "strategy": {
+                        "type": "string",
+                        "const": "whitespace_units"
+                      }
+                    },
+                    "required": [
+                      "strategy"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "strategy": {
+                        "type": "string",
+                        "const": "code_points"
+                      }
+                    },
+                    "required": [
+                      "strategy"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "strategy": {
+                        "type": "string",
+                        "const": "graphemes"
+                      }
+                    },
+                    "required": [
+                      "strategy"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "strategy": {
+                        "type": "string",
+                        "const": "intl_words"
+                      },
+                      "locale": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      }
+                    },
+                    "required": [
+                      "strategy",
+                      "locale"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "minimum": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "maximum": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "measure",
+              "minimum"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "dataSchemasByVersion": {
+        "1.0.0": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "explanation": {
+              "type": "string"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "book": {
+                  "type": "string",
+                  "enum": [
+                    "student",
+                    "workbook"
+                  ]
+                },
+                "pages": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "book",
+                "pages"
+              ]
+            },
+            "media": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "tts"
+                    },
+                    "language": {
+                      "type": "string",
+                      "minLength": 2
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "language"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "audio"
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "transcriptAvailableAfterAttempt": {
+                      "default": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "guidance": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "minWords": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "minWords"
+          ],
+          "additionalProperties": false
+        },
+        "1.1.0": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "explanation": {
+              "type": "string"
+            },
+            "source": {
+              "type": "object",
+              "properties": {
+                "book": {
+                  "type": "string",
+                  "enum": [
+                    "student",
+                    "workbook"
+                  ]
+                },
+                "pages": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "book",
+                "pages"
+              ]
+            },
+            "media": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "tts"
+                    },
+                    "language": {
+                      "type": "string",
+                      "minLength": 2
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "language"
+                  ]
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "const": "audio"
+                    },
+                    "url": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "transcriptAvailableAfterAttempt": {
+                      "default": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "url"
+                  ]
+                }
+              ]
+            },
+            "guidance": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "minWords": {
+              "type": "number",
+              "minimum": 0
+            },
+            "textRequirement": {
+              "type": "object",
+              "properties": {
+                "measure": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "strategy": {
+                          "type": "string",
+                          "const": "whitespace_units"
+                        }
+                      },
+                      "required": [
+                        "strategy"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "strategy": {
+                          "type": "string",
+                          "const": "code_points"
+                        }
+                      },
+                      "required": [
+                        "strategy"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "strategy": {
+                          "type": "string",
+                          "const": "graphemes"
+                        }
+                      },
+                      "required": [
+                        "strategy"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "strategy": {
+                          "type": "string",
+                          "const": "intl_words"
+                        },
+                        "locale": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        }
+                      },
+                      "required": [
+                        "strategy",
+                        "locale"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "minimum": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "maximum": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "measure",
+                "minimum"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "evidence": [
+        "writing_submission"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.listening",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute listening using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "transcript": {
+            "type": "string"
+          },
+          "options": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "transcript",
+          "options",
+          "answer"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation",
+        "objective_answer"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Options are distinct and contain the canonical answer."
+      ],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.speaking",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute speaking using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "guidance": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "referenceText": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "evidence": [
+        "speaking_submission"
+      ],
+      "dependencies": [
+        "speech.recording"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.flashcard",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute flashcard using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "front": {
+            "type": "string"
+          },
+          "back": {
+            "type": "string"
+          },
+          "example": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "front",
+          "back",
+          "example"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.review",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute review using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "body": {
+            "type": "string"
+          },
+          "steps": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cards": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "structure": {
+                  "type": "string"
+                },
+                "examples": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "practice": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "label",
+                "examples",
+                "practice"
+              ]
+            }
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "activity.quiz",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute quiz using the existing activity interaction.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "explanation": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "properties": {
+              "book": {
+                "type": "string",
+                "enum": [
+                  "student",
+                  "workbook"
+                ]
+              },
+              "pages": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "book",
+              "pages"
+            ]
+          },
+          "media": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tts"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2
+                  }
+                },
+                "required": [
+                  "kind",
+                  "language"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "audio"
+                  },
+                  "url": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "transcriptAvailableAfterAttempt": {
+                    "default": true,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "url"
+                ]
+              }
+            ]
+          },
+          "body": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "participation"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Presentation/participation marker only; not an assessment."
+      ],
+      "semanticValidation": true
+    },
+    {
+      "id": "grading.exact-normalized",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Compare against canonical answers with declared normalization.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "objective_answer"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "text.normalization",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "NFC, whitespace, case and configured punctuation/diacritics.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "trimWhitespace": {
+            "type": "boolean"
+          },
+          "collapseWhitespace": {
+            "type": "boolean"
+          },
+          "caseInsensitive": {
+            "type": "boolean"
+          },
+          "ignoreTerminalPunctuation": {
+            "type": "boolean"
+          },
+          "ignoreDiacritics": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "trimWhitespace",
+          "collapseWhitespace",
+          "caseInsensitive",
+          "ignoreTerminalPunctuation",
+          "ignoreDiacritics"
+        ]
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "Combining marks U+0300–U+036F only when diacritics are ignored; not a morphological analyzer."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "assessment.fixed",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute an explicitly referenced fixed assessment.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilityRequirements": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
+                    "data": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "required": {
+                      "default": true,
+                      "type": "boolean"
+                    },
+                    "fallback": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "version": {
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                        },
+                        "data": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "diagnostic",
+                  "formative",
+                  "summative"
+                ]
+              },
+              "unitId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lessonId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "objectiveIds": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "passingPolicy": {
+                "type": "object",
+                "properties": {
+                  "overall": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minimumBySkill": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "required": [
+                  "overall"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "const": "adaptive"
+              },
+              "skillWeights": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "enum": [
+                    "reading",
+                    "writing",
+                    "listening",
+                    "speaking",
+                    "vocabulary",
+                    "grammar",
+                    "pronunciation",
+                    "fluency",
+                    "comprehension"
+                  ]
+                },
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "skillPlan": {
+                "minItems": 1,
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "reading",
+                    "writing",
+                    "listening",
+                    "speaking",
+                    "vocabulary",
+                    "grammar",
+                    "pronunciation",
+                    "fluency",
+                    "comprehension"
+                  ]
+                }
+              },
+              "bank": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "activityId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "skill": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "difficulty": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 1
+                        },
+                        {
+                          "type": "number",
+                          "const": 2
+                        },
+                        {
+                          "type": "number",
+                          "const": 3
+                        }
+                      ]
+                    },
+                    "ceiling": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "activityId",
+                    "skill",
+                    "difficulty"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "purpose",
+              "passingPolicy",
+              "method",
+              "skillWeights",
+              "skillPlan",
+              "bank"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilityRequirements": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
+                    "data": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "required": {
+                      "default": true,
+                      "type": "boolean"
+                    },
+                    "fallback": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "version": {
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                        },
+                        "data": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "diagnostic",
+                  "formative",
+                  "summative"
+                ]
+              },
+              "unitId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lessonId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "objectiveIds": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "passingPolicy": {
+                "type": "object",
+                "properties": {
+                  "overall": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minimumBySkill": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "required": [
+                  "overall"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "const": "fixed"
+              },
+              "gradingStrategy": {
+                "type": "string",
+                "const": "objective_mean"
+              },
+              "activityIds": {
+                "minItems": 1,
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "purpose",
+              "passingPolicy",
+              "method",
+              "gradingStrategy",
+              "activityIds"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "evidence": [
+        "server_assessment_result"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "assessment.adaptive",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Execute a declared adaptive skill plan and bank.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilityRequirements": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
+                    "data": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "required": {
+                      "default": true,
+                      "type": "boolean"
+                    },
+                    "fallback": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "version": {
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                        },
+                        "data": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "diagnostic",
+                  "formative",
+                  "summative"
+                ]
+              },
+              "unitId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lessonId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "objectiveIds": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "passingPolicy": {
+                "type": "object",
+                "properties": {
+                  "overall": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minimumBySkill": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "required": [
+                  "overall"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "const": "adaptive"
+              },
+              "skillWeights": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string",
+                  "enum": [
+                    "reading",
+                    "writing",
+                    "listening",
+                    "speaking",
+                    "vocabulary",
+                    "grammar",
+                    "pronunciation",
+                    "fluency",
+                    "comprehension"
+                  ]
+                },
+                "additionalProperties": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "skillPlan": {
+                "minItems": 1,
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "reading",
+                    "writing",
+                    "listening",
+                    "speaking",
+                    "vocabulary",
+                    "grammar",
+                    "pronunciation",
+                    "fluency",
+                    "comprehension"
+                  ]
+                }
+              },
+              "bank": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "activityId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "skill": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "difficulty": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 1
+                        },
+                        {
+                          "type": "number",
+                          "const": 2
+                        },
+                        {
+                          "type": "number",
+                          "const": 3
+                        }
+                      ]
+                    },
+                    "ceiling": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "activityId",
+                    "skill",
+                    "difficulty"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "purpose",
+              "passingPolicy",
+              "method",
+              "skillWeights",
+              "skillPlan",
+              "bank"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "capabilityRequirements": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "version": {
+                      "type": "string",
+                      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                    },
+                    "data": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "required": {
+                      "default": true,
+                      "type": "boolean"
+                    },
+                    "fallback": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "version": {
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                        },
+                        "data": {
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "version"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "version"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "enum": [
+                  "diagnostic",
+                  "formative",
+                  "summative"
+                ]
+              },
+              "unitId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lessonId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "objectiveIds": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "passingPolicy": {
+                "type": "object",
+                "properties": {
+                  "overall": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minimumBySkill": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "reading",
+                        "writing",
+                        "listening",
+                        "speaking",
+                        "vocabulary",
+                        "grammar",
+                        "pronunciation",
+                        "fluency",
+                        "comprehension"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                },
+                "required": [
+                  "overall"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "const": "fixed"
+              },
+              "gradingStrategy": {
+                "type": "string",
+                "const": "objective_mean"
+              },
+              "activityIds": {
+                "minItems": 1,
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "purpose",
+              "passingPolicy",
+              "method",
+              "gradingStrategy",
+              "activityIds"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "evidence": [
+        "server_assessment_result"
+      ],
+      "dependencies": [
+        "grading.exact-normalized"
+      ],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": true
+    },
+    {
+      "id": "policy.unit",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Interpret AND completion and estimated mastery policies.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "completion": {
+            "type": "object",
+            "properties": {
+              "requirements": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "participation"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "minimumCount": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "submission"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "practice": {
+                          "type": "string",
+                          "enum": [
+                            "writing",
+                            "speaking"
+                          ]
+                        },
+                        "minimumCount": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds",
+                        "practice"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "objective_score"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "skill": {
+                          "type": "string",
+                          "enum": [
+                            "reading",
+                            "writing",
+                            "listening",
+                            "speaking",
+                            "vocabulary",
+                            "grammar",
+                            "pronunciation",
+                            "fluency",
+                            "comprehension"
+                          ]
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "minimumSamples": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds",
+                        "minimumScore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "assessment"
+                        },
+                        "assessmentId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "diagnostic",
+                            "formative",
+                            "summative"
+                          ]
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "assessmentId",
+                        "purpose"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "review_score"
+                        },
+                        "vocabularyIds": {
+                          "default": [],
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "activityIds": {
+                          "default": [],
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "minimumSamples": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "minimumReviews": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "minimumScore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "unit_completed"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "requirements"
+            ],
+            "additionalProperties": false
+          },
+          "mastery": {
+            "type": "object",
+            "properties": {
+              "requirements": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "participation"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "minimumCount": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "submission"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "practice": {
+                          "type": "string",
+                          "enum": [
+                            "writing",
+                            "speaking"
+                          ]
+                        },
+                        "minimumCount": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds",
+                        "practice"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "objective_score"
+                        },
+                        "activityIds": {
+                          "minItems": 1,
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "skill": {
+                          "type": "string",
+                          "enum": [
+                            "reading",
+                            "writing",
+                            "listening",
+                            "speaking",
+                            "vocabulary",
+                            "grammar",
+                            "pronunciation",
+                            "fluency",
+                            "comprehension"
+                          ]
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "minimumSamples": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "activityIds",
+                        "minimumScore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "assessment"
+                        },
+                        "assessmentId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "diagnostic",
+                            "formative",
+                            "summative"
+                          ]
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "assessmentId",
+                        "purpose"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "review_score"
+                        },
+                        "vocabularyIds": {
+                          "default": [],
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "activityIds": {
+                          "default": [],
+                          "maxItems": 500,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "minimumScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "minimumSamples": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "minimumReviews": {
+                          "default": 1,
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind",
+                        "minimumScore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "const": "unit_completed"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "kind"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "requirements"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "completion",
+          "mastery"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "derived_policy_state"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "review.spaced",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Schedule vocabulary and mistake recall.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "review_result",
+        "review_schedule"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "lesson.interactive",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Run a finite authored timeline, board and checkpoints.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "courseId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "unitId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lessonId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "objectives": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "concepts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "skills": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "estimatedMinutes": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "alternativeExamples": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "conceptId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "translation": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "conceptId",
+                "text",
+                "translation"
+              ]
+            }
+          },
+          "segments": {
+            "minItems": 2,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "presentation",
+                    "explanation",
+                    "example",
+                    "activity",
+                    "checkpoint",
+                    "speaking",
+                    "summary"
+                  ]
+                },
+                "objectives": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "concepts": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "presentation": {
+                  "type": "object",
+                  "properties": {
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "video",
+                        "audio",
+                        "slides"
+                      ]
+                    },
+                    "mediaId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "durationMs": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "transcript": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "startMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "endMs": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "text": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "textPresentation": {
+                            "type": "object",
+                            "properties": {
+                              "language": {
+                                "type": "string",
+                                "minLength": 2,
+                                "maxLength": 80
+                              },
+                              "direction": {
+                                "type": "string",
+                                "enum": [
+                                  "ltr",
+                                  "rtl",
+                                  "auto"
+                                ]
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "startMs",
+                          "endMs",
+                          "text"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "mode",
+                    "durationMs"
+                  ]
+                },
+                "cues": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "atMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "action": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "board.show"
+                              },
+                              "element": {
+                                "oneOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "text"
+                                      },
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "text": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "translation": {
+                                        "type": "string"
+                                      },
+                                      "textPresentation": {
+                                        "type": "object",
+                                        "properties": {
+                                          "language": {
+                                            "type": "string",
+                                            "minLength": 2,
+                                            "maxLength": 80
+                                          },
+                                          "direction": {
+                                            "type": "string",
+                                            "enum": [
+                                              "ltr",
+                                              "rtl",
+                                              "auto"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "kind",
+                                      "id",
+                                      "text"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "example"
+                                      },
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "text": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "translation": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "textPresentation": {
+                                        "type": "object",
+                                        "properties": {
+                                          "language": {
+                                            "type": "string",
+                                            "minLength": 2,
+                                            "maxLength": 80
+                                          },
+                                          "direction": {
+                                            "type": "string",
+                                            "enum": [
+                                              "ltr",
+                                              "rtl",
+                                              "auto"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "kind",
+                                      "id",
+                                      "text",
+                                      "translation"
+                                    ]
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "comparison"
+                                      },
+                                      "id": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "left": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "right": {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      "label": {
+                                        "type": "string"
+                                      },
+                                      "leftPresentation": {
+                                        "type": "object",
+                                        "properties": {
+                                          "language": {
+                                            "type": "string",
+                                            "minLength": 2,
+                                            "maxLength": 80
+                                          },
+                                          "direction": {
+                                            "type": "string",
+                                            "enum": [
+                                              "ltr",
+                                              "rtl",
+                                              "auto"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      },
+                                      "rightPresentation": {
+                                        "type": "object",
+                                        "properties": {
+                                          "language": {
+                                            "type": "string",
+                                            "minLength": 2,
+                                            "maxLength": 80
+                                          },
+                                          "direction": {
+                                            "type": "string",
+                                            "enum": [
+                                              "ltr",
+                                              "rtl",
+                                              "auto"
+                                            ]
+                                          }
+                                        },
+                                        "additionalProperties": false
+                                      }
+                                    },
+                                    "required": [
+                                      "kind",
+                                      "id",
+                                      "left",
+                                      "right"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "element"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "board.highlight"
+                              },
+                              "targetId": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "targetId"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "board.clear"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "translation.show"
+                              },
+                              "visible": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "visible"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "caption.show"
+                              },
+                              "text": {
+                                "type": "string",
+                                "maxLength": 300
+                              },
+                              "textPresentation": {
+                                "type": "object",
+                                "properties": {
+                                  "language": {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 80
+                                  },
+                                  "direction": {
+                                    "type": "string",
+                                    "enum": [
+                                      "ltr",
+                                      "rtl",
+                                      "auto"
+                                    ]
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "text"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "teacher.state"
+                              },
+                              "state": {
+                                "type": "string",
+                                "enum": [
+                                  "speaking",
+                                  "paused",
+                                  "listening"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "state"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "audio.play"
+                              },
+                              "mediaId": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "mediaId"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "activity.open"
+                              },
+                              "activityRef": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "activityRef"
+                            ]
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "speech.request"
+                              },
+                              "activityRef": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "activityRef"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "atMs",
+                      "action"
+                    ]
+                  }
+                },
+                "activityRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "required": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "allowInterruption": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "resumeAnchorsMs": {
+                  "default": [
+                    0
+                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  }
+                },
+                "explanation": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "type"
+              ]
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "properties": {
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "human",
+                  "ai_generated",
+                  "adapted",
+                  "imported"
+                ]
+              },
+              "generator": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reference": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "page": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "reference"
+                  ]
+                }
+              },
+              "review": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "draft",
+                      "generated",
+                      "review_pending",
+                      "approved",
+                      "published",
+                      "deprecated"
+                    ]
+                  },
+                  "reviewedBy": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "origin"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "courseId",
+          "unitId",
+          "lessonId",
+          "title",
+          "objectives",
+          "concepts",
+          "skills",
+          "estimatedMinutes",
+          "segments"
+        ]
+      },
+      "evidence": [
+        "interactive_session_state"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "learning.session_store"
+      ],
+      "restrictions": [
+        "Only actions accepted by lessonActionSchema; learning evidence comes from referenced activities.",
+        "Automatic curriculum generation/adaptation is not part of this capability."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "speech.recording",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Record up to 20 seconds and save a learner-provided transcript.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "speaking_submission"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "client.recording"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "speech.tts",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Read supplied text using a configured browser locale.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [
+        "client.audio_output"
+      ],
+      "restrictions": [
+        "Voices vary by device; availability is probed on the client."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "media.audio",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Play an authored audio source.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "src"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [
+        "client.media_playback"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "media.presentation",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Control authored audio/video playback.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "src": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "audio",
+              "video"
+            ]
+          }
+        },
+        "required": [
+          "src",
+          "type"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [
+        "client.media_playback"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "speech.recognition",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Transcribe 16 kHz mono PCM WAV audio, up to 20 seconds.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "transcription"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "speech.recognition_service"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "speech.pronunciation",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Compare a recording to a canonical reference phrase.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "referenceText": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "referenceText"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "pronunciation_feedback"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "speech.pronunciation_service"
+      ],
+      "restrictions": [
+        "Requires a supported locale; probabilistic feedback, not certified mastery."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.writing_feedback",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Give writing feedback without an official objective grade.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "writing_feedback"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.conversation",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Converse freely with contextual corrections.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "conversation_turn"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.conversation_mission",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Converse with authored objectives and quoted evidence.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "level": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scenario": {
+            "type": "string",
+            "minLength": 1
+          },
+          "objectives": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "recommendedConcepts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "setting": {
+            "type": "string"
+          },
+          "character": {
+            "type": "string"
+          },
+          "opening": {
+            "type": "string"
+          },
+          "objectiveDetails": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "hint": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "label",
+                "hint"
+              ]
+            }
+          },
+          "goals": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "general",
+                "travel",
+                "work",
+                "study",
+                "conversation"
+              ]
+            }
+          },
+          "contexts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "id",
+          "level",
+          "scenario",
+          "objectives"
+        ]
+      },
+      "evidence": [
+        "conversation_turn",
+        "objective_quote"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.micro_lesson",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Generate a micro lesson from an existing mistake.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "micro_lesson_response"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [
+        "Requires an existing learner mistake and generated questions are validated before use."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.tutor",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Explain the current learning context.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.image_description",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Compare a learner description to authored image facts, without reinterpreting the image on each request.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "facts": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "facts"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [
+        "image_description_feedback"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [
+        "Needs an authored image scene and canonical facts; not an image generation/import capability."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "ai.interactive_support",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Explain or give an alternative example during a paused interactive lesson.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "evidence": [
+        "tutor_intervention"
+      ],
+      "dependencies": [],
+      "operationalDependencies": [
+        "ai.text_service"
+      ],
+      "restrictions": [
+        "Does not generate a replacement curriculum or automatically establish mastery."
+      ],
+      "semanticValidation": false
+    },
+    {
+      "id": "lexicon.dictionary",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Search supplied lexical entries and meanings.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "language": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "lemma": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "partOfSpeech": {
+                  "type": "string"
+                },
+                "meanings": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "translations": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "translations"
+                    ]
+                  }
+                },
+                "examples": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "target": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "translations": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "minLength": 2
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "required": [
+                      "target",
+                      "translations"
+                    ]
+                  }
+                },
+                "level": {
+                  "type": "string"
+                },
+                "lessonId": {
+                  "type": "string"
+                },
+                "aliases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "surface": {
+                  "type": "string"
+                },
+                "className": {
+                  "type": "string"
+                },
+                "regionalNote": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  ]
+                },
+                "visualCue": {
+                  "type": "object",
+                  "properties": {
+                    "icon": {
+                      "type": "string",
+                      "enum": [
+                        "home",
+                        "work",
+                        "talk",
+                        "doctor",
+                        "teacher",
+                        "location"
+                      ]
+                    },
+                    "alt": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "icon",
+                    "alt"
+                  ]
+                },
+                "clozeForms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "language",
+                "lemma",
+                "meanings"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entries"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "fundamentals.alphabet",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Display letters, names and examples.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "entries": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "letter": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "word": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "translation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "example": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "vowel",
+                    "consonant"
+                  ]
+                },
+                "note": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "letter",
+                "name",
+                "word",
+                "translation",
+                "example",
+                "kind"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entries"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "fundamentals.regional_variants",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Compare authored regional terms and examples.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "meaning": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "note": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "category": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "variants": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "region": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "term": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "example": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "region",
+                      "term",
+                      "example"
+                    ]
+                  }
+                },
+                "checkPrompt": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "checkRegion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "checkOptions": {
+                  "minItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "checkAnswer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "url": {
+                        "type": "string",
+                        "format": "uri"
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "url"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "meaning",
+                "note",
+                "variants",
+                "checkPrompt",
+                "sources"
+              ]
+            }
+          }
+        },
+        "required": [
+          "entries"
+        ],
+        "additionalProperties": false
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "fundamentals.numbers",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "implemented",
+      "description": "Display authored numbers and examples.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "category": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "display": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "spoken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "example": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "exampleTranslation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accepted": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "category",
+                "display",
+                "spoken",
+                "example",
+                "exampleTranslation"
+              ]
+            }
+          },
+          "categoryLabels": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "prompts",
+          "categoryLabels"
+        ]
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [],
+      "semanticValidation": false
+    },
+    {
+      "id": "numbers.dictation",
+      "supportedVersions": [
+        "1.0.0"
+      ],
+      "support": "partial",
+      "description": "Practice authored numbers in the existing limited notation.",
+      "dataSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "prompts": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "category": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "display": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "spoken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "example": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "exampleTranslation": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "accepted": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "category",
+                "display",
+                "spoken",
+                "example",
+                "exampleTranslation"
+              ]
+            }
+          },
+          "categoryLabels": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "prompts",
+          "categoryLabels"
+        ]
+      },
+      "evidence": [],
+      "dependencies": [],
+      "operationalDependencies": [],
+      "restrictions": [
+        "ASCII digits, limited currency and ordinal notation; not a universal number parser."
+      ],
+      "semanticValidation": false
+    }
+  ]
+}

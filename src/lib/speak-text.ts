@@ -1,10 +1,17 @@
-import {
-  normalizedVoiceLocale,
-  readVoicePreference,
-  voiceId,
-} from "@/lib/speech-voice-preference";
+import { readVoicePreference } from "@/lib/speech-voice-preference";
+import { selectBrowserVoice, type SpeechSelection } from "@/engine/variants/speech";
 
-export function speakText(text: string, locale: string, onError?: () => void, rate = 0.86) {
+export function speakText(
+  text: string,
+  locale: string,
+  onError?: () => void,
+  rate = 0.86,
+  options: {
+    fallbackAllowed?: boolean;
+    requestedVariant?: string;
+    onSelection?: (result: SpeechSelection) => void;
+  } = {},
+) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return false;
 
   const spokenText = text.trim().replace(/\s*\/\s*/g, ", ");
@@ -16,14 +23,16 @@ export function speakText(text: string, locale: string, onError?: () => void, ra
   utterance.rate = rate;
   const voices = window.speechSynthesis.getVoices();
   const preferredId = readVoicePreference(locale);
-  const voice =
-    voices.find(
-      (item) =>
-        preferredId === voiceId(item) &&
-        normalizedVoiceLocale(item.lang) === normalizedVoiceLocale(locale),
-    ) ??
-    voices.find((item) => normalizedVoiceLocale(item.lang) === normalizedVoiceLocale(locale)) ??
-    voices.find((item) => normalizedVoiceLocale(item.lang).startsWith(`${normalizedVoiceLocale(locale).split("-")[0]}-`));
+  const selection = selectBrowserVoice(
+    voices,
+    locale,
+    options.fallbackAllowed ?? true,
+    preferredId,
+    options.requestedVariant,
+  );
+  options.onSelection?.(selection);
+  if (selection.status === "unavailable") return false;
+  const voice = selection.voice;
   if (voice) {
     utterance.voice = voice;
     utterance.lang = voice.lang;

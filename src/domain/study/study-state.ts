@@ -1,3 +1,4 @@
+import type { InteractiveLessonProgressReceipt } from "@/domain/interactive-lesson/progress-receipt";
 import type { GradeResult } from "@/domain/activities/grader";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import type { ReviewSchedule } from "@/domain/review/review-scheduler";
@@ -10,7 +11,12 @@ import type { ReviewStructure } from "@/content/review-structures";
 import type { ConversationSession } from "@/domain/conversation/conversation-session";
 import type { ImageDescriptionFeedback } from "@/domain/ai/schemas";
 import type { AdaptiveAnswer } from "@/domain/study/adaptive-assessment";
-import { defaultLearningPreferences, type LearningPreferences, type SelfReportedLevel } from "./learning-preferences";
+import type { ServerAssessmentResult } from "@/content/assessment-results";
+import {
+  defaultLearningPreferences,
+  type LearningPreferences,
+  type SelfReportedLevel,
+} from "./learning-preferences";
 
 export type StudentProfile = {
   learningPreferences: LearningPreferences;
@@ -26,6 +32,7 @@ export type StudentProfile = {
 };
 
 export type Attempt = {
+  interactiveReceipt?: true;
   id: string;
   activityId: string;
   answer: string;
@@ -33,6 +40,7 @@ export type Attempt = {
   skill: Skill;
   createdAt: string;
   sessionId: string | null;
+  variantId?: string;
 };
 
 export type VocabularyProgress = {
@@ -41,7 +49,10 @@ export type VocabularyProgress = {
   schedule: ReviewSchedule;
 };
 export type SessionMode = "guided" | "difficulties";
-export type PlannedReviewItem = { kind: "word" | "mistake" | "structure" | "pronunciation"; id: string };
+export type PlannedReviewItem = {
+  kind: "word" | "mistake" | "structure" | "pronunciation";
+  id: string;
+};
 export type StructureReviewProgress = { id: string; schedule: ReviewSchedule };
 export type PronunciationReviewProgress = {
   id: string;
@@ -117,12 +128,18 @@ export type ReviewEntry = {
 export type AssessmentAttempt = {
   id: string;
   assessmentId: string;
-  unitId: string;
+  unitId?: string;
   startedAt: string;
   finishedAt: string;
-  objectiveScore: number;
-};
+  objectiveScore: number | null;
+} & Partial<
+  Omit<
+    ServerAssessmentResult,
+    "id" | "assessmentId" | "unitId" | "startedAt" | "finishedAt" | "objectiveScore" | "source"
+  >
+> & { source?: "server" | "historical" };
 export type WritingSubmission = {
+  interactiveReceipt?: true;
   id: string;
   activityId: string;
   sessionId?: string | null;
@@ -131,6 +148,7 @@ export type WritingSubmission = {
   feedback?: unknown;
 };
 export type SpeakingSubmission = {
+  interactiveReceipt?: true;
   id: string;
   activityId: string;
   sessionId?: string | null;
@@ -182,7 +200,16 @@ export type ImageDescriptionAttempt = {
 export type AdaptiveAssessmentAttempt = {
   id: string;
   courseId: string;
-  unitId: string;
+  unitId?: string;
+  assessmentId?: string;
+  method?: "adaptive";
+  purpose?: ServerAssessmentResult["purpose"];
+  contentVersion?: string;
+  source?: "server" | "historical";
+  objectiveScore?: number | null;
+  passed?: boolean | null;
+  status?: ServerAssessmentResult["status"];
+  responseKey?: string;
   answers: AdaptiveAnswer[];
   startedAt: string;
   finishedAt: string;
@@ -224,7 +251,7 @@ export const initialStudyState: StudyState = {
     daysPerWeek: 4,
     level: "A1",
     priorKnowledge: "none",
-    variantId: "general",
+    variantId: "",
     onboarded: false,
   },
   completedActivityIds: [],
@@ -249,12 +276,24 @@ export const initialStudyState: StudyState = {
   activeSessionId: null,
 };
 
+/** Optional server replay context; ordinary recording retains its clock and IDs. */
+export type StudyRecordingContext = { now?: Date; idFor?: (key: string) => string };
+const recordingId = (context: StudyRecordingContext | undefined, key: string) =>
+  context?.idFor?.(key) ?? crypto.randomUUID();
+
 export function recordAdaptiveAssessment(
   state: StudyState,
   course: PublicCourse,
-  input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">,
+  input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt"> & {
+    id?: string;
+    finishedAt?: string;
+  },
+  context?: StudyRecordingContext,
 ): StudyState {
-  if (input.courseId !== course.id || !course.units.some((unit) => unit.id === input.unitId))
+  if (
+    input.courseId !== course.id ||
+    (input.unitId && !course.units.some((unit) => unit.id === input.unitId))
+  )
     return state;
   const activities = new Map(
     course.units.flatMap((unit) =>
@@ -263,7 +302,7 @@ export function recordAdaptiveAssessment(
       ),
     ),
   );
-  const finishedAt = new Date().toISOString();
+  const finishedAt = input.finishedAt ?? (context?.now ?? new Date()).toISOString();
   const mistakes = { ...state.mistakes };
   const reviewEvents: StudyEvent[] = [];
   for (const answer of input.answers) {
@@ -272,10 +311,16 @@ export function recordAdaptiveAssessment(
     if (answer.correct || !activity || !answer.correctAnswer?.trim()) continue;
     const previous = mistakes[answer.activityId];
     const schedule = previous
-      ? { ...ReviewScheduler.afterAnswer(previous.schedule, false), nextReviewAt: finishedAt }
-      : ReviewScheduler.initial(new Date(finishedAt));
+      ? {
+          ...ReviewScheduler.afterAnswer(previous.schedule, false, context?.now),
+          nextReviewAt: finishedAt,
+        }
+      : ReviewScheduler.initial(
+          new Date(finishedAt),
+          context?.idFor?.("adaptive:schedule:" + activity.id),
+        );
     mistakes[answer.activityId] = {
-      id: previous?.id ?? crypto.randomUUID(),
+      id: previous?.id ?? recordingId(context, "adaptive:mistake:" + activity.id),
       activityId: answer.activityId,
       courseId: course.id,
       languageCode: course.languageCode,
@@ -291,7 +336,7 @@ export function recordAdaptiveAssessment(
       schedule,
     };
     reviewEvents.push({
-      id: crypto.randomUUID(),
+      id: recordingId(context, "adaptive:review:" + activity.id),
       type: "adaptive_review_scheduled",
       activityId: answer.activityId,
       createdAt: finishedAt,
@@ -301,14 +346,14 @@ export function recordAdaptiveAssessment(
     ...state,
     mistakes,
     adaptiveAssessments: [
-      { ...input, id: crypto.randomUUID(), finishedAt },
-      ...(state.adaptiveAssessments ?? []),
+      { ...input, id: input.id ?? recordingId(context, "adaptive:attempt"), finishedAt },
+      ...(state.adaptiveAssessments ?? []).filter((item) => !input.id || item.id !== input.id),
     ].slice(0, 20),
     events: [
       {
-        id: crypto.randomUUID(),
+        id: recordingId(context, "adaptive:completed"),
         type: "adaptive_assessment_completed",
-        itemId: input.unitId,
+        itemId: input.assessmentId ?? input.unitId,
         createdAt: finishedAt,
       },
       ...reviewEvents,
@@ -351,13 +396,16 @@ export function recordRegionalAttempt(
       { ...input, id: crypto.randomUUID(), createdAt },
       ...(state.regionalAttempts ?? []),
     ].slice(0, 200),
-    events: [{
-      id: crypto.randomUUID(),
-      type: input.correct ? "regional_check_correct" : "regional_check_wrong",
-      itemId: input.topicId,
-      metadata: { selectedAnswer: input.selectedAnswer },
-      createdAt,
-    }, ...state.events],
+    events: [
+      {
+        id: crypto.randomUUID(),
+        type: input.correct ? "regional_check_correct" : "regional_check_wrong",
+        itemId: input.topicId,
+        metadata: { selectedAnswer: input.selectedAnswer },
+        createdAt,
+      },
+      ...state.events,
+    ],
   };
 }
 
@@ -384,8 +432,13 @@ export function recordMicroLessonAttempt(
   };
 }
 
-function event(type: string, activityId?: string): StudyEvent {
-  return { id: crypto.randomUUID(), type, createdAt: new Date().toISOString(), activityId };
+function event(type: string, activityId?: string, context?: StudyRecordingContext): StudyEvent {
+  return {
+    id: recordingId(context, "event:" + type + ":" + (activityId ?? "")),
+    type,
+    createdAt: (context?.now ?? new Date()).toISOString(),
+    activityId,
+  };
 }
 
 function itemEvent(type: string, itemId: string): StudyEvent {
@@ -474,7 +527,11 @@ export function recordEvaluatedSpeaking(
     const previous = pronunciationReviews[id];
     const correct = word.errorType === "None" && word.accuracy !== null && word.accuracy >= 75;
     if (!previous && correct) continue;
-    const schedule = ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(now), correct, now);
+    const schedule = ReviewScheduler.afterAnswer(
+      previous?.schedule ?? ReviewScheduler.initial(now),
+      correct,
+      now,
+    );
     pronunciationReviews[id] = {
       id,
       activityId,
@@ -527,7 +584,11 @@ export function recordVocabularySignal(
   };
 }
 
-export function markActivityComplete(state: StudyState, activityId: string): StudyState {
+export function markActivityComplete(
+  state: StudyState,
+  activityId: string,
+  context?: StudyRecordingContext,
+): StudyState {
   const alreadyCompleted = state.completedActivityIds.includes(activityId);
   const sessions = state.sessions.map((session) =>
     session.id === state.activeSessionId && !session.activityIds.includes(activityId)
@@ -544,7 +605,7 @@ export function markActivityComplete(state: StudyState, activityId: string): Stu
       : [...state.completedActivityIds, activityId],
     events: alreadyCompleted
       ? state.events
-      : [event("lesson_completed", activityId), ...state.events],
+      : [event("lesson_completed", activityId, context), ...state.events],
   };
 }
 
@@ -553,13 +614,16 @@ export function recordAttempt(
   activity: PublicActivity,
   answer: string,
   result: GradeResult,
+  context?: StudyRecordingContext,
 ): StudyState {
-  const createdAt = new Date().toISOString();
+  const now = context?.now ?? new Date();
+  const createdAt = now.toISOString();
   const attempt: Attempt = {
-    id: crypto.randomUUID(),
+    id: recordingId(context, "attempt:" + activity.id),
     activityId: activity.id,
     answer,
     correct: result.correct,
+    ...(result.variantId ? { variantId: result.variantId } : {}),
     skill: activity.skill,
     createdAt,
     sessionId: state.activeSessionId,
@@ -568,7 +632,7 @@ export function recordAttempt(
   if (!result.correct) {
     const previous = mistakes[activity.id];
     mistakes[activity.id] = {
-      id: previous?.id ?? crypto.randomUUID(),
+      id: previous?.id ?? recordingId(context, "mistake:" + activity.id),
       activityId: activity.id,
       courseId: state.courseId,
       languageCode: state.languageCode,
@@ -582,7 +646,12 @@ export function recordAttempt(
       lastMissedAt: createdAt,
       lastReviewedAt: previous?.lastReviewedAt ?? null,
       lastCorrectAt: previous?.lastCorrectAt ?? null,
-      schedule: ReviewScheduler.afterAnswer(previous?.schedule ?? ReviewScheduler.initial(), false),
+      schedule: ReviewScheduler.afterAnswer(
+        previous?.schedule ??
+          ReviewScheduler.initial(now, context?.idFor?.("schedule:" + activity.id)),
+        false,
+        now,
+      ),
     };
   } else if (mistakes[activity.id]) {
     const previous = mistakes[activity.id];
@@ -591,7 +660,7 @@ export function recordAttempt(
       timesCorrect: previous.timesCorrect + 1,
       lastReviewedAt: createdAt,
       lastCorrectAt: createdAt,
-      schedule: ReviewScheduler.afterAnswer(previous.schedule, true),
+      schedule: ReviewScheduler.afterAnswer(previous.schedule, true, now),
     };
   }
   const sessions = state.sessions.map((session) =>
@@ -613,8 +682,8 @@ export function recordAttempt(
       ? state.completedActivityIds
       : [...state.completedActivityIds, activity.id],
     events: [
-      event(result.correct ? "exercise_correct" : "exercise_wrong", activity.id),
-      event("exercise_answered", activity.id),
+      event(result.correct ? "exercise_correct" : "exercise_wrong", activity.id, context),
+      event("exercise_answered", activity.id, context),
       ...state.events,
     ],
   };
@@ -732,7 +801,7 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
         timesCorrect: mistake.timesCorrect + Number(correct),
         timesMissed: mistake.timesMissed + Number(!correct),
         lastReviewedAt: new Date().toISOString(),
-        lastCorrectAt: correct ? new Date().toISOString() : mistake.lastCorrectAt ?? null,
+        lastCorrectAt: correct ? new Date().toISOString() : (mistake.lastCorrectAt ?? null),
         schedule,
       },
     },
@@ -752,60 +821,192 @@ export function reviewMistake(state: StudyState, activityId: string, correct: bo
   };
 }
 
-const objectiveTypes = new Set([
-  "multiple_choice",
-  "true_false",
-  "fill_blank",
-  "ordering",
-  "short_answer",
-  "listening",
-]);
+function matchesAssessmentResult(course: PublicCourse, result: ServerAssessmentResult) {
+  const definition = course.assessments.find((item) => item.id === result.assessmentId);
+  return Boolean(
+    definition &&
+    result.courseId === course.id &&
+    result.contentVersion === course.contentVersion &&
+    result.purpose === definition.purpose &&
+    result.method === definition.method,
+  );
+}
 
-export function reconcileAssessments(state: StudyState, course: PublicCourse): StudyState {
-  let next = state;
-  for (const unit of course.units) {
-    const lesson = unit.lessons.find((item) =>
-      item.activities.some((activity) => activity.type === "quiz"),
+export function recordServerAssessment(
+  state: StudyState,
+  course: PublicCourse,
+  result: ServerAssessmentResult,
+  context?: StudyRecordingContext,
+): StudyState {
+  if (!matchesAssessmentResult(course, result)) return state;
+  if (result.method === "adaptive") {
+    if (
+      state.adaptiveAssessments.some(
+        (item) => item.id === result.id && item.responseKey === result.responseKey,
+      )
+    )
+      return state;
+    if (result.answers.some((answer) => answer.correct === null || !answer.difficulty))
+      return state;
+    return recordAdaptiveAssessment(
+      state,
+      course,
+      {
+        ...result,
+        method: "adaptive",
+        answers: result.answers.map((answer) => ({
+          ...answer,
+          correct: answer.correct === true,
+          difficulty: answer.difficulty!,
+        })),
+      },
+      context,
     );
-    if (!lesson) continue;
-    const objective = lesson.activities.filter((activity) => objectiveTypes.has(activity.type));
-    const writing = lesson.activities.filter((activity) => activity.type === "writing");
-    const attempts = objective.map((activity) =>
-      state.attempts.find((attempt) => attempt.activityId === activity.id),
-    );
-    const submissions = writing.map((activity) =>
-      state.writing.find((submission) => submission.activityId === activity.id),
-    );
-    if (attempts.some((item) => !item) || submissions.some((item) => !item)) continue;
-    const dates = [
-      ...attempts.map((item) => item!.createdAt),
-      ...submissions.map((item) => item!.createdAt),
-    ].sort();
-    const assessmentId = `${unit.id}-final`;
-    const latest = next.assessmentAttempts.find((item) => item.assessmentId === assessmentId);
-    if (latest && dates.some((date) => date <= latest.finishedAt)) continue;
-    const objectiveScore = objective.length
-      ? Math.round((100 * attempts.filter((item) => item?.correct).length) / objective.length)
-      : 0;
-    const finishedAt = new Date().toISOString();
-    next = {
-      ...next,
-      assessmentAttempts: [
-        {
-          id: crypto.randomUUID(),
-          assessmentId,
-          unitId: unit.id,
-          startedAt: dates[0] ?? finishedAt,
-          finishedAt,
-          objectiveScore,
-        },
-        ...next.assessmentAttempts,
-      ],
-      events: [
-        { id: crypto.randomUUID(), type: "assessment_completed", createdAt: finishedAt },
-        ...next.events,
-      ],
-    };
   }
-  return next;
+  if (
+    state.assessmentAttempts.some(
+      (item) => item.id === result.id && item.responseKey === result.responseKey,
+    )
+  )
+    return state;
+  let next = state;
+  const activities = new Map(
+    course.units.flatMap((unit) =>
+      unit.lessons.flatMap((lesson) => lesson.activities.map((item) => [item.id, item] as const)),
+    ),
+  );
+  for (const answer of result.answers) {
+    const activity = activities.get(answer.activityId);
+    if (!activity) continue;
+    if (answer.correct !== null)
+      next = recordAttempt(
+        next,
+        activity,
+        answer.answer,
+        {
+          variantId: answer.variantId,
+          correct: answer.correct,
+          correctAnswer: answer.correctAnswer ?? "",
+          explanation: answer.explanation ?? "",
+        },
+        context,
+      );
+    else if (activity.type === "writing") {
+      next = markActivityComplete(next, activity.id, context);
+      if (
+        !next.writing.some((item) => item.activityId === activity.id && item.text === answer.answer)
+      )
+        next = {
+          ...next,
+          writing: [
+            {
+              id: recordingId(context, "assessment:writing:" + activity.id),
+              activityId: activity.id,
+              text: answer.answer,
+              createdAt: result.finishedAt,
+              sessionId: state.activeSessionId,
+            },
+            ...next.writing,
+          ],
+        };
+    }
+  }
+  return {
+    ...next,
+    assessmentAttempts: [
+      result,
+      ...next.assessmentAttempts.filter((item) => item.id !== result.id),
+    ],
+    events: [
+      {
+        id: recordingId(context, "assessment:completed"),
+        type: "assessment_completed",
+        itemId: result.assessmentId,
+        createdAt: result.finishedAt,
+        metadata: { purpose: result.purpose, method: result.method },
+      },
+      ...next.events,
+    ],
+  };
+}
+
+/** Refresh current results from the server; cached rows are retained only as history. */
+export function restoreServerAssessmentResults(
+  state: StudyState,
+  course: PublicCourse,
+  results: ServerAssessmentResult[],
+): StudyState {
+  const fixed: AssessmentAttempt[] = state.assessmentAttempts.map((item) =>
+    item.source === "server" ? { ...item, source: "historical" as const } : item,
+  );
+  const adaptive: AdaptiveAssessmentAttempt[] = state.adaptiveAssessments.map((item) =>
+    item.source === "server" ? { ...item, source: "historical" as const } : item,
+  );
+  const valid = results.filter((result) => matchesAssessmentResult(course, result));
+  for (const result of valid) {
+    if (result.method === "fixed") {
+      const existing = fixed.findIndex((item) => item.id === result.id);
+      if (existing >= 0) fixed.splice(existing, 1);
+      fixed.push(result);
+    } else if (result.answers.every((answer) => answer.correct !== null && answer.difficulty)) {
+      const existing = adaptive.findIndex((item) => item.id === result.id);
+      if (existing >= 0) adaptive.splice(existing, 1);
+      adaptive.push({
+        ...result,
+        method: "adaptive",
+        answers: result.answers.map((answer) => ({
+          ...answer,
+          correct: answer.correct === true,
+          difficulty: answer.difficulty!,
+        })),
+      });
+    }
+  }
+  const completed = new Set(state.completedActivityIds);
+  for (const result of valid.filter((item) => item.method === "fixed"))
+    for (const answer of result.answers) completed.add(answer.activityId);
+  return {
+    ...state,
+    completedActivityIds: [...completed],
+    assessmentAttempts: fixed.sort((a, b) => b.finishedAt.localeCompare(a.finishedAt)),
+    adaptiveAssessments: adaptive.sort((a, b) => b.finishedAt.localeCompare(a.finishedAt)),
+  };
+}
+
+/** Reuse the existing projection rules; this DTO cannot authorize interactive session progress. */
+export function recordInteractiveLessonReceipt(state: StudyState, course: PublicCourse,
+  receipt: InteractiveLessonProgressReceipt): StudyState {
+  const proof = receipt.evidence;
+  if (state.courseId !== course.id || proof.courseId !== course.id || proof.contentVersion !== course.contentVersion) return state;
+  const activity = course.units.flatMap((unit) => unit.lessons).find((lesson) => lesson.id === proof.lessonId)
+    ?.activities.find((item) => item.id === proof.activityId);
+  if (!activity || (proof.kind === "speaking_submitted") !== (activity.type === "speaking") ||
+    (proof.kind === "writing_submitted") !== (activity.type === "writing")) return state;
+  const context: StudyRecordingContext = { now: new Date(receipt.createdAt), idFor: (key) => {
+    if (key === "attempt:" + activity.id) return proof.attemptId;
+    const id = receipt.recordingIds[key];
+    if (!id) throw new Error("Recibo de aula sem identidade de projeção.");
+    return id;
+  } };
+  if (proof.kind === "objective_correct") {
+    if (!receipt.grade || receipt.grade.correct !== proof.accepted || state.attempts.some((item) => item.id === proof.attemptId)) return state;
+    // A receipt belongs to the interactive session; never credit an unrelated active study session during replay.
+    const next = recordAttempt({ ...state, activeSessionId: null }, activity, receipt.answer, receipt.grade, context);
+    const newer = state.attempts.some((item) => item.activityId === activity.id && Date.parse(item.createdAt) > Date.parse(receipt.createdAt));
+    return { ...next, activeSessionId: state.activeSessionId, mistakes: newer ? state.mistakes : next.mistakes,
+      attempts: next.attempts.map((item) => item.id === proof.attemptId ? { ...item, interactiveReceipt: true } : item) };
+  }
+  if (!proof.accepted) return state;
+  if (proof.kind === "writing_submitted") {
+    if (state.writing.some((item) => item.id === proof.attemptId)) return state;
+    const next = markActivityComplete({ ...state, activeSessionId: null }, activity.id, context);
+    return { ...next, activeSessionId: state.activeSessionId, writing: [{ id: proof.attemptId,
+      interactiveReceipt: true, activityId: activity.id, sessionId: null, text: receipt.answer,
+      createdAt: receipt.createdAt }, ...next.writing] };
+  }
+  if (state.speaking.some((item) => item.id === proof.attemptId)) return state;
+  const next = markActivityComplete({ ...state, activeSessionId: null }, activity.id, context);
+  return { ...next, activeSessionId: state.activeSessionId, speaking: [{ id: proof.attemptId,
+    interactiveReceipt: true, activityId: activity.id, sessionId: null, transcription: receipt.answer,
+    audioUrl: null, createdAt: receipt.createdAt, practiceMode: "lesson" }, ...next.speaking] };
 }

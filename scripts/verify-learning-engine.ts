@@ -282,12 +282,12 @@ assert.match(
   /llamás/,
 );
 assert.equal(TutorContextBuilder.build(frecuenciasA1, {
-  schemaVersion: "1.0", contentVersion: "1.0.0", id: "es",
+  schemaVersion: "1.1", contentVersion: "1.0.0", id: "es",
   identity: { name: "Spanish", nativeName: "Español" },
   writingSystem: { direction: "ltr", scripts: ["Latin"], caseSensitive: false },
   variants: [{ id: "general", name: "Geral" }, { id: "mexico", name: "México" }],
-  capabilities: { speechRecognition: true, textToSpeech: true, pronunciationAssessment: true, regionalVariants: true, romanization: false, tones: false, grammaticalGender: true },
-  speech: { defaultVariant: "general", providers: {} },
+  linguisticFeatures: { romanization: false, tones: false, grammaticalGender: true },
+  speech: { support: { speechRecognition: true, textToSpeech: true, pronunciationAssessment: true }, defaultVariant: "general", providers: {} },
   normalization: { trimWhitespace: true, collapseWhitespace: true, caseInsensitive: true, ignoreTerminalPunctuation: true, ignoreDiacritics: false },
   modules: {},
 }, undefined, [], "mexico").variant, "México");

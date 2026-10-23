@@ -6,7 +6,7 @@ import { SpeechTranscriptionError, transcribeWav } from "@/lib/transcribe-speech
 export async function POST(request: Request) {
   if (!featureFlags.AI_TUTOR)
     return NextResponse.json({ error: "Conversas indisponíveis." }, { status: 503 });
-  const guard = await guardAIRequest(request, "conversation_transcription");
+  const guard = await guardAIRequest(request, "conversation_transcription", "form");
   if (guard.error) return guard.error;
   const form = await request.formData().catch(() => null);
   const file = form?.get("audio");

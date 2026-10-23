@@ -1,5 +1,7 @@
 "use client";
 
+import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Mic2, Volume2 } from "lucide-react";
@@ -17,6 +19,7 @@ const stages = [
 ];
 
 export default function SpeakingPracticePage() {
+  const textAttrs = useTextPresentation();
   const { course, state } = useStudy();
   const activities = useMemo(
     () =>
@@ -191,9 +194,7 @@ export default function SpeakingPracticePage() {
                   {weakWords.length > 0 && (
                     <div className="speaking-weak-words">
                       <strong>Repita com atenção</strong>
-                      <p lang={course.languageCode}>
-                        {weakWords.map((word) => word.text).join(" · ")}
-                      </p>
+                      <p {...textAttrs()}>{weakWords.map((word) => word.text).join(" · ")}</p>
                     </div>
                   )}
                 </>
@@ -206,7 +207,7 @@ export default function SpeakingPracticePage() {
                   {ownAttempts.slice(0, 3).map((attempt) => (
                     <p key={attempt.id}>
                       <time dateTime={attempt.createdAt}>{formatDate(attempt.createdAt)}</time>
-                      <span lang={course.languageCode}>{attempt.transcription}</span>
+                      <LearningText as="span" textRole="user" text={attempt.transcription} />
                     </p>
                   ))}
                 </div>

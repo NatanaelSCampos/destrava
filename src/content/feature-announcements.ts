@@ -11,6 +11,18 @@ export type FeatureAnnouncement = {
 // The claim RPC ensures every entry appears at most once per learner, on any device.
 export const featureAnnouncements: FeatureAnnouncement[] = [
   {
+    id: "2026-10-aula-particular-interativa-v1",
+    title: "Conheça a Aula particular",
+    summary: "Uma aula guiada de espanhol com professora, quadro sincronizado, exercício e prática de fala.",
+    highlights: [
+      "Pause a explicação, peça outro exemplo e retome do ponto certo.",
+      "Responda ao exercício e pratique a fala com os recursos que você já usa no curso.",
+      "Seu ponto na aula fica salvo para continuar depois.",
+    ],
+    href: "/live-classes",
+    linkLabel: "Abrir Aula particular",
+  },
+  {
     id: "2026-10-numeros-regioes-missoes-diagnostico",
     title: "Mais prática para cada passo",
     summary: "Números, variações regionais, missões e diagnóstico receberam novos exemplos e verificações.",

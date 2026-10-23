@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
 type TurnstileApi = {
@@ -25,14 +25,25 @@ export function TurnstileChallenge({
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const container = useRef<HTMLDivElement>(null);
   const widgetId = useRef<string | null>(null);
+  const [error, setError] = useState("");
 
   function renderWidget() {
     if (!siteKey || !container.current || !window.turnstile || widgetId.current) return;
     widgetId.current = window.turnstile.render(container.current, {
       sitekey: siteKey,
-      callback: (token: string) => onToken(token),
+      callback: (token: string) => {
+        setError("");
+        onToken(token);
+      },
       "expired-callback": () => onToken(null),
-      "error-callback": () => onToken(null),
+      "error-callback": (code: string) => {
+        onToken(null);
+        setError(
+          code === "110200" && window.location.hostname === "localhost"
+            ? "O localhost não está autorizado no Turnstile. Entre com Google ou configure um ambiente de desenvolvimento para o CAPTCHA."
+            : "Não foi possível concluir a verificação. Recarregue a página e tente novamente.",
+        );
+      },
     });
   }
 
@@ -58,8 +69,10 @@ export function TurnstileChallenge({
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
         onReady={renderWidget}
+        onError={() => setError("Não foi possível carregar a verificação. Recarregue a página e tente novamente.")}
       />
       <div ref={container} aria-label="Verificação de segurança" />
+      {error && <p className="inline-error" role="alert">{error}</p>}
     </>
   );
 }

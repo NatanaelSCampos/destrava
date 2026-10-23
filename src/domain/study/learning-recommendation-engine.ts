@@ -1,3 +1,4 @@
+import { learningActionAvailability, type LearningActionContext } from "./learning-action-availability";
 import type { PublicCourse } from "@/content/public";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
@@ -6,6 +7,7 @@ import type { LearningProfile } from "./learning-profile";
 import type { StudyState } from "./study-state";
 import { featureFlags } from "@/lib/feature-flags";
 import { contentAffinityRank, orderByLearningAffinity, type LearningSkill } from "./learning-preferences";
+import { outstandingPolicyActivityIds } from "./learning-policy-engine";
 
 type RecommendationBase = {
   source:
@@ -43,28 +45,37 @@ export class LearningRecommendationEngine {
     profile: LearningProfile,
     vocabularyItems: ReadonlyArray<{ id: string }>,
     resources: Pick<LanguageResources, "numbers" | "numberCategoryLabels" | "structures" | "conversationScenarios" | "imageScenes" | "learningOptions">,
-    options: { now?: Date; includeReviews?: boolean } = {},
+    options: { now?: Date; includeReviews?: boolean; actionContext?: LearningActionContext } = {},
   ): LearningRecommendation[] {
     const now = options.now ?? new Date();
     const recommendations = new Map<string, LearningRecommendation>();
     const activities = course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) =>
-        lesson.activities.map((activity) => ({ activity, lesson, unit })),
+        lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, options.actionContext).eligible).map((activity) => ({ activity, lesson, unit })),
       ),
     );
-    const nextCoreActivityId = activities.find((item) => !state.completedActivityIds.includes(item.activity.id))?.activity.id;
+    const pendingPolicyIds = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));
+    const nextCoreActivityId = activities.find(item => pendingPolicyIds.has(item.activity.id))?.activity.id ??
+      activities.find((item) => !state.completedActivityIds.includes(item.activity.id))?.activity.id;
     const activityById = new Map(activities.map((entry) => [entry.activity.id, entry]));
     const skillScores = new Map(profile.skills.map((item) => [item.id, item.score]));
     const conceptScores = new Map(profile.concepts.map((item) => [item.id, item.score]));
     const preferences = state.profile.learningPreferences;
 
+    const reviewEligible = options.includeReviews !== false && learningActionAvailability(course, { kind: "review" }, options.actionContext).eligible;
+
     function add(item: LearningRecommendation) {
+      const availability = learningActionAvailability(course, item.kind === "activity"
+        ? { kind: "activity", activityId: item.id }
+        : { kind: item.kind === "number" ? "numbers" : item.kind }, options.actionContext);
+      if (!availability.eligible) return;
+      if (availability.operation === "unknown") item = { ...item, reason: `${item.reason} ${availability.reasons.join(" ")}` };
       const key = `${item.kind}:${item.id}`;
       const current = recommendations.get(key);
       if (!current || current.priority < item.priority) recommendations.set(key, item);
     }
 
-    if (options.includeReviews !== false) {
+    if (reviewEligible) {
       const due = dueReviewCounts(
         {
           vocabulary: state.vocabulary,
@@ -97,7 +108,7 @@ export class LearningRecommendationEngine {
         (mistake.schedule.masteryScore >= 75 && mistake.timesCorrect >= mistake.timesMissed)
       )
         continue;
-      if (options.includeReviews !== false && ReviewScheduler.isDue(mistake.schedule, now))
+      if (reviewEligible && ReviewScheduler.isDue(mistake.schedule, now))
         continue;
       const daysSinceError = Math.max(
         0,
@@ -325,7 +336,7 @@ export class LearningRecommendationEngine {
     }
 
     for (const [index, context] of activities.entries()) {
-      if (state.completedActivityIds.includes(context.activity.id)) continue;
+      if (state.completedActivityIds.includes(context.activity.id) && !pendingPolicyIds.has(context.activity.id)) continue;
       const skillScore = Math.min(
         ...(context.activity.skills.length ? context.activity.skills : [context.activity.skill])
           .map((skill) => skillScores.get(skill))
@@ -350,7 +361,7 @@ export class LearningRecommendationEngine {
       const goalAffinity = context.activity.goals?.includes(preferences.goal) ? 3 : 0;
       const contextAffinity = preferences.contexts.some((id) => context.activity.contexts?.includes(id)) ? 4 : 0;
       // Personalization only reorders curriculum choices. Reviews and demonstrated weaknesses keep their tiers.
-      const priority = Math.min(69, pedagogicalPriority +
+      const priority = Math.min(69, pedagogicalPriority + (pendingPolicyIds.has(context.activity.id) ? 8 : 0) +
         (context.activity.id === nextCoreActivityId ? 15 : 0) +
         Math.round((skillPreference - 0.6) * 10) + goalAffinity + contextAffinity);
       add({
@@ -358,7 +369,7 @@ export class LearningRecommendationEngine {
         source: "curriculum",
         id: context.activity.id,
         title: context.activity.title,
-        reason: "Próxima atividade da sua trilha, ajustada ao seu desempenho.",
+        reason: pendingPolicyIds.has(context.activity.id) ? "Prática ligada a um requisito pendente da unidade." : "Prática opcional, ajustada ao seu desempenho.",
         priority,
         minutes: context.activity.minutes,
         unitNumber: context.unit.number,

@@ -1,0 +1,35 @@
+/* Interface controls stay LTR. Direction belongs to the educational fragment's HTML. */
+[data-learning-text] {
+  unicode-bidi: isolate;
+  text-align: start;
+  overflow-wrap: anywhere;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+input[data-learning-text],
+textarea[data-learning-text] {
+  unicode-bidi: plaintext;
+}
+.bidi-text-warning {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+.ordering-answer[dir],
+.ordering-words[dir] {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.word-chip {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+.option [data-learning-text] {
+  flex: 1;
+}
+.text-audio-row > [data-learning-text] {
+  flex: 1;
+}

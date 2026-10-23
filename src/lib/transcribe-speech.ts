@@ -2,7 +2,8 @@ import { z } from "zod";
 import { speechEndpoint, validWav } from "@/lib/azure-speech";
 import { findCourseBundle } from "@/content/course-registry";
 import { userCourseVariant } from "@/lib/user-course-variant";
-import { speechLocale } from "@/content/language-variant";
+import { resolveSpeechOperation } from "@/engine/variants/speech";
+import { findActivity } from "@/content/schema";
 
 const azureSchema = z.object({
   RecognitionStatus: z.string(),
@@ -18,16 +19,51 @@ export class SpeechTranscriptionError extends Error {
     super(message);
   }
 }
+export type SpeechTranscriptionDependencies = {
+  bundle: typeof findCourseBundle;
+  variant: typeof userCourseVariant;
+  endpoint: typeof speechEndpoint;
+  key: () => string | undefined;
+  request: typeof fetch;
+};
+const speechDependencies: SpeechTranscriptionDependencies = {
+  bundle: findCourseBundle,
+  variant: userCourseVariant,
+  endpoint: speechEndpoint,
+  key: () => process.env.AZURE_SPEECH_KEY,
+  request: (...args) => fetch(...args),
+};
 
-export async function transcribeWav(file: File, userId: string | null, courseId: string): Promise<string> {
-  const bundle = findCourseBundle(courseId);
+export async function transcribeWav(
+  file: File,
+  userId: string | null,
+  courseId: string,
+  activityId?: string,
+  dependencies: SpeechTranscriptionDependencies = speechDependencies,
+): Promise<string> {
+  const bundle = dependencies.bundle(courseId);
   if (!bundle) throw new SpeechTranscriptionError("Curso não encontrado.", 404);
-  const variant = await userCourseVariant(userId, courseId, bundle.language);
-  const locale = speechLocale(bundle.language, variant, "recognitionLocale");
-  if (!bundle.language.capabilities.speechRecognition || !locale)
+  const activity = activityId ? findActivity(bundle.course, activityId) : undefined;
+  if (activityId && !activity) throw new SpeechTranscriptionError("Atividade não encontrada.", 404);
+  const variant = await dependencies.variant(
+    userId,
+    courseId,
+    bundle.language,
+    bundle.course,
+    activity?.variant,
+  );
+  const selection = resolveSpeechOperation(
+    bundle.language,
+    bundle.course,
+    variant,
+    "recognitionLocale",
+    activity?.variant,
+  );
+  const locale = selection.operationalLocale;
+  if (!bundle.language.speech.support.speechRecognition || !locale)
     throw new SpeechTranscriptionError("Transcrição indisponível para este idioma.", 503);
-  const endpoint = speechEndpoint();
-  const key = process.env.AZURE_SPEECH_KEY;
+  const endpoint = dependencies.endpoint();
+  const key = dependencies.key();
   if (!endpoint || !key)
     throw new SpeechTranscriptionError("Transcrição de áudio indisponível.", 503);
   if (file.size > 700_000)
@@ -39,7 +75,7 @@ export async function transcribeWav(file: File, userId: string | null, courseId:
   endpoint.searchParams.set("format", "detailed");
   let response: Response;
   try {
-    response = await fetch(endpoint, {
+    response = await dependencies.request(endpoint, {
       method: "POST",
       headers: {
         "Ocp-Apim-Subscription-Key": key,

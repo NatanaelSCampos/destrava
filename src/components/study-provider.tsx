@@ -1,13 +1,15 @@
 "use client";
 
+import { interactiveLessonProgressReceiptSchema, type InteractiveLessonProgressReceipt } from "@/domain/interactive-lesson/progress-receipt";
+
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import type { ReactNode } from "react";
 import type { PublicActivity, PublicCourse } from "@/content/public";
@@ -16,14 +18,14 @@ import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import {
   markActivityComplete,
   recordAttempt,
+  recordInteractiveLessonReceipt,
   recordEvaluatedSpeaking,
   recordEvaluatedWriting,
   recordMicroLessonAttempt,
   recordNumberAttempt,
   recordRegionalAttempt,
-  recordAdaptiveAssessment,
+  recordServerAssessment,
   recordVocabularySignal,
-  reconcileAssessments,
   reviewMistake,
   reviewStructure,
   reviewVocabulary,
@@ -36,13 +38,17 @@ import {
   type RegionalAttempt,
   type MicroLessonAttempt,
   type ImageDescriptionAttempt,
-  type AdaptiveAssessmentAttempt,
 } from "@/domain/study/study-state";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { boundedStudySeconds } from "@/domain/study/session-time";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { canAccessWithMfa } from "@/lib/auth/mfa-access";
 import { SupabaseStudyRepository } from "@/repositories/supabase-study-repository";
+import { InstalledStudyHttpRepository } from "@/repositories/installed-study-http-repository";
+import {
+  matchingInstalledReference,
+  type InstalledRuntimeContext,
+} from "@/lib/installed-runtime-types";
 import {
   appendConversationReply,
   finishConversation,
@@ -50,12 +56,33 @@ import {
   type ConversationSession,
 } from "@/domain/conversation/conversation-session";
 import { readCourseState } from "@/domain/study/course-state-storage";
+import { StudyProgressSync, type ProgressLoadStatus } from "@/domain/study/study-progress-sync";
+import { browserStudySyncCache } from "@/lib/study-sync-cache";
+import {
+  deviceCapabilitySnapshot,
+  serverDeviceSnapshot,
+  subscribeDeviceCapabilities,
+  courseWithDeviceAvailability,
+} from "@/lib/client-capabilities";
 import type { LanguageResources, VocabularyItem } from "@/content/language-resources";
 import type { LanguagePackage, PublicAssessment } from "@/content/contracts";
+import {
+  serverAssessmentResultSchema,
+  type AssessmentRequest,
+  type ServerAssessmentResult,
+} from "@/content/assessment-results";
 
 export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
+  runtime?: InstalledRuntimeContext;
+  captureInteractiveLessonOwner: () => { generation: number; userId: string };
+  applyInteractiveLessonReceipt: (receipt: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => void;
+  assessActivity: (
+    activity: PublicActivity,
+    answer: string,
+    onAssessed?: (answer: string, result: GradeResult) => void,
+  ) => Promise<GradeResult>;
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
@@ -65,6 +92,10 @@ type StudyContextValue = {
   ready: boolean;
   authUserId: string | null;
   syncError: string;
+  progressLoadStatus: ProgressLoadStatus;
+  pendingProgress: StudyState[];
+  hasRecoveredProgress: boolean;
+  retryProgressSync: () => Promise<void>;
   flushStudyState: () => Promise<void>;
   updateProfile: (profile: Partial<StudentProfile>) => void;
   completeActivity: (id: string) => void;
@@ -76,19 +107,21 @@ type StudyContextValue = {
     audioUrl: string | null,
     feedback?: PronunciationFeedback,
     practiceMode?: SpeakingSubmission["practiceMode"],
-  ) => void;
+  ) => string;
   recordVocabularySearch: (id: string) => void;
   recordVocabularyAudio: (id: string) => void;
   recordNumberPractice: (
     input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">,
   ) => void;
-  recordRegionalCheck: (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) => void;
+  recordRegionalCheck: (
+    input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">,
+  ) => void;
   recordMicroLesson: (
     input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">,
   ) => void;
   saveConversation: (session: ConversationSession) => void;
   saveImageDescription: (attempt: Omit<ImageDescriptionAttempt, "id" | "createdAt">) => void;
-  saveAdaptiveAssessment: (attempt: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) => void;
+  submitAssessment: (input: Omit<AssessmentRequest, "courseId">) => Promise<ServerAssessmentResult>;
   addConversationReply: (
     sessionId: string,
     studentText: string,
@@ -115,195 +148,312 @@ type StudyContextValue = {
     plan: PlannedItem[],
     mode: SessionMode,
     targetMinutes: number,
-  ) => void;
+  ) => Promise<void>;
   updateActiveSessionDuration: (sessionId: string, seconds: number) => void;
   finishSession: (seconds?: number) => void;
   correctSessionDuration: (sessionId: string, minutes: number) => void;
 };
 
 const StudyContext = createContext<StudyContextValue | null>(null);
-const storageKey = "destrava-study:v2:demo";
-const legacyStorageKey = "frecuencias-study:v1:demo";
 
 export function StudyProvider({
   course,
   resources,
   language,
-  assessments,
   children,
+  runtime,
+  mountedUserId,
 }: {
   course: PublicCourse;
   resources: LanguageResources;
   language: LanguagePackage;
-  assessments: PublicAssessment[];
   children: ReactNode;
+  runtime?: InstalledRuntimeContext;
+  mountedUserId?: string | null;
 }) {
-  const vocabularyItems = resources.vocabulary;
-  const [state, setState] = useState<StudyState>(() =>
-    readCourseState(null, course.id, course.languageCode),
+  const deviceCapabilities = useSyncExternalStore(
+    subscribeDeviceCapabilities,
+    deviceCapabilitySnapshot,
+    serverDeviceSnapshot,
   );
-  const [ready, setReady] = useState(false);
-  const [authUserId, setAuthUserId] = useState<string | null>(null);
-  const [syncError, setSyncError] = useState("");
-  const repository = useRef<SupabaseStudyRepository | null>(null);
-  const saveQueue = useRef<Promise<void>>(Promise.resolve());
+  const vocabularyItems = resources.vocabulary;
+  const assessments = course.assessments;
+  const [sync] = useState(
+    () =>
+      new StudyProgressSync(
+        () => readCourseState(null, course.id, course.languageCode),
+        browserStudySyncCache(course.id, course.languageCode, runtime),
+      ),
+  );
+  const snapshot = useSyncExternalStore(sync.subscribe, sync.getSnapshot, sync.getServerSnapshot);
+  const { state, userId: authUserId, loadStatus: progressLoadStatus } = snapshot;
+  const visibleCourse = useMemo(
+    () =>
+      courseWithDeviceAvailability(
+        course,
+        deviceCapabilities,
+        language,
+        state.profile.variantId,
+        typeof window !== "undefined" ? (window.speechSynthesis?.getVoices() ?? []) : [],
+      ),
+    [course, deviceCapabilities, language, state.profile.variantId],
+  );
+  const ready = progressLoadStatus !== "loading";
+  const syncError = [snapshot.loadError, snapshot.saveError, snapshot.cacheError]
+    .filter(Boolean)
+    .join(" ");
+  const pendingProgress = useMemo(
+    () => (snapshot.dirty ? [...snapshot.recovery, state] : snapshot.recovery),
+    [snapshot.dirty, snapshot.recovery, state],
+  );
+  const hasRecoveredProgress = snapshot.recovery.length > 0;
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const setState = useCallback(
+    (updater: StudyState | ((current: StudyState) => StudyState)) => {
+      sync.update(updater);
+    },
+    [sync],
+  );
 
   useEffect(() => {
-    let cancelled = false;
+    const generation = sync.beginLoading();
+    const client = createSupabaseBrowserClient();
+    let sessionUserId: string | null | undefined = mountedUserId ?? runtime?.userId;
+    const subscription = client?.auth.onAuthStateChange((event, session) => {
+      const nextUserId = session?.user.id ?? null;
+      if (!sync.isCurrent(generation) || event === "INITIAL_SESSION") return;
+      if (
+        event === "SIGNED_OUT" ||
+        (event === "SIGNED_IN" && sessionUserId !== undefined && nextUserId !== sessionUserId)
+      ) {
+        // Revoke writes immediately, before React starts the next effect.
+        sync.invalidate(generation);
+        setLoadAttempt((attempt) => attempt + 1);
+        window.location.assign(
+          new URL(nextUserId ? "/dashboard" : "/login", window.location.origin).href,
+        );
+      }
+    });
     const timeout = window.setTimeout(() => {
       void (async () => {
-        const client = createSupabaseBrowserClient();
-        if (client) {
+        try {
+          if (!client) {
+            await sync.load(generation, null, null);
+            return;
+          }
           const { data, error } = await client.auth.getUser();
-          if (cancelled) return;
+          if (!sync.isCurrent(generation)) return;
+          sessionUserId = data.user?.id ?? null;
           if (error || !data.user) {
-            setReady(true);
+            sync.block(generation, error ? "Não foi possível verificar sua conta." : "");
             return;
           }
           const accountId = data.user.id;
-          setAuthUserId(accountId);
           const access = await canAccessWithMfa(client);
-          if (cancelled) return;
+          if (!sync.isCurrent(generation)) return;
           if (!access.allowed) {
-            if (access.error) setSyncError("Não foi possível verificar a segurança da sessão.");
-            setReady(true);
+            sync.block(
+              generation,
+              access.error ? "Não foi possível verificar a segurança da sessão." : "",
+              accountId,
+            );
             return;
           }
-          const nextRepository = new SupabaseStudyRepository(client, accountId);
-          repository.current = nextRepository;
-          try {
-            const remote = await nextRepository.load(course.id, course.languageCode);
-            if (cancelled) return;
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
-            if (remote || cached)
-              setState(remote ?? readCourseState(JSON.parse(cached!), course.id, course.languageCode));
-          } catch (caught) {
-            const cached = window.localStorage.getItem(`${storageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}:${course.id}`)
-              ?? window.localStorage.getItem(`${legacyStorageKey}:${accountId}`);
-            if (cached) {
-              try {
-                setState(readCourseState(JSON.parse(cached), course.id, course.languageCode));
-              } catch {
-                /* Keep fresh state. */
-              }
-            }
-            setSyncError(
-              caught instanceof Error
-                ? caught.message
-                : "Não foi possível carregar a sincronização.",
-            );
+          if (
+            (mountedUserId !== undefined && mountedUserId !== accountId) ||
+            (runtime && runtime.userId !== accountId)
+          ) {
+            sync.block(generation, "Sua conta mudou. O contexto será recarregado.", accountId);
+            window.location.assign(new URL("/dashboard", window.location.origin).href);
+            return;
           }
-          setReady(true);
-          return;
-        }
-        try {
-          const saved = window.localStorage.getItem(`${storageKey}:${course.id}`)
-            ?? window.localStorage.getItem(`${legacyStorageKey}:${course.id}`)
-            ?? window.localStorage.getItem(legacyStorageKey);
-          if (saved) {
-            setState(readCourseState(JSON.parse(saved), course.id, course.languageCode));
+          if (runtime) {
+            const repository = new InstalledStudyHttpRepository(runtime, course);
+            await sync.load(generation, accountId, repository);
+            return;
           }
-        } catch {
-          /* An invalid local draft should not prevent studying. */
+          const repository = new SupabaseStudyRepository(client, accountId, {
+            course,
+            load: async () => {
+              const response = await fetch(
+                `/api/assessments?courseId=${encodeURIComponent(course.id)}`,
+                { cache: "no-store" },
+              );
+              if (!response.ok)
+                throw new Error("Não foi possível carregar os resultados das avaliações.");
+              const body = await response.json();
+              if (!Array.isArray(body.results)) throw new Error("Formato dos resultados inválido.");
+              return body.results.map((result: unknown) =>
+                serverAssessmentResultSchema.parse(result),
+              );
+            },
+          }, {
+            course,
+            load: async () => {
+              const response = await fetch("/api/interactive-lessons/session?courseId=" + encodeURIComponent(course.id) + "&receipts=1", { cache: "no-store" });
+              if (!response.ok) throw new Error("Não foi possível recuperar as tentativas da aula.");
+              const body = await response.json();
+              if (!Array.isArray(body.receipts)) throw new Error("Recibos da aula inválidos.");
+              return body.receipts.map((value: unknown) => {
+                const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+                if (receipt.evidence.userId !== accountId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
+                  throw new Error("A tentativa da aula pertence a outro contexto.");
+                return receipt;
+              });
+            },
+          });
+          await sync.load(generation, accountId, {
+            load: () => repository.load(course.id, course.languageCode),
+            save: (nextState) => repository.save(nextState, course, vocabularyItems),
+          });
+        } catch (error) {
+          sync.block(
+            generation,
+            error instanceof Error ? error.message : "Não foi possível carregar seu progresso.",
+          );
         }
-        setReady(true);
       })();
     }, 0);
     return () => {
-      cancelled = true;
       window.clearTimeout(timeout);
+      subscription?.data.subscription.unsubscribe();
+      sync.invalidate(generation);
     };
-  }, [course.id, course.languageCode]);
+  }, [course, vocabularyItems, loadAttempt, sync, runtime, mountedUserId]);
 
   useEffect(() => {
-    if (!ready) return;
-    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
-    window.localStorage.setItem(key, JSON.stringify(state));
-    if (!repository.current) return;
+    if (!snapshot.dirty || !sync.canSaveRemote()) return;
     const timeout = window.setTimeout(() => {
-      const currentRepository = repository.current;
-      if (!currentRepository) return;
-      saveQueue.current = saveQueue.current
-        .catch(() => undefined)
-        .then(async () => {
-          await currentRepository.save(state, course, vocabularyItems);
-          setSyncError("");
-        })
-        .catch((caught) =>
-          setSyncError(caught instanceof Error ? caught.message : "Não foi possível sincronizar."),
-        );
+      // The controller keeps failures pending and also checks the generation inside the queue.
+      void sync.flush(snapshot.generation).catch(() => undefined);
     }, 700);
     return () => window.clearTimeout(timeout);
-  }, [ready, state, authUserId, course, vocabularyItems]);
+  }, [snapshot.dirty, snapshot.generation, progressLoadStatus, state, sync]);
 
-  const flushStudyState = useCallback(async () => {
-    const key = authUserId ? `${storageKey}:${authUserId}:${course.id}` : `${storageKey}:${course.id}`;
-    window.localStorage.setItem(key, JSON.stringify(state));
-    const currentRepository = repository.current;
-    if (!currentRepository) return;
-    saveQueue.current = saveQueue.current.catch(() => undefined).then(() =>
-      currentRepository.save(state, course, vocabularyItems),
-    );
-    await saveQueue.current;
-    setSyncError("");
-  }, [authUserId, course, state, vocabularyItems]);
+  const flushStudyState = useCallback(() => sync.flush(), [sync]);
+  const retryProgressSync = useCallback(async () => {
+    if (
+      sync.getSnapshot().loadStatus === "failed" ||
+      (runtime && sync.getSnapshot().saveError.includes("PROGRESS_CONFLICT"))
+    ) {
+      setLoadAttempt((attempt) => attempt + 1);
+    } else {
+      await sync.flush().catch(() => undefined);
+    }
+  }, [sync, runtime]);
 
+  const assessActivity = useCallback(
+    async (
+      activity: PublicActivity,
+      answer: string,
+      onAssessed?: (answer: string, result: GradeResult) => void,
+    ) => {
+      const generation = sync.getSnapshot().generation;
+      const userId = sync.getSnapshot().userId;
+      const studySessionId = sync.getSnapshot().state.activeSessionId;
+      if (runtime) await sync.flush(generation);
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou antes da correção.");
+      const evidenceId = runtime ? crypto.randomUUID() : undefined;
+      const response = await fetch("/api/grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId: course.id,
+          activityId: activity.id,
+          answer,
+          ...(runtime
+            ? {
+                versionSessionId: runtime.versionSessionId,
+                evidenceId,
+                ...(studySessionId ? { studySessionId } : {}),
+              }
+            : {}),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Não foi possível corrigir agora.");
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua conta ou contexto mudou durante a correção.");
+      if (
+        runtime &&
+        (!data.metadata ||
+          data.metadata.versionSessionId !== runtime.versionSessionId ||
+          data.metadata.evidenceId !== evidenceId ||
+          !data.metadata.reference ||
+          !matchingInstalledReference(data.metadata.reference, runtime.reference))
+      )
+        throw new Error("A correção não corresponde à versão desta sessão.");
+      if (typeof data.correct !== "boolean") throw new Error("Resposta de correção inválida.");
+      const feedback = data as GradeResult;
+      if (onAssessed) onAssessed(answer, feedback);
+      else setState((current) => recordAttempt(current, activity, answer, feedback));
+      return feedback;
+    },
+    [course, runtime, setState, sync],
+  );
+
+  const captureInteractiveLessonOwner = useCallback(() => {
+    const current = sync.getSnapshot();
+    if (runtime || !current.userId || !["loaded", "absent"].includes(current.loadStatus)) throw new Error("A aula requer uma conta autenticada no curso embutido.");
+    return { generation: current.generation, userId: current.userId };
+  }, [sync, runtime]);
+  const applyInteractiveLessonReceipt = useCallback((value: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => {
+    if (runtime || !sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
+      throw new Error("Sua conta ou contexto mudou durante a tentativa da aula.");
+    const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+    if (receipt.evidence.userId !== owner.userId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
+      throw new Error("A tentativa não corresponde ao curso e à conta atuais.");
+    setState((current) => recordInteractiveLessonReceipt(current, course, receipt));
+  }, [runtime, sync, course, setState]);
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
       setState((current) => ({ ...current, profile: { ...current.profile, ...profile } })),
-    [],
+    [setState],
   );
   const completeActivity = useCallback(
     (id: string) => setState((current) => markActivityComplete(current, id)),
-    [],
+    [setState],
   );
   const submitAttempt = useCallback(
     (activity: PublicActivity, answer: string, result: GradeResult) =>
-      setState((current) =>
-        reconcileAssessments(recordAttempt(current, activity, answer, result), course),
-      ),
-    [course],
+      setState((current) => recordAttempt(current, activity, answer, result)),
+    [setState],
   );
   const saveWriting = useCallback(
     (activityId: string, text: string, feedback?: unknown) =>
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
-        return reconcileAssessments(
-          recordEvaluatedWriting(
-            {
-              ...completed,
-              writing: [
-                {
-                  id: crypto.randomUUID(),
-                  activityId,
-                  sessionId: current.activeSessionId,
-                  text,
-                  createdAt: new Date().toISOString(),
-                  feedback,
-                },
-                ...current.writing,
-              ],
-              events: [
-                {
-                  id: crypto.randomUUID(),
-                  type: "writing_submitted",
-                  activityId,
-                  createdAt: new Date().toISOString(),
-                },
-                ...completed.events,
-              ],
-            },
-            activityId,
-            text,
-            feedback,
-          ),
-          course,
+        return recordEvaluatedWriting(
+          {
+            ...completed,
+            writing: [
+              {
+                id: crypto.randomUUID(),
+                activityId,
+                sessionId: current.activeSessionId,
+                text,
+                createdAt: new Date().toISOString(),
+                feedback,
+              },
+              ...current.writing,
+            ],
+            events: [
+              {
+                id: crypto.randomUUID(),
+                type: "writing_submitted",
+                activityId,
+                createdAt: new Date().toISOString(),
+              },
+              ...completed.events,
+            ],
+          },
+          activityId,
+          text,
+          feedback,
         );
       }),
-    [course],
+    [setState],
   );
   const saveSpeaking = useCallback(
     (
@@ -312,7 +462,8 @@ export function StudyProvider({
       audioUrl: string | null,
       feedback?: PronunciationFeedback,
       practiceMode: SpeakingSubmission["practiceMode"] = "lesson",
-    ) =>
+    ) => {
+      const submissionId = crypto.randomUUID();
       setState((current) => {
         const completed = markActivityComplete(current, activityId);
         return recordEvaluatedSpeaking(
@@ -320,7 +471,7 @@ export function StudyProvider({
             ...completed,
             speaking: [
               {
-                id: crypto.randomUUID(),
+                id: submissionId,
                 activityId,
                 sessionId: current.activeSessionId,
                 transcription,
@@ -344,8 +495,10 @@ export function StudyProvider({
           activityId,
           feedback,
         );
-      }),
-    [],
+      });
+      return submissionId;
+    },
+    [setState],
   );
   const markVocabulary = useCallback(
     (id: string, status: "new" | "learning" | "known" | "difficult") =>
@@ -360,44 +513,44 @@ export function StudyProvider({
           },
         },
       })),
-    [],
+    [setState],
   );
   const reviewWord = useCallback(
     (id: string, rating: boolean | "difficult") =>
       setState((current) => reviewVocabulary(current, id, rating)),
-    [],
+    [setState],
   );
   const reviewError = useCallback(
     (id: string, correct: boolean) => setState((current) => reviewMistake(current, id, correct)),
-    [],
+    [setState],
   );
   const reviewStructureCard = useCallback(
     (id: string, correct: boolean) =>
       setState((current) => reviewStructure(current, id, correct, resources.structures)),
-    [resources.structures],
+    [setState, resources.structures],
   );
   const recordVocabularySearch = useCallback(
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_search")),
-    [],
+    [setState],
   );
   const recordVocabularyAudio = useCallback(
     (id: string) => setState((current) => recordVocabularySignal(current, id, "vocabulary_audio")),
-    [],
+    [setState],
   );
   const recordNumberPractice = useCallback(
     (input: Pick<NumberAttempt, "promptId" | "mode" | "answer" | "correct" | "score">) =>
       setState((current) => recordNumberAttempt(current, input)),
-    [],
+    [setState],
   );
   const recordRegionalCheck = useCallback(
     (input: Pick<RegionalAttempt, "topicId" | "selectedAnswer" | "correct">) =>
       setState((current) => recordRegionalAttempt(current, input)),
-    [],
+    [setState],
   );
   const recordMicroLesson = useCallback(
     (input: Pick<MicroLessonAttempt, "activityId" | "question" | "selectedOption" | "correct">) =>
       setState((current) => recordMicroLessonAttempt(current, input)),
-    [],
+    [setState],
   );
   const saveConversation = useCallback(
     (session: ConversationSession) =>
@@ -434,7 +587,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [],
+    [setState],
   );
   const saveImageDescription = useCallback(
     (input: Omit<ImageDescriptionAttempt, "id" | "createdAt">) =>
@@ -462,12 +615,42 @@ export function StudyProvider({
           ],
         };
       }),
-    [],
+    [setState],
   );
-  const saveAdaptiveAssessment = useCallback(
-    (input: Omit<AdaptiveAssessmentAttempt, "id" | "finishedAt">) =>
-      setState((current) => recordAdaptiveAssessment(current, course, input)),
-    [course],
+  const submitAssessment = useCallback(
+    async (input: Omit<AssessmentRequest, "courseId">) => {
+      const generation = sync.getSnapshot().generation;
+      const userId = sync.getSnapshot().userId;
+      if (runtime) await sync.flush(generation);
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou antes da avaliação.");
+      const response = await fetch("/api/assessments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...input,
+          courseId: course.id,
+          ...(runtime ? { versionSessionId: runtime.versionSessionId } : {}),
+        }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error ?? "Não foi possível executar a avaliação.");
+      if (!sync.isCurrent(generation) || sync.getSnapshot().userId !== userId)
+        throw new Error("Sua sessão mudou durante a avaliação.");
+      const result = serverAssessmentResultSchema.parse(body);
+      if (result.courseId !== course.id || result.contentVersion !== course.contentVersion)
+        throw new Error("O conteúdo da avaliação mudou. Recarregue a página.");
+      if (
+        runtime &&
+        (result.installationId !== runtime.reference.installationId ||
+          result.artifactHash !== runtime.reference.artifactHash ||
+          result.versionSessionId !== runtime.versionSessionId)
+      )
+        throw new Error("A avaliação não corresponde à instalação desta sessão.");
+      setState((current) => recordServerAssessment(current, course, result));
+      return result;
+    },
+    [course, setState, sync, runtime],
   );
   const addConversationReply = useCallback(
     (
@@ -488,7 +671,9 @@ export function StudyProvider({
           session,
           studentText,
           reply,
-          resources.conversationScenarios.find((item) => item.id === session.scenarioId)?.objectives.map((item) => item.id) ?? [],
+          resources.conversationScenarios
+            .find((item) => item.id === session.scenarioId)
+            ?.objectives.map((item) => item.id) ?? [],
           inputMode,
         );
         if (updated === session) return current;
@@ -526,7 +711,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [resources.conversationScenarios],
+    [setState, resources.conversationScenarios],
   );
   const completeConversation = useCallback(
     (sessionId: string) =>
@@ -545,7 +730,7 @@ export function StudyProvider({
           ...current.events,
         ],
       })),
-    [],
+    [setState],
   );
   const recordStudyEvent = useCallback(
     (type: string, itemId?: string, metadata?: Record<string, string | number | boolean>) =>
@@ -556,10 +741,44 @@ export function StudyProvider({
           ...current.events,
         ],
       })),
-    [],
+    [setState],
   );
   const startSession = useCallback(
-    (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) =>
+    async (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
+      const generation = sync.getSnapshot().generation;
+      if (sync.getSnapshot().state.activeSessionId) return;
+      if (runtime) {
+        const response = await fetch("/api/course/active", { cache: "no-store" });
+        if (!response.ok)
+          throw new Error("Não foi possível verificar a versão ativa. Tente novamente.");
+        const catalog = await response.json();
+        const current = catalog.active?.find(
+          (entry: { reference: { courseId: string } }) => entry.reference.courseId === course.id,
+        );
+        if (!current || !sync.isCurrent(generation))
+          throw new Error("O contexto do curso mudou. Recarregue a página.");
+        if (!matchingInstalledReference(current.reference, runtime.reference)) {
+          await sync.flush(generation);
+          if (!sync.isCurrent(generation)) throw new Error("A conta mudou. Recarregue a página.");
+          const selected = await fetch("/api/course/active", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              courseId: course.id,
+              source: "installed",
+              expectedRevision: runtime.selectionRevision,
+              operationId: crypto.randomUUID(),
+            }),
+          });
+          if (!selected.ok)
+            throw new Error(
+              "Não foi possível iniciar a versão ativa. Seu progresso foi preservado.",
+            );
+          window.location.assign(new URL("/study", window.location.origin).href);
+          return;
+        }
+      }
+      if (!sync.isCurrent(generation)) throw new Error("A conta mudou. Recarregue a página.");
       setState((current) => {
         if (current.activeSessionId) return current;
         const id = crypto.randomUUID();
@@ -595,8 +814,9 @@ export function StudyProvider({
             ...current.events,
           ],
         };
-      }),
-    [course.id],
+      });
+    },
+    [setState, course.id, runtime, sync],
   );
   const updateActiveSessionDuration = useCallback(
     (sessionId: string, seconds: number) =>
@@ -612,7 +832,7 @@ export function StudyProvider({
           ? current
           : { ...current, sessions };
       }),
-    [],
+    [setState],
   );
   const finishSession = useCallback(
     (seconds = 0) =>
@@ -627,9 +847,7 @@ export function StudyProvider({
               ? {
                   ...session,
                   finishedAt: now.toISOString(),
-                  durationSeconds: boundedStudySeconds(
-                    Math.max(session.durationSeconds, seconds),
-                  ),
+                  durationSeconds: boundedStudySeconds(Math.max(session.durationSeconds, seconds)),
                 }
               : session,
           ),
@@ -645,7 +863,7 @@ export function StudyProvider({
           ],
         };
       }),
-    [course.id],
+    [setState, course.id],
   );
   const correctSessionDuration = useCallback(
     (sessionId: string, minutes: number) =>
@@ -660,12 +878,16 @@ export function StudyProvider({
           ? current
           : { ...current, sessions };
       }),
-    [],
+    [setState],
   );
 
   const value = useMemo(
     () => ({
-      course,
+      runtime,
+      assessActivity,
+      captureInteractiveLessonOwner,
+      applyInteractiveLessonReceipt,
+      course: visibleCourse,
       resources,
       language,
       assessments,
@@ -674,6 +896,10 @@ export function StudyProvider({
       ready,
       authUserId,
       syncError,
+      progressLoadStatus,
+      pendingProgress,
+      hasRecoveredProgress,
+      retryProgressSync,
       flushStudyState,
       updateProfile,
       completeActivity,
@@ -691,7 +917,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
-      saveAdaptiveAssessment,
+      submitAssessment,
       addConversationReply,
       completeConversation,
       recordStudyEvent,
@@ -701,7 +927,11 @@ export function StudyProvider({
       correctSessionDuration,
     }),
     [
-      course,
+      visibleCourse,
+      runtime,
+      assessActivity,
+      captureInteractiveLessonOwner,
+      applyInteractiveLessonReceipt,
       resources,
       language,
       assessments,
@@ -710,6 +940,10 @@ export function StudyProvider({
       ready,
       authUserId,
       syncError,
+      progressLoadStatus,
+      pendingProgress,
+      hasRecoveredProgress,
+      retryProgressSync,
       flushStudyState,
       updateProfile,
       completeActivity,
@@ -727,7 +961,7 @@ export function StudyProvider({
       recordMicroLesson,
       saveConversation,
       saveImageDescription,
-      saveAdaptiveAssessment,
+      submitAssessment,
       addConversationReply,
       completeConversation,
       recordStudyEvent,

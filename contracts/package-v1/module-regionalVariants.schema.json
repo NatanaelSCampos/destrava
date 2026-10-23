@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "meaning": {
+        "type": "string",
+        "minLength": 1
+      },
+      "note": {
+        "type": "string",
+        "minLength": 1
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1
+      },
+      "variants": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "region": {
+              "type": "string",
+              "minLength": 1
+            },
+            "term": {
+              "type": "string",
+              "minLength": 1
+            },
+            "example": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "region",
+            "term",
+            "example"
+          ]
+        }
+      },
+      "checkPrompt": {
+        "type": "string",
+        "minLength": 1
+      },
+      "checkRegion": {
+        "type": "string",
+        "minLength": 1
+      },
+      "checkOptions": {
+        "minItems": 2,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "checkAnswer": {
+        "type": "string",
+        "minLength": 1
+      },
+      "sources": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "label",
+            "url"
+          ]
+        }
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "meaning",
+      "note",
+      "variants",
+      "checkPrompt",
+      "sources"
+    ]
+  }
+}

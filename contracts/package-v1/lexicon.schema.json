@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "minLength": 1
+      },
+      "language": {
+        "type": "string",
+        "minLength": 1
+      },
+      "lemma": {
+        "type": "string",
+        "minLength": 1
+      },
+      "partOfSpeech": {
+        "type": "string"
+      },
+      "meanings": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "translations": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "required": [
+            "id",
+            "translations"
+          ]
+        }
+      },
+      "examples": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "target": {
+              "type": "string",
+              "minLength": 1
+            },
+            "translations": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "minLength": 2
+              },
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "target",
+            "translations"
+          ]
+        }
+      },
+      "level": {
+        "type": "string"
+      },
+      "lessonId": {
+        "type": "string"
+      },
+      "aliases": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "surface": {
+        "type": "string"
+      },
+      "className": {
+        "type": "string"
+      },
+      "regionalNote": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "visualCue": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string",
+            "enum": [
+              "home",
+              "work",
+              "talk",
+              "doctor",
+              "teacher",
+              "location"
+            ]
+          },
+          "alt": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "icon",
+          "alt"
+        ]
+      },
+      "clozeForms": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "id",
+      "language",
+      "lemma",
+      "meanings"
+    ]
+  }
+}

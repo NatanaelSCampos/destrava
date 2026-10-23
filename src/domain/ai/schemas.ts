@@ -19,6 +19,14 @@ export const tutorFeedbackSchema = z.object({
   example: z.string(),
   quickCheck: z.string(),
 });
+export const interactiveTeachingSchema = z.object({
+  message: z.string().min(10).max(650),
+  example: z.string().max(180),
+  translation: z.string().max(180),
+  followUp: z.string().max(180),
+  canResume: z.boolean(),
+});
+export type InteractiveTeachingFeedback = z.infer<typeof interactiveTeachingSchema>;
 
 export const conversationReplySchema = z.object({
   reply: z.string(),

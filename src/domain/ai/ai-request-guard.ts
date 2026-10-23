@@ -1,3 +1,5 @@
+import { serverServiceAvailability } from "@/lib/capability-environment";
+import { projectActionAvailability } from "@/engine/capabilities/availability-projection";
 import { NextResponse } from "next/server";
 import {
   createSupabaseServerClient,
@@ -5,10 +7,34 @@ import {
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
 import type { AIUsage } from "./ai-provider";
+import {
+  unsupportedVersionRequest,
+  type VersionPayloadParser,
+} from "@/lib/versioned-operation-guard";
+
+
+/** Known missing configuration is rejected before quota; configured is not a health check. */
+function unavailableService(feature: string) {
+  const capabilities: Record<string, string> = {
+    tutor: "ai.tutor", writing: "ai.writing_feedback", conversation: "ai.conversation",
+    micro_lesson: "ai.micro_lesson", image_description: "ai.image_description",
+    interactive_lesson: "ai.interactive_support", pronunciation: "speech.pronunciation",
+    conversation_transcription: "speech.recognition",
+  };
+  const capability = capabilities[feature];
+  if (!capability) return;
+  const state = projectActionAvailability({ dependencies: serverServiceAvailability() })[capability];
+  if (!state || state.state === "unavailable")
+    return { error: NextResponse.json({ error: state?.reasons.join(" ") ?? "Leitura de disponibilidade indisponível." }, { status: 503 }) };
+}
 
 const windows = new Map<string, { count: number; resetAt: number }>();
 
-export async function guardAIRequest(request: Request, feature: string) {
+export async function guardAIRequest(
+  request: Request,
+  feature: string,
+  parser: VersionPayloadParser = "json",
+) {
   if (isSupabaseConfigured()) {
     const user = await getAuthenticatedUser();
     if (!user)
@@ -18,6 +44,33 @@ export async function guardAIRequest(request: Request, feature: string) {
           { status: 401 },
         ),
       };
+    const versionScope = await unsupportedVersionRequest(request, parser);
+    if (versionScope) return { error: versionScope };
+    if (process.env.DESTRAVA_LOCAL_ONLY === "1" && process.env.NODE_ENV !== "production") {
+      try {
+        const { isSelectedInstalled } = await import("@/lib/application-course-runtime");
+        if (await isSelectedInstalled(user.id))
+          return {
+            error: NextResponse.json(
+              {
+                error: "Este recurso ainda não está integrado a cursos instalados.",
+                capability: feature,
+                layer: "installed.integration",
+              },
+              { status: 422 },
+            ),
+          };
+      } catch {
+        return {
+          error: NextResponse.json(
+            { error: "Não foi possível verificar o contexto de estudo." },
+            { status: 503 },
+          ),
+        };
+      }
+    }
+    const missingService = unavailableService(feature);
+    if (missingService) return missingService;
     const client = await createSupabaseServerClient();
     if (!client)
       return {
@@ -49,6 +102,10 @@ export async function guardAIRequest(request: Request, feature: string) {
         { status: 503 },
       ),
     };
+  const versionScope = await unsupportedVersionRequest(request, parser);
+  if (versionScope) return { error: versionScope };
+  const missingService = unavailableService(feature);
+  if (missingService) return missingService;
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   const current = windows.get(ip);
   const now = Date.now();

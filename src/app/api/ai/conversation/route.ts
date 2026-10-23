@@ -9,6 +9,8 @@ import { variantLabel } from "@/content/language-variant";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { buildLearningMemory } from "@/domain/study/learning-memory";
 import { validatedObjectiveIds } from "@/domain/conversation/objective-evidence";
+import { buildLinguisticAIContext } from "@/domain/ai/linguistic-context";
+import { userCourseVariant } from "@/lib/user-course-variant";
 
 const inputSchema = z.object({
   courseId: z.string().min(1).max(80),
@@ -38,22 +40,32 @@ export async function POST(request: Request) {
   if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
   const { course, resources, language, coursePackage } = bundle;
   const scenario =
-    input.mode === "mission" ? resources.conversationScenarios.find((item) => item.id === input.scenarioId) : undefined;
+    input.mode === "mission"
+      ? resources.conversationScenarios.find((item) => item.id === input.scenarioId)
+      : undefined;
   if ((input.mode === "mission" && !scenario) || (input.mode === "free" && input.topic.length < 3))
     return NextResponse.json({ error: "Escolha uma missão ou um assunto." }, { status: 400 });
 
   try {
     const client = guard.userId ? await createSupabaseServerClient() : null;
-    const { data } = client
+    const { data, error } = client
       ? await client
           .from("user_course_state")
           .select("state")
           .eq("user_id", guard.userId)
           .eq("course_id", course.id)
           .maybeSingle()
-      : { data: null };
+      : { data: null, error: null };
+    if (error) throw error;
     const state = data?.state ? readCourseState(data.state, course.id, course.languageCode) : null;
-    const region = variantLabel(language, state?.profile?.variantId);
+    const preference = await userCourseVariant(guard.userId ?? null, course.id, language, course);
+    const linguisticContext = buildLinguisticAIContext(
+      course,
+      language,
+      coursePackage.sourceLanguage,
+      preference,
+    );
+    const region = variantLabel(language, linguisticContext.variantId, course);
     const currentUnit = course.units.find((unit) =>
       unit.lessons.some((lesson) =>
         lesson.activities.some((activity) => !state?.completedActivityIds?.includes(activity.id)),
@@ -69,8 +81,11 @@ export async function POST(request: Request) {
         level: course.level,
         unit: currentUnit?.title ?? course.units.at(-1)?.title ?? "Curso",
         goal: state?.profile?.learningPreferences?.goal ?? "general",
-        contexts: coursePackage.contexts?.filter((item) =>
-          state?.profile?.learningPreferences?.contexts?.includes(item.id)).map((item) => item.label).slice(0, 3) ?? [],
+        contexts:
+          coursePackage.contexts
+            ?.filter((item) => state?.profile?.learningPreferences?.contexts?.includes(item.id))
+            .map((item) => item.label)
+            .slice(0, 3) ?? [],
         knownWords: Object.values(state?.vocabulary ?? {}).filter((item) => item.status === "known")
           .length,
         difficulty: Object.values(state?.mistakes ?? {})
@@ -78,6 +93,7 @@ export async function POST(request: Request) {
           .slice(0, 3)
           .map((item) => item.correctAnswer.slice(0, 100)),
         region,
+        linguisticContext,
         memory: state ? buildLearningMemory(state, course.id) : undefined,
         referenceVocabulary: coursePackage.lexicon.slice(0, 15).map((entry) => ({
           term: entry.surface ?? entry.lemma,

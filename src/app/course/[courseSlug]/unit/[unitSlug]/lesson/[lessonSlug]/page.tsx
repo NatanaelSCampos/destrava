@@ -1,12 +1,13 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { AssessmentResult } from "@/components/activities/assessment-result";
+import { resolveAssessment } from "@/content/assessment-references";
 
 function LessonContent() {
   const { courseSlug, unitSlug, lessonSlug } = useParams<{
@@ -15,11 +16,16 @@ function LessonContent() {
     lessonSlug: string;
   }>();
   const { course, state } = useStudy();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const unit = course.units.find(
     (item) => item.slug === unitSlug || String(item.number) === unitSlug,
   );
   const lesson = unit?.lessons.find((item) => item.slug === lessonSlug);
+  useEffect(() => {
+    if (lesson?.interactiveLessonRef && courseSlug === course.slug)
+      router.replace(`/live-classes?lesson=${encodeURIComponent(lesson.id)}`);
+  }, [lesson?.id, lesson?.interactiveLessonRef, courseSlug, course.slug, router]);
   const requestedActivity = searchParams.get("activity");
   const requestedIndex =
     lesson?.activities.findIndex((activity) => activity.id === requestedActivity) ?? -1;
@@ -30,7 +36,17 @@ function LessonContent() {
     setSelection({ routeKey, index: typeof next === "function" ? next(index) : next });
   if (courseSlug !== course.slug || !unit || !lesson)
     return <div className="empty-state">Lição não encontrada.</div>;
+  if (!lesson.activities.length) return <div className="empty-state">As atividades desta lição estão indisponíveis. Os requisitos da unidade permanecem pendentes.</div>;
+  if (lesson.interactiveLessonRef) return <div className="lesson-page">
+    <span className="eyebrow">AULA PARTICULAR</span>
+    <h1>{lesson.title}</h1>
+    <p>Esta lição tem uma aula guiada com quadro, prática e professora.</p>
+    <Link className="primary-button" href={`/live-classes?lesson=${encodeURIComponent(lesson.id)}`}>
+      Abrir aula particular <ArrowRight size={17} />
+    </Link>
+  </div>;
   const active = lesson.activities[index] ?? lesson.activities[0];
+  const finalAssessment = resolveAssessment(course.assessments, unit.assessmentRefs.final, "summative");
   const complete = lesson.activities.filter((activity) =>
     state.completedActivityIds.includes(activity.id),
   ).length;
@@ -63,7 +79,7 @@ function LessonContent() {
                 style={{ width: `${Math.round((100 * complete) / lesson.activities.length)}%` }}
               />
             </div>
-            <small>{Math.round((100 * complete) / lesson.activities.length)}% concluído</small>
+            <small>{Math.round((100 * complete) / lesson.activities.length)}% das atividades realizadas</small>
           </div>
           <nav aria-label="Atividades da lição">
             {lesson.activities.map((activity, activityIndex) => (
@@ -90,8 +106,8 @@ function LessonContent() {
         </aside>
         <div className="lesson-main">
           <ActivityRenderer key={active.id} activity={active} />
-          {lesson.activities.some((activity) => activity.type === "quiz") && (
-            <AssessmentResult lesson={lesson} unitId={unit.id} />
+          {finalAssessment?.lessonId === lesson.id && (
+            <AssessmentResult assessmentId={finalAssessment.id} />
           )}
           <div className="lesson-controls">
             <button

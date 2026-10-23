@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { findCourseBundle } from "@/content/course-registry";
-import { speechLocale } from "@/content/language-variant";
+import { resolveSpeechOperation } from "@/engine/variants/speech";
 import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       { status: 503 },
     );
 
-  const guard = await guardAIRequest(request, "pronunciation");
+  const guard = await guardAIRequest(request, "pronunciation", "form");
   if (guard.error) return guard.error;
 
   const form = await request.formData().catch(() => null);
@@ -52,12 +52,15 @@ export async function POST(request: Request) {
   const file = form?.get("audio");
   if (
     !(file instanceof File) ||
-    (typeof activityId !== "string" && typeof numberPromptId !== "string")
+    (typeof activityId === "string") === (typeof numberPromptId === "string")
   )
     return NextResponse.json({ error: "Envie a gravação da atividade." }, { status: 400 });
 
   const activity = typeof activityId === "string" ? findActivity(bundle.course, activityId) : null;
-  const numberPrompt = typeof numberPromptId === "string" ? bundle.resources.numbers.find((item) => item.id === numberPromptId) : null;
+  const numberPrompt =
+    typeof numberPromptId === "string"
+      ? bundle.resources.numbers.find((item) => item.id === numberPromptId)
+      : null;
   const referenceText =
     numberPrompt?.spoken ?? (activity?.type === "speaking" ? activity.referenceText : undefined);
   if (!referenceText)
@@ -69,10 +72,36 @@ export async function POST(request: Request) {
   if (!validWav(audio))
     return NextResponse.json({ error: "Gravação inválida. Grave novamente." }, { status: 400 });
 
-  const variant = await userCourseVariant(guard.userId ?? null, bundle.course.id, bundle.language);
-  const locale = speechLocale(bundle.language, variant, "assessmentLocale");
-  if (!bundle.language.capabilities.pronunciationAssessment || !locale)
-    return NextResponse.json({ error: "Avaliação de pronúncia indisponível para este idioma." }, { status: 503 });
+  let locale: string | null;
+  let requestedVariant: string;
+  try {
+    const variant = await userCourseVariant(
+      guard.userId ?? null,
+      bundle.course.id,
+      bundle.language,
+      bundle.course,
+      activity?.variant,
+    );
+    const selection = resolveSpeechOperation(
+      bundle.language,
+      bundle.course,
+      variant,
+      "assessmentLocale",
+      activity?.variant,
+    );
+    locale = selection.operationalLocale;
+    requestedVariant = selection.requestedVariant;
+  } catch {
+    return NextResponse.json(
+      { error: "Contexto linguístico indisponível. Nenhuma avaliação ocorreu." },
+      { status: 503 },
+    );
+  }
+  if (!bundle.language.speech.support.pronunciationAssessment || !locale)
+    return NextResponse.json(
+      { error: "Avaliação de pronúncia indisponível para este idioma." },
+      { status: 503 },
+    );
   endpoint.searchParams.set("language", locale);
   endpoint.searchParams.set("format", "detailed");
   const config = Buffer.from(
@@ -129,6 +158,11 @@ export async function POST(request: Request) {
       );
 
     const feedback: PronunciationFeedback = {
+      speechContext: {
+        requestedVariant,
+        operationalLocale: locale,
+        compatibility: "declared_mapping",
+      },
       referenceText,
       recognizedText: result.Display ?? "",
       accuracy: result.AccuracyScore,

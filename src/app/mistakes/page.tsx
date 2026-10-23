@@ -1,4 +1,6 @@
 "use client";
+import { learningActionAvailability } from "@/domain/study/learning-action-availability";
+import { LearningText } from "@/components/learning/text-presentation";
 
 import Link from "next/link";
 import { ArrowRight, Check, NotebookPen, RotateCcw } from "lucide-react";
@@ -6,7 +8,6 @@ import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";
 import { formatDate } from "@/lib/utils";
 import { SpeakButton } from "@/components/audio/speak-button";
-import { featureFlags } from "@/lib/feature-flags";
 import { mistakeHistory } from "@/domain/study/mistake-history";
 
 const skillNames: Record<string, string> = {
@@ -20,7 +21,10 @@ const skillNames: Record<string, string> = {
 };
 
 export default function MistakesPage() {
-  const { course, state } = useStudy();
+  const { course, state, runtime } = useStudy();
+  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
+  const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
   const contexts = new Map(
     course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) =>
@@ -54,9 +58,7 @@ export default function MistakesPage() {
             Cada dúvida registrada vira uma oportunidade de praticar com intenção.
           </p>
         </div>
-        <Link href="/review" className="primary-button">
-          <RotateCcw size={16} /> Revisar agora
-        </Link>
+        {reviewAction.eligible ? <Link href="/review" className="primary-button"><RotateCcw size={16} /> Revisar agora</Link> : <><p role="status">{reviewAction.reasons.join(" ")}</p><Link href={`/course/${course.slug}`} className="primary-button">Continuar meu curso</Link></>}
       </div>
       <div className="mistake-summary">
         <div className="panel">
@@ -93,16 +95,19 @@ export default function MistakesPage() {
                   <span>{formatDate(item.lastMissedAt)}</span>
                 </div>
                 <h3>{context?.activity.title ?? "Atividade"}</h3>
-                <small>{course.title} · {course.languageCode.toUpperCase()}{topic ? ` · ${topic.label}` : ""}</small>
+                <small>
+                  {course.title} · {course.languageCode.toUpperCase()}
+                  {topic ? ` · ${topic.label}` : ""}
+                </small>
                 <div className="mistake-comparison">
                   <div>
                     <span>SUA RESPOSTA</span>
-                    <p>{item.originalAnswer}</p>
+                    <LearningText as="p" textRole="user" text={item.originalAnswer} />
                   </div>
                   <div>
                     <span>FORMA ESPERADA</span>
                     <p>
-                      <Check size={16} /> {item.correctAnswer}
+                      <Check size={16} /> <LearningText text={item.correctAnswer} />
                       <SpeakButton text={item.correctAnswer} label="Ouvir forma esperada" />
                     </p>
                   </div>
@@ -120,16 +125,30 @@ export default function MistakesPage() {
                     <ol>
                       {history.map((entry) => (
                         <li key={entry.id}>
-                          <span>{formatDate(entry.at)} · {
-                            { exercise: "Exercício", writing: "Escrita", speaking: "Fala", review: "Revisão" }[entry.source]
-                          } · {entry.correct === null ? "Sem nota objetiva" : entry.correct ? "Acertou" : "Precisa rever"}</span>
+                          <span>
+                            {formatDate(entry.at)} ·{" "}
+                            {
+                              {
+                                exercise: "Exercício",
+                                writing: "Escrita",
+                                speaking: "Fala",
+                                review: "Revisão",
+                              }[entry.source]
+                            }{" "}
+                            ·{" "}
+                            {entry.correct === null
+                              ? "Sem nota objetiva"
+                              : entry.correct
+                                ? "Acertou"
+                                : "Precisa rever"}
+                          </span>
                           <p>{entry.answer}</p>
                         </li>
                       ))}
                     </ol>
                   </details>
                 )}
-                {context && (
+                {context && learningActionAvailability(course, { kind: "activity", activityId: item.activityId }, actionContext).eligible && (
                   <div className="mistake-actions">
                     <Link href={context.href} className="text-link">
                       {item.category === "speaking"
@@ -137,12 +156,12 @@ export default function MistakesPage() {
                         : "Praticar novamente"}{" "}
                       <ArrowRight size={15} />
                     </Link>
-                    {featureFlags.AI_TUTOR && (
+                    {microAction.eligible && (
                       <Link
                         href={`/micro-lesson?activity=${encodeURIComponent(item.activityId)}`}
                         className="text-link"
                       >
-                        Fazer microlição <ArrowRight size={15} />
+                        {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Fazer microlição"} <ArrowRight size={15} />
                       </Link>
                     )}
                   </div>

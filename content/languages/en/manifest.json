@@ -1,31 +1,59 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "contentVersion": "1.0.0",
   "id": "en",
-  "identity": { "name": "English", "nativeName": "English", "iso639_1": "en" },
-  "writingSystem": { "direction": "ltr", "scripts": ["Latin"], "caseSensitive": false },
-  "variants": [
-    { "id": "general", "name": "Inglês geral", "default": true },
-    { "id": "en-US", "name": "Inglês dos Estados Unidos" },
-    { "id": "en-GB", "name": "Inglês do Reino Unido" }
-  ],
-  "capabilities": {
-    "speechRecognition": true,
-    "textToSpeech": true,
-    "pronunciationAssessment": true,
-    "regionalVariants": true,
-    "romanization": false,
-    "tones": false,
-    "grammaticalGender": false
+  "identity": {
+    "name": "English",
+    "nativeName": "English",
+    "iso639_1": "en"
   },
+  "writingSystem": {
+    "direction": "ltr",
+    "scripts": [
+      "Latin"
+    ],
+    "caseSensitive": false
+  },
+  "variants": [
+    {
+      "id": "general",
+      "name": "Inglês geral",
+      "default": true
+    },
+    {
+      "id": "en-US",
+      "name": "Inglês dos Estados Unidos"
+    },
+    {
+      "id": "en-GB",
+      "name": "Inglês do Reino Unido"
+    }
+  ],
   "speech": {
     "defaultVariant": "general",
     "providers": {
       "azure": {
-        "general": { "recognitionLocale": "en-US", "assessmentLocale": "en-US", "ttsLocale": "en-US" },
-        "en-US": { "recognitionLocale": "en-US", "assessmentLocale": "en-US", "ttsLocale": "en-US" },
-        "en-GB": { "recognitionLocale": "en-GB", "assessmentLocale": "en-GB", "ttsLocale": "en-GB" }
+        "general": {
+          "recognitionLocale": "en-US",
+          "assessmentLocale": "en-US",
+          "ttsLocale": "en-US"
+        },
+        "en-US": {
+          "recognitionLocale": "en-US",
+          "assessmentLocale": "en-US",
+          "ttsLocale": "en-US"
+        },
+        "en-GB": {
+          "recognitionLocale": "en-GB",
+          "assessmentLocale": "en-GB",
+          "ttsLocale": "en-GB"
+        }
       }
+    },
+    "support": {
+      "speechRecognition": true,
+      "textToSpeech": true,
+      "pronunciationAssessment": true
     }
   },
   "normalization": {
@@ -36,9 +64,22 @@
     "ignoreDiacritics": false
   },
   "modules": {
-    "alphabet": { "enabled": true, "source": "fundamentals/alphabet.json" },
-    "numbers": { "enabled": true, "source": "fundamentals/numbers.json" },
-    "regionalVariants": { "enabled": true, "source": "fundamentals/regional-variants.json" }
+    "alphabet": {
+      "enabled": true,
+      "source": "fundamentals/alphabet.json"
+    },
+    "numbers": {
+      "enabled": true,
+      "source": "fundamentals/numbers.json"
+    },
+    "regionalVariants": {
+      "enabled": true,
+      "source": "fundamentals/regional-variants.json"
+    }
   },
-  "strategies": { "textTokenizer": "latin-word-v1", "answerNormalizer": "default-latin-v1" }
+  "linguisticFeatures": {
+    "romanization": false,
+    "tones": false,
+    "grammaticalGender": false
+  }
 }

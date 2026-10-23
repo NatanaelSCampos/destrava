@@ -15,10 +15,14 @@ import { TutorContextBuilder } from "../src/domain/ai/tutor-context-builder";
 import { nextAdaptiveItem } from "../src/domain/study/adaptive-assessment";
 import { speechLocale, textToSpeechLocale } from "../src/content/language-variant";
 import { runtimeBundle } from "../src/content/runtime-package";
+import { resolveAssessment } from "../src/content/assessment-references";
 
 const es = findCourseBundle("frecuencias-a1")!;
 const test = findCourseBundle("pt-BR.xx-Test.a1.general")!;
 const en = findCourseBundle("pt-BR.en.a1.general")!;
+const testDiagnostic = resolveAssessment(test.coursePackage.assessments, test.coursePackage.assessmentRefs.diagnostic, "diagnostic")!;
+const enDiagnostic = resolveAssessment(en.coursePackage.assessments, en.coursePackage.assessmentRefs.diagnostic, "diagnostic")!;
+assert(testDiagnostic.method === "adaptive" && enDiagnostic.method === "adaptive");
 assert.equal(allCourseBundles().length, 3);
 assert.equal(es.language.id, "es");
 assert.equal(test.language.id, "xx-Test");
@@ -27,7 +31,7 @@ assert.equal(test.resources.vocabulary.length, 5);
 assert.equal(test.resources.alphabet.length, 4);
 assert.equal(test.resources.numbers.length, 0);
 assert.equal(speechLocale(test.language, "general", "recognitionLocale"), null);
-assert.equal(test.language.capabilities.textToSpeech, false);
+assert.equal(test.language.speech.support.textToSpeech, false);
 assert.equal(textToSpeechLocale(test.language, "general"), null);
 assert.equal(textToSpeechLocale({
   ...test.language,
@@ -38,6 +42,13 @@ assert.equal(textToSpeechLocale({
 assert.equal(test.coursePackage.assessments.length, 1);
 const extraUnit = {
   ...test.coursePackage.units[0], id: "xx.u02", slug: "novos-passos", order: 2,
+  assessmentRefs: { formative: [] },
+  learningPolicy: {
+    completion: { requirements: test.coursePackage.units[0].learningPolicy.completion.requirements.map(rule =>
+      "activityIds" in rule ? { ...rule, activityIds: rule.activityIds.map(id => `${id}.u02`) } : rule) },
+    mastery: { requirements: test.coursePackage.units[0].learningPolicy.mastery.requirements.map(rule =>
+      "activityIds" in rule ? { ...rule, activityIds: rule.activityIds.map(id => `${id}.u02`) } : rule) },
+  },
   lessons: test.coursePackage.units[0].lessons.map((lesson) => ({
     ...lesson, id: `${lesson.id}.u02`, slug: `${lesson.slug}-u02`,
     activities: lesson.activities.map((activity) => ({ ...activity, id: `${activity.id}.u02` })),
@@ -47,7 +58,7 @@ assert.equal(runtimeBundle({
   course: { ...test.coursePackage, units: [...test.coursePackage.units, extraUnit] },
   language: test.language, moduleData: { alphabet: test.resources.alphabet },
 }).course.units.length, 2);
-assert.equal(nextAdaptiveItem(test.coursePackage.assessments[0].bank, [], test.coursePackage.assessments[0].skillPlan)?.activityId, "xx.act.choice");
+assert.equal(nextAdaptiveItem(testDiagnostic.bank, [], testDiagnostic.skillPlan)?.activityId, "xx.act.choice");
 assert.notEqual(normalizeAnswer("español", es.language.normalization), normalizeAnswer("espanol", es.language.normalization));
 
 const esActivity = findActivity(es.course, "grammar-3")!;
@@ -108,16 +119,16 @@ for (const variant of ["general", "en-US", "en-GB"]) {
   assert.equal(textToSpeechLocale(en.language, variant), locale);
 }
 assert.equal(en.resources.alphabet.length, 26);
-assert.equal(en.resources.numbers.length, 7);
+assert.equal(en.resources.numbers.length, 26);
 assert.equal(en.resources.regionalTopics.length, 2);
 assert.equal(en.course.units.length, 1);
 assert.equal(en.course.units[0].lessons.length, 3);
-assert.equal(en.course.units[0].lessons.flatMap((lesson) => lesson.activities).length, 18);
+assert.equal(en.course.units[0].lessons.flatMap((lesson) => lesson.activities).length, 23);
 assert.equal(en.resources.vocabulary.length, en.coursePackage.lexicon.length);
 assert.equal(en.resources.conversationScenarios.length, 1);
 assert.equal(en.coursePackage.roleplays.length, 1);
-assert.equal(en.coursePackage.assessments[0].bank.length, 5);
-assert.equal(en.coursePackage.assessments[0].passingPolicy.overall, 0.6);
+assert.equal(enDiagnostic.bank.length, 15);
+assert.equal(enDiagnostic.passingPolicy.overall, 0.6);
 assert.equal(en.resources.imageScenes[0].image, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.image);
 assert.notEqual(en.resources.imageScenes[0].prompt, es.resources.imageScenes.find((scene) => scene.id === "cafe")?.prompt);
 assert.equal(searchDictionary(en.resources, "hello")[0]?.id, "en.lex.hello");

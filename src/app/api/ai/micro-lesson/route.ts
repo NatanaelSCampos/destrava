@@ -4,6 +4,8 @@ import { findCourseBundle } from "@/content/course-registry";
 import { findActivity } from "@/content/schema";
 import { guardAIRequest, logAIRequest } from "@/domain/ai/ai-request-guard";
 import { getAIProvider } from "@/domain/ai/ai-provider";
+import { buildLinguisticAIContext } from "@/domain/ai/linguistic-context";
+import { userCourseVariant } from "@/lib/user-course-variant";
 import type { Mistake } from "@/domain/study/study-state";
 import { readCourseState } from "@/domain/study/course-state-storage";
 import { featureFlags } from "@/lib/feature-flags";
@@ -47,7 +49,9 @@ export async function POST(request: Request) {
     if (error)
       return NextResponse.json({ error: "Não foi possível ler seu caderno." }, { status: 503 });
     mistake = data?.state
-      ? readCourseState(data.state, bundle.course.id, bundle.course.languageCode).mistakes[parsed.data.activityId]
+      ? readCourseState(data.state, bundle.course.id, bundle.course.languageCode).mistakes[
+          parsed.data.activityId
+        ]
       : undefined;
   } else if (process.env.NODE_ENV === "development") {
     mistake = parsed.data.localMistake;
@@ -59,6 +63,13 @@ export async function POST(request: Request) {
     );
 
   try {
+    const variantId = await userCourseVariant(
+      guard.userId ?? null,
+      bundle.course.id,
+      bundle.language,
+      bundle.course,
+      activity.variant,
+    );
     const result = await getAIProvider().generateMicroLesson({
       course: bundle.course.title,
       languageCode: bundle.course.languageCode,
@@ -69,6 +80,14 @@ export async function POST(request: Request) {
       originalAnswer: mistake.originalAnswer.slice(0, 500),
       correctAnswer: mistake.correctAnswer.slice(0, 500),
       explanation: mistake.explanation.slice(0, 1200),
+      linguisticContext: buildLinguisticAIContext(
+        bundle.course,
+        bundle.language,
+        bundle.coursePackage.sourceLanguage,
+        variantId,
+        activity.id,
+        mistake.originalAnswer,
+      ),
     });
     await logAIRequest("micro_lesson", result.usage, guard.reservationId ?? null);
     return NextResponse.json({ lesson: result.feedback });

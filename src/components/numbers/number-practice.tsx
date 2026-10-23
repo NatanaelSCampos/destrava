@@ -1,5 +1,7 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Hash, Headphones, Mic2 } from "lucide-react";
@@ -23,17 +25,30 @@ const modeDefinitions: { id: NumberMode; title: string; detail: string }[] = [
 
 export function NumberPractice({ initialPromptId }: { initialPromptId?: string }) {
   const { resources, language } = useStudy();
-  if (!resources.numbers.length) return <div className="empty-state panel">A prática de números ainda não está disponível para este curso.</div>;
-  if (!language.capabilities.textToSpeech) return <div className="empty-state panel">A prática de números com áudio ainda não está disponível para este idioma.</div>;
+  if (!resources.numbers.length)
+    return (
+      <div className="empty-state panel">
+        A prática de números ainda não está disponível para este curso.
+      </div>
+    );
+  if (!language.speech.support.textToSpeech)
+    return (
+      <div className="empty-state panel">
+        A prática de números com áudio ainda não está disponível para este idioma.
+      </div>
+    );
   return <NumberPracticeContent initialPromptId={initialPromptId} />;
 }
 
 function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }) {
-  const { course, language, resources, state, recordNumberPractice } = useStudy();
+  const textAttrs = useTextPresentation();
+  const { language, resources, state, recordNumberPractice } = useStudy();
   const numberPrompts = resources.numbers;
   const numberCategoryLabels = resources.numberCategoryLabels;
   const categories = Object.keys(numberCategoryLabels) as NumberCategory[];
-  const modes = modeDefinitions.filter((item) => item.id === "dictation" || language.capabilities.pronunciationAssessment);
+  const modes = modeDefinitions.filter(
+    (item) => item.id === "dictation" || language.speech.support.pronunciationAssessment,
+  );
   const findNumberPrompt = (id: string) => numberPrompts.find((item) => item.id === id);
   const initial = findNumberPrompt(initialPromptId ?? "") ?? numberPrompts[0];
   const [category, setCategory] = useState<NumberCategory>(initial.category);
@@ -167,7 +182,11 @@ function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }
             <>
               <h2>Que número você ouviu?</h2>
               <p>Ouça quantas vezes precisar e digite usando algarismos.</p>
-              <SpeakButton text={prompt.spoken} label={`Ouvir número em ${language.identity.nativeName}`} withLabel />
+              <SpeakButton
+                text={prompt.spoken}
+                label={`Ouvir número em ${language.identity.nativeName}`}
+                withLabel
+              />
               <form onSubmit={submitDictation} className="number-answer-form">
                 <label htmlFor="number-answer">Sua resposta</label>
                 <input
@@ -191,8 +210,7 @@ function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }
                 >
                   <strong>{result ? "Acertou!" : "Vale repetir este número."}</strong>
                   <p>
-                    Resposta: {prompt.display} ·{" "}
-                    <span lang={course.languageCode}>{prompt.spoken}</span>
+                    Resposta: {prompt.display} · <span {...textAttrs()}>{prompt.spoken}</span>
                   </p>
                   <SpeakButton text={prompt.spoken} label="Ouvir a resposta" withLabel />
                 </div>
@@ -201,7 +219,9 @@ function NumberPracticeContent({ initialPromptId }: { initialPromptId?: string }
           ) : (
             <>
               <h2>
-                {mode === "speaking" ? `Fale ${prompt.display} em ${language.identity.nativeName}` : "Escute e repita"}
+                {mode === "speaking"
+                  ? `Fale ${prompt.display} em ${language.identity.nativeName}`
+                  : "Escute e repita"}
               </h2>
               {mode === "speaking" && <p className="number-display">{prompt.display}</p>}
               <SpeakingRecorder

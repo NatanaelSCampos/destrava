@@ -1,0 +1,161 @@
+{
+  "language": {
+    "schemaVersion": "1.1",
+    "contentVersion": "1.0.0",
+    "id": "xx-External",
+    "identity": { "name": "Synthetic external language", "nativeName": "External fixture" },
+    "writingSystem": { "direction": "rtl", "scripts": ["Hebr", "Latn"], "caseSensitive": false },
+    "variants": [
+      { "id": "variant-a", "name": "Synthetic A" },
+      { "id": "variant-b", "name": "Synthetic B" }
+    ],
+    "linguisticFeatures": { "romanization": false, "tones": false, "grammaticalGender": false },
+    "speech": {
+      "support": {
+        "speechRecognition": false,
+        "textToSpeech": false,
+        "pronunciationAssessment": false
+      },
+      "defaultVariant": "variant-a",
+      "providers": {}
+    },
+    "normalization": {
+      "trimWhitespace": true,
+      "collapseWhitespace": true,
+      "caseInsensitive": false,
+      "ignoreTerminalPunctuation": false,
+      "ignoreDiacritics": false
+    },
+    "modules": {}
+  },
+  "course": {
+    "schemaVersion": "1.5",
+    "contentVersion": "1.0.0",
+    "id": "external.fixture",
+    "slug": "external-fixture",
+    "sourceLanguage": "pt-BR",
+    "targetLanguage": "xx-External",
+    "defaultVariant": "variant-a",
+    "acceptedVariants": ["variant-a", "variant-b"],
+    "framework": { "name": "Synthetic", "exitLevel": "A1" },
+    "track": "fixture",
+    "title": "Fixture externa",
+    "learningGoals": ["demo.goal"],
+    "description": "Material sintético para testes técnicos, sem aprovação linguística ou publicação."
+  },
+  "units": [
+    {
+      "id": "opaque-unit",
+      "slug": "demo",
+      "order": 1,
+      "title": "Unidade sintética",
+      "objectives": ["demo.goal"],
+      "skills": ["vocabulary", "writing", "listening"],
+      "assessmentRefs": { "formative": [], "final": "opaque-final" },
+      "learningPolicy": {
+        "completion": {
+          "requirements": [
+            {
+              "id": "deliver-text",
+              "label": "Entregar texto",
+              "kind": "submission",
+              "activityIds": ["opaque-writing"],
+              "practice": "writing",
+              "minimumCount": 1
+            }
+          ]
+        },
+        "mastery": {
+          "requirements": [
+            {
+              "id": "pass-final",
+              "label": "Concluir avaliação",
+              "kind": "assessment",
+              "assessmentId": "opaque-final",
+              "purpose": "summative",
+              "minimumScore": 100
+            }
+          ]
+        }
+      },
+      "lessons": [
+        {
+          "id": "opaque-lesson",
+          "slug": "practice",
+          "order": 1,
+          "title": "Prática",
+          "objectives": ["demo.goal"],
+          "minutes": 6,
+          "activities": [
+            {
+              "id": "opaque-ordering",
+              "type": "ordering",
+              "skills": ["vocabulary"],
+              "concepts": [],
+              "title": "Ordene",
+              "prompt": "Monte a sequência declarada.",
+              "minutes": 2,
+              "variant": { "requiredVariant": "variant-b" },
+              "presentation": {
+                "fields": {
+                  "tokens": { "direction": "auto" },
+                  "prompt": { "language": "pt-BR", "direction": "ltr" }
+                }
+              },
+              "payload": {
+                "words": ["שלום", "A12", "שלום"],
+                "answer": "שלום::A12::שלום",
+                "answerOrder": [0, 1, 2],
+                "reconstruction": { "strategy": "separator", "separator": "::" }
+              },
+              "evaluation": { "strategy": "exact-normalized" }
+            },
+            {
+              "id": "opaque-writing",
+              "type": "writing",
+              "skills": ["writing"],
+              "concepts": [],
+              "title": "Escreva",
+              "minutes": 2,
+              "payload": {
+                "guidance": ["Escreva de dois a quarenta grafemas."],
+                "textRequirement": {
+                  "measure": { "strategy": "graphemes" },
+                  "minimum": 2,
+                  "maximum": 40
+                }
+              }
+            },
+            {
+              "id": "opaque-listening",
+              "type": "listening",
+              "skills": ["listening"],
+              "concepts": [],
+              "title": "Ouça",
+              "minutes": 2,
+              "media": ["resource-voice"],
+              "payload": { "transcript": "12", "options": ["12", "13"], "answer": "12" },
+              "evaluation": { "strategy": "exact-normalized" }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "concepts": [],
+  "lexicon": [],
+  "assessments": [
+    {
+      "id": "opaque-final",
+      "title": "Avaliação sintética",
+      "purpose": "summative",
+      "method": "fixed",
+      "unitId": "opaque-unit",
+      "objectiveIds": ["demo.goal"],
+      "passingPolicy": { "overall": 1 },
+      "gradingStrategy": "objective_mean",
+      "activityIds": ["opaque-ordering"]
+    }
+  ],
+  "media": [{ "id": "resource-voice", "type": "audio", "src": "resources/phrase.wav" }]
+}

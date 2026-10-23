@@ -1,5 +1,7 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useEffect, useRef, useState } from "react";
 import { Mic, Square, Check } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
@@ -8,6 +10,9 @@ import { SpeakButton } from "@/components/audio/speak-button";
 import { audioToWav } from "@/lib/audio-to-wav";
 import type { PronunciationFeedback } from "@/domain/activities/pronunciation";
 import type { SpeakingSubmission } from "@/domain/study/study-state";
+import { resolveSpeechOperation } from "@/engine/variants/speech";
+import { resolveLearningVariant } from "@/engine/variants/resolution";
+import { LearningText, LearningTextarea } from "@/components/learning/text-presentation";
 
 type Speaking = Extract<PublicActivity, { type: "speaking" }>;
 
@@ -20,17 +25,24 @@ export function SpeakingRecorder({
   numberPromptId,
   onNumberAssessed,
   onSaved,
+  onSubmitSpeaking,
 }: {
   activity: Speaking;
+  onSubmitSpeaking?: (transcription: string, audio: Blob) => Promise<void>;
   practiceMode?: NonNullable<SpeakingSubmission["practiceMode"]>;
   showReference?: boolean;
   showReferenceAudio?: boolean;
   referenceHint?: string;
   numberPromptId?: string;
   onNumberAssessed?: (feedback: PronunciationFeedback) => void;
-  onSaved?: () => void;
+  onSaved?: (result?: {
+    submissionId: string;
+    transcription: string;
+    feedback?: PronunciationFeedback;
+  }) => void;
 }) {
-  const { course, state, saveSpeaking } = useStudy();
+  const textAttrs = useTextPresentation(activity.presentation);
+  const { course, language, state, saveSpeaking } = useStudy();
   const previous = numberPromptId
     ? undefined
     : state.speaking.find(
@@ -54,6 +66,21 @@ export function SpeakingRecorder({
   const ownWords = practiceMode === "own";
   const requireAssessment =
     Boolean(numberPromptId) || practiceMode === "shadowing" || practiceMode === "memory";
+  const variant = resolveLearningVariant(
+    language,
+    course,
+    state.profile.variantId,
+    activity.variant,
+  );
+  const pronunciationAvailable =
+    variant.status === "resolved" &&
+    resolveSpeechOperation(
+      language,
+      course,
+      variant.variantId,
+      "assessmentLocale",
+      activity.variant,
+    ).status === "selected";
 
   useEffect(
     () => () => {
@@ -109,7 +136,20 @@ export function SpeakingRecorder({
     stream.current?.getTracks().forEach((track) => track.stop());
     setRecording(false);
   }
-  function save() {
+  async function save() {
+    if (onSubmitSpeaking) {
+      if (!audioBlob || !transcription.trim() || assessing) return;
+      setAssessing(true);
+      setError("");
+      try {
+        await onSubmitSpeaking(transcription.trim(), await audioToWav(audioBlob));
+        setSaved(true);
+        onSaved?.();
+      } catch (caught) {
+        setError(caught instanceof Error ? caught.message : "Não foi possível salvar a fala.");
+      } finally { setAssessing(false); }
+      return;
+    }
     if (numberPromptId) {
       if (!feedback || !onNumberAssessed) return;
       onNumberAssessed(feedback);
@@ -118,7 +158,7 @@ export function SpeakingRecorder({
       return;
     }
     if (!audioUrl || !transcription.trim()) return;
-    saveSpeaking(
+    const submissionId = saveSpeaking(
       activity.id,
       transcription.trim(),
       audioUrl,
@@ -126,11 +166,16 @@ export function SpeakingRecorder({
       practiceMode,
     );
     setSaved(true);
-    onSaved?.();
+    onSaved?.({
+      submissionId,
+      transcription: transcription.trim(),
+      feedback: ownWords ? undefined : (feedback ?? undefined),
+    });
   }
 
   async function assess() {
-    if (!audioBlob || !activity.referenceText || assessing || ownWords) return;
+    if (!audioBlob || !activity.referenceText || assessing || ownWords || !pronunciationAvailable)
+      return;
     setAssessing(true);
     setError("");
     try {
@@ -159,7 +204,14 @@ export function SpeakingRecorder({
         <strong>Sua tarefa</strong>
         <ul>
           {activity.guidance.map((item) => (
-            <li key={item}>{item}</li>
+            <LearningText
+              as="li"
+              key={item}
+              presentation={activity.presentation}
+              field="guidance"
+              textRole="source"
+              text={item}
+            />
           ))}
         </ul>
         {practiceMode === "own" && (
@@ -168,12 +220,18 @@ export function SpeakingRecorder({
         {activity.referenceText && !ownWords && (
           <div className="text-audio-row">
             {showReference ? (
-              <p lang={course.languageCode}>{activity.referenceText}</p>
+              <LearningText
+                as="p"
+                presentation={activity.presentation}
+                field="referenceText"
+                text={activity.referenceText}
+              />
             ) : (
               <p>{referenceHint ?? "Escute a frase sem ler e tente reproduzi-la de memória."}</p>
             )}
             {showReferenceAudio && (
               <SpeakButton
+                variant={activity.variant}
                 text={activity.referenceText}
                 label="Ouvir a frase para repetir"
                 withLabel
@@ -212,11 +270,17 @@ export function SpeakingRecorder({
         <button
           type="button"
           className="secondary-button"
-          disabled={assessing}
+          disabled={assessing || !pronunciationAvailable}
           onClick={() => void assess()}
         >
           {assessing ? "Avaliando áudio…" : "Avaliar pronúncia"}
         </button>
+      )}
+      {activity.referenceText && !ownWords && !pronunciationAvailable && (
+        <p role="status">
+          A avaliação de pronúncia não está disponível para a variante desta atividade. Isso não
+          conta como erro.
+        </p>
       )}
       {shownFeedback && activity.referenceText && !ownWords && (
         <div className="pronunciation-result" role="status">
@@ -227,7 +291,7 @@ export function SpeakingRecorder({
             /100 · Frase completa {Math.round(shownFeedback.completeness)}/100
           </p>
           {shownFeedback.words.length > 0 && (
-            <div className="pronunciation-words" lang={course.languageCode}>
+            <div className="pronunciation-words" {...textAttrs()}>
               {shownFeedback.words.map((word, index) => (
                 <span
                   key={`${index}-${word.text}`}
@@ -238,7 +302,11 @@ export function SpeakingRecorder({
                   }
                   title={`Clareza: ${word.accuracy === null ? "sem nota" : `${Math.round(word.accuracy)}/100`}`}
                 >
-                  {word.text}
+                  <LearningText
+                    presentation={activity.presentation}
+                    textRole="fragment"
+                    text={word.text}
+                  />
                   {word.errorType !== "None" || (word.accuracy !== null && word.accuracy < 75)
                     ? " ↻"
                     : ""}
@@ -261,20 +329,26 @@ export function SpeakingRecorder({
                 ? "Revise ou digite o que você disse"
                 : "Digite o que você disse"}
           </label>
-          <textarea
+          <LearningTextarea
+            presentation={activity.presentation}
             id={`transcription-${activity.id}`}
             value={transcription}
             onChange={(event) => {
               setTranscription(event.target.value);
               setSaved(false);
             }}
-            placeholder="Me llamo… Soy de…"
+            placeholder="Digite aqui a frase que você disse…"
             rows={3}
           />
         </div>
       )}
       {!numberPromptId && transcription.trim() && (
-        <SpeakButton text={transcription} label="Ouvir a transcrição" withLabel />
+        <SpeakButton
+          variant={activity.variant}
+          text={transcription}
+          label="Ouvir a transcrição"
+          withLabel
+        />
       )}
       <p className="helper-note">
         {numberPromptId
@@ -295,7 +369,7 @@ export function SpeakingRecorder({
           saved ||
           (requireAssessment && !feedback)
         }
-        onClick={save}
+        onClick={() => void save()}
       >
         <Check size={16} /> {numberPromptId ? "Registrar tentativa" : "Salvar prática oral"}
       </button>

@@ -1,7 +1,6 @@
 [
   {
     "id": "en.u01.diagnostic",
-    "type": "adaptive_diagnostic",
     "unitId": "en.u01",
     "skillWeights": {
       "vocabulary": 0.2,
@@ -103,6 +102,8 @@
         "difficulty": 3
       }
     ],
-    "activities": []
+    "purpose": "diagnostic",
+    "method": "adaptive",
+    "title": "Diagnóstico do curso"
   }
 ]

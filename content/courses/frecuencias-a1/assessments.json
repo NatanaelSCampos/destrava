@@ -1,7 +1,6 @@
 [
   {
     "id": "frecuencias-a1.nos-presentamos.diagnostic",
-    "type": "adaptive_diagnostic",
     "unitId": "nos-presentamos",
     "skillWeights": {
       "vocabulary": 0.2,
@@ -149,6 +148,30 @@
         "difficulty": 1
       }
     ],
-    "activities": []
+    "purpose": "diagnostic",
+    "method": "adaptive",
+    "title": "Diagnóstico do curso"
+  },
+  {
+    "id": "nos-presentamos-final",
+    "title": "Avaliação final da unidade",
+    "purpose": "summative",
+    "method": "fixed",
+    "unitId": "nos-presentamos",
+    "lessonId": "l-assessment",
+    "objectiveIds": [],
+    "gradingStrategy": "objective_mean",
+    "passingPolicy": {
+      "overall": 0.75
+    },
+    "activityIds": [
+      "assessment-1",
+      "assessment-2",
+      "assessment-3",
+      "assessment-4",
+      "assessment-5",
+      "assessment-6",
+      "assessment-writing"
+    ]
   }
 ]

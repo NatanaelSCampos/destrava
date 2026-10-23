@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, LockKeyhole, Play } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
-import { courseProgress, unitProgress } from "@/domain/study/progress";
+import { courseStudyProgress, unitProgress } from "@/domain/study/progress";
+import { policyStatusLabels } from "@/components/activities/policy-checklist";
 
 export default function CoursePage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
   const { course, state, vocabularyItems } = useStudy();
   if (courseSlug !== course.slug) return <div className="empty-state">Curso não encontrado.</div>;
-  const progress = courseProgress(course, state);
+  const progress = courseStudyProgress(course, state);
   return (
     <div className="course-page">
       <div className="page-heading">
@@ -32,7 +33,7 @@ export default function CoursePage() {
         </div>
         <div className="course-overview-score">
           <strong>{progress}%</strong>
-          <span>do curso concluído</span>
+          <span>do conteúdo estudado</span>
           <div className="progress-track">
             <span style={{ width: `${progress}%` }} />
           </div>
@@ -51,7 +52,7 @@ export default function CoursePage() {
         {course.units
           .filter((unit) => unit.active)
           .map((unit) => {
-            const item = unitProgress(unit, state, vocabularyItems);
+            const item = unitProgress(unit, state, vocabularyItems, course);
             return (
               <Link
                 key={unit.id}
@@ -77,11 +78,11 @@ export default function CoursePage() {
                   <span
                     className={`pill ${item.isMastered ? "" : item.isCompleted ? "amber" : "gray"}`}
                   >
-                    {item.isMastered ? "Dominada" : item.isCompleted ? "Concluída" : "Em andamento"}
+                    {item.isMastered ? "Domínio estimado" : item.isCompleted ? "Concluída" : policyStatusLabels[item.completion.status]}
                   </span>
-                  <strong>{item.percentage}%</strong>
+                  <strong>{item.participationPercentage}%</strong>
                   <div className="progress-track">
-                    <span style={{ width: `${item.percentage}%` }} />
+                    <span style={{ width: `${item.participationPercentage}%` }} />
                   </div>
                 </div>
                 <ArrowRight size={18} />

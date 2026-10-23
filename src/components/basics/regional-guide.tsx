@@ -1,5 +1,7 @@
 "use client";
 
+import { useTextPresentation } from "@/components/learning/text-presentation";
+
 import { useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, Globe2 } from "lucide-react";
@@ -8,8 +10,9 @@ import { useStudy } from "@/components/study-provider";
 import { resolveVariant, textToSpeechLocale, variantLabel } from "@/content/language-variant";
 
 export function RegionalGuide() {
-  const { state, language, resources, recordRegionalCheck } = useStudy();
-  const region = resolveVariant(language, state.profile.variantId);
+  const textAttrs = useTextPresentation();
+  const { state, language, course, resources, recordRegionalCheck } = useStudy();
+  const region = resolveVariant(language, state.profile.variantId, course);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const regionalTopics = resources.regionalTopics;
   const categoryLabels: Record<string, string> = {
@@ -30,8 +33,8 @@ export function RegionalGuide() {
       <h2 id="regional-title">Um idioma, várias formas de falar.</h2>
       <p>
         Compare frases do cotidiano. Sua preferência atual é{" "}
-        <strong>{variantLabel(language, region)}</strong>. A escolha muda
-        exemplos e orienta o professor, sem substituir o conteúdo do curso.
+        <strong>{variantLabel(language, region)}</strong>. A escolha muda exemplos e orienta o
+        professor, sem substituir o conteúdo do curso.
       </p>
       <Link href="/settings" className="secondary-button">
         Alterar minha região
@@ -43,7 +46,9 @@ export function RegionalGuide() {
           const options = topic.checkOptions ?? topic.variants.map((variant) => variant.region);
           return (
             <article key={topic.id} className="regional-topic">
-              {topic.category && <span className="pill">{categoryLabels[topic.category] ?? topic.category}</span>}
+              {topic.category && (
+                <span className="pill">{categoryLabels[topic.category] ?? topic.category}</span>
+              )}
               <span className="eyebrow">{topic.meaning}</span>
               <h3>{topic.title}</h3>
               <p>{topic.note}</p>
@@ -53,12 +58,10 @@ export function RegionalGuide() {
                     className={`regional-variant ${region === variant.region ? "preferred" : ""}`}
                     key={variant.region}
                   >
-                    <small>
-                      {variantLabel(language, variant.region)}
-                    </small>
-                    <strong lang={language.id}>{variant.term}</strong>
+                    <small>{variantLabel(language, variant.region)}</small>
+                    <strong {...textAttrs()}>{variant.term}</strong>
                     <div className="text-audio-row">
-                      <span lang={language.id}>{variant.example}</span>
+                      <span {...textAttrs()}>{variant.example}</span>
                       <SpeakButton
                         text={variant.example}
                         locale={textToSpeechLocale(language, variant.region) ?? undefined}
