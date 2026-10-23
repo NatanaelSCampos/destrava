@@ -4,7 +4,7 @@
 
 ## Baseline oficial
 
-- **`origin/main` verificada em 23/10/2026:** `df17c5d8adeb337ac886876183194e946b446a8a`, merge **PR #8 (P0 documental)**, após PR #7 (auditoria/acervo ES-A1), PR #5 (política) e PR #6 (A2/B2). A árvore funcional A2/B2 foi homologada localmente no candidato `e780e56e95d4462aac556b17f5039af3dde70a9f`; os merges documentais não equivalem a deploy.
+- **`origin/main` confirmada em 23/10/2026:** `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`, merge **PR #9 (COM-0 documental)**, após PR #8 (P0), #7 (auditoria ES-A1), #5 (política) e #6 (motor A2/B2). A árvore funcional A2/B2 foi homologada localmente no candidato `e780e56e95d4462aac556b17f5039af3dde70a9f`. Esses merges documentais não equivalem a deploy, migração ou curso pessoal atualizado.
 - O Ciclo 2 tem **QA/Revisor GO e homologação local** relatados em [implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). CI remoto, vozes reais, dispositivos físicos, produção e bootstrap limpo não foram certificados por esse merge.
 - Pilotos pessoais ES/EN, worktrees e pendências históricas permanecem separados. [Relatório de preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md). Esta reconciliação de GitHub **não inspecionou os worktrees Windows**.
 
@@ -48,12 +48,20 @@
 - **Rede:** binding Docker da porta em `0.0.0.0` e `::`; a inspeção foi local e **não** testou exposição externa. Avaliar restrição em autorização operacional futura.
 - **Conclusão:** COM-0 foi encerrado sob autorização de leitura **já consumida**, sem implementação, SQL modificador, testes autenticados/browser nem verificação Fly/Supabase remoto. A U2 pessoal não foi alterada.
 
+## COM-1 — desenho técnico estático entregue; decisões detalhadas pendentes
+
+- O **Codex Lead concluiu COM-1 por análise estática**, no commit `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1` (baseline da PR #9), com relatório **[RELATORIO_COM1.md](features/es-a1-composicao/RELATORIO_COM1.md)** e parecer **`COM-1: DECISÕES PENDENTES`**. QA/Revisor avaliaram **o desenho**, não executaram testes de runtime, SQL, rede ou browser nesta fase. Nenhuma edição de código, worktree ou schema foi relatada.
+- O projeto técnico propõe contexto de operação imutável, geração `G`/reset sob trava transacional, idempotência antes do CAS, `operationReceipt` distinto de `currentSnapshot`, sessões B1 versionadas e paginação consistente. **São propostas, não mecanismos implementados.**
+- **O proprietário concordou com cinco diretrizes de arquitetura para documentação e aprofundamento**, registradas em [DECISOES_COM1.md](features/es-a1-composicao/DECISOES_COM1.md): preservar legado histórico sem gerar notas, preservar **funcionalidade** do EN, declarar proveniência desconhecida, áudio histórico só ao usuário autorizado e comparar **in-place vs `_v2` vs híbrido** por objeto.
+- **Decisões técnicas abertas:** critérios de adoção de cada legado; plano efetivo do EN após cutover; áudio antigo (URLs assinadas e reset); matriz de colunas/PK/FK/ACL/triggers/rollback completa e escolha motivada entre [alternativas SQL](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md). As **seis tabelas `_v2` e cinco migrações do COM-1 NÃO foram aprovadas**.
+- **Sem nova autorização operacional:** COM-0 somente leitura já encerrado; nenhum novo banco/consulta agregada (inclusive valores de geração), migração, reset, Storage, teste escritor, rede, Fly, IA paga ou implementação foi liberado.
+
 ## Próximos marcos
 
-1. **PR documental COM-0:** registrar o [relatório](features/es-a1-composicao/RELATORIO_COM0.md) e atualizar [spec](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md) e [tarefas](features/es-a1-composicao/tasks.md). Merge exige aprovação separada; **sem código/migração**.
-2. **COM-1 recomendado, ainda não autorizado:** projeto técnico **estático, sem banco** da convergência `parcial/divergente`, geração/lock B1, versão de sessões, grants `TRUNCATE`, história e dados legados. Novas consultas agregadas exigem permissão própria, não herdada do COM-0.
-3. **COM-2/3 futuros:** após especificação/revisão/autorizações individuais, implementação isolada, QA/Revisor e PR funcional distinta; alterações de SQL, Storage, grants, Docker, redes, worktrees e testes escritores requerem permissão delimitada.
-4. **P1 pedagógica:** somente após integração segura, fatia U2 de quantificadores/ajuda recuperável/feedback contextual, depois U2 e U1; publicar em Fly/Supabase somente com autorização operacional específica.
+1. **Revisar PR documental COM-1:** registro integral do relatório, cinco diretrizes para especificação, matriz comparativa **preliminar**, atualização de [spec](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md) e [tarefas](features/es-a1-composicao/tasks.md). O merge exige aprovação específica.
+2. **COM-1B — próximo handoff recomendado, ainda não autorizado:** completar por **leitura estática** a matriz por objeto e o plano de continuidade **funcional EN**, legado e áudio, detalhando SQL/ACL/rollback e testes no papel. Ver [roteiro COM-1B](features/es-a1-composicao/ROTEIRO_COM1B.md). Não acessar banco novamente.
+3. **COM-2/3** somente após decisões/contratos validados e autorizações separadas: implementação isolada, testes autorizados locais, QA/Revisor e PR funcional. Migrações e cutover do banco existente continuam operações autorizadas separadamente.
+4. **Retorno ao laboratório ES-A1:** depois de composição segura e validação do curso pessoal, primeira fatia pedagógica U2 (explicação recuperável, feedback contextual) → U2 inteira → U1. Fly e Supabase remoto permanecem fora.
 
 ## Norte estratégico registrado
 

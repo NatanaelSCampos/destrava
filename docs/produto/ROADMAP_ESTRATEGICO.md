@@ -1,6 +1,6 @@
 # Destrava — Roadmap estratégico do Learning Engine até o lançamento
 
-> **Estado: ROADMAP ESTRATÉGICO (PR #4), política do laboratório (PR #5), auditoria ES-A1 (PR #7) e P0 documental (PR #8) integrados.** Baseline verificada em 23/10/2026: `main` `df17c5d8adeb337ac886876183194e946b446a8a`. O COM-0 foi realizado **somente por leitura do banco local**, com resultado `parcial/divergente`; ainda não houve composição do motor/piloto ou remodelagem da U2.
+> **Estado: ROADMAP ESTRATÉGICO (PR #4), laboratório (PR #5), auditoria ES-A1 (PR #7), P0 (PR #8) e COM-0 (PR #9) documentados.** Baseline verificada em 23/10/2026: `main` `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`. O Codex entregou COM-1 estático com `DECISÕES PENDENTES`; cinco diretrizes arquiteturais foram aceitas para documentação, mas matriz SQL, continuidade funcional EN e áudio ainda precisam ser detalhados antes de implementar.
 
 ## 1. Objetivo e princípio
 
@@ -27,7 +27,7 @@ Estado dos 33 itens e das 44 capacidades: [Matriz de maturidade](MATRIZ_MATURIDA
 
 **Dogfooding contínuo do produto:** o curso pessoal ES-A1 (duas unidades) é o [laboratório vivo do Destrava](CURSO_LABORATORIO_ES_A1.md). Após marcos relevantes, auditar o recurso no caminho real do aluno, atualizar o curso quando útil/disponível, testar pedagogia e registrar limitações. O laboratório pessoal **já existe**; não confundi-lo com o piloto com alunos reais de M9. Não exigir segundo curso para preservar dados experimentais.
 
-**Laboratório ES-A1 (23/10/2026):** [auditoria do acervo](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [direção editorial](../features/piloto-es-a1-pos-ciclo2/spec.md), [P0](../features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), **[COM-0](../features/es-a1-composicao/RELATORIO_COM0.md)** e [plano técnico](../features/es-a1-composicao/plan.md). O acervo compilado conta 703 atividades, com distribuição pedagógica deficiente; a decisão é evoluir a U2 antes de U1. **P0 e COM-0 estão concluídos** nos limites relatados. O COM-0 encontrou schema local `parcial/divergente`, objeto reset com proveniência não rastreada e `TRUNCATE` excessivo; a sequência proposta agora é **COM-1 desenho estático → integração/QA por autorização → fatia U2 → restante U2/U1**. Sem autorização de implementação, migração ou publicação.
+**Laboratório ES-A1 (23/10/2026):** [auditoria do acervo](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [direção editorial](../features/piloto-es-a1-pos-ciclo2/spec.md), [P0](../features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), [COM-0](../features/es-a1-composicao/RELATORIO_COM0.md), **[COM-1](../features/es-a1-composicao/RELATORIO_COM1.md)**, [diretrizes aceitas](../features/es-a1-composicao/DECISOES_COM1.md) e [comparação SQL](../features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md). O acervo compilado tem 703 atividades com percurso a reorganizar; **P0, COM-0 e análise COM-1 foram concluídos**, com COM-1 `DECISÕES PENDENTES`. A sequência proposta agora é **COM-1B fechar matriz/EN/áudio → COM-2 implementação autorizada → QA/Revisor e homologação do curso pessoal → fatia U2 → U2/U1**. O núcleo M3–M6 pode evoluir em frentes paralelas; a ponte de integração não cria um novo marco global. Sem autorização de migração, reset, deploy ou implementação.
 
 ## 3. Fluxograma de evolução
 

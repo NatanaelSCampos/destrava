@@ -1,6 +1,6 @@
 # Destrava — decisões aprovadas e questões futuras
 
-Atualização documental: 23/10/2026. Decisões anteriores C2 de [Ciclo 2](features/fase4-ciclo2/spec.md) permanecem válidas; o código A2/B2 foi **integrado pela PR #6**, e a política do laboratório ES-A1 pela **PR #5**, com `main` em `6bdd26c336ce50d59569a74581044fe3ddc89284`. Esses merges não autorizam deploy/migração nem novas tarefas automaticamente.
+Atualização documental: 23/10/2026. Decisões C2 de [Ciclo 2](features/fase4-ciclo2/spec.md) continuam válidas. A `main` confirmada é `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1` (PR #9, COM-0 documentado), após PR #8 P0, #7 auditoria ES-A1, #6 A2/B2 e #5 laboratório vivo. O Codex entregou **COM-1 somente estático, `DECISÕES PENDENTES`**. O proprietário concordou com **cinco diretrizes arquiteturais para especificação**, ainda **sem aprovar SQL, cutover ou implementação**.
 
 ## Confirmado
 
@@ -69,7 +69,21 @@ O relatório P0 não executou SQL, QA/browser, migração, reset nem testou conc
 | **COMP-C04** | Writers privilegiados B1/I7/I8 sem geração/lock comum | Desenhar bloqueio transacional, retry/recibo/leitura/versionamento; não afirmar que reset é seguro |
 | **COMP-C05** | Docker publica porta PostgreSQL em `0.0.0.0` e `::` | Avaliação/restrição futura da rede, **não** evidência de alcance externo confirmado |
 
-**COM-1 só poderá ser iniciado após autorização de planejamento própria** e usará leitura de código/documentos, sem nova consulta ao banco. Implementação, alteração de grants, migração, dados, worktrees e testes que escrevam mantêm gates diferentes.
+**COM-1 foi autorizado e concluído como análise estática**. Sua autorização não se estende a novas consultas de banco, COM-1B/COM-2, alterações de grants, SQL, migração, dados, worktrees, testes escritores ou deploy. Ver [relatório](features/es-a1-composicao/RELATORIO_COM1.md), [diretrizes](features/es-a1-composicao/DECISOES_COM1.md) e [matriz SQL preliminar](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md).
+
+## COM-1 — Diretrizes arquiteturais aceitas, escolhas técnicas não resolvidas
+
+**Fonte:** [RELATORIO_COM1.md](features/es-a1-composicao/RELATORIO_COM1.md); parecer do Codex `COM-1: DECISÕES PENDENTES`. O proprietário concordou em **prosseguir com as cinco recomendações como diretrizes do desenho**, não como aprovação dos seis `_v2`, cinco migrações propostas ou nova versão operacional.
+
+| ID | Diretriz aceita para projeto | Limite pendente |
+| --- | --- | --- |
+| **COMP-AD01** | Legado sem geração é histórico; adoção seletiva só com evidência | Critérios por tabela/objeto, sem `DEFAULT G_atual`, nota fictícia ou perda de histórico |
+| **COMP-AD02** | EN preservado em **funcionalidade**, não apenas em bytes | **Cutover compartilhado bloqueado** até prova de compatibilidade e teste planejado |
+| **COMP-AD03** | Reset herdado com proveniência desconhecida documentada; versões SQL futuras únicas | Sem `migration repair`, autoria/data inventada ou reaplicação do identificador duplicado |
+| **COMP-AD04** | Áudio histórico owner-only; URL assinada prévia não tem revogação instantânea prometida | Política por Storage/recibo/TTL pendente; **reset administrativo desabilitado** |
+| **COMP-AD05** | Matriz SQL com comparação **in-place**, **`_v2`** e **híbrido** antes de escolher | Seis novas tabelas e cinco migrações são **propostas não aprovadas** |
+
+**Próxima demanda candidata COM-1B:** fechar alternativas por tabela (PK/FK/grants/rollback), legado, EN e áudio por leitura de código/documentos, com nova autorização. Ver [DECISOES_COM1.md](features/es-a1-composicao/DECISOES_COM1.md), [MATRIZ_ALTERNATIVAS_SQL_COM1.md](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md) e [ROTEIRO_COM1B.md](features/es-a1-composicao/ROTEIRO_COM1B.md). **Nenhuma execução de COM-2 está autorizada.**
 
 ## Ideia futura — Língua Viva / Idioma nas Ruas
 
