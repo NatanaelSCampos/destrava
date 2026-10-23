@@ -1,8 +1,8 @@
-# Roteiro de handoff — COM-0, levantamento de schema e histórico
+# Roteiro histórico de handoff — COM-0, schema local conferido
 
-**Não autorizado para execução por esta PR.** Este roteiro é para o Codex Lead **após**: (1) o proprietário aprovar o merge da PR documental de composição; (2) autorizar expressamente **consulta somente leitura ao ambiente identificado**. Não iniciar se qualquer condição faltar.
+**HISTÓRICO CONCLUÍDO — NÃO REEXECUTAR AUTOMATICAMENTE.** Após a PR #8 integrada, o proprietário autorizou expressamente **COM-0 somente leitura ao PostgreSQL local identificado**. O Codex entregou [RELATORIO_COM0.md](RELATORIO_COM0.md) com **21 SELECT em cinco transações READ ONLY**, classificação **`parcial/divergente`**. A autorização foi usada e encerrada; ela **não se estende** a novas consultas ou outros bancos. Este roteiro conserva os critérios daquele handoff, mas **o próximo passo é COM-1, desenho estático**, conforme [plano](plan.md).
 
-## Briefing mínimo
+## Briefing mínimo — histórico, não reenviar como tarefa nova
 
 > Leia `AGENTS.md`, `DESTRAVA_MULTIAGENTE.md`, `docs/features/es-a1-composicao/spec.md`, `plan.md`, `tasks.md` e `docs/features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md`. Confirme baseline da `main`. Execute **somente COM-0**, inspeção do histórico e schema do **Supabase local identificado/autorizado**, sem escrita.
 >
@@ -20,6 +20,6 @@
 4. Dados retornados não incluem emails, IDs de alunos, tokens nem conteúdo privado; registrar apenas estrutura ou agregados permitidos.
 5. Worktrees ES/EN e pendências permanecem byte a byte intactos.
 
-## Resultado
+## Resultado encerrado
 
-Entregar `COM-0: SCHEMA CONFERIDO` ou `COM-0: BLOQUEADO`, com evidência. **Nunca usar GO PARA DEPLOY.** A análise de integração COM-1 e alterações SQL/código exigem autorização posterior.
+**COM-0: SCHEMA CONFERIDO — `parcial/divergente`**, conforme [relatório](RELATORIO_COM0.md); **nenhuma alteração realizada**. Próximo possível handoff: **COM-1 somente desenho de convergência**, com autorização explícita posterior do proprietário; não executar banco, exploração de rede, migração ou implementação por esta PR.

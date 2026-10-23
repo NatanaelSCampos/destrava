@@ -4,7 +4,7 @@
 
 ## Baseline oficial
 
-- **`origin/main` verificada em 23/10/2026:** `cacbacb6b6c2e5308885f6174e660f8c9c23bd19`, merge documental da **PR #7 (auditoria e direção editorial ES-A1)**, após PR #5 (política do laboratório) e PR #6 (A2/B2). O candidato funcional A2/B2 mantém a árvore homologada localmente `e780e56e95d4462aac556b17f5039af3dde70a9f` antes dos merges documentais.
+- **`origin/main` verificada em 23/10/2026:** `df17c5d8adeb337ac886876183194e946b446a8a`, merge **PR #8 (P0 documental)**, após PR #7 (auditoria/acervo ES-A1), PR #5 (política) e PR #6 (A2/B2). A árvore funcional A2/B2 foi homologada localmente no candidato `e780e56e95d4462aac556b17f5039af3dde70a9f`; os merges documentais não equivalem a deploy.
 - O Ciclo 2 tem **QA/Revisor GO e homologação local** relatados em [implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). CI remoto, vozes reais, dispositivos físicos, produção e bootstrap limpo não foram certificados por esse merge.
 - Pilotos pessoais ES/EN, worktrees e pendências históricas permanecem separados. [Relatório de preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md). Esta reconciliação de GitHub **não inspecionou os worktrees Windows**.
 
@@ -34,18 +34,26 @@
 ## P0 — Reconciliação técnica de leitura concluída
 
 - O **Codex Lead entregou o [relatório P0](features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md)** sobre composição do curso pessoal compilado ES/EN com motor atual: parecer **PLANO SUFICIENTE** para **desenhar** integração, QA/Revisor favoráveis à lógica. **Nenhum SQL, login, browser, build, acesso Fly/Supabase ou teste funcional da composição foi executado**.
-- **Migração `20261022000100` duplicada:** `learning_reset_generation.sql` do piloto e `interactive_segment_evidence.sql` do motor não são equivalentes; estado real aplicado **não inspecionado**.
+- **Migração `20261022000100` duplicada:** arquivos distintos de geração/reset e B1. O P0 **não** acessou SQL; a inspeção **COM-0 posterior** examinou metadados do banco local e encontrou os dois conjuntos de objetos presentes, somente B1 registrado no histórico, constraint divergente; sem verificar origem da geração.
 - **Geração e B1:** writer privilegiado e atalho HTTP de recibo devem respeitar a mesma trava de usuário, geração e escopo versionado; leitura/replay/cache e dados privados I8 também. Hash B1 inclui pacote inteiro: editar U2 pode mudar o hash de aula U1.
 - Preservação relatada pelo Codex de **20 worktrees / 249 pendências** e ES/EN, sem escrita; arquivos ignorados não integralmente inventariados. É fotografia histórica, não garantia automática no próximo ciclo.
 - **Registro documental em revisão:** [spec de composição](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md), [tarefas](features/es-a1-composicao/tasks.md) e [roteiro](features/es-a1-composicao/ROTEIRO_TAREFA.md). **Nenhuma implementação, inspeção operacional de banco ou migração autorizada por esta PR.**
 
+## COM-0 — banco local conferido, estado parcial/divergente
+
+- [**Relatório COM-0**](features/es-a1-composicao/RELATORIO_COM0.md), recebido em 23/10/2026: Codex confirmou o projeto local `espanhol-plataform`, PostgreSQL 17.11, porta 54322/contêiner guardado, em **21 SELECT de metadados, 5 transações `REPEATABLE READ READ ONLY` finalizadas com `ROLLBACK`**. Nenhum dado pessoal consultado, nenhuma alteração executada; resultados SQL brutos não foram anexados e não foram reproduzidos pelo ChatGPT.
+- **Classificação `parcial/divergente`:** 20 registros históricos; `20261022000100` consta como `interactive_segment_evidence` (B1) com 12 statements, mas **objetos de geração/reset também existem sem versão correspondente no histórico**. Proveniência e ordem de aplicação permanecem indeterminadas.
+- **Constraint de geração diferente:** banco só exige `generation >= 0`; migração piloto também exige teto `9007199254740991`. A distribuição de valores não foi consultada e exige autorização **separada** para leitura agregada.
+- **Segurança prioritária:** `anon`/`authenticated` têm privilégio `TRUNCATE` em sessões interativas; RLS não governa esse privilégio. Planejar revogação/testes, **sem alegar exploração HTTP**. Writers privilegiados B1/I7/I8 não verificam geração; precisam de lock/escopo transacional compatível antes da composição.
+- **Rede:** binding Docker da porta em `0.0.0.0` e `::`; a inspeção foi local e **não** testou exposição externa. Avaliar restrição em autorização operacional futura.
+- **Conclusão:** COM-0 foi encerrado sob autorização de leitura **já consumida**, sem implementação, SQL modificador, testes autenticados/browser nem verificação Fly/Supabase remoto. A U2 pessoal não foi alterada.
+
 ## Próximos marcos
 
-1. Revisar/aprovar o **merge documental** do P0 na PR própria; este registro não altera runtime, schema, curso ou ambiente.
-2. **COM-0 — próximo gate recomendado:** após autorização explícita para um **ambiente nomeado**, verificar **somente por leitura** o schema e histórico de migrações (preferir Supabase local). Sem acesso autorizado, STOP.
-3. **COM-1/COM-2 — execução futura:** após COM-0, aprovar plano SQL e mudanças de código/segurança, compor motor + piloto em candidato isolado; QA/Revisor independentes e PR funcional somente autorizada.
-4. **P1 pedagógica — somente depois:** fatia curta U2 de quantificadores, explicação recuperável e feedback contextual; em seguida U2 e U1, com autorização editorial própria.
-5. Fly/Supabase remoto, reset/migrações, serviços pagos e publicação continuam dependentes de decisões operacionais separadas. A experiência pessoal deve ser única, sem curso paralelo apenas para guardar histórico.
+1. **PR documental COM-0:** registrar o [relatório](features/es-a1-composicao/RELATORIO_COM0.md) e atualizar [spec](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md) e [tarefas](features/es-a1-composicao/tasks.md). Merge exige aprovação separada; **sem código/migração**.
+2. **COM-1 recomendado, ainda não autorizado:** projeto técnico **estático, sem banco** da convergência `parcial/divergente`, geração/lock B1, versão de sessões, grants `TRUNCATE`, história e dados legados. Novas consultas agregadas exigem permissão própria, não herdada do COM-0.
+3. **COM-2/3 futuros:** após especificação/revisão/autorizações individuais, implementação isolada, QA/Revisor e PR funcional distinta; alterações de SQL, Storage, grants, Docker, redes, worktrees e testes escritores requerem permissão delimitada.
+4. **P1 pedagógica:** somente após integração segura, fatia U2 de quantificadores/ajuda recuperável/feedback contextual, depois U2 e U1; publicar em Fly/Supabase somente com autorização operacional específica.
 
 ## Norte estratégico registrado
 

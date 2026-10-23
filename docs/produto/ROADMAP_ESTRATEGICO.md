@@ -1,6 +1,6 @@
 # Destrava — Roadmap estratégico do Learning Engine até o lançamento
 
-> **Estado: ROADMAP ESTRATÉGICO INTEGRADO NA PR #4 E POLÍTICA DO CURSO-LABORATÓRIO INTEGRADA NA PR #5.** Baseline verificada em 23/10/2026: `main` `6bdd26c336ce50d59569a74581044fe3ddc89284`. A auditoria estática ES-A1 foi concluída e a direção editorial de **evoluir o acervo, U2 primeiro** foi aprovada; P0 técnico e implementação ainda dependem de autorizações futuras.
+> **Estado: ROADMAP ESTRATÉGICO (PR #4), política do laboratório (PR #5), auditoria ES-A1 (PR #7) e P0 documental (PR #8) integrados.** Baseline verificada em 23/10/2026: `main` `df17c5d8adeb337ac886876183194e946b446a8a`. O COM-0 foi realizado **somente por leitura do banco local**, com resultado `parcial/divergente`; ainda não houve composição do motor/piloto ou remodelagem da U2.
 
 ## 1. Objetivo e princípio
 
@@ -27,7 +27,7 @@ Estado dos 33 itens e das 44 capacidades: [Matriz de maturidade](MATRIZ_MATURIDA
 
 **Dogfooding contínuo do produto:** o curso pessoal ES-A1 (duas unidades) é o [laboratório vivo do Destrava](CURSO_LABORATORIO_ES_A1.md). Após marcos relevantes, auditar o recurso no caminho real do aluno, atualizar o curso quando útil/disponível, testar pedagogia e registrar limitações. O laboratório pessoal **já existe**; não confundi-lo com o piloto com alunos reais de M9. Não exigir segundo curso para preservar dados experimentais.
 
-**Auditoria ES-A1 (23/10/2026):** [relatório](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [decisão e spec](../features/piloto-es-a1-pos-ciclo2/spec.md), [plano](../features/piloto-es-a1-pos-ciclo2/plan.md). O acervo pessoal contém 703 atividades e variedade de formatos, mas concentra reconhecimento em blocos; a ordem aprovada é **reconciliação técnica P0 → fatia vertical U2 → U2 completa → U1**. Os riscos de migração duplicada e geração/B1 são STOP antes de compor motor e piloto. **Sem nova autorização de implementação por este registro.**
+**Laboratório ES-A1 (23/10/2026):** [auditoria do acervo](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md), [direção editorial](../features/piloto-es-a1-pos-ciclo2/spec.md), [P0](../features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), **[COM-0](../features/es-a1-composicao/RELATORIO_COM0.md)** e [plano técnico](../features/es-a1-composicao/plan.md). O acervo compilado conta 703 atividades, com distribuição pedagógica deficiente; a decisão é evoluir a U2 antes de U1. **P0 e COM-0 estão concluídos** nos limites relatados. O COM-0 encontrou schema local `parcial/divergente`, objeto reset com proveniência não rastreada e `TRUNCATE` excessivo; a sequência proposta agora é **COM-1 desenho estático → integração/QA por autorização → fatia U2 → restante U2/U1**. Sem autorização de implementação, migração ou publicação.
 
 ## 3. Fluxograma de evolução
 

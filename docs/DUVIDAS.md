@@ -43,7 +43,7 @@ Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/REL
 - **ESLAB-B03:** decidir, a partir da auditoria e do contrato público, o menor mecanismo seguro de **feedback editorial por alternativa errada**, sem gabarito público antes da submissão. Se exigir novo contrato/schema, STOP.
 - **ESLAB-B04:** qual é a versão remota realmente em uso e o estado do schema/provedores? A auditoria estática não comprova; investigar só com permissão operacional delimitada.
 
-**P0 técnico concluído apenas por leitura:** [relatório P0](features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md) com parecer PLANO SUFICIENTE. Riscos ESLAB-B01/B02 **não estão resolvidos no código ou banco**. Próxima proposta em revisão: [spec de composição](features/es-a1-composicao/spec.md), [plano COM-0→COM-4](features/es-a1-composicao/plan.md), [tarefas](features/es-a1-composicao/tasks.md). **COM-0 (consulta de schema/histórico do destino) depende de autorização específica**, separada da PR documental. Histórico experimental pode ser reconstruído, mas operações destrutivas continuam proibidas sem autorização explícita.
+**P0 concluído por leitura; COM-0 concluído por SELECT autorizado no banco local:** o [relatório COM-0](features/es-a1-composicao/RELATORIO_COM0.md) classificou o schema do projeto `espanhol-plataform` como **`parcial/divergente`**: os objetos de reset e B1 existem, mas somente B1 consta da versão `20261022000100` no histórico, e a constraint de geração é distinta. Não houve operação escritora. A [spec de composição](features/es-a1-composicao/spec.md) e o [plano](features/es-a1-composicao/plan.md) propõem **COM-1 desenho estático** como próximo gate, ainda não autorizado por este registro. A autorização de leitura de COM-0 **não se estende** a novas consultas, SQL, reset ou deploy.
 
 ## Propostas técnicas do P0 para revisão — NÃO autorizam implementação
 
@@ -56,6 +56,20 @@ Registro funcional C2: [relatório de implementação](features/fase4-ciclo2/REL
 | **COMP-D05** | Composição **seletiva** do acervo ES sobre motor atual com B1/A2/B2, EN intacto | Worktrees/SQL/código ainda não autorizados; P1 pedagógico só depois da integração segura |
 
 O relatório P0 não executou SQL, QA/browser, migração, reset nem testou concorrência em runtime. **"PLANO SUFICIENTE" é um parecer de planejamento, não um GO funcional ou operacional.**
+
+## COM-0 — evidências e decisões pendentes em revisão
+
+**Relatório de banco local (23/10/2026):** [RELATORIO_COM0.md](features/es-a1-composicao/RELATORIO_COM0.md). Inspeção de metadados apenas; **20 registros de migração, 21 SELECT, 5 transações READ ONLY encerradas com ROLLBACK**, classificada `parcial/divergente`.
+
+| ID | Achado relatado / próxima decisão | Limite |
+| --- | --- | --- |
+| **COMP-C01** | Objetos reset e B1 presentes, só B1 registrado no histórico da versão `20261022000100` | Propor convergência em **migração futura nova e única**, sem inventar/apagar histórico; ausência de proveniência permanece explícita |
+| **COMP-C02** | Constraint atual `generation >= 0`, sem teto `9007199254740991` do piloto | Consultar valores incompatíveis **somente se autorizado em nova leitura agregada**; não instalar constraint às cegas |
+| **COMP-C03** | Privilégio efetivo `TRUNCATE` para `anon` e `authenticated` nas sessões interativas, RLS não controla TRUNCATE | **Prioridade de segurança**: desenhar revogação explícita e teste de grants/herança; sem exploração HTTP comprovada |
+| **COMP-C04** | Writers privilegiados B1/I7/I8 sem geração/lock comum | Desenhar bloqueio transacional, retry/recibo/leitura/versionamento; não afirmar que reset é seguro |
+| **COMP-C05** | Docker publica porta PostgreSQL em `0.0.0.0` e `::` | Avaliação/restrição futura da rede, **não** evidência de alcance externo confirmado |
+
+**COM-1 só poderá ser iniciado após autorização de planejamento própria** e usará leitura de código/documentos, sem nova consulta ao banco. Implementação, alteração de grants, migração, dados, worktrees e testes que escrevam mantêm gates diferentes.
 
 ## Ideia futura — Língua Viva / Idioma nas Ruas
 
