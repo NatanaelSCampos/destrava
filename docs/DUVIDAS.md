@@ -1,6 +1,6 @@
 # Destrava — decisões aprovadas e questões futuras
 
-Atualização documental: 23/10/2026. Decisões C2 de [Ciclo 2](features/fase4-ciclo2/spec.md) continuam válidas. A `main` confirmada é `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1` (PR #9, COM-0 documentado), após PR #8 P0, #7 auditoria ES-A1, #6 A2/B2 e #5 laboratório vivo. O Codex entregou **COM-1 somente estático, `DECISÕES PENDENTES`**. O proprietário concordou com **cinco diretrizes arquiteturais para especificação**, ainda **sem aprovar SQL, cutover ou implementação**.
+Atualização documental: 23/10/2026. Diretrizes C2/A2/B2 e do laboratório pessoal permanecem válidas. A `main` confirmada é `1487da9647a06d878f0a2e4e92c3d6d45e878f76` (PR #10 integrada). As análises COM-0/COM-1/COM-1B continuam históricas. O proprietário decidiu priorizar **release limpa, nova geração/revisão de curso e deploy controlado**, sem migrar o progresso experimental antigo; essa escolha **não autoriza apagá-lo ou publicar**.
 
 ## Confirmado
 
@@ -83,7 +83,20 @@ O relatório P0 não executou SQL, QA/browser, migração, reset nem testou conc
 | **COMP-AD04** | Áudio histórico owner-only; URL assinada prévia não tem revogação instantânea prometida | Política por Storage/recibo/TTL pendente; **reset administrativo desabilitado** |
 | **COMP-AD05** | Matriz SQL com comparação **in-place**, **`_v2`** e **híbrido** antes de escolher | Seis novas tabelas e cinco migrações são **propostas não aprovadas** |
 
-**Próxima demanda candidata COM-1B:** fechar alternativas por tabela (PK/FK/grants/rollback), legado, EN e áudio por leitura de código/documentos, com nova autorização. Ver [DECISOES_COM1.md](features/es-a1-composicao/DECISOES_COM1.md), [MATRIZ_ALTERNATIVAS_SQL_COM1.md](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md) e [ROTEIRO_COM1B.md](features/es-a1-composicao/ROTEIRO_COM1B.md). **Nenhuma execução de COM-2 está autorizada.**
+**Estado após mudança de direção:** COM-1B foi analisado estaticamente pelo Codex e seu relatório foi entregue no chat, mas **o desenho híbrido não foi aprovado para implementação**; a composição/migração histórica fica despriorizada em favor do [Release Limpo](features/release-limpo/spec.md). Ver histórico COM-1 em [DECISOES_COM1.md](features/es-a1-composicao/DECISOES_COM1.md) e [matriz anterior](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md). **Nenhuma execução de COM-2 foi autorizada.**
+
+## Release Limpo — decisões de produto e gates
+
+| ID | Diretriz atual | Permissão/decisão ainda necessária |
+| --- | --- | --- |
+| **RL-D01** | Primeira release limpa, sem transferência de progresso pessoal experimental antigo | **Não apagar nem resetar** banco antigo, contas, áudio ou worktrees automaticamente |
+| **RL-D02** | Novo projeto de QA `destrava-release-clean` com Docker/portas/volumes isolados | Portas reais, criação do ambiente e testes escritores **precisam de autorização** |
+| **RL-D03** | Supabase remoto novo proposto; Fly **existente ou novo** é escolha futura | Projeto remoto, contas/login, app, custos, DNS, migração/deploy e rollback não aprovados |
+| **RL-D04** | Primeiro ES-A1 **compilado** gerado/revisado via IA/Foundry; aproveitar recursos realmente integrados | A2 instalado e B2 compilado não garantem paridade; custo pago e geração/curso não aprovados |
+| **RL-D05** | Teste sintético de **segunda edição** de curso, e a cada release teste de **bootstrap + upgrade incremental** | Antes de segunda edição real, corrigir versionamento B1 se houver incompatibilidade |
+| **RL-D06** | Manifesto de SHA/schema/curso/build/image digest e guarda explícita de deploy Fly | `.env.local` não pode determinar produção; script e testes de guardas aguardam PR funcional |
+
+**Próximo gate proposto:** F0 — [PR documental](features/release-limpo/RELATORIO_PLANO.md), [spec](features/release-limpo/spec.md), [plano](features/release-limpo/plan.md), [tarefas](features/release-limpo/tasks.md). Após seu merge autorizado, obter autorização própria para **F1, guardas/perfis e deploy simulado**, sem inicializar bancos ou alterar Fly.
 
 ## Ideia futura — Língua Viva / Idioma nas Ruas
 

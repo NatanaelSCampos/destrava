@@ -1,6 +1,6 @@
 # Política de produto — Curso ES-A1 como laboratório vivo do Destrava
 
-**Decisão de produto do proprietário: 23/10/2026; política integrada pela PR #5 em `6bdd26c`.** A auditoria estática posterior fundamenta a escolha editorial **ESLAB-D01: evoluir o acervo atual e reorganizar U2 antes de U1**. Nenhuma implementação, migração ou publicação é autorizada por esta política. Ver [roadmap](ROADMAP_ESTRATEGICO.md), [matriz de maturidade](MATRIZ_MATURIDADE_RECURSOS.md), [auditoria](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md) e [plano](../features/piloto-es-a1-pos-ciclo2/plan.md).
+**Política permanente de laboratório aprovada em 23/10/2026 (PR #5).** A auditoria posterior registrou ESLAB-D01 (evoluir acervo U2→U1), decisão histórica preservada. **Nova direção para a primeira release:** [Release Limpo](../features/release-limpo/spec.md) com **novo curso compilado ES-A1 gerado/revisado via IA/Foundry** após homologar motor em ambiente isolado; o curso antigo continua fonte histórica/editorial até eventual substituição aprovada. **A política de um único laboratório pessoal ativo não muda.** Não há autorização para código, geração paga, reset, migração, descarte de fonte ou publicação. Ver [roadmap](ROADMAP_ESTRATEGICO.md), [matriz](MATRIZ_MATURIDADE_RECURSOS.md), [auditoria](../features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md) e [plano ativo](../features/release-limpo/plan.md).
 
 ## 1. Princípio permanente
 
@@ -29,8 +29,10 @@ Registrar as seis dimensões por recurso: **motor, caminho (compilado/instalado)
 - Worktrees de **desenvolvimento, QA e integração isolados continuam obrigatórios** quando necessários para proteger escrita e infraestrutura compartilhada. Isso **não é** um segundo curso pessoal para uso.
 - O proprietário aceita reconstruir progresso experimental ou repetir diagnóstico, se necessário. **Não criar uma migração elaborada só para preservar seu histórico**. Antes de qualquer exclusão/reset/migração efetiva, porém, pedir autorização **para a operação concreta**, verificar destino e não comprometer outros usuários/ambientes.
 - Um relato do aluno ou diagnóstico pode reconstruir **uma estimativa explícita** de nível e tópicos estudados; a IA nunca deve fabricar notas, timestamps, tentativas ou evidências canônicas que já não existam.
-- Conciliar primeiro o conteúdo dos worktrees pessoais ES/EN: a `main` do motor contém fixtures, **não equivale automaticamente à versão completa das duas unidades pessoais**. Não descartar mudanças editoriais não comitadas; preservar o piloto EN salvo autorização contrária.
+- **Para a nova release limpa**, gerar/revisar novo conteúdo ES-A1 compilado no IA/Foundry após validar o motor; os worktrees ES/EN anteriores ficam preservados como referência e não são descartados/mesclados automaticamente. A `main` ainda contém fixtures e não representa todo o acervo pessoal; o novo conteúdo precisa ser entregue, revisado e testado explicitamente.
 - Publicação no Fly/Supabase remoto, custos e migrações requerem aprovação própria; merge funcional não atualiza a versão em que o proprietário estuda por si só.
+
+**Transição do laboratório:** enquanto a nova release não estiver homologada/publicada, o curso atual continua sendo o laboratório de estudo. Depois da aprovação operacional, substituí-lo por uma única experiência pessoal nova, sem duplicar curso estável para guardar progresso. Aceitar recomeçar dados experimentais **não** concede permissão para excluir histórico físico. Antes de cada atualização futura, testar migração incremental e reedição de curso com progresso sintético, preservando versões/evidências ou falhando honestamente.
 
 ## 4. Ciclo de atualização contínua
 
@@ -57,11 +59,11 @@ A auditoria de 23/10/2026 identificou no motor `src/domain/activities/grader.ts`
 
 O aprendizado real e o desempenho do aluno orientam melhorias editoriais e de UX; não substituem evals do motor, testes de isolamento, evidência de domínio ou revisão humana do conteúdo.
 
-## 6. Primeiro marco de atualização, após A2/B2
+## 6. Histórico da primeira atualização após A2/B2
 
-**A2/B2 integrados e auditoria pessoal concluída estaticamente.** A `main` contém o Ciclo 2 e a política ES-A1 (PRs #6/#5). O Codex investigou o curso compilado pessoal e recomendou **evoluir**, não substituir integralmente, as duas unidades; o proprietário **aprovou essa estratégia editorial (ESLAB-D01)**. **P0 foi concluído por leitura**, com parecer PLANO SUFICIENTE no [relatório P0](../features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md). A composição real ainda não começou: o próximo gate **COM-0** é leitura de schema/histórico do ambiente identificado, **somente após autorização própria**. Ver [spec de composição](../features/es-a1-composicao/spec.md), [plano](../features/es-a1-composicao/plan.md) e [revisão pedagógica](../features/piloto-es-a1-pos-ciclo2/spec.md); nada disso concede permissão de banco, código ou publicação.
+As auditorias P0, COM-0, COM-1 e COM-1B foram concluídas nos limites estáticos/de leitura e preservadas na [documentação de composição](../features/es-a1-composicao/plan.md). O projeto antigo de migração de sessões/progresso foi **despriorizado** para a primeira release limpa; **não** foi implementado, nem aplicado ao banco de estudo ou ao Supabase remoto.
 
-O proprietário **autoriza discutir e planejar a reformulação completa das duas unidades**, sem exigir preservar exatamente a ordem antiga. A reescrita efetiva, mudanças de contratos e operações de publicação continuam fora desta PR documental.
+**Próxima rota vigente, somente documental até autorização:** [Release Limpo](../features/release-limpo/plan.md), começando por guardas de ambiente e script de deploy antes de criar o Supabase local novo. Depois virão bootstrap/testes essenciais, curso ES-A1 compilado gerado e revisado e release Fly com aprovação própria. O curso antigo permanece disponível como estudo e fonte editorial até a transição ser validada; não descartar histórico físico por inferência.
 
 ## 7. Autorizações e fronteiras
 

@@ -4,7 +4,7 @@
 
 ## Baseline oficial
 
-- **`origin/main` confirmada em 23/10/2026:** `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`, merge **PR #9 (COM-0 documental)**, após PR #8 (P0), #7 (auditoria ES-A1), #5 (política) e #6 (motor A2/B2). A árvore funcional A2/B2 foi homologada localmente no candidato `e780e56e95d4462aac556b17f5039af3dde70a9f`. Esses merges documentais não equivalem a deploy, migração ou curso pessoal atualizado.
+- **`origin/main` confirmada em 23/10/2026:** `1487da9647a06d878f0a2e4e92c3d6d45e878f76`, merge da **PR #10 (COM-1 documental)**, após #9 COM-0, #8 P0, #7 auditoria ES-A1, #6 motor A2/B2 e #5 política do laboratório. O motor A2/B2 tem evidências de homologação local em candidato `e780e56e95d4462aac556b17f5039af3dde70a9f`; o estado Fly/Supabase remoto não foi verificado. Nenhum merge documental instala curso ou banco.
 - O Ciclo 2 tem **QA/Revisor GO e homologação local** relatados em [implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). CI remoto, vozes reais, dispositivos físicos, produção e bootstrap limpo não foram certificados por esse merge.
 - Pilotos pessoais ES/EN, worktrees e pendências históricas permanecem separados. [Relatório de preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md). Esta reconciliação de GitHub **não inspecionou os worktrees Windows**.
 
@@ -56,12 +56,22 @@
 - **Decisões técnicas abertas:** critérios de adoção de cada legado; plano efetivo do EN após cutover; áudio antigo (URLs assinadas e reset); matriz de colunas/PK/FK/ACL/triggers/rollback completa e escolha motivada entre [alternativas SQL](features/es-a1-composicao/MATRIZ_ALTERNATIVAS_SQL_COM1.md). As **seis tabelas `_v2` e cinco migrações do COM-1 NÃO foram aprovadas**.
 - **Sem nova autorização operacional:** COM-0 somente leitura já encerrado; nenhum novo banco/consulta agregada (inclusive valores de geração), migração, reset, Storage, teste escritor, rede, Fly, IA paga ou implementação foi liberado.
 
+## Direção atual — Release Limpo para primeira publicação atualizada
+
+- O proprietário priorizou **novo projeto local de release isolado → bootstrap/testes pertinentes → curso novo ES-A1 compilado gerado/revisado no Foundry → homologação de Supabase remoto → Fly.io**. A intenção é não transportar **progresso experimental antigo**, mas **não autoriza excluí-lo**. Relatório de leitura do Codex: [RELATORIO_PLANO.md](features/release-limpo/RELATORIO_PLANO.md), com QA/Revisor **somente sobre plano**, sem testes de ambiente novo.
+- **A estratégia COM-1B de compatibilização histórica fica despriorizada** para esta primeira release, não invalidada como histórico. Não criar seis tabelas `_v2` nem migrar progresso só para preservá-lo. Os riscos reais Auth/MFA, `TRUNCATE`, B1 e versionamento de curso continuam relevantes.
+- Quatro ajustes incorporados no [planejamento](features/release-limpo/plan.md): preservar `espanhol-plataform` e isolar `destrava-release-clean`; **app Fly existente ou novo é decisão posterior**, não presumir novo; fazer **teste de atualização futura de curso com progresso sintético** além de bootstrap limpo; primeiro curso **compilado**, sem dizer que A2 instalado/B2 compilado são automaticamente iguais no mesmo caminho.
+- **Proteção permanente do deploy:** `scripts/deploy-fly.ps1` atual usa `.env.local` em build. Exigir perfil remoto explícito e imagem/digest homologado antes de qualquer publicação. Não publicar com parâmetros locais.
+- **F0 atual:** criar/revisar PR somente documental com [spec](features/release-limpo/spec.md), [plano](features/release-limpo/plan.md), [tarefas](features/release-limpo/tasks.md) e [roteiro de F1](features/release-limpo/ROTEIRO_TAREFA.md). **Nenhuma implementação, serviço ou banco novo autorizado**.
+
 ## Próximos marcos
 
-1. **Revisar PR documental COM-1:** registro integral do relatório, cinco diretrizes para especificação, matriz comparativa **preliminar**, atualização de [spec](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md) e [tarefas](features/es-a1-composicao/tasks.md). O merge exige aprovação específica.
-2. **COM-1B — próximo handoff recomendado, ainda não autorizado:** completar por **leitura estática** a matriz por objeto e o plano de continuidade **funcional EN**, legado e áudio, detalhando SQL/ACL/rollback e testes no papel. Ver [roteiro COM-1B](features/es-a1-composicao/ROTEIRO_COM1B.md). Não acessar banco novamente.
-3. **COM-2/3** somente após decisões/contratos validados e autorizações separadas: implementação isolada, testes autorizados locais, QA/Revisor e PR funcional. Migrações e cutover do banco existente continuam operações autorizadas separadamente.
-4. **Retorno ao laboratório ES-A1:** depois de composição segura e validação do curso pessoal, primeira fatia pedagógica U2 (explicação recuperável, feedback contextual) → U2 inteira → U1. Fly e Supabase remoto permanecem fora.
+1. **F0:** revisão e merge **expressamente aprovado** da PR documental do Release Limpo.
+2. **F1:** após autorização funcional separada, Codex Lead prepara **somente guardas/perfis de release e script de deploy seguro**, com QA negativo em Fly simulado; sem inicializar Docker nem acessar Supabase/Fly reais. PR funcional própria.
+3. **F2:** após aprovação dos guardas e autorização operacional específica, criar **`destrava-release-clean` isolado**, aplicar 20 migrações canônicas, executar bootstrap, ACL/Auth/MFA/B1/A2/B2/I8 e teste sintético de mudança de curso. Não tocar no projeto de estudo existente.
+4. **F3:** IA/Foundry gera e revisa **novo curso compilado** ES-A1, com recursos realmente disponíveis, contratos/pedagogia e jornada homologados; APIs pagas precisam de aprovação.
+5. **F4/F5:** escolher Supabase remoto e app Fly (existente ou novo), contas/credenciais, custos, imagem/digest e rollback, **somente com autorização operacional**. Smoke final e laboratório pessoal em versão nova.
+6. **Atualizações seguintes:** upgrade incremental de banco e edição do curso, além de bootstrap limpo; reimplantação do zero é exceção, não rotina.
 
 ## Norte estratégico registrado
 
