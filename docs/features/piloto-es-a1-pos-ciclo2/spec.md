@@ -1,6 +1,6 @@
 # Próximo ciclo candidato — atualização do laboratório pessoal ES-A1 após A2/B2
 
-**Estado (23/10/2026): AUDITORIA ESTÁTICA CONCLUÍDA; DECISÃO EDITORIAL APROVADA; IMPLEMENTAÇÃO E PUBLICAÇÃO NÃO AUTORIZADAS.**
+**Estado (23/10/2026): AUDITORIAS DO ACERVO E P0 TÉCNICO CONCLUÍDAS POR LEITURA; DECISÃO EDITORIAL APROVADA; IMPLEMENTAÇÃO, BANCO E PUBLICAÇÃO NÃO AUTORIZADOS.**
 
 Decisão de produto: o curso pessoal de espanhol A1 com **duas unidades já usadas para estudos** deve refletir o **melhor conjunto funcional e honesto do motor em seu caminho de execução**. Ver política permanente: [Curso laboratório ES-A1](../../produto/CURSO_LABORATORIO_ES_A1.md).
 
@@ -76,7 +76,7 @@ As duas unidades devem constituir uma **experiência de aprendizagem A1**, com o
 
 ## 4. Sequência aprovada de priorização — execução ainda não autorizada
 
-O proprietário aprovou **A (evoluir acervo)**, em vez de reescrever tudo. A prioridade é **U2 primeiro**, validando uma fatia completa antes de aplicar o padrão ao restante. A ordem é: (P0) reconciliação técnica B01/B02 por leitura; (P1) mapa curricular/revisão editorial e um percurso vertical U2; (P2) evoluir toda U2; (P3) reorganizar U1; (P4) QA real, dogfooding e eventual publicação separada.
+O proprietário aprovou **A (evoluir acervo)**, em vez de reescrever tudo. A prioridade é **U2 primeiro**, validando uma fatia completa antes de aplicar o padrão ao restante. A ordem aprovada é: (P0 **concluído somente por leitura**) [reconciliação técnica](RELATORIO_P0.md) → (**COM-0 pendente de autorização**) inspeção de schema/integração segura; só depois (P1) mapa curricular/revisão editorial e um percurso vertical U2; (P2) evoluir toda U2; (P3) reorganizar U1; (P4) QA real, dogfooding e eventual publicação separada.
 
 Ver [plano](plan.md) e [tarefas](tasks.md).
 
@@ -92,4 +92,4 @@ Ver [plano](plan.md) e [tarefas](tasks.md).
 - Este ciclo não autoriza implementação imediata e não determina que todos os recursos estejam em todas as atividades.
 - O Language Foundry é responsável por qualidade/editorial de pacotes definitivos; o piloto pessoal pode validar pedagogia, mas não certifica automaticamente um curso público.
 - A aceitação de eventual perda de progresso **não autoriza** reset ou escrita em base remota sem confirmação de destino/escopo e autorização expressa da operação.
-- A2/B2 e a auditoria estática já foram concluídos nos escopos relatados. **O próximo gate é P0 (plano de reconciliação de migrações e proteção de geração), sem executar alterações**; etapas editoriais/funcionais subsequentes aguardam autorização delimitada.
+- A2/B2 e a auditoria estática já foram concluídos nos escopos relatados. **o P0 foi concluído por leitura, com [relatório P0](RELATORIO_P0.md) e parecer PLANO SUFICIENTE; o próximo gate é COM-0, **somente leitura de schema/histórico com autorização própria**, conforme a [spec de composição](../es-a1-composicao/spec.md)**; etapas editoriais/funcionais subsequentes aguardam autorização delimitada.

@@ -4,7 +4,7 @@
 
 ## Baseline oficial
 
-- **`origin/main` verificada em 23/10/2026:** `6bdd26c336ce50d59569a74581044fe3ddc89284`, **PR #5 (política ES-A1) integrada**, após PR #6 A2/B2 e PRs #2–4. O candidato funcional A2/B2 mantém a árvore validada localmente `e780e56e95d4462aac556b17f5039af3dde70a9f` antes do merge documental.
+- **`origin/main` verificada em 23/10/2026:** `cacbacb6b6c2e5308885f6174e660f8c9c23bd19`, merge documental da **PR #7 (auditoria e direção editorial ES-A1)**, após PR #5 (política do laboratório) e PR #6 (A2/B2). O candidato funcional A2/B2 mantém a árvore homologada localmente `e780e56e95d4462aac556b17f5039af3dde70a9f` antes dos merges documentais.
 - O Ciclo 2 tem **QA/Revisor GO e homologação local** relatados em [implementação](features/fase4-ciclo2/RELATORIO_IMPLEMENTACAO.md). CI remoto, vozes reais, dispositivos físicos, produção e bootstrap limpo não foram certificados por esse merge.
 - Pilotos pessoais ES/EN, worktrees e pendências históricas permanecem separados. [Relatório de preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md). Esta reconciliação de GitHub **não inspecionou os worktrees Windows**.
 
@@ -31,12 +31,21 @@
 - **STOPs relatados para integrar piloto e motor:** duas migrações diferentes compartilham `20261022000100`; proteção de geração/reset do piloto pode divergir do escritor privado B1. São riscos de composição **não homologados em banco**.
 - A versão atualmente selecionada pelo aluno no Fly/Supabase remoto, as vozes físicas e o resultado no navegador **não foram verificados na auditoria**. Nenhuma implementação/alteração de curso decorre do registro.
 
+## P0 — Reconciliação técnica de leitura concluída
+
+- O **Codex Lead entregou o [relatório P0](features/piloto-es-a1-pos-ciclo2/RELATORIO_P0.md)** sobre composição do curso pessoal compilado ES/EN com motor atual: parecer **PLANO SUFICIENTE** para **desenhar** integração, QA/Revisor favoráveis à lógica. **Nenhum SQL, login, browser, build, acesso Fly/Supabase ou teste funcional da composição foi executado**.
+- **Migração `20261022000100` duplicada:** `learning_reset_generation.sql` do piloto e `interactive_segment_evidence.sql` do motor não são equivalentes; estado real aplicado **não inspecionado**.
+- **Geração e B1:** writer privilegiado e atalho HTTP de recibo devem respeitar a mesma trava de usuário, geração e escopo versionado; leitura/replay/cache e dados privados I8 também. Hash B1 inclui pacote inteiro: editar U2 pode mudar o hash de aula U1.
+- Preservação relatada pelo Codex de **20 worktrees / 249 pendências** e ES/EN, sem escrita; arquivos ignorados não integralmente inventariados. É fotografia histórica, não garantia automática no próximo ciclo.
+- **Registro documental em revisão:** [spec de composição](features/es-a1-composicao/spec.md), [plano](features/es-a1-composicao/plan.md), [tarefas](features/es-a1-composicao/tasks.md) e [roteiro](features/es-a1-composicao/ROTEIRO_TAREFA.md). **Nenhuma implementação, inspeção operacional de banco ou migração autorizada por esta PR.**
+
 ## Próximos marcos
 
-1. **Revisar PR documental de consolidação** de [spec](features/piloto-es-a1-pos-ciclo2/spec.md), [plano](features/piloto-es-a1-pos-ciclo2/plan.md), [tarefas](features/piloto-es-a1-pos-ciclo2/tasks.md) e [auditoria](features/piloto-es-a1-pos-ciclo2/RELATORIO_AUDITORIA.md). Aprovação do merge é separada.
-2. **P0 — próximo handoff ao Codex:** sob autorização própria, **investigação somente de leitura** para composição motor/piloto, migrações duplicadas e guarda de geração versus B1; gerar um plano, **não corrigir nem executar SQL**.
-3. **Depois do P0 e autorização funcional específica:** aplicar fatia vertical **U2** (objetivo explícito, ajuda acessível, feedback contextual, formatos variados), validar com QA/Revisor e somente então expandir U2/U1.
-4. **Piloto e operação:** o proprietário testa a única experiência pessoal; Fly/Supabase remoto, migrações, reset, custos e publicação têm autorizações individuais. A ampla reformulação visual continua no pré-lançamento.
+1. Revisar/aprovar o **merge documental** do P0 na PR própria; este registro não altera runtime, schema, curso ou ambiente.
+2. **COM-0 — próximo gate recomendado:** após autorização explícita para um **ambiente nomeado**, verificar **somente por leitura** o schema e histórico de migrações (preferir Supabase local). Sem acesso autorizado, STOP.
+3. **COM-1/COM-2 — execução futura:** após COM-0, aprovar plano SQL e mudanças de código/segurança, compor motor + piloto em candidato isolado; QA/Revisor independentes e PR funcional somente autorizada.
+4. **P1 pedagógica — somente depois:** fatia curta U2 de quantificadores, explicação recuperável e feedback contextual; em seguida U2 e U1, com autorização editorial própria.
+5. Fly/Supabase remoto, reset/migrações, serviços pagos e publicação continuam dependentes de decisões operacionais separadas. A experiência pessoal deve ser única, sem curso paralelo apenas para guardar histórico.
 
 ## Norte estratégico registrado
 
