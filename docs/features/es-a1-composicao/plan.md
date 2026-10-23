@@ -1,6 +1,8 @@
-# ES-A1 — Plano de composição segura motor + piloto pessoal
+# ES-A1 — Plano histórico de composição segura motor + piloto pessoal
 
-**Estado em 23/10/2026: P0 concluído por leitura; COM-0 concluído com metadados SQL locais; COM-1 entregou desenho estático com `DECISÕES PENDENTES`.** Fontes: [P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), [COM-0](RELATORIO_COM0.md), [COM-1](RELATORIO_COM1.md), [cinco diretrizes aprovadas para especificação](DECISOES_COM1.md), [matriz SQL preliminar](MATRIZ_ALTERNATIVAS_SQL_COM1.md), [spec](spec.md), [tarefas](tasks.md). O PostgreSQL local foi classificado `parcial/divergente` no COM-0; **nenhuma composição foi implementada**. Baseline estática do COM-1: `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`. Esta PR **somente documenta**, sem autorização de novas consultas, código, SQL, worktree, migração, reset ou deploy.
+**Estado da rota em 23/10/2026: HISTÓRICA/DESPRIORIZADA PARA A PRIMEIRA RELEASE.** O proprietário priorizou [Release Limpo](../release-limpo/spec.md): validar motor em ambiente novo, gerar curso ES-A1 compilado e homologar Fly. **Não executar COM-1B/COM-2 nem as estruturas `_v2` por inferência.** A composição histórica abaixo continua útil para futuros problemas de upgrade, mas não é autorização operacional.
+
+**Histórico deste plano: P0 concluído por leitura; COM-0 concluído com metadados SQL locais; COM-1 entregou desenho estático com `DECISÕES PENDENTES`.** Fontes: [P0](../piloto-es-a1-pos-ciclo2/RELATORIO_P0.md), [COM-0](RELATORIO_COM0.md), [COM-1](RELATORIO_COM1.md), [cinco diretrizes aprovadas para especificação](DECISOES_COM1.md), [matriz SQL preliminar](MATRIZ_ALTERNATIVAS_SQL_COM1.md), [spec](spec.md), [tarefas](tasks.md). O PostgreSQL local foi classificado `parcial/divergente` no COM-0; **nenhuma composição foi implementada**. Baseline estática do COM-1: `1b1b27908f3babb89b04dac222ed5bbcee7f1ca1`. Esta PR **somente documenta**, sem autorização de novas consultas, código, SQL, worktree, migração, reset ou deploy.
 
 ## O que preservar
 
