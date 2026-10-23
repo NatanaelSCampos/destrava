@@ -20,6 +20,8 @@ Este índice organiza **onde encontrar decisões**, sem substituir contratos e r
 | Estado e próxima etapa | [PROGRESSO_PRODUTO.md](PROGRESSO_PRODUTO.md) |
 | Processo de demanda | [DO_CHAT_AO_COMMIT.md](DO_CHAT_AO_COMMIT.md) |
 | Decisões pendentes | [DUVIDAS.md](DUVIDAS.md) |
+| Ciclo 2, proposta não autorizada | [spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md) |
+| Sincronização pós-merge | [relatório](features/fase4-ciclo2/RELATORIO_EXECUCAO.md) |
 
 ## Estados e hierarquia
 

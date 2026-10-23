@@ -1,44 +1,37 @@
 # Destrava — progresso do produto e desenvolvimento
 
-**Atualizado em 22/10/2026. Status documental, não um resultado novo de testes.**
+**Atualizado em 23/10/2026. Distinguir Git verificado, evidência histórica e proposta.**
 
-## Baselines verificadas nesta organização
+## Baseline oficial
 
-- \`main\` no GitHub: \`10e426e\`, histórico anterior (04/10/2026). **Não é baseline segura para planejamento de novas implementações da Fase 4.**
-- \`feat/fase4-first-parallel-cycle\`: \`93ef6f2\`, commit "feat: align learning availability and scope classroom evidence". Esta é a baseline remota recente inspecionada.
-- O relatório [Fase 4 Ciclo 1](../DESTRAVA_FASE4_CICLO1.md) documenta o candidato F4-C3, verificações e limites. Não pressupor produção homologada nem que pilotos ES/EN estejam integralmente nesta mesma branch.
+- `origin/main`: `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, merge confirmado da PR #2; árvore `24b31199507e901bc9cacb9058756244bf4fa0c6`, igual à homologada em `18a67c5`.
+- Main não avançou desde esse merge na conferência desta preparação. Outros checkouts não foram atualizados automaticamente; principal permanece em `93ef6f2` com pendências preservadas.
+- Planejamento: branch `docs/fase4-ciclo2-planejamento`, worktree `D:\Documents\destrava-worktrees\fase4-ciclo2-planejamento`, criado da main confirmada; sem env/deps copiados ou implementação.
+- Inventário e preservação: [relatório desta preparação](features/fase4-ciclo2/RELATORIO_EXECUCAO.md).
 
-## Concluído conforme relatórios/commits
+## Concluído conforme commits/relatórios
 
-- Incrementos 1–8: contratos, avaliações, políticas, capacidades, texto/variantes, importação, instalação/versionamento e interoperabilidade básica de cursos externos.
-- Estrutura multiagente com Lead, Implementador, QA e Revisor, worktrees e revisão.
-- **Fase 4 Ciclo 1 / A1:** recomendações e CTAs consideram implementação, compatibilidade do curso, disponibilidade operacional e permissão.
-- **Fase 4 Ciclo 1 / B1:** evidências e checkpoints independentes por segmento na Aula Particular; correções de apresentação mobile.
-- Evidência relatada do F4: QA 33/33; 25 cenários de integração local; 8 verificações de navegador; Revisor sem achados abertos para o candidato final.
+- Incrementos 1–8: contratos, avaliações, políticas, capacidades, texto/variantes, importação, instalações/versionamento e interoperabilidade básica.
+- Estrutura multiagente canônica e [Do Chat ao Commit](DO_CHAT_AO_COMMIT.md), sem outra plataforma.
+- Fase 4 Ciclo 1 A1: disponibilidade contextual; B1: evidências/checkpoints por segmento e mobile. Evidência histórica QA 33, SQL 25 e browser oito, com limites no [relatório F4](../DESTRAVA_FASE4_CICLO1.md).
+- R1P2 em `18a67c5`, incorporado pela PR #2: ausência de chave privada bloqueia aula; configuração completa continua condicional. [Relatório](features/pr2-r1p2/RELATORIO_EXECUCAO.md).
+- Merge integrou código na main, sem homologar Fly/banco remoto/bootstrap exato/pilotos. Release de cinco pacotes continua separada.
 
-## Próxima etapa registrada — NÃO INICIADA
+## Próxima etapa — NÃO IMPLEMENTADA
 
-**Fase 4 Ciclo 2**, com duas frentes propostas pelo relatório F4:
+[Spec](features/fase4-ciclo2/spec.md), [plan](features/fase4-ciclo2/plan.md), [tasks](features/fase4-ciclo2/tasks.md) e [roteiro](features/fase4-ciclo2/ROTEIRO_TAREFA.md): **seis escolhas de produto aprovadas, ainda em PR documental sem merge e sem autorização para implementação:**
 
-- **Motor A2:** homologar sessões instaladas e diagnóstico no fluxo real: iniciar, pausar, retomar, finalizar, recarregar, versões fixadas, falha de rede, evidência persistida e troca de curso, desktop/mobile.
-- **Aula Particular B2:** política bilíngue PT-BR (apoio/explicações) + idioma estudado (exemplos/prática), narração segmentada, pausa/cancelamento/retomada, voz compatível e fallback textual; incluir fixture de idioma sintético.
+- A2: sessões pedagógicas e diagnóstico adaptativo real, pausa explícita+automática, recuperação de sessão/plano/etapa/tempo confirmados e respostas submetidas. Sem rascunhos incompletos ou novo diagnóstico fixo.
+- B2: apoio/alvo pelo curso, TTS por ação do aluno, uma reprodução ativa, mídia pausada e retomada por frase/âncora, fallback textual e provas B1 preservadas; sem realtime/avatar/avaliação acústica.
+- Investigação por leitura, nenhum teste de runtime novo. Final I8 não comprova diagnóstico; botão TTS não é controlador bilíngue completo.
 
-**Situação:** registrada para continuidade e planejamento; não autorizada para implementação só por constar aqui. [Proposta de escopo](features/fase4-ciclo2/spec.md).
+## Próximos marcos
+
+1. Proprietário revisar PR documental com as [decisões já aprovadas](DUVIDAS.md) e autorizar separadamente o merge da especificação.
+2. Autorizar expressamente A2/B2; merge da proposta sozinho não inicia implementação.
+3. Lead estabilizar interfaces/ownership/isolamento e delegar conforme plano, até quatro agentes ativos.
+4. Executar só o autorizado e registrar candidato/comandos/resultados/limites antes de propor checkpoint/merge funcional.
 
 ## Restrições persistentes
 
-- Language Foundry produz/revisa conteúdo; motor valida/importa/executa contratos públicos.
-- Pilotos experimentais ES/EN e dados pessoais não devem ser apagados ou substituídos por conveniência do ciclo A2/B2.
-- IA, voz, revisão espaçada e Aula Particular em cursos externos têm integrações parciais ou bloqueadas conforme o caminho; não anunciar suporte homogêneo.
-- Fly.io: houve publicação anterior dos pilotos, mas não presumir que o ciclo A1/B1 esteja no deploy nem que o login autenticado tenha sido homologado.
-- Segurança, autenticacão, MFA, autorização, integridade de versões e isolamento local continuam obrigatórios.
-
-## Próximos marcos do processo
-
-1. Revisar/adotar documentalmente "Do Chat ao Commit" sem alterar código.
-2. Reconciliar a linha de desenvolvimento remota \`feat/fase4-first-parallel-cycle\` com a \`main\` somente por PR própria e autorização.
-3. Aprovar ou ajustar as specs de A2 e B2, criar plan/tasks de execução orientados por evidência.
-4. Lead executar A2/B2 nas worktrees, com QA/Revisor independentes e gates definidos.
-5. Atualizar este arquivo com hashes, resultados e limitações **após**, nunca antes, da execução.
-
-A fonte de comportamento efetivo é o código/contrato da baseline apontada, não uma descrição otimista do status.
+Foundry produz/aprova conteúdo; motor valida/importa/executa contrato público. Preservar pilotos ES/EN e pendências. Não ampliar suporte instalado de IA/voz/SRS/aula por inferência. Auth/MFA, identidade/versão, segredos e leitura antes de escrita são obrigatórios. Serviços são coordenados; migrações/exclusões/pago/release dependem de autorização própria.
