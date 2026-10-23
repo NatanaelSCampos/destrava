@@ -1,10 +1,12 @@
 # Fase 4 — Ciclo 2: A2 + B2
 
-**Estado: DECISÕES E ESCOPO INTEGRADOS PELA PR #3; HOUVE AUTORIZAÇÃO POSTERIOR DO PROPRIETÁRIO PARA A2/B2 EM CONVERSA, SEM RESULTADO FUNCIONAL AINDA COMPROVADO.**
+**Estado: IMPLEMENTADA E HOMOLOGADA LOCALMENTE — QA/REVISOR GO.**
+
+Autorização funcional expressa do proprietário em 23/10/2026, sobre `b2e94ce89e9bbaf964e4738b8464dc49f049cb2d`. As seis decisões e os 15 critérios aprovados permanecem íntegros. Merge, deploy, migrações, exclusões, alterações de políticas de banco, chamadas pagas e contratos públicos continuam não autorizados.
 
 Baseline: `dccbdec2242b09dee0b37cd765f49c41cfaf185d`, árvore `24b31199507e901bc9cacb9058756244bf4fa0c6`, main após a PR #2. Origem preservada: seção G de [Fase 4 Ciclo 1](../../../DESTRAVA_FASE4_CICLO1.md). Este é o escopo canônico; [plano](plan.md), [tarefas](tasks.md) e [roteiro](ROTEIRO_TAREFA.md) o detalham sem criar outra metodologia.
 
-## Estado observado e objetivo
+## Estado observado na baseline e objetivo
 
 | Frente | Comprovado por código/evidência anterior | Parcial ou não comprovado |
 | --- | --- | --- |
@@ -19,7 +21,7 @@ Investigação estática; esta preparação não executou testes de produto. A2 
 
 **C2-B01:** apoio e alvo vêm do curso/variante; narração manual, sem autoplay. **C2-B02:** uma reprodução ativa; pausar mídia conflitante; retomada desde início de frase/âncora, sem precisão por palavra. **C2-B03:** texto se voz/idioma não estiver confiável; não detectar idioma por string; `followUp` tem papel/idioma explícito antes de falar. **C2-O01:** Lead comprova isolamento local; nenhuma permissão para migração, reset ou alteração de políticas.
 
-A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são **requisitos de produto aprovados e versionados**, integrados na PR #3. Uma autorização de execução posterior foi dada pelo proprietário em conversa com handoff ao Codex; **esta especificação isoladamente não ordena trabalho nem certifica execução**.
+A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são **requisitos de produto aprovados**. A documentação foi integrada pela PR #3 e a execução de A2/B2 foi autorizada expressamente depois desse merge.
 
 
 ## Invariantes compartilhados
@@ -33,7 +35,7 @@ A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são
 
 ## A2 — sessões e diagnóstico em cursos instalados
 
-### Regras para execução futura (decisões aprovadas)
+### Regras aprovadas
 
 - Distinguir **sessão de versão** (`VersionSession`, fixa instalação/artefato) de **sessão pedagógica** (`StudySession`, plano/atividades/tempo). Uma não comprova o ciclo de vida da outra.
 - Iniciar sessão pedagógica autenticada no curso instalado, respeitando capacidade, plano, modo e versão. Duplo clique/retry não duplicam sessão.
@@ -60,7 +62,7 @@ A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são
 
 ## B2 — ensino bilíngue e narração controlada
 
-### Regras para execução futura (decisões aprovadas)
+### Regras aprovadas
 
 - Apoio vem de `course.sourceLanguage`; alvo de `course.targetLanguage` e configuração/variante efetiva (**C2-B01**). PT-BR é um caso de apoio, não regra fixa do motor.
 - Reusar `textPresentation.language`, source/target, transcrições por linha e campos semânticos de apoio/exemplo. Determinar idioma efetivo antes de enfileirar fala.
@@ -85,11 +87,13 @@ A fonte detalhada das seis escolhas é [DUVIDAS.md](../../DUVIDAS.md). Elas são
 
 ## Decisões e autorização
 
-[DUVIDAS.md](../../DUVIDAS.md) registra C2-A01/A02/B01/B02/B03/O01 como **decisões aprovadas**. A PR documental #3 foi mesclada e houve autorização separada em conversa para o Ciclo 2. A entrega funcional depende do Lead e da revisão de candidato real; **merge/deploy/migração/remoção de dados não foram autorizados**. Mudança nova de produto/schema/contrato exige STOP.
+[DUVIDAS.md](../../DUVIDAS.md) registra as seis decisões aprovadas. A autorização funcional posterior permite implementação, testes locais não destrutivos, commit/push do candidato aprovado e PR funcional; não permite merge ou publicação. Mudança nova de produto/schema/contrato exige STOP.
 
 ## Fora de escopo
 
 - Aula Particular/IA/voz/SRS instalada por consequência; gates continuam explícitos.
 - Voz realtime, avatar, novo serviço/modelo, avaliação acústica, nota inventada ou arquitetura nova de plugins/contratos.
 - Admin/edição dos pilotos ES/EN, reescrita do motor ou nova regra de conclusão/domínio.
-- Deploy, migração local/remota, exclusão/reset, chamadas pagas, dependências e merge de PRs nesta preparação.
+- Deploy, migração local/remota, exclusão/reset, chamadas pagas, atualização desnecessária de dependências e merge de PRs nesta execução.
+
+Resultados da implementação: [relatório funcional](RELATORIO_IMPLEMENTACAO.md). Os critérios acima permanecem os aprovados em `b2e94ce`.

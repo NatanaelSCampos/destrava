@@ -110,7 +110,7 @@ export function editPackageJson(
 }
 export const cloneFiles = (files: ReadonlyMap<string, Uint8Array>) =>
   new Map([...files].map(([path, bytes]) => [path, bytes.slice()]));
-export function independentLearningFixtures() {
+export function independentLearningFixtures(options: { diagnostic?: boolean; retainFiles?: boolean } = {}) {
   const root = mkdtempSync(join(tmpdir(), "destrava-i8-independent-"));
   const candidate = candidateRoot();
   assert(!root.startsWith(candidate + sep), "Producer must execute outside the candidate checkout");
@@ -160,8 +160,9 @@ export function independentLearningFixtures() {
     assert.equal(receipt.contentVersion, version);
     return { directory: output, receipt, files: inventory(output) };
   };
-  const first = produce("v1", "1.0.0"),
-    second = produce("v2", "2.0.0");
+  const extra = options.diagnostic ? ["--diagnostic"] : [];
+  const first = produce("v1", "1.0.0", extra),
+    second = produce("v2", "2.0.0", extra);
   const answers = ["I8 alpha::I8 beta::I8 gamma", "I8 gamma::I8 beta::I8 alpha"];
   return {
     root,
@@ -194,6 +195,7 @@ export function independentLearningFixtures() {
       );
     },
     cleanup() {
+      if (options.retainFiles) return;
       const checked = realpathSync(root),
         temp = realpathSync(tmpdir());
       assert(

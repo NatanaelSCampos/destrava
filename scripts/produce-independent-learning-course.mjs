@@ -13,6 +13,7 @@ const { values, positionals } = parseArgs({
     "course-id": { type: "string", default: "independent.i8.fixture" },
     mandatory: { type: "string" },
     unsupported: { type: "boolean", default: false },
+    diagnostic: { type: "boolean", default: false },
   },
 });
 assert.equal(
@@ -126,6 +127,23 @@ unit.learningPolicy.mastery.requirements[0].minimumScore = second ? 50 : 100;
 const assessments = structuredClone(source.assessments);
 assessments[0].passingPolicy.overall = second ? 0.5 : 1;
 assessments[0].activityIds = [ordering.id];
+if (values.diagnostic) {
+  const bank = [1, 2, 3].map((difficulty) => {
+    const activity = structuredClone(ordering);
+    Object.assign(activity, {
+      id: "c2-diagnostic-" + difficulty,
+      type: "multiple_choice",
+      title: "Questão sintética " + difficulty,
+      prompt: "Selecione a alternativa sintética indicada no objetivo.",
+      skills: ["vocabulary"],
+      payload: { options: ["C2 correto " + difficulty, "C2 alternativa " + difficulty], answer: "C2 correto " + difficulty, explanation: "Critério sintético privado " + difficulty },
+    });
+    lesson.activities.push(activity);
+    return { activityId: activity.id, skill: "vocabulary", difficulty };
+  });
+  assessments.push({ id: "c2-adaptive-diagnostic", title: "Diagnóstico adaptativo C2", purpose: "diagnostic", method: "adaptive", unitId: unit.id, objectiveIds: [], passingPolicy: { overall: 0.5 }, skillWeights: { vocabulary: 1 }, skillPlan: ["vocabulary", "vocabulary", "vocabulary"], bank });
+  course.assessmentRefs = { ...course.assessmentRefs, diagnostic: "c2-adaptive-diagnostic" };
+}
 const requirements = [];
 if (values.mandatory) {
   const capability = catalog.capabilities.find((entry) => entry.id === values.mandatory);

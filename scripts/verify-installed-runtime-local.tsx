@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { runCiclo2Journey } from "./ciclo2-local-journey";
 import { randomUUID } from "node:crypto";
 import { renameSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -73,7 +74,7 @@ async function main() {
       ConstructorParameters<typeof CourseInstallationService>[0]["environment"]
     >,
   });
-  const fixture = independentLearningFixtures();
+  const fixture = independentLearningFixtures({ retainFiles: process.env.C2_LOCAL_JOURNEY === "1" || process.env.C2_RETAIN_FILES === "1" });
   const mandatory = fixture.produce(
     "mandatory-ai",
     "1.0.0",
@@ -207,6 +208,7 @@ async function main() {
   };
   const dismissOverlays = async () => {
     assert(browser);
+    await browser.evaluate("document.querySelector('.page-tour-close')?.click();document.querySelector('button[aria-label=\"Fechar novidades\"]')?.click()");
     for (let attempt = 0; attempt < 6; attempt++) {
       const label = (await browser.evaluate(
         "(() => { const candidates = [...document.querySelectorAll('button[aria-label]')].filter(node => ['Pular guia','Fechar novidades'].includes(node.getAttribute('aria-label')) && !node.disabled); const node = candidates.find(node => { const rect = node.getBoundingClientRect(); const hit = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2); return rect.width > 0 && rect.height > 0 && (hit === node || node.contains(hit)); }); if (!node) return null; return node.getAttribute('aria-label'); })()",
@@ -318,7 +320,18 @@ async function main() {
     await clickText("Verificar resposta");
     return responseFromClick("/api/grade");
   };
+    const { checkpointBrowser } = await importCandidate<typeof import("./checkpoint-browser.mjs")>(
+      "scripts/checkpoint-browser.mjs",
+    );
   try {
+    if (process.env.C2_ONLY === "1") {
+      browser = await checkpointBrowser();
+      await browser.viewport(1280,900);
+      await runCiclo2Journey({ browser, fixture, service, authority: context.authority, student, prepared, active, progress, api, waitUi, clickText, dismissOverlays, check });
+      const proof=browser.proof();assert.equal(proof.blockedRequests,0);assert.equal(proof.runtimeErrors,0);assert.equal(externalAttempts,0);
+      console.log(JSON.stringify({scenarios:records,browser:proof,isolation,paidCalls:0,remoteOperations:0}));
+      return;
+    }
     const a = await student(),
       b = await student();
     let first!: Installation, second!: Installation;
@@ -679,9 +692,6 @@ async function main() {
       },
     );
 
-    const { checkpointBrowser } = await importCandidate<typeof import("./checkpoint-browser.mjs")>(
-      "scripts/checkpoint-browser.mjs",
-    );
     browser = await checkpointBrowser();
     await browser.viewport(1280, 900);
     await browser.cookies([...a.cookies].map(([name, value]) => ({ name, value })));
@@ -1096,6 +1106,10 @@ async function main() {
         assert.equal(externalAttempts, 0);
       },
     );
+    if (process.env.C2_LOCAL_JOURNEY === "1") {
+      await browser.viewport(1280, 900);
+      await runCiclo2Journey({ browser, fixture: independentLearningFixtures({ retainFiles: true }), service, authority: context.authority, student, prepared, active, progress, api, waitUi, clickText, dismissOverlays, check });
+    }
     const proof = browser.proof();
     assert.equal(proof.blockedRequests, 0);
     assert.equal(proof.runtimeErrors, 0);
@@ -1137,7 +1151,7 @@ async function main() {
             .map((line) => line.trim())
             .slice(0, 8)
         : [];
-    console.error(JSON.stringify({ failedScenario: runningScenario, at }));
+    console.error(JSON.stringify({ failedScenario: runningScenario, at, message: error instanceof Error ? error.message : "Unknown synthetic test error" }));
     if (browser) {
       const artifact = "increment8-failure-" + Date.now();
       try {

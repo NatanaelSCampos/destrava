@@ -106,6 +106,9 @@ export type StudySession = {
   wrong: number;
   wordsReviewed: number;
   plan: PlannedItem[];
+  /** Internal checkpoint, independent of learning evidence. */
+  cursor?: number;
+  paused?: boolean;
 };
 
 export type StudyEvent = {
@@ -238,6 +241,8 @@ export type StudyState = {
   conversations: ConversationSession[];
   imageDescriptions: ImageDescriptionAttempt[];
   adaptiveAssessments: AdaptiveAssessmentAttempt[];
+  /** Submitted adaptive prefixes only. No editor drafts or official results. */
+  adaptiveProgress?: import("@/domain/assessments/adaptive-progress").AdaptiveProgress[];
   activeSessionId: string | null;
 };
 

@@ -1,7 +1,7 @@
 "use client";
 import { LearningText } from "@/components/learning/text-presentation";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ChartNoAxesCombined, RotateCcw } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
@@ -42,15 +42,19 @@ export function AdaptiveAssessmentRunner({
 }: {
   assessment: AdaptiveAssessmentDefinition;
 }) {
-  const { course, language, state, submitAssessment, recordStudyEvent } = useStudy();
+  const { course, language, state, submitAssessment, recordStudyEvent, runtime, confirmAdaptiveProgress } = useStudy();
+  const resumed = runtime ? (state.adaptiveProgress ?? []).find(value => value.assessmentId === assessment.id &&
+    !state.adaptiveAssessments.some(result => result.id === value.attemptId && result.source === "server")) : undefined;
+  const busy = useRef(false);
+  const [pendingPrefix, setPendingPrefix] = useState<import("@/domain/assessments/adaptive-progress").AdaptiveProgress | null>(null);
   const skillPlan = assessment?.skillPlan ?? [];
-  const [startedAt, setStartedAt] = useState<string | null>(null);
-  const [answers, setAnswers] = useState<AdaptiveAnswer[]>([]);
+  const [startedAt, setStartedAt] = useState<string | null>(resumed?.startedAt ?? null);
+  const [answers, setAnswers] = useState<AdaptiveAnswer[]>(resumed?.answers ?? []);
   const [hasAnswered, setHasAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [attemptId, setAttemptId] = useState(() => crypto.randomUUID());
+  const [attemptId, setAttemptId] = useState(() => resumed?.attemptId ?? crypto.randomUUID());
   const activities = new Map(
     course.units.flatMap((item) =>
       item.lessons.flatMap((lesson) =>
@@ -90,21 +94,28 @@ export function AdaptiveAssessmentRunner({
   );
   const showReport = finished || (!startedAt && latest);
 
-  function begin() {
-    recordStudyEvent("assessment_started", assessment.id, {
-      courseId: course.id,
-      purpose: assessment.purpose,
-    });
-    setAttemptId(crypto.randomUUID());
+  async function begin() {
+    if (busy.current) return;
+    busy.current = true;
+    setSaving(true);
     setError("");
-    setStartedAt(new Date().toISOString());
-    setAnswers([]);
-    setHasAnswered(false);
-    setFinished(false);
+    // A start is local until the first answer is actually submitted.
+    const attempt = { id: crypto.randomUUID(), startedAt: new Date().toISOString() };
+    try {
+      recordStudyEvent("assessment_started", assessment.id, { courseId: course.id, purpose: assessment.purpose });
+      setAttemptId(attempt.id);
+      setStartedAt(attempt.startedAt);
+      setAnswers([]);
+      setHasAnswered(false);
+      setFinished(false);
+      setPendingPrefix(null);
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Não foi possível iniciar a avaliação."); }
+    finally { busy.current = false; setSaving(false); }
   }
 
   async function finish(updated: AdaptiveAnswer[]) {
-    if (!startedAt || saving) return;
+    if (!startedAt || busy.current) return;
+    busy.current = true;
     setSaving(true);
     setError("");
     try {
@@ -127,30 +138,42 @@ export function AdaptiveAssessmentRunner({
         caught instanceof Error ? caught.message : "Não foi possível registrar a avaliação.",
       );
     } finally {
+      busy.current = false;
       setSaving(false);
     }
   }
 
+  async function confirmPrefix(prefix: import("@/domain/assessments/adaptive-progress").AdaptiveProgress) {
+    if (busy.current) return;
+    busy.current = true;
+    setSaving(true);
+    setError("");
+    setPendingPrefix(prefix);
+    try {
+      const confirmed = await confirmAdaptiveProgress(prefix);
+      setAttemptId(confirmed.attemptId);
+      setStartedAt(confirmed.startedAt);
+      setAnswers(confirmed.answers ?? []);
+      setHasAnswered(false);
+      setPendingPrefix(null);
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Não foi possível confirmar sua resposta."); }
+    finally { busy.current = false; setSaving(false); }
+  }
+
   function assessed(answer: string, result: GradeResult) {
-    if (!next || hasAnswered || !current || !startedAt) return;
-    const updated: AdaptiveAnswer[] = [
-      ...answers,
-      {
-        activityId: current.id,
-        skill: next.skill,
-        difficulty: next.difficulty,
-        ceiling: next.ceiling,
-        correct: result.correct,
-        answer,
-        correctAnswer: result.correctAnswer,
-        explanation: result.explanation,
-      },
-    ];
+    if (!next || hasAnswered || !current || !startedAt || busy.current) return;
+    if (runtime) {
+      void confirmPrefix({ attemptId, assessmentId: assessment.id, startedAt,
+        responses: [...answers.map(item => ({ activityId: item.activityId, answer: item.answer })),
+          { activityId: current.id, answer }] });
+      return;
+    }
+    const updated: AdaptiveAnswer[] = [...answers, { activityId: current.id, skill: next.skill,
+      difficulty: next.difficulty, ceiling: next.ceiling, correct: result.correct, answer,
+      correctAnswer: result.correctAnswer, explanation: result.explanation }];
     setAnswers(updated);
     setHasAnswered(true);
-    if (updated.length === skillPlan.length) {
-      void finish(updated);
-    }
+    if (updated.length === skillPlan.length) void finish(updated);
   }
 
   if (bank.length < skillPlan.length)
@@ -188,9 +211,10 @@ export function AdaptiveAssessmentRunner({
         </p>
       )}
       {saving && <p role="status">Registrando suas respostas…</p>}
-      {error && answers.length === skillPlan.length && !finished && (
-        <button className="primary-button" disabled={saving} onClick={() => void finish(answers)}>
-          Tentar registrar novamente
+      {pendingPrefix && error && <button className="primary-button" disabled={saving} onClick={() => void confirmPrefix(pendingPrefix)}>Tentar confirmar resposta novamente</button>}
+      {startedAt && answers.length === skillPlan.length && !finished && (
+        <button className="primary-button" disabled={saving || !!pendingPrefix} onClick={() => void finish(answers)}>
+          Confirmar resultado
         </button>
       )}
       {!startedAt && !latest && (
@@ -203,12 +227,12 @@ export function AdaptiveAssessmentRunner({
               .join(", ")}
             . As questões usam o conteúdo da unidade e o resultado orienta sua prática.
           </p>
-          <button type="button" className="primary-button" onClick={begin}>
+          <button type="button" className="primary-button" disabled={saving || !!pendingPrefix} onClick={() => void begin()}>
             Começar avaliação <ArrowRight size={16} />
           </button>
         </section>
       )}
-      {startedAt && !finished && current && next && (
+      {startedAt && !finished && current && next && !saving && !pendingPrefix && (
         <section className="panel adaptive-question">
           <div className="adaptive-question-head">
             <span className="eyebrow">

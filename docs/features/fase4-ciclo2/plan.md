@@ -1,6 +1,6 @@
 # Ciclo 2 — plano técnico proposto
 
-**Somente planejamento — seis decisões de produto aprovadas, implementação não autorizada.** Aceite: [spec](spec.md). Baseline: `dccbdec` / árvore `24b3119`. Registro: [DUVIDAS](../../DUVIDAS.md). Controles: [roteiro](ROTEIRO_TAREFA.md).
+**Plano executado e homologado localmente — autorização expressa em 23/10/2026, baseline `b2e94ce`. As decisões/aceites aprovados não foram alterados.** Aceite: [spec](spec.md). Baseline: `dccbdec` / árvore `24b3119`. Registro: [DUVIDAS](../../DUVIDAS.md). Controles: [roteiro](ROTEIRO_TAREFA.md).
 
 ## Investigação e reuso comprovado
 
@@ -56,7 +56,7 @@
 
 ## Equipe, sequência e contexto
 
-Usar [procedimento canônico](../../../DESTRAVA_MULTIAGENTE.md). Esta preparação tem Lead+QA+Revisor; nenhum implementador foi iniciado.
+Usar [procedimento canônico](../../../DESTRAVA_MULTIAGENTE.md). A preparação documental anterior teve Lead+QA+Revisor. A execução autorizada utiliza dois implementadores independentes, QA e revisão posterior, dentro do limite de quatro agentes ativos.
 
 Após autorização: **dois implementadores delimitados**, A2 e B2, com o mesmo perfil canônico, em worktrees separadas. Máximo quatro agentes ativos contando Lead:
 
@@ -66,7 +66,7 @@ Após autorização: **dois implementadores delimitados**, A2 e B2, com o mesmo 
 4. Lead recebe patches completos/manifestos, checa e integra. Banco/browser/build sequenciais no checkout cujo isolamento foi comprovado.
 5. QA testa candidato integrado e Revisor lê o mesmo candidato congelado; alteração invalida evidências afetadas. Retrabalho retorna ao dono, serializado quando necessário.
 
-Worktrees A2/B2/QA são apenas **propostas para criação futura**, não criadas aqui. O worktree documental serve ao planejamento e não recebe env/deps/copias de caches.
+Foram criadas worktrees novas `f4-c2-motor`, `f4-c2-aula`, `f4-c2-qa` e `f4-c2-integracao`, todas em `b2e94ce`. Worktrees anteriores/pilotos são preservados. Cada nova worktree instala suas dependências; nenhuma recebe env remoto, node_modules ou caches copiados.
 
 Briefing curto: baseline+trilha/tarefa+spec/plan/tasks+ownership+aceite+restrições; sem histórico completo nem contrato duplicado em prompts. Handoff em dez campos, arquivos novos/patch/hashes/comandos/exits/limites. Só Lead integra.
 
@@ -77,3 +77,5 @@ Métricas: falhas reproduzidas, achados independentes, retrabalho, sobreposiçã
 ## Riscos/controles
 
 Sessão de versão confundida com estudo: A01/A02 e leitura nova. Falha/ACK/troca: CAS, geração, identidade de retry. Final como diagnóstico: fixture e propósito distintos. Linha mista/voz errada: idioma explícito ou texto. Áudio/callback velho: proprietário, cancelamento e exclusividade. Prova B1 perdida: regressões por segmento. Schema/checkout divergente: C2-O01, labels e nenhum bootstrap alegado por inferência.
+
+Resultado: [implementação e homologação local](RELATORIO_IMPLEMENTACAO.md). A investigação de lacunas acima descreve a baseline anterior; os critérios aprovados não foram alterados.

@@ -27,6 +27,7 @@ export function evaluateAssessment(
   responses: AssessmentResponse[],
   normalization: NormalizationRules,
   context?: GradingContext,
+  options?: { allowPartialAdaptive?: boolean },
 ) {
   const definition = resolveAssessment(course.assessments, assessmentId)!;
   const activities = new Map(
@@ -85,7 +86,7 @@ export function evaluateAssessment(
   };
 
   if (definition.method === "adaptive") {
-    if (responses.length !== definition.skillPlan.length)
+    if (responses.length > definition.skillPlan.length || (!options?.allowPartialAdaptive && responses.length !== definition.skillPlan.length))
       throw new AssessmentExecutionError("Complete a sequência de questões da avaliação.");
     const answers: AdaptiveAnswer[] = [];
     for (const response of responses) {
@@ -105,7 +106,7 @@ export function evaluateAssessment(
       definition.passingPolicy,
       definition.skillWeights,
     );
-    const insufficient = report.bySkill.some(
+    const insufficient = responses.length < definition.skillPlan.length || report.bySkill.some(
       (item) => item.status === "insufficient" || item.status === "not_assessed",
     );
     return {
