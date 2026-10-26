@@ -1,5 +1,5 @@
 import "server-only";
-import type { Course } from "@/content/schema";
+import type { Activity, Course } from "@/content/schema";
 import { publicCourse } from "@/content/public";
 import { assessmentRequestSchema, type AssessmentRequest } from "@/content/assessment-results";
 import { evaluateAssessment, assessmentSummary } from "@/domain/assessments/assessment-engine";
@@ -23,18 +23,21 @@ const scope = (course: Course, userId: string) => ({
   courseId: course.id,
   contentVersion: course.contentVersion,
 });
+function participationEvidence(course: Course, userId: string, activity: Activity) {
+  return {
+    v: 1,
+    kind: "participation",
+    ...scope(course, userId),
+    activityId: activity.id,
+    definitionHash: evidenceHash(activity),
+  };
+}
 export function activityEvidence(course: Course, userId: string, activityId: string) {
   const activity = course.units
     .flatMap((u) => u.lessons.flatMap((l) => l.activities))
     .find((a) => a.id === activityId);
   if (!activity) throw new Error("Unknown learning activity");
-  return {
-    v: 1,
-    kind: "participation",
-    ...scope(course, userId),
-    activityId,
-    definitionHash: evidenceHash(activity),
-  };
+  return participationEvidence(course, userId, activity);
 }
 export function completionReceipt(course: Course, userId: string, activityId: string) {
   return signLearningEvidence(activityEvidence(course, userId, activityId), key());
@@ -136,15 +139,22 @@ export async function loadLearningAccess(
   const attempts = progress?.state?.attempts;
   if (attempts !== undefined && !Array.isArray(attempts))
     throw new Error("Unreadable learning evidence");
+  // Definitions and their hashes are request-local. User evidence is always verified.
+  const activities = new Map<string, Activity>();
+  for (const unit of course.units) for (const lesson of unit.lessons)
+    for (const activity of lesson.activities)
+      if (!activities.has(activity.id)) activities.set(activity.id, activity);
+  const definitions = new Map<string, ReturnType<typeof participationEvidence>>();
   for (const attempt of attempts ?? []) {
-    if (
-      eligible.has(attempt?.activityId) &&
-      verifyLearningEvidence(
-        attempt.serverReceipt,
-        activityEvidence(course, userId, attempt.activityId),
-        key(),
-      )
-    )
+    if (!eligible.has(attempt?.activityId)) continue;
+    let definition = definitions.get(attempt.activityId);
+    if (!definition) {
+      const activity = activities.get(attempt.activityId);
+      if (!activity) throw new Error("Unknown learning activity");
+      definition = participationEvidence(course, userId, activity);
+      definitions.set(attempt.activityId, definition);
+    }
+    if (verifyLearningEvidence(attempt.serverReceipt, definition, key()))
       completed.add(attempt.activityId);
   }
   const required = new Set(course.units.flatMap((u) => (u.access ? [u.access.assessmentId] : [])));

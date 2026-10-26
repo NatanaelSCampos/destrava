@@ -96,3 +96,16 @@ Destino local de revisão: `http://127.0.0.1:3100`. Os testes de celular usam em
 [unidade-3-desktop](screenshots/unidade-3-desktop.png) · [unidade-4-desktop](screenshots/unidade-4-desktop.png) · [unidade-5-desktop](screenshots/unidade-5-desktop.png) · [cena-celular](screenshots/cena-celular.png) · [feedback-celular](screenshots/feedback-celular.png) · [prova-celular](screenshots/prova-celular.png) · [instrucao-oral-celular](screenshots/instrucao-oral-celular.png)
 
 As respostas nas capturas pertencem a testes sintéticos. A nota mostrada é resultado desses testes, não avaliação de aprendizagem do proprietário.
+
+## Correção focal após o primeiro ensaio remoto
+
+O primeiro ensaio publicado no commit `c1bb28366536499e2a008ab3c230fca9a05183b6` (Fly release 55) terminou com timeout após 212 práticas e três resultados oficiais de U1. Quatro pedidos de correção concorrentes coincidiram com alternância de falha e sucesso do health check. Esse ensaio permanece **FAIL**; não foi convertido em homologação das novas unidades. Sem essa carga, foram observados 303 ms em `/login` e 2.588–3.381 ms no acesso protegido. São medições pontuais, sem garantia de percentis.
+
+A correção M6 mantém `publicCourse`, consultas, paginação, correção das provas, autorização, assinaturas e cortes de 80%. Um índice de atividades e os hashes das definições ficam restritos à chamada atual. Cada recibo continua sendo verificado, inclusive duplicatas; nenhum resultado de autorização é guardado entre pedidos. A proposta de retirar a projeção pública foi descartada antes de aplicação, após a comparação detectar uma diferença de recusa de configuração. A proposta conservadora foi aceita pela revisão automática.
+
+- Oito testes genéricos portáveis passaram. A comparação do autor aprovou 34 cenários e as assinaturas de 951 práticas e 11 provas permaneceram byteiguais.
+- QA independente aprovou 16 grupos: DTO inteiro, duplicatas em ambas as ordens, adulteração e mudança de proprietário/edição/definição, configurações, paginação, histórico e fronteiras exatas. Em 951 práticas + 11 provas, os acessos à coleção de unidades caíram de 977 para 27, mantendo 962 verificações HMAC.
+- Revisor deu parecer estático favorável. TypeScript, ESLint, arquitetura e build local tiveram exit 0. A resposta HTTP local de acesso é exatamente igual à anterior, com o mesmo histórico. A primeira consulta imediatamente após iniciar o processo recebeu conexão recusada; a comparação passou após confirmar prontidão HTTP 200.
+- As medianas sintéticas instrumentadas de CPU foram 113,5→100,6 ms (212+3) e 210,7→143,8 ms (951+11). A projeção pública completa continua; esses números não comprovam resolver o timeout remoto.
+
+O novo ensaio remoto usa conta sintética nova, preserva a tentativa anterior e limita a carga a dois pedidos de correção concorrentes, com prazo absoluto de rede. Seu resultado, o commit efetivamente publicado, a imagem e as capturas ficam vinculados ao recibo final em `.tmp/english-u345-20261026/`. Nenhum conteúdo, gabarito, regra de prova, catálogo ou schema precisou mudar para M6.
