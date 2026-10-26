@@ -59,39 +59,41 @@ export function publicCourse(
   environment?: CapabilityEnvironment,
   preference?: unknown,
 ): PublicCourse {
+  // Configuration and activity scope are request-local. Never cache user state or a
+  // public DTO across calls: preferences and operational conditions can change.
+  const environments = new Map<string | undefined, CapabilityEnvironment>();
+  const effectiveEnvironment = (value: unknown): CapabilityEnvironment => {
+    if (environment) return environment;
+    if (!language) return {};
+    const variant = typeof value === "string" ? value : undefined;
+    let selected = environments.get(variant);
+    if (!selected) {
+      selected = serverCapabilityEnvironment(language, variant, course);
+      environments.set(variant, selected);
+    }
+    return selected;
+  };
   const report = course.capabilityRequests
     ? (() => {
+        const activityLocations = new Map<string, Activity>();
+        course.units.forEach((unit, u) => unit.lessons.forEach((lesson, l) => {
+          const prefix = `course.units[${u}].lessons[${l}]`;
+          lesson.activities.forEach((activity, a) =>
+            activityLocations.set(`${prefix}.activities[${a}]`, activity));
+          lesson.deferredRecovery?.rules.forEach((rule, r) =>
+            activityLocations.set(`${prefix}.deferredRecovery.rules[${r}].activity`, rule.activity));
+        }));
         const reports = course.capabilityRequests!.map((request) => {
-          const scopedActivity = course.units
-            .flatMap((unit, u) =>
-              unit.lessons.flatMap((lesson, l) =>
-                [
-                  ...lesson.activities.map((activity, a) => ({
-                    activity, location: `course.units[${u}].lessons[${l}].activities[${a}]`,
-                  })),
-                  ...(lesson.deferredRecovery?.rules.map((rule, r) => ({
-                    activity: rule.activity, location: `course.units[${u}].lessons[${l}].deferredRecovery.rules[${r}].activity`,
-                  })) ?? []),
-                ],
-              ),
-            )
-            .find(
-              (item) =>
-                request.location === item.location ||
-                request.location.startsWith(`${item.location}.`),
-            );
-          const effective = scopedActivity?.activity.variant?.requiredVariant ?? preference;
-          return negotiateCapabilities(
-            [request],
-            environment ??
-              (language
-                ? serverCapabilityEnvironment(
-                    language,
-                    typeof effective === "string" ? effective : undefined,
-                    course,
-                  )
-                : {}),
-          );
+          // Walk dot-delimited ancestors, preserving the exact scope boundary.
+          // In particular, activities[1] must never match activities[10].
+          let location = request.location;
+          let scopedActivity = activityLocations.get(location);
+          while (!scopedActivity && location.includes(".")) {
+            location = location.slice(0, location.lastIndexOf("."));
+            scopedActivity = activityLocations.get(location);
+          }
+          const effective = scopedActivity?.variant?.requiredVariant ?? preference;
+          return negotiateCapabilities([request], effectiveEnvironment(effective));
         });
         return {
           compatible: reports.every((r) => r.compatible),
@@ -144,7 +146,7 @@ export function publicCourse(
     capabilityReport: report,
     availability: {
       ...projected,
-      actionStates: projectActionAvailability(environment ?? (language ? serverCapabilityEnvironment(language, typeof preference === "string" ? preference : undefined, course) : {})),
+      actionStates: projectActionAvailability(effectiveEnvironment(preference)),
       spacedRepetition: featureFlags.SPACED_REPETITION,
     },
     units: course.units
