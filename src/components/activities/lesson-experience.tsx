@@ -93,7 +93,11 @@ export function LessonExperience({ lesson, unit, index, onSelect, nextLesson, pr
   const hasMoreParts = activityIndex < stage.endIndex;
   const select = (next: number) => {
     onSelect(next);
-    window.requestAnimationFrame(() => document.getElementById("activity-" + lesson.activities[next].id)?.focus());
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById("activity-" + lesson.activities[next].id);
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ behavior: "instant", block: "nearest", inline: "nearest" });
+    });
   };
   return <div className="lesson-experience">
     <Link className="back-link" href={`/course/${course.slug}/unit/${unit.number}`}><ArrowLeft size={15} /> Voltar à unidade</Link>

@@ -1,8 +1,8 @@
 # Responsividade — celular e tablet
 
 Data: 26/10/2026. Baseline: `008d5d7982e936283772e5f746102f0e85c85a89`.
-Candidato local: **MOBILE-C7**, onze fontes fixados em `.tmp/mobile-20261026/candidate-c7.json`.
-Este documento registra a análise e as evidências declaradas por candidato; o C7 acrescenta somente os alvos de toque mencionados abaixo. A identidade e a conferência da imagem publicada são registradas separadamente nos recibos desta entrega.
+Candidato local: **MOBILE-C8**, onze fontes fixados em `.tmp/mobile-20261026/candidate-c8.json`.
+Este documento registra a análise e as evidências declaradas por candidato; o C8 acrescenta foco e reposicionamento imediatos após a medição dos alvos do C7. A identidade e a conferência da imagem publicada são registradas separadamente nos recibos desta entrega.
 
 ## O que precisava melhorar
 
@@ -16,6 +16,7 @@ A ausência de rolagem lateral da página não assegurava boa usabilidade. Em390
 - Login compacto, campos16px e formulários de MFA/onboarding incluídos. A barra inferior sai de cena enquanto um campo de texto está focado; o conteúdo mantém espaço para os controles.
 - Ajuda com altura dinâmica, corpo rolável e rodapé alcançável; áudio nativo limitado à largura disponível. Molduras aninhadas da prova foram reduzidas no celular.
 - Controles declaram `touch-action: manipulation`. O ensaio isolado reproduziu a seleção rápida consumida sem essa regra e a chegada à parte esperada com ela. Não se atribui toda a causa do gesto apenas aos snapshots.
+- Troca de parte mantém foco acessível e reposiciona o artigo sem animação. O trace C7 registrou movimento de31px do alvo entre início e fim de um toque; esse candidato conserva seu FAIL intermitente. O ajuste C8 elimina o autoscroll suave do foco sem mudar seleção/URL.
 - Carregamento do acesso aparece como conferência do percurso, evitando apresentar aprovação ainda não carregada como bloqueio já decidido.
 
 São capacidades gerais da interface. Não há tratamento por curso/atividade, mudança curricular, alteração dos contratos, banco, Auth, avaliação ou corte de80%. Nenhum serviço de IA foi habilitado.
@@ -27,9 +28,9 @@ São capacidades gerais da interface. Não há tratamento por curso/atividade, m
 | Matriz inicial | 16 rotas×6 dimensões =96 combinações; sem overflow da página ou exceções runtime. As rotas dependentes de acesso podiam ainda estar carregando; esse levantamento não certifica seu conteúdo funcional. |
 | Dimensões | 360×740,390×844,430×932,844×390,768×1024 e1024×768. Chrome com métricas de dispositivo e toque. |
 | Layout compacto medido | No C3, antes do único delta de toque do C4: primeira atividade a687px em390px, partes130px; login a325px. Medições completas em `local-c3-audit.json`; fonte e posição são computadas, não estimadas por screenshot. |
-| Interação C7 | 15/15 PASS: menu/foco/Tab/Escape/breakpoint, áudio real, alvos44px, última parte, escrita, ajuda/draft, paisagem e montagem por toque; zero exceções runtime. |
+| Interação C8 | 15/15 PASS: menu/foco/Tab/Escape/breakpoint, áudio real, alvos44px, última parte, escrita, ajuda/draft, paisagem e montagem por toque; zero exceções runtime; alvos das partes com deslocamento0px entre início/fim do toque no ensaio local C8. |
 | Alvos C7 | 7 telas×6 dimensões =42 combinações PASS: CTA, duração, filtros, ações do vocabulário, preferências e login; sem overflow. Não é alegação de que todo link inline tenha44px. |
-| Código | Build C7 exit0; TypeScript e ESLint focalizados exit0 no C3, cujos deltas posteriores foram apenas CSS de toque/layout. |
+| Código | Build C8 exit0; TypeScript e ESLint focalizados exit0 no C3, cujos deltas posteriores foram apenas CSS de toque/layout. |
 | Independência | QA conferiu pinos/recibos; Revisor aprovou fontes congeladas. Lead operou serviços e navegador. Mesma máquina/filesystem, sem alegação de sandbox técnico por papel. |
 
 A primeira falha do roteiro procurava escrita numa lição que não a contém. A segunda pressupunha rascunho vazio, embora a conta QA já tivesse texto. O C3 preserva seu FAIL por timeout na seleção rápida de partes. Os probes e o C4 verde ficam separados; nenhuma falha foi convertida em aprovação histórica.
