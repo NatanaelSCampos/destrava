@@ -21,7 +21,7 @@ primary_region = "gru"
 
   [[http_service.checks]]
     method = "GET"
-    path = "/login"
+    path = "/api/health"
     interval = "30s"
     timeout = "5s"
     grace_period = "10s"

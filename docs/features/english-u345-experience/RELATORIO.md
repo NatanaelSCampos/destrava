@@ -109,3 +109,12 @@ A correção M6 mantém `publicCourse`, consultas, paginação, correção das p
 - As medianas sintéticas instrumentadas de CPU foram 113,5→100,6 ms (212+3) e 210,7→143,8 ms (951+11). A projeção pública completa continua; esses números não comprovam resolver o timeout remoto.
 
 O novo ensaio remoto usa conta sintética nova, preserva a tentativa anterior e limita a carga a dois pedidos de correção concorrentes, com prazo absoluto de rede. Seu resultado, o commit efetivamente publicado, a imagem e as capturas ficam vinculados ao recibo final em `.tmp/english-u345-20261026/`. Nenhum conteúdo, gabarito, regra de prova, catálogo ou schema precisou mudar para M6.
+## Checagem de vida e retomada operacional
+
+O ensaio M6 sequencial também foi interrompido: as falhas do health check reapareceram, embora houvesse avanço em U2. As 212 práticas canônicas e os três resultados oficiais de U1 ficaram preservados. Isso não foi apresentado como homologação remota concluída.
+
+Foi identificado um custo independente: o health check do Fly abria `/login`, cujo layout resolve e apresenta um curso inteiro. A nova rota `/api/health` responde somente sobre a vida do processo, fora dos layouts, sem consultar autenticação, banco ou conteúdo. É dinâmica, sem cache e sem cookies; o Fly continua com GET, intervalo de 30 segundos e prazo de cinco segundos. Memória e CPU permanecem 512 MB e uma CPU compartilhada. Essa resposta não certifica jornadas de aprendizagem nem substitui testes de banco, páginas ou persistência.
+
+Propostas de reaproveitar negociações de capacidades foram avaliadas em memória e descartadas por piorarem o custo de CPU. Nenhuma foi aplicada; `publicCourse` e as validações de ambiente continuam íntegros.
+
+A rodada final usa uma conta sintética nova na edição 1.1.0 e materializa recibos intermediários, incluindo a fronteira negativa de 211 práticas em U1. Os dois ensaios anteriores e seus dados permanecem preservados. São previstas 951 correções e 11 resultados oficiais, com até quatro correções concorrentes em U1, cujo acesso não depende de prova anterior, e uma por vez nas unidades protegidas. As jornadas de navegador ficam vinculadas à nova imagem. Não há reaproveitamento de notas de piloto, outra edição ou outro proprietário, nem nova assinatura de respostas antigas.
