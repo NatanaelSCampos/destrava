@@ -3742,5 +3742,1949 @@
         }
       }
     ]
+  },
+  {
+    "id": "personal-en-u3-l01-word-1",
+    "language": "en",
+    "lemma": "get up",
+    "surface": "get up",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l01-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "levantar-se"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l01-word-2",
+    "language": "en",
+    "lemma": "have breakfast",
+    "surface": "have breakfast",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l01-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "tomar café da manhã"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l01-word-3",
+    "language": "en",
+    "lemma": "go to bed",
+    "surface": "go to bed",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l01-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "ir dormir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l02-word-1",
+    "language": "en",
+    "lemma": "start",
+    "surface": "start",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l02-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "começar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l02-word-2",
+    "language": "en",
+    "lemma": "finish",
+    "surface": "finish",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l02-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "terminar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l02-word-3",
+    "language": "en",
+    "lemma": "half past",
+    "surface": "half past",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l02-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "meia hora depois de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l03-word-1",
+    "language": "en",
+    "lemma": "Monday",
+    "surface": "Monday",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l03-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "segunda-feira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l03-word-2",
+    "language": "en",
+    "lemma": "Friday",
+    "surface": "Friday",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l03-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "sexta-feira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l03-word-3",
+    "language": "en",
+    "lemma": "Sunday",
+    "surface": "Sunday",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l03-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "domingo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l04-word-1",
+    "language": "en",
+    "lemma": "morning",
+    "surface": "morning",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l04-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "manhã"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l04-word-2",
+    "language": "en",
+    "lemma": "afternoon",
+    "surface": "afternoon",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l04-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "tarde"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l04-word-3",
+    "language": "en",
+    "lemma": "evening",
+    "surface": "evening",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l04-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "fim da tarde ou início da noite"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l05-word-1",
+    "language": "en",
+    "lemma": "works",
+    "surface": "works",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l05-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "trabalha"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l05-word-2",
+    "language": "en",
+    "lemma": "studies",
+    "surface": "studies",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l05-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "estuda"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l05-word-3",
+    "language": "en",
+    "lemma": "has lunch",
+    "surface": "has lunch",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l05-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "almoça"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l06-word-1",
+    "language": "en",
+    "lemma": "don’t",
+    "surface": "don’t",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l06-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "negação com I/you/we/they"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l06-word-2",
+    "language": "en",
+    "lemma": "doesn’t",
+    "surface": "doesn’t",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l06-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "negação com he/she/it"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l06-word-3",
+    "language": "en",
+    "lemma": "rest",
+    "surface": "rest",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l06-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "descansar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l07-word-1",
+    "language": "en",
+    "lemma": "Do you…?",
+    "surface": "Do you…?",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l07-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "Você…? em pergunta de hábito"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l07-word-2",
+    "language": "en",
+    "lemma": "Yes, I do.",
+    "surface": "Yes, I do.",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l07-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "Sim, para o próprio hábito"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l07-word-3",
+    "language": "en",
+    "lemma": "No, I don’t.",
+    "surface": "No, I don’t.",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l07-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "Não, para o próprio hábito"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l08-word-1",
+    "language": "en",
+    "lemma": "Does he…?",
+    "surface": "Does he…?",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l08-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "Ele…? em pergunta de hábito"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l08-word-2",
+    "language": "en",
+    "lemma": "Yes, he does.",
+    "surface": "Yes, he does.",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l08-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "Sim, para o hábito dele"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l08-word-3",
+    "language": "en",
+    "lemma": "No, he doesn’t.",
+    "surface": "No, he doesn’t.",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l08-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "Não, para o hábito dele"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l09-word-1",
+    "language": "en",
+    "lemma": "usually",
+    "surface": "usually",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l09-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "geralmente"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l09-word-2",
+    "language": "en",
+    "lemma": "sometimes",
+    "surface": "sometimes",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l09-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "às vezes"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l09-word-3",
+    "language": "en",
+    "lemma": "never",
+    "surface": "never",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l09-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "nunca"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l10-word-1",
+    "language": "en",
+    "lemma": "when",
+    "surface": "when",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l10-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "quando"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l10-word-2",
+    "language": "en",
+    "lemma": "what time",
+    "surface": "what time",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l10-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "a que horas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l10-word-3",
+    "language": "en",
+    "lemma": "on Wednesday",
+    "surface": "on Wednesday",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l10-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "na quarta-feira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l11-word-1",
+    "language": "en",
+    "lemma": "during the week",
+    "surface": "during the week",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l11-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "durante a semana"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l11-word-2",
+    "language": "en",
+    "lemma": "weekend",
+    "surface": "weekend",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l11-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "fim de semana"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l11-word-3",
+    "language": "en",
+    "lemma": "visit my family",
+    "surface": "visit my family",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l11-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "visitar minha família"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l12-word-1",
+    "language": "en",
+    "lemma": "finish work",
+    "surface": "finish work",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l12-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "terminar o trabalho"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l12-word-2",
+    "language": "en",
+    "lemma": "What about you?",
+    "surface": "What about you?",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l12-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "E você?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u3-l12-word-3",
+    "language": "en",
+    "lemma": "together",
+    "surface": "together",
+    "level": "A1",
+    "lessonId": "personal-en-u3-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u3-l12-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "juntos ou juntas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l01-word-1",
+    "language": "en",
+    "lemma": "rice",
+    "surface": "rice",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l01-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "arroz"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l01-word-2",
+    "language": "en",
+    "lemma": "beans",
+    "surface": "beans",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l01-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "feijão"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l01-word-3",
+    "language": "en",
+    "lemma": "fish",
+    "surface": "fish",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l01-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "peixe"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l02-word-1",
+    "language": "en",
+    "lemma": "menu",
+    "surface": "menu",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l02-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "cardápio"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l02-word-2",
+    "language": "en",
+    "lemma": "cheese",
+    "surface": "cheese",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l02-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "queijo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l02-word-3",
+    "language": "en",
+    "lemma": "tomato",
+    "surface": "tomato",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l02-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "tomate"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l03-word-1",
+    "language": "en",
+    "lemma": "I’d like",
+    "surface": "I’d like",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l03-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "eu gostaria de pedir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l03-word-2",
+    "language": "en",
+    "lemma": "please",
+    "surface": "please",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l03-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "por favor"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l03-word-3",
+    "language": "en",
+    "lemma": "Anything else?",
+    "surface": "Anything else?",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l03-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "Mais alguma coisa?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l04-word-1",
+    "language": "en",
+    "lemma": "apple",
+    "surface": "apple",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l04-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "maçã"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l04-word-2",
+    "language": "en",
+    "lemma": "sandwiches",
+    "surface": "sandwiches",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l04-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "sanduíches"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l04-word-3",
+    "language": "en",
+    "lemma": "banana",
+    "surface": "banana",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l04-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "banana"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l05-word-1",
+    "language": "en",
+    "lemma": "bottle",
+    "surface": "bottle",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l05-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "garrafa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l05-word-2",
+    "language": "en",
+    "lemma": "slice",
+    "surface": "slice",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l05-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "fatia"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l05-word-3",
+    "language": "en",
+    "lemma": "cup",
+    "surface": "cup",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l05-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "xícara"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l06-word-1",
+    "language": "en",
+    "lemma": "some",
+    "surface": "some",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l06-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "algum ou um pouco, conforme o contexto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l06-word-2",
+    "language": "en",
+    "lemma": "any",
+    "surface": "any",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l06-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "algum em verificação; nenhum em negação"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l06-word-3",
+    "language": "en",
+    "lemma": "eggs",
+    "surface": "eggs",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l06-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "ovos"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l07-word-1",
+    "language": "en",
+    "lemma": "how many",
+    "surface": "how many",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l07-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "quantos ou quantas, para itens contáveis"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l07-word-2",
+    "language": "en",
+    "lemma": "how much",
+    "surface": "how much",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l07-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "quanto ou quanta, para quantidade incontável"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l07-word-3",
+    "language": "en",
+    "lemma": "litre",
+    "surface": "litre",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l07-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "litro"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l08-word-1",
+    "language": "en",
+    "lemma": "price",
+    "surface": "price",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l08-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "preço"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l08-word-2",
+    "language": "en",
+    "lemma": "dollars",
+    "surface": "dollars",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l08-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "dólares"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l08-word-3",
+    "language": "en",
+    "lemma": "total",
+    "surface": "total",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l08-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "total da compra"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l09-word-1",
+    "language": "en",
+    "lemma": "we’d like",
+    "surface": "we’d like",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l09-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "nós gostaríamos de pedir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l09-word-2",
+    "language": "en",
+    "lemma": "for me",
+    "surface": "for me",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l09-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "para mim"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l09-word-3",
+    "language": "en",
+    "lemma": "to drink",
+    "surface": "to drink",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l09-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "para beber"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l10-word-1",
+    "language": "en",
+    "lemma": "need",
+    "surface": "need",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l10-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "precisar de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l10-word-2",
+    "language": "en",
+    "lemma": "buy",
+    "surface": "buy",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l10-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "comprar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l10-word-3",
+    "language": "en",
+    "lemma": "shopping list",
+    "surface": "shopping list",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l10-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "lista de compras"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l11-word-1",
+    "language": "en",
+    "lemma": "without",
+    "surface": "without",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l11-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "sem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l11-word-2",
+    "language": "en",
+    "lemma": "with",
+    "surface": "with",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l11-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "com"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l11-word-3",
+    "language": "en",
+    "lemma": "meat",
+    "surface": "meat",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l11-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "carne"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l12-word-1",
+    "language": "en",
+    "lemma": "bill",
+    "surface": "bill",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l12-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "conta do restaurante"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l12-word-2",
+    "language": "en",
+    "lemma": "by card",
+    "surface": "by card",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l12-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "com cartão"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u4-l12-word-3",
+    "language": "en",
+    "lemma": "in cash",
+    "surface": "in cash",
+    "level": "A1",
+    "lessonId": "personal-en-u4-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u4-l12-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "em dinheiro"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l01-word-1",
+    "language": "en",
+    "lemma": "swim",
+    "surface": "swim",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l01-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "nadar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l01-word-2",
+    "language": "en",
+    "lemma": "cook",
+    "surface": "cook",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l01-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "cozinhar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l01-word-3",
+    "language": "en",
+    "lemma": "ride a bike",
+    "surface": "ride a bike",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l01-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l01-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "andar de bicicleta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l02-word-1",
+    "language": "en",
+    "lemma": "drive",
+    "surface": "drive",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l02-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "dirigir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l02-word-2",
+    "language": "en",
+    "lemma": "cannot",
+    "surface": "cannot",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l02-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "não saber ou não poder, conforme o contexto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l02-word-3",
+    "language": "en",
+    "lemma": "but",
+    "surface": "but",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l02-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l02-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "mas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l03-word-1",
+    "language": "en",
+    "lemma": "help me",
+    "surface": "help me",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l03-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "me ajudar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l03-word-2",
+    "language": "en",
+    "lemma": "open",
+    "surface": "open",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l03-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "abrir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l03-word-3",
+    "language": "en",
+    "lemma": "right now",
+    "surface": "right now",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l03-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l03-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "agora mesmo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l04-word-1",
+    "language": "en",
+    "lemma": "Would you like to…?",
+    "surface": "Would you like to…?",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l04-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "Você gostaria de…? em convite para agir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l04-word-2",
+    "language": "en",
+    "lemma": "have coffee",
+    "surface": "have coffee",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l04-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "tomar café"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l04-word-3",
+    "language": "en",
+    "lemma": "meet",
+    "surface": "meet",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l04-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l04-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "encontrar-se"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l05-word-1",
+    "language": "en",
+    "lemma": "I’d love to",
+    "surface": "I’d love to",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l05-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "eu adoraria, para aceitar um convite"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l05-word-2",
+    "language": "en",
+    "lemma": "come",
+    "surface": "come",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l05-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "vir ou ir ao encontro"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l05-word-3",
+    "language": "en",
+    "lemma": "What about Sunday?",
+    "surface": "What about Sunday?",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l05-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l05-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "Que tal domingo?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l06-word-1",
+    "language": "en",
+    "lemma": "free",
+    "surface": "free",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l06-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "disponível"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l06-word-2",
+    "language": "en",
+    "lemma": "busy",
+    "surface": "busy",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l06-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "ocupado ou ocupada"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l06-word-3",
+    "language": "en",
+    "lemma": "after six",
+    "surface": "after six",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l06-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l06-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "depois das seis"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l07-word-1",
+    "language": "en",
+    "lemma": "May",
+    "surface": "May",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l07-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "maio"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l07-word-2",
+    "language": "en",
+    "lemma": "June",
+    "surface": "June",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l07-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "junho"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l07-word-3",
+    "language": "en",
+    "lemma": "fifth",
+    "surface": "fifth",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l07-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l07-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "quinto, usado para dia cinco"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l08-word-1",
+    "language": "en",
+    "lemma": "by bus",
+    "surface": "by bus",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l08-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "de ônibus"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l08-word-2",
+    "language": "en",
+    "lemma": "on foot",
+    "surface": "on foot",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l08-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "a pé"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l08-word-3",
+    "language": "en",
+    "lemma": "station",
+    "surface": "station",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l08-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l08-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "estação"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l09-word-1",
+    "language": "en",
+    "lemma": "going to",
+    "surface": "going to",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l09-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "construção para plano ou intenção neste contexto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l09-word-2",
+    "language": "en",
+    "lemma": "tomorrow",
+    "surface": "tomorrow",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l09-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "amanhã"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l09-word-3",
+    "language": "en",
+    "lemma": "visit the park",
+    "surface": "visit the park",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l09-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l09-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "visitar o parque"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l10-word-1",
+    "language": "en",
+    "lemma": "with us",
+    "surface": "with us",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l10-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "conosco"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l10-word-2",
+    "language": "en",
+    "lemma": "meet us",
+    "surface": "meet us",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l10-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "encontrar-se conosco"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l10-word-3",
+    "language": "en",
+    "lemma": "walk",
+    "surface": "walk",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l10-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l10-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "ir a pé ou caminhar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l11-word-1",
+    "language": "en",
+    "lemma": "instead",
+    "surface": "instead",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l11-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "em vez disso"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l11-word-2",
+    "language": "en",
+    "lemma": "See you at seven.",
+    "surface": "See you at seven.",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l11-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "Até às sete."
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l11-word-3",
+    "language": "en",
+    "lemma": "good for me",
+    "surface": "good for me",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l11-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l11-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "bom para mim, ao aceitar uma combinação"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l12-word-1",
+    "language": "en",
+    "lemma": "noon",
+    "surface": "noon",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l12-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "meio-dia"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l12-word-2",
+    "language": "en",
+    "lemma": "vegetable soup",
+    "surface": "vegetable soup",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l12-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "sopa de legumes"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u5-l12-word-3",
+    "language": "en",
+    "lemma": "after eleven",
+    "surface": "after eleven",
+    "level": "A1",
+    "lessonId": "personal-en-u5-l12-core",
+    "meanings": [
+      {
+        "id": "personal-en-u5-l12-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "depois das onze"
+          ]
+        }
+      }
+    ]
   }
 ]

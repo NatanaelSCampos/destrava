@@ -954,7 +954,7 @@ async function main() {
           await assert.rejects(() => repository.save(edited));
           assert.equal(posts.length, 0);
           assert.equal(sync.getSnapshot().dirty, true);
-          assert.equal(f.cache.read(studentA).pending?.profile.goal, edited.profile.goal);
+          assert.equal((await f.cache.read(studentA)).pending?.profile.goal, edited.profile.goal);
         },
       );
       await bridgeCheck(
@@ -978,12 +978,12 @@ async function main() {
           sync.update(edited);
           await assert.rejects(() => sync.flush(), /response lost/);
           assert.equal(sync.getSnapshot().dirty, true);
-          assert.equal(f.cache.read(studentA).pending?.profile.goal, edited.profile.goal);
+          assert.equal((await f.cache.read(studentA)).pending?.profile.goal, edited.profile.goal);
           await sync.flush();
           assert.equal(posts.length, 2);
           assert.deepEqual(posts[1], posts[0]);
           assert.equal(sync.getSnapshot().dirty, false);
-          assert.equal(f.cache.read(studentA).pending, null);
+          assert.equal((await f.cache.read(studentA)).pending, null);
         },
       );
       await bridgeCheck(
@@ -1025,7 +1025,7 @@ async function main() {
           assert.equal(posts.length, 3, "Both original receipt and latest draft must be confirmed");
           assert.equal(savedGoal, later.profile.goal);
           assert.equal(sync.getSnapshot().dirty, false);
-          assert.equal(f.cache.read(studentA).pending, null);
+          assert.equal((await f.cache.read(studentA)).pending, null);
         },
       );
       await bridgeCheck(
@@ -1052,7 +1052,7 @@ async function main() {
           await assert.rejects(() => sync.flush(), /PROGRESS_CONFLICT/);
           assert.equal(sync.getSnapshot().dirty, true);
           assert.equal(sync.getSnapshot().state.profile.goal, edited.profile.goal);
-          assert.equal(f.cache.read(studentA).pending?.profile.goal, edited.profile.goal);
+          assert.equal((await f.cache.read(studentA)).pending?.profile.goal, edited.profile.goal);
           advanced = true;
           await sync.load(sync.beginLoading(), studentA, repository);
           assert.equal(sync.getSnapshot().state.profile.goal, "Remote revision advanced");
@@ -1060,8 +1060,7 @@ async function main() {
             sync.getSnapshot().recovery.some((draft) => draft.profile.goal === edited.profile.goal),
           );
           assert(
-            f.cache
-              .read(studentA)
+            (await f.cache.read(studentA))
               .recovery.some((draft) => draft.profile.goal === edited.profile.goal),
           );
           assert.equal(
@@ -1091,14 +1090,14 @@ async function main() {
           const draft = f.fresh();
           draft.profile.goal = "A V1 namespace canary";
           f.cache.write(studentA, { state: draft, pending: draft, recovery: [draft] });
-          assert.deepEqual(cacheB.read(studentB), { state: null, pending: null, recovery: [] });
-          assert.deepEqual(cacheV2.read(studentA), { state: null, pending: null, recovery: [] });
-          assert.deepEqual(compiled.read(studentA), { state: null, pending: null, recovery: [] });
-          assert.deepEqual(f.cache.read(studentB), { state: null, pending: null, recovery: [] });
+          assert.deepEqual((await cacheB.read(studentB)), { state: null, pending: null, recovery: [] });
+          assert.deepEqual((await cacheV2.read(studentA)), { state: null, pending: null, recovery: [] });
+          assert.deepEqual((await compiled.read(studentA)), { state: null, pending: null, recovery: [] });
+          assert.deepEqual((await f.cache.read(studentB)), { state: null, pending: null, recovery: [] });
           assert.throws(() =>
             f.cache.write(studentB, { state: draft, pending: draft, recovery: [] }),
           );
-          assert.equal(f.cache.read(studentA).pending?.profile.goal, draft.profile.goal);
+          assert.equal((await f.cache.read(studentA)).pending?.profile.goal, draft.profile.goal);
         },
       );
       await bridgeCheck(
@@ -1139,7 +1138,7 @@ async function main() {
           sync.update(edited);
           await assert.rejects(() => sync.flush());
           assert.equal(sync.getSnapshot().dirty, true);
-          assert(f.cache.read(studentA).pending);
+          assert((await f.cache.read(studentA)).pending);
           await sync.flush();
           assert.deepEqual(posts[1], posts[0]);
           assert.equal(sync.getSnapshot().state.attempts[0].createdAt, originalTime);
@@ -1660,7 +1659,7 @@ async function main() {
             "Malformed HTTP200 was acknowledged as a successful save",
           );
           assert.equal(sync.getSnapshot().dirty, true);
-          assert.equal(f.cache.read(studentA).pending?.profile.goal, draft.profile.goal);
+          assert.equal((await f.cache.read(studentA)).pending?.profile.goal, draft.profile.goal);
           malformedReply = false;
           await sync.flush();
           assert.deepEqual(
@@ -1669,7 +1668,7 @@ async function main() {
             "Malformed response discarded original pending operationId",
           );
           assert.equal(sync.getSnapshot().dirty, false);
-          assert.equal(f.cache.read(studentA).pending, null);
+          assert.equal((await f.cache.read(studentA)).pending, null);
         });
     } finally {
       if (originalWindow) Object.defineProperty(globalThis, "window", originalWindow);

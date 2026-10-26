@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.11",
-  "contentVersion": "1.0.0",
+  "contentVersion": "1.1.0",
   "id": "ingles-a1-pessoal",
   "slug": "ingles-a1-pessoal",
   "isDefault": false,
@@ -18,8 +18,8 @@
     "exitLevel": "A1"
   },
   "track": "general",
-  "title": "Inglês · primeiros encontros e vida no bairro",
-  "description": "Construa apresentações e perguntas, descreva sua casa e encontre serviços no bairro. Cada assunto combina modelos com tradução, diálogo, áudio selecionado, prática, recuperação e uma aplicação livre. Duas unidades iniciais não equivalem ao A1 completo.",
+  "title": "Inglês · encontros, rotina e vida na cidade",
+  "description": "Cinco unidades para construir apresentações, descrever casa e bairro, conversar sobre rotinas, fazer pedidos e combinar encontros. Modelos traduzidos, diálogo, escuta, prática e recuperação. Este percurso delimitado não declara domínio A1 completo.",
   "learningGoals": [
     "personal-en-u1-l01-goal",
     "personal-en-u1-l02-goal",
@@ -46,7 +46,43 @@
     "personal-en-u2-l11-goal",
     "personal-en-u2-l12-goal",
     "personal-en-u2-l13-goal",
-    "personal-en-u2-l14-goal"
+    "personal-en-u2-l14-goal",
+    "personal-en-u3-l01-goal",
+    "personal-en-u3-l02-goal",
+    "personal-en-u3-l03-goal",
+    "personal-en-u3-l04-goal",
+    "personal-en-u3-l05-goal",
+    "personal-en-u3-l06-goal",
+    "personal-en-u3-l07-goal",
+    "personal-en-u3-l08-goal",
+    "personal-en-u3-l09-goal",
+    "personal-en-u3-l10-goal",
+    "personal-en-u3-l11-goal",
+    "personal-en-u3-l12-goal",
+    "personal-en-u4-l01-goal",
+    "personal-en-u4-l02-goal",
+    "personal-en-u4-l03-goal",
+    "personal-en-u4-l04-goal",
+    "personal-en-u4-l05-goal",
+    "personal-en-u4-l06-goal",
+    "personal-en-u4-l07-goal",
+    "personal-en-u4-l08-goal",
+    "personal-en-u4-l09-goal",
+    "personal-en-u4-l10-goal",
+    "personal-en-u4-l11-goal",
+    "personal-en-u4-l12-goal",
+    "personal-en-u5-l01-goal",
+    "personal-en-u5-l02-goal",
+    "personal-en-u5-l03-goal",
+    "personal-en-u5-l04-goal",
+    "personal-en-u5-l05-goal",
+    "personal-en-u5-l06-goal",
+    "personal-en-u5-l07-goal",
+    "personal-en-u5-l08-goal",
+    "personal-en-u5-l09-goal",
+    "personal-en-u5-l10-goal",
+    "personal-en-u5-l11-goal",
+    "personal-en-u5-l12-goal"
   ],
   "supportedGoals": [
     "general",
@@ -59,7 +95,7 @@
   "provenance": {
     "origin": "ai_generated",
     "generator": {
-      "name": "Language Foundry · English U1/U2 original experience"
+      "name": "Language Foundry · English original U1–U5"
     },
     "review": {
       "status": "review_pending"

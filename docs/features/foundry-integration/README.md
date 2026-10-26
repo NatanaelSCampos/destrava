@@ -127,3 +127,7 @@ A experiência 1.1.0 do início da Unidade 1 está disponível para experimento.
 ## Atualização U1/U2 — 25/10/2026
 
 A edição local1.4.0 está pronta para estudo do proprietário, com capacidades reutilizáveis CoursePackage1.8, QA e Revisor favoráveis no compilado local. Veja o [relatório atual](../f3-u12-experience/RELATORIO_EXECUCAO.md) e o [guia de teste](../f3-u12-experience/GUIA_DE_TESTE.md). Os PIDs, acessos e critérios acima pertencem às execuções históricas. Não há publicação por consequência.
+
+## Inglês — expansão U3/U4/U5, 26/10/2026
+
+A edição 1.1.0 acrescenta rotina e horários, comida e compras, encontros e planos, com 12 temas e prova final de 31 questões por unidade nova. O [relatório da edição](../english-u345-experience/RELATORIO.md) registra conteúdo, capacidades, validações, transição e situação de publicação; o [padrão de autoria](../english-u345-experience/PADRAO_AUTORIA.md) orienta os próximos pacotes. Os registros acima conservam seus resultados históricos.

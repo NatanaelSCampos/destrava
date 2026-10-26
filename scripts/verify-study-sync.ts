@@ -357,7 +357,7 @@ async function main() {
     assert.deepEqual((await repository.load(courseId, "test-language"))?.completedActivityIds, []);
   });
 
-  await check("browser cache uses account/course keys and preserves recovery copies", () => {
+  await check("browser cache uses account/course keys and preserves recovery copies", async () => {
     const values = new Map<string, string>();
     const oldWindow = globalThis.window;
     const storage = {
@@ -373,10 +373,10 @@ async function main() {
         pending: progress("pending"),
         recovery: [progress("backup")],
       });
-      assert.deepEqual(cache.read("user-a").pending?.completedActivityIds, ["pending"]);
-      assert.equal(cache.read("user-b").state, null);
+      assert.deepEqual((await cache.read("user-a")).pending?.completedActivityIds, ["pending"]);
+      assert.equal((await cache.read("user-b")).state, null);
       assert.equal(
-        browserStudySyncCache("other-course", "test-language").read("user-a").state,
+        (await browserStudySyncCache("other-course", "test-language").read("user-a")).state,
         null,
       );
       cache.write("user-a", {
@@ -384,17 +384,17 @@ async function main() {
         pending: null,
         recovery: [progress("backup")],
       });
-      assert.equal(cache.read("user-a").pending, null);
-      assert.deepEqual(cache.read("user-a").recovery[0].completedActivityIds, ["backup"]);
+      assert.equal((await cache.read("user-a")).pending, null);
+      assert.deepEqual((await cache.read("user-a")).recovery[0].completedActivityIds, ["backup"]);
       values.set(
         `frecuencias-study:v1:demo:user-b`,
         JSON.stringify({ completedActivityIds: ["old"] }),
       );
       assert.deepEqual(
-        browserStudySyncCache(LEGACY_COURSE_ID, "es").read("user-b").state?.completedActivityIds,
+        (await browserStudySyncCache(LEGACY_COURSE_ID, "es").read("user-b")).state?.completedActivityIds,
         ["old"],
       );
-      assert.equal(cache.read("user-b").state, null);
+      assert.equal((await cache.read("user-b")).state, null);
     } finally {
       globalThis.window = oldWindow;
     }

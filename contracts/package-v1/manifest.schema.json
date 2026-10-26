@@ -469,7 +469,7 @@
       "additionalProperties": false
     },
     "assets": {
-      "maxItems": 768,
+      "maxItems": 2048,
       "type": "array",
       "items": {
         "type": "object",

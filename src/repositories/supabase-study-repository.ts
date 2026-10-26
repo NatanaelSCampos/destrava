@@ -53,25 +53,14 @@ export class SupabaseStudyRepository {
       }
     }
     if (state === null) return null;
-    const speaking = await Promise.all(
-      (state.speaking ?? []).map(async (submission) => {
-        if (!submission.audioPath) return submission;
-        const { data: signed } = await this.db.storage
-          .from("speaking-audio")
-          .createSignedUrl(submission.audioPath, 60 * 60);
-        return { ...submission, audioUrl: signed?.signedUrl ?? null };
-      }),
-    );
-    return { ...state, speaking };
+    // Playback URLs expire; the sync state contains only the durable audio reference.
+    return state;
   }
 
   async save(state: StudyState, course: PublicCourse, vocabularyItems: VocabularyItem[]) {
-    const remoteState: StudyState = {
-      ...state,
-      speaking: await Promise.all(
-        state.speaking.map((submission) => this.prepareAudio(submission)),
-      ),
-    };
+    // The sync intent must be exactly the state that is persisted, including audio.
+    for (const submission of state.speaking) this.assertPreparedAudio(submission);
+    const remoteState = state;
     const { error } = await this.db
       .from("user_course_state")
       .upsert(
@@ -83,8 +72,18 @@ export class SupabaseStudyRepository {
     await this.projectNormalizedData(remoteState, course, vocabularyItems);
   }
 
-  private async prepareAudio(submission: StudyState["speaking"][number]) {
-    if (submission.audioPath) return { ...submission, audioUrl: null };
+  private assertPreparedAudio(submission: StudyState["speaking"][number]) {
+    const validPath = submission.audioPath == null || ["webm", "ogg", "m4a"]
+      .some(extension => submission.audioPath === `${this.userId}/${submission.id}.${extension}`);
+    if (submission.audioUrl != null || !validPath)
+      throw new Error("A gravação ainda não está pronta para sincronizar. Sua alteração continua preservada neste navegador.");
+  }
+
+  async prepareSpeakingSubmission(submission: StudyState["speaking"][number]) {
+    if (submission.audioPath) {
+      this.assertPreparedAudio(submission);
+      return submission;
+    }
     if (!submission.audioUrl?.startsWith("data:")) return submission;
     const blob = await fetch(submission.audioUrl).then((response) => response.blob());
     const extension = blob.type.includes("mp4")

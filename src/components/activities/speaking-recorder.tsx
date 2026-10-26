@@ -149,7 +149,7 @@ export function SpeakingRecorder({
   }, [stop, draftScope]);
 
   async function start() {
-    if (captureBlocked()) return;
+    if (captureBlocked() || assessing) return;
     const request = ++captureRequest.current;
     let media: MediaStream | null = null;
     let next: MediaRecorder | null = null;
@@ -205,7 +205,7 @@ export function SpeakingRecorder({
   }
 
   async function save() {
-    if (captureBlocked()) return;
+    if (captureBlocked() || assessing || recording) return;
     const request = captureRequest.current;
     if (onSubmitSpeaking) {
       if (!audioBlob || !transcription.trim() || assessing) return;
@@ -230,19 +230,26 @@ export function SpeakingRecorder({
       return;
     }
     if (!audioUrl || !transcription.trim()) return;
-    const submissionId = saveSpeaking(
-      activity.id,
-      transcription.trim(),
-      audioUrl,
-      ownWords ? undefined : (feedback ?? undefined),
-      practiceMode,
-    );
-    setSaved(true);
-    onSaved?.({
-      submissionId,
-      transcription: transcription.trim(),
-      feedback: ownWords ? undefined : (feedback ?? undefined),
-    });
+    setAssessing(true);
+    setError("");
+    try {
+      const submissionId = await saveSpeaking(
+        activity.id,
+        transcription.trim(),
+        audioUrl,
+        ownWords ? undefined : (feedback ?? undefined),
+        practiceMode,
+      );
+      if (captureBlocked() || request !== captureRequest.current) return;
+      setSaved(true);
+      onSaved?.({
+        submissionId,
+        transcription: transcription.trim(),
+        feedback: ownWords ? undefined : (feedback ?? undefined),
+      });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Não foi possível salvar a fala.");
+    } finally { setAssessing(false); }
   }
 
   async function assess() {
@@ -408,9 +415,9 @@ export function SpeakingRecorder({
             presentation={activity.presentation}
             id={`transcription-${activity.id}`}
             value={transcription}
-            disabled={draftLoading}
+            disabled={draftLoading || assessing}
             onChange={(event) => {
-              if (draftLoading) return;
+              if (draftLoading || assessing) return;
               updateDraft({ transcription: event.target.value });
               setSaved(false);
             }}

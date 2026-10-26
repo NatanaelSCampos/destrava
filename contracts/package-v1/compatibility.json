@@ -21,15 +21,15 @@
     ]
   },
   "limits": {
-    "files": 1024,
-    "assets": 768,
+    "files": 4096,
+    "assets": 2048,
     "totalBytes": 33554432,
     "jsonBytes": 1048576,
     "assetBytes": 16777216,
     "depth": 16,
     "jsonDepth": 64,
     "jsonNodes": 100000,
-    "activities": 2000,
+    "activities": 4096,
     "concepts": 2000,
     "lexicon": 5000
   },

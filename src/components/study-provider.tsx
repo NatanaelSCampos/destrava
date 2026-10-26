@@ -120,7 +120,7 @@ type StudyContextValue = {
     audioUrl: string | null,
     feedback?: PronunciationFeedback,
     practiceMode?: SpeakingSubmission["practiceMode"],
-  ) => string;
+  ) => Promise<string>;
   recordVocabularySearch: (id: string) => void;
   recordVocabularyAudio: (id: string) => void;
   recordNumberPractice: (
@@ -173,6 +173,33 @@ type StudyContextValue = {
 };
 
 const StudyContext = createContext<StudyContextValue | null>(null);
+
+/** Finish audio preparation before the submission enters the durable sync intent. */
+export async function prepareAndRecordSpeaking(
+  sync: StudyProgressSync,
+  submission: Omit<SpeakingSubmission, "sessionId">,
+  prepare?: (submission: SpeakingSubmission) => Promise<SpeakingSubmission>,
+): Promise<string> {
+  const owner = sync.getSnapshot();
+  if (!["loaded", "absent"].includes(owner.loadStatus))
+    throw new Error("Carregue seu progresso antes de salvar a prática oral.");
+  const original = { ...submission, sessionId: owner.state.activeSessionId };
+  const prepared = prepare ? await prepare(original) : original;
+  const current = sync.getSnapshot();
+  if (!sync.isCurrent(owner.generation) || current.userId !== owner.userId ||
+    !["loaded", "absent"].includes(current.loadStatus))
+    throw new Error("Sua conta ou contexto mudou durante o envio da gravação.");
+  sync.update((state) => {
+    const completed = markActivityComplete(state, prepared.activityId);
+    return recordEvaluatedSpeaking({
+      ...completed,
+      speaking: [prepared, ...state.speaking],
+      events: [{ id: crypto.randomUUID(), type: "speaking_submitted",
+        activityId: prepared.activityId, createdAt: new Date().toISOString() }, ...completed.events],
+    }, prepared.activityId, prepared.feedback);
+  });
+  return prepared.id;
+}
 
 export function StudyProvider({
   course,
@@ -515,42 +542,19 @@ export function StudyProvider({
       feedback?: PronunciationFeedback,
       practiceMode: SpeakingSubmission["practiceMode"] = "lesson",
     ) => {
-      const submissionId = crypto.randomUUID();
-      setState((current) => {
-        const completed = markActivityComplete(current, activityId);
-        return recordEvaluatedSpeaking(
-          {
-            ...completed,
-            speaking: [
-              {
-                id: submissionId,
-                activityId,
-                sessionId: current.activeSessionId,
-                transcription,
-                audioUrl,
-                feedback,
-                practiceMode,
-                createdAt: new Date().toISOString(),
-              },
-              ...current.speaking,
-            ],
-            events: [
-              {
-                id: crypto.randomUUID(),
-                type: "speaking_submitted",
-                activityId,
-                createdAt: new Date().toISOString(),
-              },
-              ...completed.events,
-            ],
-          },
-          activityId,
-          feedback,
-        );
-      });
-      return submissionId;
+      const owner = sync.getSnapshot();
+      return prepareAndRecordSpeaking(sync, {
+        id: crypto.randomUUID(), activityId, transcription, audioUrl, feedback,
+        practiceMode, createdAt: new Date().toISOString(),
+      }, !runtime && owner.userId ? async (submission) => {
+        if (!sync.canSaveRemote())
+          throw new Error("Confirme seu progresso antes de enviar a gravação.");
+        const client = createSupabaseBrowserClient();
+        if (!client) throw new Error("Não foi possível enviar a gravação. Tente novamente.");
+        return new SupabaseStudyRepository(client, owner.userId!).prepareSpeakingSubmission(submission);
+      } : undefined);
     },
-    [setState],
+    [runtime, sync],
   );
   const markVocabulary = useCallback(
     (id: string, status: "new" | "learning" | "known" | "difficult") =>

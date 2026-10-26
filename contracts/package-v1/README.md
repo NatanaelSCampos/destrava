@@ -63,10 +63,10 @@ São recusados symlinks, junctions, hard links, arquivos especiais e extensões 
 
 Limites atuais, também gerados em `compatibility.json`:
 
-- 1.024 entradas no diretório, 32 MiB no total, 1 MiB por JSON e 16 MiB por binário.
+- 4.096 entradas no diretório, 32 MiB no total, 1 MiB por JSON e 16 MiB por binário.
 - Profundidade de pastas 16; JSON 64 níveis e 100.000 nós por documento.
-- Até 2.000 atividades, 2.000 conceitos e 5.000 itens de léxico.
-- Até 100 unidades, 768 recursos binários e 100 documentos de aula interativa por manifesto.
+- Até 4.096 atividades, 2.000 conceitos e 5.000 itens de léxico.
+- Até 100 unidades, 2.048 recursos binários e 100 documentos de aula interativa por manifesto.
 
 Binários permitidos: PNG/JPEG, WAV/MP3 e MP4/WebM, com extensão e assinatura compatíveis. Integridade/signatura não certifica decodificação, segurança de codec, alinhamento entre áudio/transcrição ou qualidade editorial. SVG/HTML, SQL, scripts e ZIP não integram este formato inicial.
 
@@ -136,3 +136,5 @@ node scripts/produce-independent-learning-course.mjs contracts/package-v1 $indep
 ```
 
 Use outro diretório novo com `--version=2.0.0` e o mesmo `--course-id=<id>` para manter as identidades curriculares e trocar o gabarito. O verificador `runtime:verify` reproduz a distribuição isolada com permissões de filesystem e zero imports privados/rede. `runtime:verify:local` pertence ao consumidor: instala, autoriza por mecanismo restrito de teste e percorre a interface normal. Esses scripts não pertencem ao contrato público do produtor. [Matriz por caminho e evidências](../../DESTRAVA_RUNTIME_INCREMENTO_8.md).
+
+Extensão de capacidade da edição de 26/10/2026: os limites acima são genéricos e mantêm os tetos de bytes, nós, profundidade e integridade. Atividades de recuperação diferida contam no mesmo orçamento de atividades. O caminho de instalação I7 no banco ainda tem o limite histórico de 256 arquivos; validar/exportar um pacote maior não comprova instalação I7. O caminho compilado e a validação externa são distintos dessa instalação.

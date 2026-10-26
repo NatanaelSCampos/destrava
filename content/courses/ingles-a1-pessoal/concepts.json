@@ -232,5 +232,428 @@
     "description": {
       "pt-BR": "Integrar descrição, existência, localização, valores e perguntas."
     }
+  },
+  {
+    "id": "personal-en-u3-l01-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Uma manhã com começo e sequência",
+    "description": {
+      "pt-BR": "Descreva uma manhã com quatro frases: levantar, café, ação seguinte e um horário."
+    }
+  },
+  {
+    "id": "personal-en-u3-l02-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Ler e dizer horários sem adivinhar",
+    "description": {
+      "pt-BR": "Crie dois horários e informe início e término por extenso. Diga se são da manhã ou da tarde."
+    },
+    "prerequisites": [
+      "personal-en-u3-l01-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l03-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Dias de trabalho e estudo",
+    "description": {
+      "pt-BR": "Monte uma semana com pelo menos três dias e duas atividades. Escreva os dias por extenso."
+    },
+    "prerequisites": [
+      "personal-en-u3-l02-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l04-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Manhã, tarde e noite",
+    "description": {
+      "pt-BR": "Descreva três partes de um dia com uma atividade em cada período."
+    },
+    "prerequisites": [
+      "personal-en-u3-l03-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l05-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "A rotina de outra pessoa",
+    "description": {
+      "pt-BR": "Crie uma rotina de quatro hábitos para outra pessoa. Informe seus pronomes e use he ou she."
+    },
+    "prerequisites": [
+      "personal-en-u3-l04-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l06-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "O que não faz parte da rotina",
+    "description": {
+      "pt-BR": "Escreva dois hábitos e duas negações. Use uma negação com I e outra com he ou she."
+    },
+    "prerequisites": [
+      "personal-en-u3-l05-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l07-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Perguntar sobre os hábitos de você",
+    "description": {
+      "pt-BR": "Escreva quatro falas com duas perguntas Do you e respostas coerentes, uma positiva e uma negativa."
+    },
+    "prerequisites": [
+      "personal-en-u3-l06-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l08-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Perguntar sobre outra pessoa",
+    "description": {
+      "pt-BR": "Crie quatro falas para conferir dois hábitos de outra pessoa, com Does e respostas curtas coerentes."
+    },
+    "prerequisites": [
+      "personal-en-u3-l07-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l09-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Com que frequência isso acontece?",
+    "description": {
+      "pt-BR": "Escreva quatro hábitos usando always, usually, sometimes e never, um em cada frase."
+    },
+    "prerequisites": [
+      "personal-en-u3-l08-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l10-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Quando e a que horas?",
+    "description": {
+      "pt-BR": "Crie uma agenda e uma conversa que pergunte primeiro o dia e depois a hora da mesma atividade."
+    },
+    "prerequisites": [
+      "personal-en-u3-l09-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l11-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Durante a semana e no fim de semana",
+    "description": {
+      "pt-BR": "Compare dois dias de duas pessoas. Inclua uma pergunta e uma negação para evitar supor rotinas iguais."
+    },
+    "prerequisites": [
+      "personal-en-u3-l10-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u3-l12-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Encontrar um horário habitual em comum",
+    "description": {
+      "pt-BR": "Escreva seis falas para comparar rotinas e achar um horário habitual comum. Termine pedindo confirmação para a próxima terça."
+    },
+    "prerequisites": [
+      "personal-en-u3-l11-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l01-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "O que você gosta de comer?",
+    "description": {
+      "pt-BR": "Escreva três preferências e uma pergunta sobre comida. Diferencie gosto de restrição alimentar."
+    }
+  },
+  {
+    "id": "personal-en-u4-l02-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Entender um cardápio de café",
+    "description": {
+      "pt-BR": "Monte um cardápio com duas bebidas e dois lanches. Escreva duas perguntas sobre ingredientes ou temperatura."
+    },
+    "prerequisites": [
+      "personal-en-u4-l01-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l03-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Fazer um pedido com cortesia",
+    "description": {
+      "pt-BR": "Escreva quatro falas para pedir bebida e lanche. Use cortesia e responda se deseja mais alguma coisa."
+    },
+    "prerequisites": [
+      "personal-en-u4-l02-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l04-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Um item ou vários?",
+    "description": {
+      "pt-BR": "Faça uma lista de cinco itens contáveis com números. Use pelo menos dois singulares e dois plurais."
+    },
+    "prerequisites": [
+      "personal-en-u4-l03-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l05-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Porções para o que não contamos sozinho",
+    "description": {
+      "pt-BR": "Escreva um pedido com três alimentos ou bebidas e suas porções. Evite contar pão, arroz e água sem contexto de porção."
+    },
+    "prerequisites": [
+      "personal-en-u4-l04-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l06-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Temos um pouco? Falta alguma coisa?",
+    "description": {
+      "pt-BR": "Escreva um inventário com duas coisas disponíveis e duas ausentes. Acrescente uma oferta com some."
+    },
+    "prerequisites": [
+      "personal-en-u4-l05-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l07-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Quanto ou quantos?",
+    "description": {
+      "pt-BR": "Escreva duas perguntas com how many e duas com how much. Responda usando números e unidades coerentes."
+    },
+    "prerequisites": [
+      "personal-en-u4-l06-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l08-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Entender preços e confirmar moeda",
+    "description": {
+      "pt-BR": "Crie três preços em USD e uma conversa para confirmar preço unitário e total de uma compra simples."
+    },
+    "prerequisites": [
+      "personal-en-u4-l07-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l09-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Pedir para duas pessoas",
+    "description": {
+      "pt-BR": "Crie um pedido para duas pessoas com comida, bebida e destinatário claro. Acrescente uma conferência do pedido."
+    },
+    "prerequisites": [
+      "personal-en-u4-l08-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l10-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Preparar uma lista e comprar o que falta",
+    "description": {
+      "pt-BR": "Escreva um inventário e uma lista de compras diferentes. Explique duas necessidades e uma coisa que não precisa comprar."
+    },
+    "prerequisites": [
+      "personal-en-u4-l09-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l11-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Confirmar ingredientes e corrigir o pedido",
+    "description": {
+      "pt-BR": "Escreva quatro falas para perguntar um ingrediente, pedir uma alteração e confirmar o pedido final."
+    },
+    "prerequisites": [
+      "personal-en-u4-l10-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u4-l12-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Conferir e fechar a conta",
+    "description": {
+      "pt-BR": "Crie uma conta curta em USD e seis falas para conferir itens, pedir a conta e perguntar o meio de pagamento."
+    },
+    "prerequisites": [
+      "personal-en-u4-l11-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l01-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Dizer o que você sabe fazer",
+    "description": {
+      "pt-BR": "Escreva três habilidades e duas perguntas sobre habilidades. Use can sem mudar o verbo seguinte."
+    }
+  },
+  {
+    "id": "personal-en-u5-l02-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Quando ainda não sabe fazer",
+    "description": {
+      "pt-BR": "Compare duas habilidades suas ou de uma pessoa de exemplo. Inclua can, cannot e uma frase com but."
+    },
+    "prerequisites": [
+      "personal-en-u5-l01-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l03-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Pedir ajuda para uma ação",
+    "description": {
+      "pt-BR": "Escreva duas conversas de pedido de ajuda: uma com aceitação e outra com recusa para o momento."
+    },
+    "prerequisites": [
+      "personal-en-u5-l02-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l04-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Convidar para fazer algo",
+    "description": {
+      "pt-BR": "Crie dois convites para atividades diferentes. Inclua uma proposta de dia ou lugar em cada convite."
+    },
+    "prerequisites": [
+      "personal-en-u5-l03-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l05-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Aceitar ou recusar um convite",
+    "description": {
+      "pt-BR": "Escreva duas respostas a convites: uma aceitação e uma recusa com razão simples e coerente."
+    },
+    "prerequisites": [
+      "personal-en-u5-l04-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l06-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Confirmar se pode naquele dia",
+    "description": {
+      "pt-BR": "Escreva quatro falas para confirmar dia, janela de disponibilidade e hora exata de um encontro."
+    },
+    "prerequisites": [
+      "personal-en-u5-l05-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l07-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Datas com mês por extenso",
+    "description": {
+      "pt-BR": "Crie três eventos com dia e mês por extenso. Escreva uma pergunta para confirmar uma das datas."
+    },
+    "prerequisites": [
+      "personal-en-u5-l06-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l08-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Combinar local e transporte",
+    "description": {
+      "pt-BR": "Escreva um convite com local específico, referência no bairro e transporte de cada uma de duas pessoas."
+    },
+    "prerequisites": [
+      "personal-en-u5-l07-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l09-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Contar um plano com going to",
+    "description": {
+      "pt-BR": "Escreva três planos para amanhã ou para um dia nomeado. Use be going to e mantenha o sujeito claro."
+    },
+    "prerequisites": [
+      "personal-en-u5-l08-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l10-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Perguntar e contar planos de outras pessoas",
+    "description": {
+      "pt-BR": "Crie dois planos de outras pessoas, uma negação e duas perguntas de confirmação usando be going to."
+    },
+    "prerequisites": [
+      "personal-en-u5-l09-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l11-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Reagendar por mensagem",
+    "description": {
+      "pt-BR": "Escreva seis mensagens curtas: plano inicial, impedimento, nova proposta, aceite e confirmação final coerente."
+    },
+    "prerequisites": [
+      "personal-en-u5-l10-concept"
+    ]
+  },
+  {
+    "id": "personal-en-u5-l12-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Um encontro com tudo combinado",
+    "description": {
+      "pt-BR": "Escreva oito falas para combinar um encontro: convite, disponibilidade, dia, hora, local, transporte, pedido de comida e confirmação."
+    },
+    "prerequisites": [
+      "personal-en-u5-l11-concept"
+    ]
   }
 ]

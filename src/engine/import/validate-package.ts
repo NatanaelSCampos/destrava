@@ -337,7 +337,12 @@ export function validateExternalPackageFiles(
     ),
   };
   const count = pieces.units.reduce(
-    (sum, unit) => sum + (unit?.lessons.reduce((n, l) => n + l.activities.length, 0) ?? 0),
+    (sum, unit) =>
+      sum +
+      (unit?.lessons.reduce(
+        (n, lesson) => n + lesson.activities.length + (lesson.deferredRecovery?.rules.length ?? 0),
+        0,
+      ) ?? 0),
     0,
   );
   if (

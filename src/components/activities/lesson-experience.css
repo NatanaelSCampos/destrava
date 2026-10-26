@@ -288,8 +288,8 @@
 .lesson-help-body > section > h3 { margin:0 0 17px; font-size:21px; }
 .lesson-help-surface > footer { padding:15px 22px; border-top:1px solid #e5ebe7; background:white; display:flex; justify-content:flex-end; }
 .conversation-voice-steps ul { margin:0 0 18px; padding:0; list-style:none; display:grid; gap:8px; counter-reset:voice-step; }
-.conversation-voice-steps li { display:flex; align-items:center; gap:9px; font-size:14px; line-height:1.5; color:#365347; }
-.conversation-voice-steps li::before { counter-increment:voice-step; content:counter(voice-step); width:25px; height:25px; flex:0 0 25px; display:grid; place-items:center; background:#d9eade; border-radius:8px; font-size:11px; font-weight:700; }
+.conversation-voice-steps li { display:block; position:relative; padding-inline-start:34px; font-size:14px; line-height:1.5; color:#365347; }
+.conversation-voice-steps li::before { position:absolute; inset-inline-start:0; top:0; counter-increment:voice-step; content:counter(voice-step); width:25px; height:25px; flex:0 0 25px; display:grid; place-items:center; background:#d9eade; border-radius:8px; font-size:11px; font-weight:700; }
 .practice-bubble .recording-panel { border:1px solid #d6e4da; background:white; border-radius:14px; padding:18px; }
 .practice-bubble .mic-orb { width:48px; height:48px; }
 .practice-bubble .speaking-recorder > .helper-note { font-size:12px; line-height:1.5; }
@@ -502,3 +502,9 @@
   .lesson-help-surface > footer { padding-bottom:max(15px,env(safe-area-inset-bottom)); }
 }
 @media(max-width:390px) { .le-controls > .primary-button { flex:1; justify-content:center; } }
+
+/* Keep recorded controls inside conversation bubbles at narrow widths. */
+.lesson-experience .teaching-dialogue .teaching-turn { min-width:0; }
+.lesson-experience .teaching-dialogue .teaching-bubble-head > .recorded-phrase {
+  flex:1 1 100%; min-width:0; max-width:100%;
+}

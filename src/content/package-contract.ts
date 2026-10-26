@@ -12,15 +12,15 @@ export const supportedPackageVersions = {
   course: supportedCourseSchemaVersions,
 } as const;
 export const packageLimits = {
-  files: 1024,
-  assets: 768,
+  files: 4096,
+  assets: 2048,
   totalBytes: 32 * 1024 * 1024,
   jsonBytes: 1024 * 1024,
   assetBytes: 16 * 1024 * 1024,
   depth: 16,
   jsonDepth: 64,
   jsonNodes: 100_000,
-  activities: 2000,
+  activities: 4096,
   concepts: 2000,
   lexicon: 5000,
 } as const;
