@@ -4,7 +4,7 @@ import { useTextPresentation } from "@/components/learning/text-presentation";
 import { presentationLanguage } from "@/engine/presentation/language";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import {
   ArrowLeft,
   ArrowRight,

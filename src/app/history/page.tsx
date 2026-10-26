@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, CalendarDays, Check, Clock3, History, RotateCcw, X } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { formatDate, formatMinutes } from "@/lib/utils";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { Sparkles, X } from "lucide-react";
 import { featureAnnouncements } from "@/content/feature-announcements";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";

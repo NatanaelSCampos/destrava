@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, BookOpen, Check, KeyRound, LockKeyhole } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";

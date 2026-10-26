@@ -2,7 +2,7 @@
 import { LearningText } from "@/components/learning/text-presentation";
 
 import { useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, Lightbulb, RotateCcw } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ExerciseCard } from "@/components/activities/exercise-card";

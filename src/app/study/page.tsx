@@ -2,7 +2,7 @@
 import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,

@@ -3,7 +3,7 @@
 import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { SpeakButton } from "@/components/audio/speak-button";

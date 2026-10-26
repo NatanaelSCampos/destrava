@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { useParams } from "next/navigation";
 import { ArrowRight, BookOpen, CheckCircle2, Clock3, LockKeyhole, Play } from "lucide-react";
 import { useStudy } from "@/components/study-provider";

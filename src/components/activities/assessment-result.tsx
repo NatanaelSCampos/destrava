@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, CheckCircle2, Lightbulb } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { currentAssessmentResult } from "@/domain/study/learning-policy-engine";

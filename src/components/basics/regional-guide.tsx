@@ -3,7 +3,7 @@
 import { useTextPresentation } from "@/components/learning/text-presentation";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { CheckCircle2, Globe2 } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { useStudy } from "@/components/study-provider";

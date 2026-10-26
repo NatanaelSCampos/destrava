@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { cookies } from "next/headers";
 import { resolveApplicationRuntime } from "@/lib/application-course-runtime";
 import { getAuthenticatedUser } from "@/lib/supabase/server";

@@ -2,7 +2,7 @@
 
 import { assessmentsForLesson } from "@/lib/assessment-lesson";
 import { courseLessonPath } from "@/lib/course-lesson-navigation";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, Play, Target } from "lucide-react";
 import { useStudy } from "@/components/study-provider";

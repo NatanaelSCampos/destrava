@@ -4,7 +4,7 @@ import { learningActionAvailability } from "@/domain/study/learning-action-avail
 import { LearningText, useTextPresentation } from "@/components/learning/text-presentation";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, Hash, Search } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { numberPracticeLink } from "@/domain/numbers/number-practice";

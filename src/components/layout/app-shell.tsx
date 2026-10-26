@@ -7,7 +7,7 @@ import {
 import { Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { LearningAccessGate } from "./learning-access-gate";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   BookOpen,

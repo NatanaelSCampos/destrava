@@ -4,7 +4,7 @@ import { learningActionAvailability } from "@/domain/study/learning-action-avail
 import { useTextPresentation } from "@/components/learning/text-presentation";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, BookOpen, Check, Search, Star } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { formatDate } from "@/lib/utils";

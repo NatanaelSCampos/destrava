@@ -3,7 +3,7 @@ import { learningActionAvailability, unavailableLearningRequirements } from "@/d
 
 import { LearningText } from "@/components/learning/text-presentation";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, ChartNoAxesCombined, Target } from "lucide-react";
 import { PolicyChecklist, policyStatusLabels } from "@/components/activities/policy-checklist";
 import { useStudy } from "@/components/study-provider";

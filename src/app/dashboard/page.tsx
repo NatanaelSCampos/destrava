@@ -2,7 +2,7 @@
 import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
 
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import {
   ArrowRight,
   BookOpen,

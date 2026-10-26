@@ -2,7 +2,7 @@
 import { learningActionAvailability } from "@/domain/study/learning-action-availability";
 import { LearningText } from "@/components/learning/text-presentation";
 
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, Check, NotebookPen, RotateCcw } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewScheduler } from "@/domain/review/review-scheduler";

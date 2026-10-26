@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { Check, Circle } from "lucide-react";
 import type { PolicyResult, PolicyStatus } from "@/domain/study/learning-policy-engine";
 import { assessmentLink } from "@/content/assessment-references";

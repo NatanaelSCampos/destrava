@@ -1,6 +1,6 @@
 "use client";
 import { LockKeyhole, ArrowRight, RefreshCw, Clock3 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { useStudy } from "@/components/study-provider";
 import type { AccessDecision } from "@/domain/study/learning-access";
 export function LearningAccessCard({

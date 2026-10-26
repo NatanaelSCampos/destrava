@@ -3,7 +3,7 @@
 import { useTextPresentation } from "@/components/learning/text-presentation";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, Hash, Headphones, Mic2 } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";

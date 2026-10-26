@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { ArrowRight, BookOpen, RotateCcw, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ReviewQueue } from "@/components/review/review-queue";

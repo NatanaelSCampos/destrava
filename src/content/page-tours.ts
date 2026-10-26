@@ -71,7 +71,7 @@ const tours: Record<string, PageTour> = {
     name: "Meu curso",
     steps: [
       {
-        title: "Sua trilha de espanhol",
+        title: "Sua trilha de estudo",
         description:
           "O curso organiza o conteúdo em unidades. Você pode abrir qualquer etapa disponível.",
         target: ".course-page .page-heading",
@@ -167,7 +167,7 @@ const tours: Record<string, PageTour> = {
     steps: [
       {
         title: "Conheça as letras",
-        description: "Veja o nome de cada letra em espanhol e compare com uma palavra de exemplo.",
+        description: "Ouça o nome de cada letra e compare com uma palavra de exemplo.",
         target: ".alphabet-page .page-heading",
       },
       {
@@ -349,7 +349,7 @@ const tours: Record<string, PageTour> = {
     name: "Conversar",
     steps: [
       {
-        title: "Converse em espanhol",
+        title: "Converse no idioma do curso",
         description:
           "Use uma situação guiada ou uma conversa livre para praticar respostas naturais.",
         target: ".conversation-page .page-heading",
@@ -377,7 +377,7 @@ const tours: Record<string, PageTour> = {
       },
       {
         title: "Sua vez de responder",
-        description: "Escreva ou grave sua resposta em espanhol para continuar o diálogo.",
+        description: "Escreva ou grave sua resposta para continuar o diálogo.",
         target: ".conversation-compose",
       },
     ],
@@ -388,7 +388,7 @@ const tours: Record<string, PageTour> = {
     steps: [
       {
         title: "Descreva uma cena",
-        description: "Observe a imagem e explique em espanhol o que está vendo.",
+        description: "Observe a imagem e descreva o que está vendo no idioma que você está aprendendo.",
         target: ".describe-page .page-heading",
       },
       {
@@ -554,7 +554,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Áudio de estudo",
         description:
-          "Escolha uma voz espanhola deste dispositivo e ouça o exemplo. A lista pode ser diferente no celular e no computador.",
+          "Escolha uma voz no idioma do curso e ouça o exemplo. As vozes disponíveis dependem do dispositivo.",
         target: ".audio-settings-panel",
       },
       {

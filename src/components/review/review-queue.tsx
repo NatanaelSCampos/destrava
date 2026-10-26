@@ -4,7 +4,7 @@ import { useTextPresentation } from "@/components/learning/text-presentation";
 import { LearningText } from "@/components/learning/text-presentation";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import {
   ArrowRight,
   BriefcaseBusiness,

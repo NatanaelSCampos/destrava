@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import Link from "@/components/navigation-link";
 import { resolveLessonStages, lessonStagePosition, lessonStageComplete } from "@/engine/presentation/lesson-stages";
 import { useLayoutEffect, useRef } from "react";
 import "./lesson-experience.css";
