@@ -3841,3 +3841,15 @@
   .login-card form { margin-top:22px; }
   .login-switch { min-height:44px; text-align:left; }
 }
+
+/* Standalone actions and filters keep a comfortable touch target. */
+@media(max-width:1024px) {
+  .hero-button,.quick-session-time,.quick-session-focus,
+  .study-option-list a,.review-tabs button,.vocab-filters button,
+  .settings-preference-choices button,.live-board-top button,
+  .vocab-card-footer button,.login-switch,
+  .text-link,.live-back,.lesson-neighbors a,.le-neighbors a {
+    min-height:44px; min-width:44px; display:inline-flex; align-items:center;
+  }
+  .vocab-context > summary { min-height:44px; min-width:44px; padding-block:12px; }
+}
