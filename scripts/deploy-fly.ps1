@@ -45,17 +45,12 @@ if ($ValidateOnly) {
   return
 }
 
-$flyArgs = @('deploy', $workspace, '--config', (Join-Path $workspace 'fly.toml'),
-  '--dockerfile', (Join-Path $workspace 'Dockerfile'), '--remote-only', '--ha=false', '--app', $plan.app)
-foreach ($property in $plan.buildArgs.PSObject.Properties) {
-  $flyArgs += @('--build-arg', ($property.Name + '=' + $property.Value))
-}
-
 # Preserve IPv4 transport and fix both the caller directory and build context.
 Push-Location -LiteralPath $workspace
 try {
   # External tools may include sensitive context in either stream. Do not echo them.
-  $null = & (Join-Path $PSScriptRoot 'fly-ipv4.ps1') @flyArgs 2>&1
+  $runner = Join-Path $PSScriptRoot 'release-guards/run-deployment.mjs'
+  & $node $runner $ReleaseProfile $workspace $ExpectedApp $ExpectedSupabaseProject $ExpectedOrigin $ExpectedSha
   if ($LASTEXITCODE -ne 0) { throw 'Fly build/deploy failed.' }
   Write-Output 'Fly command completed for the validated release identity.'
 } catch {

@@ -238,6 +238,7 @@ $ErrorActionPreference = 'Stop'
 if (-not $env:RELEASE_QA_CALL_LOG) { throw 'QA stub requires an isolated log.' }
 $entry = @{ arguments = $Forwarded; simulated = $true } | ConvertTo-Json -Compress
 Add-Content -LiteralPath $env:RELEASE_QA_CALL_LOG -Value $entry
+if ($env:RELEASE_QA_STUB_WARN -eq '1') { [Console]::Error.WriteLine('Synthetic native warning; successful exit') }
 if ($env:RELEASE_QA_STUB_FAIL -eq '1') { Write-Output 'sb_secret_DO_NOT_DISCLOSE_QA_837426'; exit 19 }
 exit 0
 `;
@@ -250,6 +251,7 @@ function gitFixture() {
   mkdirSync(join(retained,"empty-hooks"));
   copyFileSync(join(candidateRoot,"scripts/deploy-fly.ps1"),join(root,"scripts/deploy-fly.ps1"));
   copyFileSync(deployPath, join(root,"scripts/release-guards/deployment-plan.mjs"));
+  copyFileSync(join(candidateRoot,"scripts/release-guards/run-deployment.mjs"),join(root,"scripts/release-guards/run-deployment.mjs"));
   if (existsSync(join(candidateRoot,"scripts/release-guards/strict-json.mjs"))) copyFileSync(join(candidateRoot,"scripts/release-guards/strict-json.mjs"),join(root,"scripts/release-guards/strict-json.mjs"));
   writeFileSync(join(root,"scripts/fly-ipv4.ps1"), flyStub);
   const { profile } = productionFixture(); profile.workspace = root;
@@ -257,7 +259,7 @@ function gitFixture() {
   writeFileSync(join(root,"package-lock.json"),'{}\n');
   writeFileSync(join(root,"fly.toml"),`app = "${profile.app}"\n[env]\nNODE_ENV = "production"\nAPP_ORIGIN = "${profile.origin}"\n`);
   writeFileSync(join(root,"supabase/migrations/20261023000000_synthetic_qa.sql"),"-- Synthetic fixture; never executed.\n");
-  writeFileSync(join(root,".gitignore"),".env*\n");
+  writeFileSync(join(root,".gitignore"),".env*\n.tmp/\n");
   const git = (...args) => execFileSync("git",["-c","core.autocrlf=false","-c",`core.hooksPath=${join(retained,"empty-hooks")}`,"-c","commit.gpgsign=false","-c","user.name=Destrava QA Synthetic","-c","user.email=qa-fixture@example.invalid","-C",root,...args],{ encoding:"utf8",windowsHide:true,env:safeEnvironment(),stdio:["ignore","pipe","pipe"] }).trim();
   git("init","-q"); git("add","--all"); git("commit","-qm","Synthetic QA fixture only");
   profile.commit = git("rev-parse","HEAD");
@@ -390,4 +392,10 @@ test("local CLI rejects duplicate conflicting project keys before external opera
   const values = `{"DESTRAVA_LOCAL_PROJECT":"espanhol-plataform",${JSON.stringify(profile.values).slice(1)}`;
   writeFileSync(fixture.profilePath,`{"workspace":${JSON.stringify(profile.workspace)},"values":${values}}`);
   const result = runLocalCli(fixture,localCliArgs(fixture)); assert.notEqual(result.status,0);
+});
+
+test("PowerShell native stderr warning keeps successful deployment exit", () => {
+  const fixture=gitFixture(); const result=dispatchFixture(fixture,{env:{RELEASE_QA_STUB_WARN:"1"}});
+  assert.equal(result.status,0,result.output); assert.equal(result.calls.length,1);
+  assert(!result.output.includes("Synthetic native warning"));
 });
