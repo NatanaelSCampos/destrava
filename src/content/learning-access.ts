@@ -68,7 +68,7 @@ export function learningAccessIssues(course: AccessCourse): string[] {
     ),
   );
   const hasAccess = course.units.some((u) => u.access) || course.assessments.some((a) => a.exam);
-  if (hasAccess && course.schemaVersion !== "1.10")
+  if (hasAccess && !["1.10", "1.11"].includes(course.schemaVersion))
     errors.push("Learning access and exams require CoursePackage 1.10.");
   for (const unit of course.units) {
     if (unit.access) {

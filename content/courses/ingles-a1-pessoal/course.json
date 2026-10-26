@@ -1,6 +1,6 @@
 {
-  "schemaVersion": "1.5",
-  "contentVersion": "0.1.0",
+  "schemaVersion": "1.11",
+  "contentVersion": "1.0.0",
   "id": "ingles-a1-pessoal",
   "slug": "ingles-a1-pessoal",
   "isDefault": false,
@@ -18,11 +18,35 @@
     "exitLevel": "A1"
   },
   "track": "general",
-  "title": "Inglês A1 · estudo pessoal",
-  "description": "Piloto experimental original com duas unidades independentes. Explicações em português e prática em inglês. Escutas indisponíveis; reforços e voz opcionais. Não canônico do Language Foundry.",
+  "title": "Inglês · primeiros encontros e vida no bairro",
+  "description": "Construa apresentações e perguntas, descreva sua casa e encontre serviços no bairro. Cada assunto combina modelos com tradução, diálogo, áudio selecionado, prática, recuperação e uma aplicação livre. Duas unidades iniciais não equivalem ao A1 completo.",
   "learningGoals": [
-    "personal-en-u1-goal",
-    "personal-en-u2-goal"
+    "personal-en-u1-l01-goal",
+    "personal-en-u1-l02-goal",
+    "personal-en-u1-l03-goal",
+    "personal-en-u1-l04-goal",
+    "personal-en-u1-l05-goal",
+    "personal-en-u1-l06-goal",
+    "personal-en-u1-l07-goal",
+    "personal-en-u1-l08-goal",
+    "personal-en-u1-l09-goal",
+    "personal-en-u1-l10-goal",
+    "personal-en-u1-l11-goal",
+    "personal-en-u1-l12-goal",
+    "personal-en-u2-l01-goal",
+    "personal-en-u2-l02-goal",
+    "personal-en-u2-l03-goal",
+    "personal-en-u2-l04-goal",
+    "personal-en-u2-l05-goal",
+    "personal-en-u2-l06-goal",
+    "personal-en-u2-l07-goal",
+    "personal-en-u2-l08-goal",
+    "personal-en-u2-l09-goal",
+    "personal-en-u2-l10-goal",
+    "personal-en-u2-l11-goal",
+    "personal-en-u2-l12-goal",
+    "personal-en-u2-l13-goal",
+    "personal-en-u2-l14-goal"
   ],
   "supportedGoals": [
     "general",
@@ -31,17 +55,12 @@
     "travel",
     "conversation"
   ],
-  "assessmentRefs": {
-    "diagnostic": "personal-en-u1-assess-diagnostic"
-  },
+  "assessmentRefs": {},
   "provenance": {
-    "origin": "adapted",
-    "sources": [
-      {
-        "type": "original_experimental_editorial",
-        "reference": "Pacote editorial English A1 U1/U2 V1; adaptação experimental sem aprovação canônica."
-      }
-    ],
+    "origin": "ai_generated",
+    "generator": {
+      "name": "Language Foundry · English U1/U2 original experience"
+    },
     "review": {
       "status": "review_pending"
     }

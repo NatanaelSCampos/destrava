@@ -63,10 +63,10 @@ São recusados symlinks, junctions, hard links, arquivos especiais e extensões 
 
 Limites atuais, também gerados em `compatibility.json`:
 
-- 256 entradas no diretório, 32 MiB no total, 1 MiB por JSON e 16 MiB por binário.
+- 1.024 entradas no diretório, 32 MiB no total, 1 MiB por JSON e 16 MiB por binário.
 - Profundidade de pastas 16; JSON 64 níveis e 100.000 nós por documento.
 - Até 2.000 atividades, 2.000 conceitos e 5.000 itens de léxico.
-- Até 100 unidades, 100 recursos binários e 100 documentos de aula interativa por manifesto.
+- Até 100 unidades, 768 recursos binários e 100 documentos de aula interativa por manifesto.
 
 Binários permitidos: PNG/JPEG, WAV/MP3 e MP4/WebM, com extensão e assinatura compatíveis. Integridade/signatura não certifica decodificação, segurança de codec, alinhamento entre áudio/transcrição ou qualidade editorial. SVG/HTML, SQL, scripts e ZIP não integram este formato inicial.
 

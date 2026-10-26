@@ -35,7 +35,7 @@ export const supportedCourseSchemaVersions = [
   "1.7",
   "1.8",
   "1.9",
-  "1.10",
+  "1.10", "1.11",
 ] as const;
 
 export const languageVariantSchema = z.object({
@@ -527,7 +527,7 @@ export const coursePackageSchema = z
         "Declarative learning policies require CoursePackage schemaVersion 1.3",
       );
     if (
-      !["1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion) &&
+      !["1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion) &&
       (course.acceptedVariants ||
         course.units.some((unit) =>
           unit.lessons.some((lesson) =>
@@ -561,7 +561,7 @@ export const coursePackageSchema = z
       );
     if (
       hasTextMetadata &&
-      !["1.5", "1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion)
+      !["1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion)
     )
       issue(
         ["schemaVersion"],

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { teachingLineSchema } from "./teaching-line";
 
-export const sceneIllustrationSchema = z.enum(["message", "meeting", "clock", "cafe", "menu", "takeaway"]);
+export const sceneIllustrationSchema = z.enum(["message", "meeting", "clock", "cafe", "menu", "takeaway", "home", "interior", "neighborhood", "profile"]);
 export const sceneClockSchema = z.object({
   hour: z.number().int().min(1).max(12), minute: z.number().int().min(0).max(59),
 }).strict();
@@ -10,7 +10,7 @@ export const sceneItemSchema = z.object({
   translation: z.string().trim().min(1).max(120).optional(),
   detail: z.string().trim().min(1).max(180).optional(),
   value: z.string().trim().min(1).max(60).optional(),
-  icon: z.enum(["cup", "tea", "water", "bread", "clock", "pin", "receipt", "bag", "people", "quote"]),
+  icon: z.enum(["cup", "tea", "water", "bread", "clock", "pin", "receipt", "bag", "people", "quote", "home", "bed", "sofa", "key", "phone", "mail", "book", "briefcase"]),
 }).strict();
 export const activitySceneSchema = z.object({
   illustration: sceneIllustrationSchema,

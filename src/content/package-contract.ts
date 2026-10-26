@@ -12,7 +12,8 @@ export const supportedPackageVersions = {
   course: supportedCourseSchemaVersions,
 } as const;
 export const packageLimits = {
-  files: 256,
+  files: 1024,
+  assets: 768,
   totalBytes: 32 * 1024 * 1024,
   jsonBytes: 1024 * 1024,
   assetBytes: 16 * 1024 * 1024,
@@ -116,7 +117,7 @@ export const externalPackageManifestSchema = z
         modules: z.record(z.string().min(1).max(80), jsonFile).optional(),
       })
       .strict(),
-    assets: z.array(packageAssetSchema).max(100),
+    assets: z.array(packageAssetSchema).max(packageLimits.assets),
     capabilityRequirements: capabilityRequirementsSchema.optional(),
   })
   .strict()

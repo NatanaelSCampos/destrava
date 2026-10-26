@@ -1,13 +1,13 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Coffee, CupSoda, GlassWater, Croissant, Clock3, MapPin, Receipt, ShoppingBag, Users, MessageCircle } from "lucide-react";
+import { Coffee, CupSoda, GlassWater, Croissant, Clock3, MapPin, Receipt, ShoppingBag, Users, MessageCircle, House, BedDouble, Sofa, KeyRound, Phone, Mail, BookOpen, BriefcaseBusiness } from "lucide-react";
 import type { ActivityScene, SceneItem } from "@/content/activity-scene";
 import type { ActivityPresentation } from "@/content/text-presentation";
 import { LearningText } from "@/components/learning/text-presentation";
 import { SceneIllustration } from "./lesson-illustrations";
 
-const icons = {cup: Coffee, tea: CupSoda, water: GlassWater, bread: Croissant, clock: Clock3, pin: MapPin, receipt: Receipt, bag: ShoppingBag, people: Users, quote: MessageCircle};
+const icons = {cup: Coffee, tea: CupSoda, water: GlassWater, bread: Croissant, clock: Clock3, pin: MapPin, receipt: Receipt, bag: ShoppingBag, people: Users, quote: MessageCircle, home: House, bed: BedDouble, sofa: Sofa, key: KeyRound, phone: Phone, mail: Mail, book: BookOpen, briefcase: BriefcaseBusiness};
 
 export function SceneItemCard({ item, presentation }: {item: SceneItem; presentation?: ActivityPresentation}) {
   const Icon = icons[item.icon];

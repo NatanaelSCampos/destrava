@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { HomeIllustration, InteriorIllustration, NeighborhoodIllustration, ProfileIllustration } from "./context-illustrations";
 
 export function PlaceIllustration({ label, small = false }: { label: string; small?: boolean }) {
   const title = useId();
@@ -122,6 +123,10 @@ export function SceneIllustration({kind, label, clock}: {
   clock?: {hour: number; minute: number};
 }) {
   if (kind === "message") return <MessageIllustration />;
+  if (kind === "home") return <HomeIllustration label={label} />;
+  if (kind === "interior") return <InteriorIllustration label={label} />;
+  if (kind === "neighborhood") return <NeighborhoodIllustration label={label} />;
+  if (kind === "profile") return <ProfileIllustration label={label} />;
   if (kind === "meeting") return <MeetingIllustration label={label} />;
   // A missing authored time must not invent a time that could suggest an answer.
   if (kind === "clock") return <ClockIllustration {...clock} label={label} />;

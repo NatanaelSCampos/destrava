@@ -115,7 +115,7 @@ export function teachingCourseIssues(course: Course): string[] {
   for (const unit of course.units)
     for (const lesson of unit.lessons) {
       if (lesson.stages) {
-        if (!["1.9", "1.10"].includes(course.schemaVersion))
+        if (!["1.9", "1.10", "1.11"].includes(course.schemaVersion))
           errors.push("Lesson stages require CoursePackage 1.9.");
         errors.push(...lessonStageIssues(lesson));
         if (
@@ -127,7 +127,7 @@ export function teachingCourseIssues(course: Course): string[] {
           );
       }
       if (lesson.objectiveLabels) {
-        if (!["1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion))
+        if (!["1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion))
           errors.push("Objective labels require CoursePackage 1.6.");
         for (const id of Object.keys(lesson.objectiveLabels))
           if (!lesson.objectives?.includes(id))
@@ -178,12 +178,12 @@ export function teachingCourseIssues(course: Course): string[] {
           );
         if (
           (inline || data.recallScene) &&
-          !["1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion)
+          !["1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion)
         )
           errors.push(
             activity.id + ": inline annotations and recall scenes require CoursePackage 1.7",
           );
-        if (hasExperiencePayload(data) && !["1.8", "1.9", "1.10"].includes(course.schemaVersion))
+        if (hasExperiencePayload(data) && !["1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion))
           errors.push(
             activity.id + ": authored scenes and review recall require CoursePackage 1.8",
           );
@@ -195,6 +195,12 @@ export function teachingCourseIssues(course: Course): string[] {
             errors.push(activity.id + ": review audio must align with each example");
           for (const id of card.audioMediaIds ?? []) audio(id, activity.id);
         }
+        const extendedKinds = new Set(["home", "interior", "neighborhood", "profile"]);
+        const extendedIcons = new Set(["home", "bed", "sofa", "key", "phone", "mail", "book", "briefcase"]);
+        const authoredScenes = [data.scene, data.recallScene] as ({illustration?: string; items?: {icon: string}[]} | undefined)[];
+        if (course.schemaVersion !== "1.11" && authoredScenes.some(item => item &&
+          (extendedKinds.has(item.illustration ?? "") || item.items?.some(entry => extendedIcons.has(entry.icon)))))
+          errors.push(activity.id + ": extended scene illustrations and icons require CoursePackage 1.11");
         const scene = data.scene as { cue?: { audioMediaId?: string } } | undefined;
         if (scene?.cue?.audioMediaId) audio(scene.cue.audioMediaId, activity.id);
         errors.push(
@@ -218,7 +224,7 @@ export function teachingCourseIssues(course: Course): string[] {
           data.feedback ||
           data.supportActivityIds ||
           lesson.deferredRecovery;
-        if (modern && !["1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion))
+        if (modern && !["1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion))
           errors.push(`${activity.id}: teaching and deferred recovery require CoursePackage 1.6`);
         for (const id of (data.supportActivityIds as string[] | undefined) ?? [])
           if (normal.get(id)?.type !== "lesson_content")

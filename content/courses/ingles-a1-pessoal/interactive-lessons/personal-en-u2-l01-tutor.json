@@ -3,26 +3,60 @@
   "courseId": "ingles-a1-pessoal",
   "unitId": "personal-en-u2",
   "lessonId": "personal-en-u2-l01-guided",
-  "title": "Tipos de moradia",
+  "title": "Da pergunta ao lugar certo",
   "objectives": [
-    "Reconhecer formas simples de falar da própria casa."
+    "personal-en-u2-l04-goal"
   ],
   "concepts": [
-    "personal-en-u2-l01-concept"
+    "personal-en-u2-l04-concept"
   ],
   "skills": [
-    "speaking",
-    "writing"
+    "reading",
+    "writing",
+    "listening"
   ],
-  "estimatedMinutes": 18,
-  "alternativeExamples": [],
+  "estimatedMinutes": 9,
+  "alternativeExamples": [
+    {
+      "conceptId": "personal-en-u2-l04-concept",
+      "text": "The lamp is on the desk.",
+      "translation": "A luminária está sobre a escrivaninha."
+    }
+  ],
   "segments": [
     {
-      "id": "personal-en-u2-l01-tutor-stage-1",
-      "title": "Boas-vindas",
-      "type": "presentation",
+      "id": "personal-en-u2-guided-intro",
+      "title": "Leia a situação",
+      "type": "explanation",
+      "objectives": [
+        "personal-en-u2-l04-goal"
+      ],
       "concepts": [
-        "personal-en-u2-l01-concept"
+        "personal-en-u2-l04-concept"
+      ],
+      "cues": [
+        {
+          "id": "personal-en-u2-guided-cue-context",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-guided-board-context",
+              "text": "Uma pessoa procura uma luminária numa sala. Você distingue existência de localização e responde ao que ela perguntou.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "activityRef": "personal-en-u2-guided-support",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
       ],
       "presentation": {
         "mode": "slides",
@@ -30,8 +64,17 @@
         "transcript": [
           {
             "startMs": 0,
+            "endMs": 8000,
+            "text": "Uma pessoa procura uma luminária numa sala. Você distingue existência de localização e responde ao que ela perguntou.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 8000,
             "endMs": 16000,
-            "text": "Hoje vamos praticar tipos de moradia. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+            "text": "Compare o modelo, pause e responda aos próximos passos. Consulte o apoio quando precisar.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
@@ -39,258 +82,41 @@
           }
         ]
       },
+      "explanation": "Uma pessoa procura uma luminária numa sala. Você distingue existência de localização e responde ao que ela perguntou."
+    },
+    {
+      "id": "personal-en-u2-guided-model",
+      "title": "O bloco que resolve a situação",
+      "type": "example",
+      "objectives": [
+        "personal-en-u2-l04-goal"
+      ],
+      "concepts": [
+        "personal-en-u2-l04-concept"
+      ],
       "cues": [
         {
-          "id": "personal-en-u2-l01-tutor-stage-1-cue-0",
+          "id": "personal-en-u2-guided-cue-model",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-1-text-0",
-              "text": "Hoje vamos praticar tipos de moradia. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+              "kind": "example",
+              "id": "personal-en-u2-guided-board-model",
+              "text": "The lamp is on the desk.",
+              "translation": "A luminária está sobre a escrivaninha.",
               "textPresentation": {
-                "language": "pt-BR",
+                "language": "en",
                 "direction": "ltr"
               }
             }
           }
         }
       ],
+      "required": true,
+      "allowInterruption": true,
       "resumeAnchorsMs": [
         0
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-stage-2",
-      "title": "Explicação em português e exemplo em inglês",
-      "type": "presentation",
-      "concepts": [
-        "personal-en-u2-l01-concept"
-      ],
-      "presentation": {
-        "mode": "slides",
-        "durationMs": 32000,
-        "transcript": [
-          {
-            "startMs": 0,
-            "endMs": 16000,
-            "text": "Nesta lição, nosso objetivo é reconhecer formas simples de falar da própria casa. Home descreve lar; house é edifício residencial; apartment e flat designam tipos de apartamento em variedades diferentes. Use live in para dizer onde mora.",
-            "textPresentation": {
-              "language": "pt-BR",
-              "direction": "ltr"
-            }
-          },
-          {
-            "startMs": 16000,
-            "endMs": 32000,
-            "text": "Our house is near the school.",
-            "textPresentation": {
-              "language": "en-US",
-              "direction": "ltr"
-            }
-          }
-        ]
-      },
-      "cues": [
-        {
-          "id": "personal-en-u2-l01-tutor-stage-2-cue-0",
-          "atMs": 0,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-2-text-0",
-              "text": "Nesta lição, nosso objetivo é reconhecer formas simples de falar da própria casa. Home descreve lar; house é edifício residencial; apartment e flat designam tipos de apartamento em variedades diferentes. Use live in para dizer onde mora.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              }
-            }
-          }
-        },
-        {
-          "id": "personal-en-u2-l01-tutor-stage-2-cue-1",
-          "atMs": 16000,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-2-text-1",
-              "text": "Our house is near the school.",
-              "textPresentation": {
-                "language": "en-US",
-                "direction": "ltr"
-              }
-            }
-          }
-        }
-      ],
-      "resumeAnchorsMs": [
-        0,
-        16000
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-stage-3",
-      "title": "Demonstração",
-      "type": "presentation",
-      "concepts": [
-        "personal-en-u2-l01-concept"
-      ],
-      "presentation": {
-        "mode": "slides",
-        "durationMs": 32000,
-        "transcript": [
-          {
-            "startMs": 0,
-            "endMs": 16000,
-            "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
-            "textPresentation": {
-              "language": "pt-BR",
-              "direction": "ltr"
-            }
-          },
-          {
-            "startMs": 16000,
-            "endMs": 32000,
-            "text": "Our house is near the river.",
-            "textPresentation": {
-              "language": "en-US",
-              "direction": "ltr"
-            }
-          }
-        ]
-      },
-      "cues": [
-        {
-          "id": "personal-en-u2-l01-tutor-stage-3-cue-0",
-          "atMs": 0,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-3-text-0",
-              "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              }
-            }
-          }
-        },
-        {
-          "id": "personal-en-u2-l01-tutor-stage-3-cue-1",
-          "atMs": 16000,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-3-text-1",
-              "text": "Our house is near the river.",
-              "textPresentation": {
-                "language": "en-US",
-                "direction": "ltr"
-              }
-            }
-          }
-        }
-      ],
-      "resumeAnchorsMs": [
-        0,
-        16000
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-stage-4",
-      "title": "Orientação para praticar",
-      "type": "presentation",
-      "concepts": [
-        "personal-en-u2-l01-concept"
-      ],
-      "presentation": {
-        "mode": "slides",
-        "durationMs": 32000,
-        "transcript": [
-          {
-            "startMs": 0,
-            "endMs": 16000,
-            "text": "Diga o tipo de moradia e o andar de um personagem fictício.",
-            "textPresentation": {
-              "language": "pt-BR",
-              "direction": "ltr"
-            }
-          },
-          {
-            "startMs": 16000,
-            "endMs": 32000,
-            "text": "She lives in a small apartment.",
-            "textPresentation": {
-              "language": "en-US",
-              "direction": "ltr"
-            }
-          }
-        ]
-      },
-      "cues": [
-        {
-          "id": "personal-en-u2-l01-tutor-stage-4-cue-0",
-          "atMs": 0,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-4-text-0",
-              "text": "Diga o tipo de moradia e o andar de um personagem fictício.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              }
-            }
-          }
-        },
-        {
-          "id": "personal-en-u2-l01-tutor-stage-4-cue-1",
-          "atMs": 16000,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-4-text-1",
-              "text": "She lives in a small apartment.",
-              "textPresentation": {
-                "language": "en-US",
-                "direction": "ltr"
-              }
-            }
-          }
-        }
-      ],
-      "resumeAnchorsMs": [
-        0,
-        16000
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-speaking",
-      "title": "Prática oral opcional",
-      "type": "speaking",
-      "activityRef": "personal-en-u2-speaking-prompt-0001",
-      "required": false,
-      "concepts": [
-        "personal-en-u2-l01-concept"
-      ],
-      "cues": [],
-      "resumeAnchorsMs": [
-        0
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-stage-5",
-      "title": "Atenção ao uso",
-      "type": "presentation",
-      "concepts": [
-        "personal-en-u2-l01-concept"
       ],
       "presentation": {
         "mode": "slides",
@@ -298,117 +124,82 @@
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 16000,
-            "text": "First floor pode referir-se a andares diferentes conforme a convenção regional; registre a variante.",
+            "endMs": 8000,
+            "text": "The lamp is on the desk.",
             "textPresentation": {
-              "language": "pt-BR",
+              "language": "en",
               "direction": "ltr"
             }
-          }
-        ]
-      },
-      "cues": [
-        {
-          "id": "personal-en-u2-l01-tutor-stage-5-cue-0",
-          "atMs": 0,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-5-text-0",
-              "text": "First floor pode referir-se a andares diferentes conforme a convenção regional; registre a variante.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              }
-            }
-          }
-        }
-      ],
-      "resumeAnchorsMs": [
-        0
-      ]
-    },
-    {
-      "id": "personal-en-u2-l01-tutor-stage-6",
-      "title": "Verifique o que aprendeu",
-      "type": "presentation",
-      "concepts": [
-        "personal-en-u2-l01-concept"
-      ],
-      "presentation": {
-        "mode": "slides",
-        "durationMs": 16000,
-        "transcript": [
+          },
           {
-            "startMs": 0,
+            "startMs": 8000,
             "endMs": 16000,
-            "text": "Agora explique em português o que você aprendeu sobre tipos de moradia. Se preferir, tente dar um exemplo em inglês.",
+            "text": "A luminária está sobre a escrivaninha.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           }
         ]
-      },
-      "cues": [
-        {
-          "id": "personal-en-u2-l01-tutor-stage-6-cue-0",
-          "atMs": 0,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "kind": "text",
-              "id": "personal-en-u2-l01-tutor-stage-6-text-0",
-              "text": "Agora explique em português o que você aprendeu sobre tipos de moradia. Se preferir, tente dar um exemplo em inglês.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              }
-            }
-          }
-        }
-      ],
-      "resumeAnchorsMs": [
-        0
-      ]
+      }
     },
     {
-      "id": "personal-en-u2-l01-tutor-checkpoint",
-      "title": "Prática escrita livre",
+      "id": "personal-en-u2-guided-check",
+      "title": "Escolha uma mensagem",
       "type": "checkpoint",
-      "activityRef": "personal-en-u2-short-answer-0001",
-      "required": false,
+      "objectives": [
+        "personal-en-u2-l04-goal"
+      ],
       "concepts": [
-        "personal-en-u2-l01-concept"
+        "personal-en-u2-l04-concept"
       ],
       "cues": [],
+      "activityRef": "personal-en-u2-guided-checkpoint",
+      "required": true,
+      "allowInterruption": true,
       "resumeAnchorsMs": [
         0
       ]
     },
     {
-      "id": "personal-en-u2-l01-tutor-summary",
-      "title": "Resumo",
-      "type": "summary",
-      "explanation": "O professor explica em português e pratica inglês. Sem voz adequada, acompanhe o texto. Esta prática é opcional e formativa, sem nota oficial.",
+      "id": "personal-en-u2-guided-write",
+      "title": "Prepare sua resposta",
+      "type": "checkpoint",
+      "objectives": [
+        "personal-en-u2-l04-goal"
+      ],
       "concepts": [
-        "personal-en-u2-l01-concept"
+        "personal-en-u2-l04-concept"
       ],
       "cues": [],
+      "activityRef": "personal-en-u2-guided-write",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-guided-finish",
+      "title": "Volte à ideia central",
+      "type": "summary",
+      "objectives": [
+        "personal-en-u2-l04-goal"
+      ],
+      "concepts": [
+        "personal-en-u2-l04-concept"
+      ],
+      "cues": [],
+      "activityRef": "personal-en-u2-guided-review",
+      "required": true,
+      "allowInterruption": true,
       "resumeAnchorsMs": [
         0
       ]
     }
   ],
   "provenance": {
-    "origin": "adapted",
-    "sources": [
-      {
-        "type": "original_experimental_editorial",
-        "reference": "ROTEIROS_AULA_PARTICULAR_BILINGUE_PT_EN.json#EN-U2-L01-TUTOR"
-      }
-    ],
+    "origin": "ai_generated",
     "review": {
       "status": "review_pending"
     }
