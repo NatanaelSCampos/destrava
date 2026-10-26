@@ -1,3 +1,5 @@
+import { courseWithLearningAccess } from "../src/domain/study/learning-access.ts";
+import { learningActionAvailability, unavailableLearningRequirements } from "../src/domain/study/learning-action-availability.ts";
 import { evaluateUnitPolicies } from "../src/domain/study/learning-policy-engine.ts";
 import { initialStudyState } from "../src/domain/study/study-state.ts";
 import test from "node:test";
@@ -494,4 +496,62 @@ test("timestamp evidence survives PostgreSQL UTC representation without acceptin
     ),
     false,
   );
+});
+
+function noticeFixture() {
+  const c = structuredClone(course);
+  const u1 = c.units[0], u2 = c.units[1];
+  u1.learningPolicy = { completion: { requirements: [{ id: "first-practice", label: "Praticar", kind: "participation", activityIds: ["p0"], minimumCount: 1 }] }, mastery: { requirements: [] } };
+  u2.lessons = [{ ...structuredClone(u1.lessons[0]), id: "next-lesson", activities: [{ ...structuredClone(practices[0]), id: "next-practice" }] }];
+  c.assessments.push({ ...structuredClone(exam), id: "final2", unitId: "u2", activityIds: ["next-practice"] });
+  u2.learningPolicy = { completion: { requirements: [
+    { id: "next-practice", label: "Realizar as práticas", kind: "participation", activityIds: ["next-practice"], minimumCount: 1 },
+    { id: "next-final", label: "Concluir a prova com 80%", kind: "assessment", assessmentId: "final2", purpose: "summative", minimumScore: 80 },
+  ] }, mastery: { requirements: [] } };
+  c.availability = { unavailableActivityIds: [], spacedRepetition: false, actionStates: { "assessment.fixed": { state: "available", reasons: [] } } };
+  const state = structuredClone(initialStudyState); state.courseId = c.id;
+  return { c, state };
+}
+test("prerequisite locks do not become global unavailable-requirement banners", () => {
+  const { c, state } = noticeFixture(), before = structuredClone(c);
+  const view = courseWithLearningAccess(c, evaluateLearningAccess(c, empty));
+  assert.deepEqual(view.availability.lockedUnitIds, ["u2"]);
+  assert.deepEqual(unavailableLearningRequirements(view, state), []);
+  assert.equal(learningActionAvailability(view, { kind: "activity", activityId: "next-practice" }).eligible, false);
+  assert.equal(learningActionAvailability(view, { kind: "assessment", id: "final2" }).eligible, false);
+  assert.notEqual(evaluateUnitPolicies(view.units[1], state, view).completion.status, "satisfied");
+  assert.deepEqual(state.completedActivityIds, []);
+  assert.deepEqual(c, before);
+});
+test("missing or foreign access snapshots keep the next unit locked without a false failure banner", () => {
+  const { c, state } = noticeFixture();
+  const allowed = evaluateLearningAccess(c, { ...empty, assessmentResults: [result(15)] });
+  for (const snapshot of [null, { ...allowed, courseId: "another" }, { ...allowed, contentVersion: "another" }]) {
+    const view = courseWithLearningAccess(c, snapshot);
+    assert.deepEqual(view.availability.lockedUnitIds, ["u2"]);
+    assert.equal(learningActionAvailability(view, { kind: "activity", activityId: "next-practice" }).eligible, false);
+    assert.deepEqual(unavailableLearningRequirements(view, state), []);
+  }
+});
+test("genuine failures in the available unit remain visible while future-unit locks stay quiet", () => {
+  const { c, state } = noticeFixture();
+  c.availability.unavailableActivityIds = ["p0"];
+  c.availability.reasons = { p0: ["Recurso de estudo indisponível."] };
+  const view = courseWithLearningAccess(c, evaluateLearningAccess(c, empty));
+  const notices = unavailableLearningRequirements(view, state);
+  assert.equal(notices.length, 1);
+  assert.equal(notices[0].unitId, "u1");
+  assert(notices[0].reasons.includes("Recurso de estudo indisponível."));
+  assert.equal(view.availability.unavailableActivityIds.includes("p0"), true);
+});
+test("unlocking restores normal availability and exposes real missing requirements in that unit", () => {
+  const { c, state } = noticeFixture();
+  const evidence = { ...empty, assessmentResults: [result(15)] };
+  const snapshot = evaluateLearningAccess(c, evidence), view = courseWithLearningAccess(c, snapshot);
+  assert.deepEqual(view.availability.lockedUnitIds, []);
+  assert.equal(learningActionAvailability(view, { kind: "activity", activityId: "next-practice" }).eligible, true);
+  assert.deepEqual(unavailableLearningRequirements(view, state), []);
+  c.availability.unavailableAssessmentIds = ["final2"];
+  const unavailable = courseWithLearningAccess(c, snapshot);
+  assert(unavailableLearningRequirements(unavailable, state).some(entry => entry.unitId === "u2" && entry.label.includes("80%")));
 });

@@ -18,6 +18,32 @@ export type LearningAccessSnapshot = {
   units: Record<string, AccessDecision>;
   assessments: Record<string, AccessDecision>;
 };
+/** Apply progression locks to the capability-projected course; server guards remain authoritative. */
+export function courseWithLearningAccess(
+  course: PublicCourse,
+  snapshot: LearningAccessSnapshot | null,
+): PublicCourse {
+  if (!course.units.some(unit => unit.access)) return course;
+  const current = snapshot?.courseId === course.id && snapshot.contentVersion === course.contentVersion
+    ? snapshot : null;
+  const locked = course.units.filter(unit => unit.access && !current?.units[unit.id]?.allowed);
+  const activityIds = locked.flatMap(unit => unit.lessons.flatMap(lesson => lesson.activities.map(activity => activity.id)));
+  const base = course.availability ?? { unavailableActivityIds: [], spacedRepetition: false };
+  const reasons = Object.fromEntries(activityIds.map(id => [id, ["Conclua a prova da unidade anterior para abrir esta prática."]]));
+  return {
+    ...course,
+    availability: {
+      ...base,
+      lockedUnitIds: locked.map(unit => unit.id),
+      unavailableUnitIds: [...new Set([...(base.unavailableUnitIds ?? []), ...locked.map(unit => unit.id)])],
+      unavailableActivityIds: [...new Set([...base.unavailableActivityIds, ...activityIds])],
+      unavailableAssessmentIds: [...new Set([...(base.unavailableAssessmentIds ?? []), ...course.assessments
+        .filter(assessment => locked.some(unit => unit.id === assessment.unitId)).map(assessment => assessment.id)])],
+      reasons: { ...base.reasons, ...reasons },
+    },
+  };
+}
+
 export function protectedExamForActivity(
   course: Pick<PublicCourse, "assessments">,
   activityId: string,

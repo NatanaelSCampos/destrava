@@ -39,6 +39,8 @@ export type PublicUnit = Omit<Unit, "lessons"> & { lessons: PublicLesson[] };
 export type LearningAvailability = {
   unavailableActivityIds: string[];
   unavailableUnitIds?: string[];
+  /** Presentation metadata: progression locks are not course failures. */
+  lockedUnitIds?: string[];
   unavailableAssessmentIds?: string[];
   unavailableInteractiveLessonIds?: string[];
   scopeLocations?: Record<string, string>;

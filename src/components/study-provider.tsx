@@ -1,5 +1,5 @@
 "use client";
-import type { LearningAccessSnapshot } from "@/domain/study/learning-access";
+import { courseWithLearningAccess, type LearningAccessSnapshot } from "@/domain/study/learning-access";
 
 import {
   interactiveLessonProgressReceiptSchema,
@@ -1094,48 +1094,10 @@ export function StudyProvider({
     refreshLearningAccess,
   ]);
 
-  const accessibleCourse = useMemo(() => {
-    if (!hasLearningAccess) return visibleCourse;
-    const locked = visibleCourse.units.filter(
-      (u) => u.access && !learningAccess?.units[u.id]?.allowed,
-    );
-    const activityIds = locked.flatMap((u) =>
-      u.lessons.flatMap((l) => l.activities.map((a) => a.id)),
-    );
-    const reasons = Object.fromEntries(
-      activityIds.map((id) => [
-        id,
-        ["Conclua a prova da unidade anterior para abrir esta prática."],
-      ]),
-    );
-    return {
-      ...visibleCourse,
-      availability: {
-        ...visibleCourse.availability!,
-        unavailableUnitIds: [
-          ...new Set([
-            ...(visibleCourse.availability?.unavailableUnitIds ?? []),
-            ...locked.map((u) => u.id),
-          ]),
-        ],
-        unavailableActivityIds: [
-          ...new Set([
-            ...(visibleCourse.availability?.unavailableActivityIds ?? []),
-            ...activityIds,
-          ]),
-        ],
-        unavailableAssessmentIds: [
-          ...new Set([
-            ...(visibleCourse.availability?.unavailableAssessmentIds ?? []),
-            ...visibleCourse.assessments
-              .filter((a) => locked.some((u) => u.id === a.unitId))
-              .map((a) => a.id),
-          ]),
-        ],
-        reasons: { ...visibleCourse.availability?.reasons, ...reasons },
-      },
-    };
-  }, [visibleCourse, hasLearningAccess, learningAccess]);
+  const accessibleCourse = useMemo(
+    () => hasLearningAccess ? courseWithLearningAccess(visibleCourse, learningAccess) : visibleCourse,
+    [visibleCourse, hasLearningAccess, learningAccess],
+  );
   const value = useMemo(
     () => ({
       learningAccess,

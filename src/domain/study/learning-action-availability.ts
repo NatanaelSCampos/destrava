@@ -94,6 +94,9 @@ export function learningActionForPath(pathname: string, searchParams?: Pick<URLS
 /** Show named obligations even when they cannot enter an executable study plan. */
 export function unavailableLearningRequirements(course: PublicCourse, state: StudyState, context?: LearningActionContext) {
   return course.units.flatMap(unit => {
+    // Future units waiting for a prerequisite are not broken course requirements.
+    // Activity and assessment access remains denied by the projection and server guards.
+    if (course.availability?.lockedUnitIds?.includes(unit.id)) return [];
     const result = evaluateUnitPolicies(unit, state, course);
     return (["completion", "mastery"] as const).flatMap(group => (unit.learningPolicy?.[group].requirements ?? []).flatMap(rule => {
       const evaluated = result[group].requirements.find(item => item.id === rule.id);
