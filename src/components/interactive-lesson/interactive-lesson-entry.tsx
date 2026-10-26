@@ -65,7 +65,7 @@ export async function InteractiveLessonEntry({ requested, location }: { requeste
       </div>
     );
   const media = Object.fromEntries(
-    bundle.coursePackage.media.map(({ id, src, type }) => [id, { src, type }]),
+    bundle.coursePackage.media.map(({ id, src, type, metadata }) => [id, { src, type, synthetic: metadata?.synthetic === true }]),
   );
   if (!learningActionAvailability(projected, { kind: "interactive", id: definition.id }, { source: "compiled", permitted: true }).eligible ||
     projected.availability?.unavailableInteractiveLessonIds?.includes(definition.id))

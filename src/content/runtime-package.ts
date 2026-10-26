@@ -118,7 +118,7 @@ export function runtimeBundle(raw: CompiledPackage) {
     acceptedVariants: coursePackage.acceptedVariants,
     description: coursePackage.description,
     contentVersion: coursePackage.contentVersion,
-    ...(["1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(coursePackage.schemaVersion)
+    ...(["1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12"].includes(coursePackage.schemaVersion)
       ? {
           teachingMedia: coursePackage.media
             .filter((asset) => asset.type === "audio")

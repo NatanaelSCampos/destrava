@@ -1,7 +1,7 @@
 import type { InteractiveLessonDefinition } from "@/content/contracts";
 import type { LessonRuntimeState } from "./runtime";
 
-export type OperationalEvent = { type: string; segmentId: string; activityId?: string };
+export type OperationalEvent = { type: string; segmentId: string; activityId?: string; positionMs: number };
 
 // Operational signals only. Learning evidence stays with the existing activity/speech flows.
 export function deriveLessonEvents(previous: LessonRuntimeState | null, current: LessonRuntimeState,
@@ -11,6 +11,9 @@ export function deriveLessonEvents(previous: LessonRuntimeState | null, current:
   const before = previous ? lesson.segments[previous.segmentIndex] : undefined;
   if (!segment) return events;
   const add = (type: string, target = segment) => events.push({ type, segmentId: target.id,
+    positionMs: target.id === segment.id
+      ? (current.phase === "intervening" ? current.resumePoint?.playbackPositionMs ?? current.positionMs : current.positionMs)
+      : previous?.positionMs ?? 0,
     ...(target.activityRef ? { activityId: target.activityRef } : {}) });
   if (!previous || previous.phase === "idle") {
     if (current.phase !== "idle") { add("lesson.started"); add("lesson.segment.started"); }

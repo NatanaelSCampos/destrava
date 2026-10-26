@@ -43,13 +43,18 @@ export function transcriptNarration(
 export type TeachingNarration = {
   message: string; example: string; translation: string; followUp: string;
   unannotatedMessage?: boolean;
+  messageParts?: Array<{ text: string; role: "source" | "target" | "unknown" }>;
   followUpSpeech?: { role: "source" | "target"; language: string } | null;
 };
 export function teachingNarration(reply: TeachingNarration, context: NarrationContext) {
   const followUp = reply.followUpSpeech;
   const role = followUp?.role === "source" || followUp?.role === "target" ? followUp.role : undefined;
   return [
-    narrationLine("message", reply.message, reply.unannotatedMessage ? undefined : context.sourceLanguage, context, 0, "source"),
+    ...(reply.messageParts ? reply.messageParts.map((part, index) => narrationLine(
+      `message:${index}`, part.text, part.role === "source" ? context.sourceLanguage
+        : part.role === "target" ? context.targetLanguage : undefined, context, 0,
+      part.role === "source" || part.role === "target" ? part.role : undefined,
+    )) : [narrationLine("message", reply.message, reply.unannotatedMessage ? undefined : context.sourceLanguage, context, 0, "source")]),
     narrationLine("example", reply.example, context.targetLanguage, context, 0, "target"),
     narrationLine("translation", reply.translation, context.sourceLanguage, context, 0, "source"),
     narrationLine("followUp", reply.followUp, role ? followUp?.language : undefined, context, 0, role),

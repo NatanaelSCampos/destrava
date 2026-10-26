@@ -3085,6 +3085,9 @@
             "type": "string",
             "minLength": 1
           },
+          "autoAdvancePresentations": {
+            "type": "boolean"
+          },
           "courseId": {
             "type": "string",
             "minLength": 1
@@ -3302,6 +3305,49 @@
                                         "type": "string",
                                         "const": "text"
                                       },
+                                      "illustration": {
+                                        "type": "string",
+                                        "enum": [
+                                          "message",
+                                          "meeting",
+                                          "clock",
+                                          "cafe",
+                                          "menu",
+                                          "takeaway",
+                                          "home",
+                                          "interior",
+                                          "neighborhood",
+                                          "profile"
+                                        ]
+                                      },
+                                      "icon": {
+                                        "type": "string",
+                                        "enum": [
+                                          "cup",
+                                          "tea",
+                                          "water",
+                                          "bread",
+                                          "clock",
+                                          "pin",
+                                          "receipt",
+                                          "bag",
+                                          "people",
+                                          "quote",
+                                          "home",
+                                          "bed",
+                                          "sofa",
+                                          "key",
+                                          "phone",
+                                          "mail",
+                                          "book",
+                                          "briefcase"
+                                        ]
+                                      },
+                                      "label": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "id": {
                                         "type": "string",
                                         "minLength": 1
@@ -3309,6 +3355,30 @@
                                       "text": {
                                         "type": "string",
                                         "minLength": 1
+                                      },
+                                      "runs": {
+                                        "minItems": 1,
+                                        "maxItems": 12,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "text": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 650
+                                            },
+                                            "language": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 80
+                                            }
+                                          },
+                                          "required": [
+                                            "text"
+                                          ],
+                                          "additionalProperties": false
+                                        }
                                       },
                                       "translation": {
                                         "type": "string"
@@ -3346,6 +3416,49 @@
                                         "type": "string",
                                         "const": "example"
                                       },
+                                      "illustration": {
+                                        "type": "string",
+                                        "enum": [
+                                          "message",
+                                          "meeting",
+                                          "clock",
+                                          "cafe",
+                                          "menu",
+                                          "takeaway",
+                                          "home",
+                                          "interior",
+                                          "neighborhood",
+                                          "profile"
+                                        ]
+                                      },
+                                      "icon": {
+                                        "type": "string",
+                                        "enum": [
+                                          "cup",
+                                          "tea",
+                                          "water",
+                                          "bread",
+                                          "clock",
+                                          "pin",
+                                          "receipt",
+                                          "bag",
+                                          "people",
+                                          "quote",
+                                          "home",
+                                          "bed",
+                                          "sofa",
+                                          "key",
+                                          "phone",
+                                          "mail",
+                                          "book",
+                                          "briefcase"
+                                        ]
+                                      },
+                                      "label": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 80
+                                      },
                                       "id": {
                                         "type": "string",
                                         "minLength": 1
@@ -3353,6 +3466,30 @@
                                       "text": {
                                         "type": "string",
                                         "minLength": 1
+                                      },
+                                      "runs": {
+                                        "minItems": 1,
+                                        "maxItems": 12,
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "text": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 650
+                                            },
+                                            "language": {
+                                              "type": "string",
+                                              "minLength": 1,
+                                              "maxLength": 80
+                                            }
+                                          },
+                                          "required": [
+                                            "text"
+                                          ],
+                                          "additionalProperties": false
+                                        }
                                       },
                                       "translation": {
                                         "type": "string",
@@ -3391,6 +3528,44 @@
                                       "kind": {
                                         "type": "string",
                                         "const": "comparison"
+                                      },
+                                      "illustration": {
+                                        "type": "string",
+                                        "enum": [
+                                          "message",
+                                          "meeting",
+                                          "clock",
+                                          "cafe",
+                                          "menu",
+                                          "takeaway",
+                                          "home",
+                                          "interior",
+                                          "neighborhood",
+                                          "profile"
+                                        ]
+                                      },
+                                      "icon": {
+                                        "type": "string",
+                                        "enum": [
+                                          "cup",
+                                          "tea",
+                                          "water",
+                                          "bread",
+                                          "clock",
+                                          "pin",
+                                          "receipt",
+                                          "bag",
+                                          "people",
+                                          "quote",
+                                          "home",
+                                          "bed",
+                                          "sofa",
+                                          "key",
+                                          "phone",
+                                          "mail",
+                                          "book",
+                                          "briefcase"
+                                        ]
                                       },
                                       "id": {
                                         "type": "string",

@@ -11842,6 +11842,143 @@
       "description": "Verificação delimitada das informações e construções trabalhadas. Tente antes de consultar a comparação; acertar estes itens não comprova toda a conversação livre.",
       "minutes": 18,
       "active": true
+    },
+    {
+      "id": "atp-u1-live-demo",
+      "slug": "um-encontro-sem-desencontro",
+      "title": "Um encontro sem desencontro",
+      "order": 9,
+      "minutes": 13,
+      "eyebrow": "Converse com o professor",
+      "description": "Uma conversa para encontrar alguém, entender a resposta e pedir ajuda.",
+      "objectives": [
+        "atp-locate-person",
+        "atp-repair-understanding"
+      ],
+      "activities": [
+        {
+          "id": "atp-live-check-location",
+          "type": "multiple_choice",
+          "title": "Responda para se encontrar",
+          "prompt": "A outra pessoa pergunta pelo seu lugar. Você está na biblioteca. Qual mensagem envia?",
+          "skills": [
+            "reading"
+          ],
+          "concepts": [
+            "atp-location-question"
+          ],
+          "minutes": 1,
+          "presentation": {
+            "fields": {
+              "options": {
+                "language": "es",
+                "direction": "ltr"
+              },
+              "answer": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          },
+          "payload": {
+            "options": [
+              "Estoy en la biblioteca.",
+              "¿Dónde estás?",
+              "No entiendo."
+            ],
+            "answer": "Estoy en la biblioteca.",
+            "explanation": "A mensagem informa seu lugar e responde à pergunta recebida.",
+            "scene": {
+              "illustration": "meeting",
+              "title": "Responda para se encontrar",
+              "context": "A outra pessoa pergunta pelo seu lugar. Você está na biblioteca. Qual mensagem envia?"
+            },
+            "feedback": {
+              "summaryCorrect": "Sua mensagem atende à situação.",
+              "summaryIncorrect": "Vamos comparar a intenção das mensagens.",
+              "alternatives": [
+                {
+                  "answer": "Estoy en la biblioteca.",
+                  "detail": "A mensagem informa seu lugar e responde à pergunta recebida."
+                },
+                {
+                  "answer": "¿Dónde estás?",
+                  "detail": "Esta pergunta procura o lugar da outra pessoa; ainda falta informar o seu."
+                },
+                {
+                  "answer": "No entiendo.",
+                  "detail": "Esta mensagem avisa uma dificuldade de compreensão; a situação pede seu lugar."
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "atp-live-check-repair",
+          "type": "multiple_choice",
+          "title": "Peça para ouvir de novo",
+          "prompt": "Uma parte da mensagem chegou cortada. Você quer receber a informação outra vez. O que pede?",
+          "skills": [
+            "reading"
+          ],
+          "concepts": [
+            "atp-repair"
+          ],
+          "minutes": 1,
+          "presentation": {
+            "fields": {
+              "options": {
+                "language": "es",
+                "direction": "ltr"
+              },
+              "answer": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          },
+          "evaluation": {
+            "strategy": "exact-normalized"
+          },
+          "payload": {
+            "options": [
+              "Más despacio, por favor.",
+              "¿Puedes repetir, por favor?",
+              "Estoy en la plaza."
+            ],
+            "answer": "¿Puedes repetir, por favor?",
+            "explanation": "O pedido solicita que a informação seja apresentada outra vez.",
+            "scene": {
+              "illustration": "message",
+              "title": "Peça para ouvir de novo",
+              "context": "Uma parte da mensagem chegou cortada. Você quer receber a informação outra vez. O que pede?"
+            },
+            "feedback": {
+              "summaryCorrect": "Sua mensagem atende à situação.",
+              "summaryIncorrect": "Vamos comparar a intenção das mensagens.",
+              "alternatives": [
+                {
+                  "answer": "Más despacio, por favor.",
+                  "detail": "Este pedido trata da velocidade. Aqui você precisa receber novamente a parte cortada."
+                },
+                {
+                  "answer": "¿Puedes repetir, por favor?",
+                  "detail": "O pedido solicita que a informação seja apresentada outra vez."
+                },
+                {
+                  "answer": "Estoy en la plaza.",
+                  "detail": "Esta mensagem informa um lugar, sem pedir a parte que faltou."
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "interactiveLessonRef": "atp-u1-live-demo-board",
+      "active": true
     }
   ],
   "assessmentRefs": {

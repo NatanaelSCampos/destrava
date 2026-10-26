@@ -19,13 +19,24 @@ export const tutorFeedbackSchema = z.object({
   example: z.string(),
   quickCheck: z.string(),
 });
-export const interactiveTeachingSchema = z.object({
-  message: z.string().min(10).max(650),
+const teachingMessageParts = z.array(z.object({
+  text: z.string().min(1).max(650), role: z.enum(["source", "target", "unknown"]),
+}).strict()).min(1).max(12);
+const interactiveTeachingBaseSchema = z.object({
+  message: z.string().trim().min(10).max(650),
   example: z.string().max(180),
   translation: z.string().max(180),
   followUp: z.string().max(180),
   canResume: z.boolean(),
+  followUpRole: z.enum(["source", "target", "unknown"]).optional(),
+  messageParts: teachingMessageParts.optional(),
 });
+export const interactiveTeachingSchema = interactiveTeachingBaseSchema.superRefine((reply, ctx) => {
+  if (reply.messageParts && reply.messageParts.map(part => part.text).join("") !== reply.message)
+    ctx.addIssue({ code: "custom", path: ["messageParts"], message: "Parts must reproduce the complete message." });
+});
+export const interactiveTeachingModelSchema = interactiveTeachingBaseSchema.omit({ message: true, messageParts: true })
+  .required({ followUpRole: true }).extend({ messageParts: teachingMessageParts });
 export type InteractiveTeachingFeedback = z.infer<typeof interactiveTeachingSchema>;
 
 export const conversationReplySchema = z.object({

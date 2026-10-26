@@ -1,5 +1,6 @@
 import { unitAccessSchema, examPolicySchema, learningAccessIssues } from "./learning-access";
 import { z } from "zod";
+import { sceneIllustrationSchema, sceneItemSchema } from "./activity-scene";
 import { lessonStagesSchema } from "./lesson-stages";
 import { deferredRecoverySchema } from "./teaching";
 import { teachingCourseIssues } from "./validate-teaching";
@@ -35,7 +36,7 @@ export const supportedCourseSchemaVersions = [
   "1.7",
   "1.8",
   "1.9",
-  "1.10", "1.11",
+  "1.10", "1.11", "1.12",
 ] as const;
 
 export const languageVariantSchema = z.object({
@@ -187,23 +188,37 @@ export const mediaSchema = z.object({
 });
 // Authoring contract for a guided lesson. It contains presentation data only;
 // activity answers remain in the server-side CoursePackage activities.
+const boardTextRuns = z.array(z.object({
+  text: z.string().min(1).max(650), language: z.string().trim().min(1).max(80).optional(),
+}).strict()).min(1).max(12).optional();
+const boardVisualFields = {
+  illustration: sceneIllustrationSchema.optional(),
+  icon: sceneItemSchema.shape.icon.optional(),
+};
 export const boardElementSchema = z.discriminatedUnion("kind", [
   z.object({
     kind: z.literal("text"),
+    ...boardVisualFields,
+    label: z.string().trim().min(1).max(80).optional(),
     id,
     text: id,
+    runs: boardTextRuns,
     translation: z.string().optional(),
     textPresentation: textPresentationSchema.optional(),
   }),
   z.object({
     kind: z.literal("example"),
+    ...boardVisualFields,
+    label: z.string().trim().min(1).max(80).optional(),
     id,
     text: id,
+    runs: boardTextRuns,
     translation: id,
     textPresentation: textPresentationSchema.optional(),
   }),
   z.object({
     kind: z.literal("comparison"),
+    ...boardVisualFields,
     id,
     left: id,
     right: id,
@@ -211,7 +226,12 @@ export const boardElementSchema = z.discriminatedUnion("kind", [
     leftPresentation: textPresentationSchema.optional(),
     rightPresentation: textPresentationSchema.optional(),
   }),
-]);
+]).superRefine((element, ctx) => {
+  if (element.kind !== "comparison" && element.runs && element.text.length > 650)
+    ctx.addIssue({ code: "custom", path: ["runs"], message: "Board runs are limited to 650 total characters." });
+  if (element.kind !== "comparison" && element.runs && element.runs.map(run => run.text).join("") !== element.text)
+    ctx.addIssue({ code: "custom", path: ["runs"], message: "Board runs must reproduce the complete text exactly." });
+});
 export const lessonActionSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("board.show"), element: boardElementSchema }),
   z.object({ type: z.literal("board.highlight"), targetId: id }),
@@ -234,6 +254,7 @@ export type LessonAction = z.infer<typeof lessonActionSchema>;
 export type BoardElement = z.infer<typeof boardElementSchema>;
 export const interactiveLessonSchema = z.object({
   id,
+  autoAdvancePresentations: z.boolean().optional(),
   courseId: id,
   unitId: id,
   lessonId: id,
@@ -527,7 +548,7 @@ export const coursePackageSchema = z
         "Declarative learning policies require CoursePackage schemaVersion 1.3",
       );
     if (
-      !["1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion) &&
+      !["1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12"].includes(course.schemaVersion) &&
       (course.acceptedVariants ||
         course.units.some((unit) =>
           unit.lessons.some((lesson) =>
@@ -561,12 +582,18 @@ export const coursePackageSchema = z
       );
     if (
       hasTextMetadata &&
-      !["1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11"].includes(course.schemaVersion)
+      !["1.5", "1.6", "1.7", "1.8", "1.9", "1.10", "1.11", "1.12"].includes(course.schemaVersion)
     )
       issue(
         ["schemaVersion"],
         "Text presentation metadata requires CoursePackage schemaVersion 1.5",
       );
+    if (course.schemaVersion !== "1.12" && course.interactiveLessons.some(lesson =>
+      lesson.autoAdvancePresentations !== undefined || lesson.segments.some(segment =>
+        segment.cues.some(({ action }) => action.type === "board.show" &&
+          (action.element.illustration !== undefined || action.element.icon !== undefined ||
+            (action.element.kind !== "comparison" && (action.element.label !== undefined || action.element.runs !== undefined)))))))
+      issue(["interactiveLessons"], "Illustrated boards and automatic presentation sequences require CoursePackage 1.12");
     for (const message of learningAccessIssues(course)) issue(["units"], message);
     for (const message of teachingCourseIssues(course)) issue(["units"], message);
     const definitions = new Map(course.assessments.map((item) => [item.id, item]));

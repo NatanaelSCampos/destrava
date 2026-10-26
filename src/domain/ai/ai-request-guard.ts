@@ -47,6 +47,7 @@ export async function guardAIRequest(
   request: Request,
   feature: string,
   parser: VersionPayloadParser = "json",
+  preflight?: (userId: string) => Promise<NextResponse | null>,
 ) {
   if (isSupabaseConfigured()) {
     const user = await getAuthenticatedUser();
@@ -117,6 +118,11 @@ export async function guardAIRequest(
           };
         }
       }
+    }
+    // Feature-specific session checks run after authentication/access, before quota.
+    if (preflight) {
+      try { const rejection = await preflight(user.id); if (rejection) return { error: rejection }; }
+      catch { return { error: NextResponse.json({ error: "Não foi possível conferir o momento da aula." }, { status: 503 }) }; }
     }
     const missingService = unavailableService(feature);
     if (missingService) return missingService;

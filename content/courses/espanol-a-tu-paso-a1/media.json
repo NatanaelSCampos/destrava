@@ -2234,5 +2234,165 @@
         }
       ]
     }
+  },
+  {
+    "id": "atp-live-01-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-01-da9d38db75df6145.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 65352,
+      "sha256": "da9d38db75df6145b2a5138f6ebbb4114de6c7015ebd7332cc509ecab3d4060d",
+      "transcript": "Imagine que você combinou um encontro e acabou de chegar à praça. A outra pessoa ainda não apareceu. Hoje vamos conduzir essa conversa, uma mensagem de cada vez.\n\nPrimeiro você vai ouvir modelos curtos. Depois vamos separar as partes, trocar o lugar e praticar. Não precisa inventar uma frase antes de ter contato com ela.\n\nEstoy en la plaza.\n\nEssa mensagem informa onde a própria pessoa está. Ela pode ser enviada quando alguém procura você. Observe que é uma informação, ainda não uma pergunta.\n\n¿Dónde estás?\n\nAgora ouvimos uma pergunta. A pessoa quer descobrir o lugar da outra. Ao longo da aula, o quadro vai mostrar a frase que estamos usando naquele momento.\n\nVocê pode pausar, voltar alguns segundos ou escrever uma dúvida. Quando perguntar, eu interrompo a explicação para tratar desse ponto. Depois você retoma a mesma conversa.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-02-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-02-48b02528c74f4a81.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 79368,
+      "sha256": "48b02528c74f4a814c1807c4bbbac0bf7552e4d46a521e8fdabe6e1c1b9a6f8d",
+      "transcript": "Vamos construir a primeira mensagem com calma. Para avisar onde você está agora, usamos uma forma que corresponde a estou. Ouça a frase completa antes de separar as partes.\n\nEstoy en la biblioteca.\n\nA primeira parte indica a pessoa que fala. Não precisamos colocar eu em toda mensagem: essa forma do verbo já informa quem está falando. Acrescentar o pronome também é possível.\n\nYo estoy en la biblioteca.\n\nAs duas versões informam o mesmo lugar. A versão com o pronome pode destacar quem está falando. Não transforme a ausência dele em erro: ouça como ambas funcionam na conversa.\n\nA parte final indica na biblioteca. Em espanhol, a preposição e o artigo ficam separados. Em português, eles aparecem juntos nessa expressão. Compare as frases pelo sentido, sem traduzir letra por letra.\n\nEstoy en la plaza.\n\nTrocamos o lugar e mantivemos o início da mensagem. Você não precisa decorar uma frase diferente para cada situação. Guarde o pequeno bloco inicial e conecte o lugar que deseja informar.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-03-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-03-279556286889e155.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 70104,
+      "sha256": "279556286889e1559f61098258c8eefdee05a6e19ab48f012b41845c85fad0fa",
+      "transcript": "Você já consegue avisar seu lugar. Agora quer saber onde está a outra pessoa. Escute a pergunta e perceba que a forma do verbo muda quando falamos diretamente com ela.\n\n¿Dónde estás?\n\nA palavra inicial pede uma informação de lugar. A forma final corresponde a você está nesse tratamento entre pessoas próximas. Aqui não estamos perguntando quem a pessoa é.\n\nEstoy en la biblioteca.\n\nEssa resposta resolve a pergunta: a pessoa informa seu lugar. Se ela apenas repetisse a pergunta, você continuaria sem a informação necessária para encontrá-la. Observe a função de cada fala.\n\nEstoy en la plaza. ¿Dónde estás?\n\nAgora a mensagem tem duas ações: você avisa onde está e pergunta pelo outro lugar. A pontuação separa as ações. Você pode fazer uma pequena pausa entre elas ao falar.\n\nAntes de continuar, imagine que recebe apenas a pergunta. Qual tipo de mensagem precisa enviar: uma localização ou outra pergunta? Vamos conferir essa decisão numa prática curta.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-04-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-04-b79a27c5bd0cbc33.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 74664,
+      "sha256": "b79a27c5bd0cbc33f5c27f4a7704dfddc1e5b1d9d2e3ddc6babc9ceb09be88b9",
+      "transcript": "Continuar uma conversa também envolve lidar com uma dificuldade. Você ouviu ou leu a mensagem, mas não compreendeu. Em vez de adivinhar o lugar, pode avisar o problema.\n\nNo entiendo.\n\nEssa frase comunica que você não compreendeu. Ela não pede um lugar nem informa onde você está. Seu papel é permitir que a outra pessoa perceba a dificuldade.\n\n¿Puedes repetir, por favor?\n\nAgora temos um pedido concreto: ouvir a informação novamente. A expressão final torna o pedido cortês. Entre pessoas conhecidas, essa é uma possibilidade para continuar o contato.\n\nNo entiendo. ¿Puedes repetir, por favor?\n\nAs duas partes podem aparecer na mesma mensagem. A primeira explica a dificuldade; a segunda indica como a outra pessoa pode ajudar. Não é necessário abandonar a conversa por causa de uma palavra.\n\nSe sua dúvida for justamente sobre essa diferença, interrompa aqui e pergunte. A explicação será ligada a este trecho da aula, sem mandar você para uma tela separada.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-05-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-05-f58b24e7919581e1.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 84864,
+      "sha256": "f58b24e7919581e14e3c4649d99af9c65431ebca068b362a65c7af2d1098b048",
+      "transcript": "Às vezes você quer ouvir de novo. Em outras situações, até reconhece as palavras, mas a velocidade atrapalha. É útil escolher um pedido que comunique melhor o que precisa.\n\nMás despacio, por favor.\n\nEsse pedido trata da velocidade. Ele pode ajudar quando a pessoa fala rápido. Pedir repetição trata de ouvir a informação outra vez. Os dois pedidos podem fazer sentido, mas não dizem exatamente a mesma coisa.\n\n¿Puedes repetir, por favor?\n\nAqui você pede outra apresentação da informação. Não estamos dizendo que uma frase é sempre melhor que a outra. A escolha depende do que aconteceu e da ajuda que você quer receber.\n\nImagine que uma mensagem chegou cortada. Pedir para repetir pode resolver. Agora imagine uma fala completa, mas rápida demais: pedir menos velocidade comunica essa dificuldade de forma mais direta.\n\nNo entiendo. Más despacio, por favor.\n\nEssa combinação também é possível. Na próxima prática, observe a situação antes de escolher. Não tente acertar apenas reconhecendo uma palavra: pense no que sua mensagem pede à outra pessoa.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-06-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-06-c237d6ce5530de8d.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 77448,
+      "sha256": "c237d6ce5530de8d7494436f6397bda9106b7622d4f5bd04849062631fd876d2",
+      "transcript": "Vamos voltar ao encontro. Você perguntou pelo lugar e recebeu uma informação que não ficou clara. Primeiro pede repetição. Depois precisa usar a resposta, em vez de continuar repetindo o mesmo pedido.\n\n¿Dónde estás?\n\nEstoy en la biblioteca.\n\nSe a informação não ficou clara, peça para ouvi-la novamente. Quando entender que a pessoa está na biblioteca, você já pode decidir onde procurá-la. A repetição tem um propósito: recuperar a informação.\n\nEstoy en la plaza. ¿Dónde estás?\n\nNesse outro contato, você informa seu lugar antes da pergunta. A ordem faz sentido porque você quer encontrar alguém e também oferecer uma informação útil sobre sua própria posição.\n\nVocê pode ensaiar em voz baixa antes de consultar o modelo. Depois compare a intenção: sua frase informou um lugar? Fez a pergunta que você queria? Esse ensaio não recebe uma nota automática de pronúncia.\n\nAgora vamos escolher um pedido de ajuda em uma situação nova. Você já ouviu os modelos e a diferença entre eles. Use essa diferença para decidir o que dizer.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-07-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-07-f3347ef0c5b71df2.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 75120,
+      "sha256": "f3347ef0c5b71df251d7725bb6d3a9a243f6dec254ff95239e1d3d3c5646d92b",
+      "transcript": "Reconhecer um exemplo conhecido é um começo. Para ampliar sua prática, precisamos mudar a situação. Imagine que o encontro mudou de lugar e você precisa avisar isso antes de procurar a outra pessoa.\n\nEstoy en la biblioteca. ¿Dónde estás?\n\nA estrutura continua disponível, mas a informação agora é outra. Você não precisa copiar o lugar do primeiro exemplo. Escolha o lugar que corresponde à situação que quer comunicar.\n\nFaça uma pequena tentativa de memória: como avisaria que está na praça? Se não lembrar, consulte o exemplo e tente novamente depois. Usar apoio é parte do estudo, não um motivo para perder pontos.\n\nEstoy en la plaza.\n\nCompare sua tentativa com esse modelo. Observe o começo da mensagem e o lugar informado. Uma resposta sobre a biblioteca poderia estar bem formada, mas não atenderia a uma tarefa que pede praça.\n\nQuando voltar a estudar em outra sessão, tente recuperar a pergunta antes de ver o cartão. Essa retomada em outro momento ajuda a observar o que você consegue produzir sem o modelo à frente.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
+  },
+  {
+    "id": "atp-live-08-narration",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/guided-ai-001/section-08-9cda3153dfe9f148.mp3",
+    "metadata": {
+      "author": "Destrava Language Foundry",
+      "synthetic": true,
+      "generator": "OpenAI gpt-4o-mini-tts",
+      "voice": "coral",
+      "durationMs": 97152,
+      "sha256": "9cda3153dfe9f148ef6818a83f5832941f2316d46b6f694ec60d9b08cda7000b",
+      "transcript": "Vamos juntar as peças sem acrescentar uma lista enorme de regras. Você pode avisar seu lugar, perguntar pelo lugar da outra pessoa e pedir ajuda quando a informação não fica clara.\n\nEstoy en la plaza. ¿Dónde estás?\n\nNo entiendo. ¿Puedes repetir, por favor?\n\nEsses modelos são um ponto de partida. Na prática, escute a resposta da pessoa e use a informação recebida. Uma conversa não é apenas uma sequência de frases decoradas: cada fala muda o que vem depois.\n\nSe ainda confunde a pergunta com a localização, volte ao trecho correspondente e observe a troca entre as duas pessoas. Se a dificuldade é escolher o pedido de ajuda, compare a situação com os dois pedidos.\n\nVocê também pode escrever uma dúvida agora. O professor considera esta aula e o momento em que você interrompeu. Depois da resposta, retome a explicação pelo ponto indicado no controle.\n\nQuando terminar, experimente uma mensagem curta com um lugar diferente do primeiro exemplo. Em uma próxima sessão, recupere a pergunta sem olhar. Essas tentativas mostram melhor o que já consegue usar.\n\nVocê concluiu uma prática inicial de encontro e compreensão. Continue com as atividades da unidade para ampliar essas ações. Terminar esta aula registra a participação; não significa que você já domina todo o espanhol.",
+      "sourceLanguage": "pt-BR",
+      "targetLanguage": "es",
+      "credit": "Roteiro original Destrava; voz gerada por IA.",
+      "sourceUrl": "https://developers.openai.com/api/docs/guides/text-to-speech",
+      "listeningScope": "guided_lesson",
+      "humanAudition": false
+    }
   }
 ]

@@ -487,7 +487,7 @@ export function AppShell({
               }}>
                 <Sparkles size={16} />{" "}
                 {tutorAction.operation === "unknown"
-                  ? "Tentar professor (condicional)"
+                  ? "Perguntar ao professor"
                   : "Perguntar ao professor"}
               </button>
             )}
@@ -544,7 +544,7 @@ export function AppShell({
           >
             <MessageCircle size={20} />{" "}
             <span>
-              {conversationAction.operation === "unknown" ? "Conversar (condicional)" : "Conversar"}
+              {conversationAction.operation === "unknown" ? "Conversar" : "Conversar"}
             </span>
           </Link>
         ) : (

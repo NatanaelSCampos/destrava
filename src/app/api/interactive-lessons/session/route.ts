@@ -117,6 +117,7 @@ export async function POST(request: Request) {
               lessonSessionId: scope.sessionId,
               contentVersion: scope.contentVersion,
               segmentId: event.segmentId,
+              positionMs: event.positionMs,
             },
           })),
         );
