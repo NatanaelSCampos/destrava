@@ -1,7 +1,10 @@
 "use client";
 
+import { presentationLanguage } from "@/engine/presentation/language";
+import { PracticeConversation } from "./practice-conversation";
 import { useState } from "react";
-import { Check, RotateCcw, X } from "lucide-react";
+import { useResponseDraft } from "./use-response-draft";
+import { Check, ListChecks, RotateCcw, X } from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import type { GradeResult } from "@/domain/activities/grader";
 import { useStudy } from "@/components/study-provider";
@@ -25,20 +28,40 @@ type Exercise = Extract<
 export function ExerciseCard({
   activity,
   onAssessed,
+  conversation = false,
   onSubmitAnswer,
+  onRecordAnswer,
+  answerDraftScope,
 }: {
   activity: Exercise;
+  answerDraftScope?: string;
+  onRecordAnswer?: (answer: string) => void;
+  conversation?: boolean;
   onSubmitAnswer?: (answer: string) => Promise<GradeResult>;
   onAssessed?: (answer: string, result: GradeResult) => void;
 }) {
   const { language, assessActivity } = useStudy();
-  const [answer, setAnswer] = useState("");
-  const [ordered, setOrdered] = useState<string[]>([]);
+  const {
+    value: draft,
+    update: updateDraft,
+    reloadSafe,
+  } = useResponseDraft(activity.id + (answerDraftScope ? ":attempt:" + answerDraftScope : ""));
+  const answer = draft.answer ?? "";
+  const ordered = draft.ordered ?? [];
+  const setAnswer = (text: string) => updateDraft({ answer: text });
+  const setOrdered = (next: string[] | ((current: string[]) => string[])) =>
+    updateDraft((current) => ({
+      ordered: typeof next === "function" ? next(current.ordered ?? []) : next,
+    }));
+  const [recorded, setRecorded] = useState(false);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [composing, setComposing] = useState(false);
   const textAttributes = useTextPresentation(activity.presentation);
+  const optionsLanguage = textAttributes("options").lang.split("-")[0].toLowerCase();
+  const targetLanguage = presentationLanguage(language).split("-")[0].toLowerCase();
+  const targetOptions = optionsLanguage === targetLanguage;
   const tokens = activity.type === "ordering" ? orderingTokens(activity.id, activity.words) : [];
   const selected = selectedTokens(tokens, ordered);
   const selectedAnswer =
@@ -48,6 +71,11 @@ export function ExerciseCard({
 
   async function submit() {
     if (!selectedAnswer.trim() || loading || composing) return;
+    if (onRecordAnswer) {
+      onRecordAnswer(selectedAnswer);
+      setRecorded(true);
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -64,14 +92,21 @@ export function ExerciseCard({
   }
 
   function reset() {
+    setRecorded(false);
     setResult(null);
     setAnswer("");
     setOrdered([]);
     setError("");
   }
 
-  return (
+  const content = (
     <div className="exercise-content">
+      {!reloadSafe && (
+        <p role="status">
+          O navegador bloqueou o rascunho local. Mantenha esta página aberta até enviar sua
+          resposta.
+        </p>
+      )}
       {activity.type === "listening" && (
         <AudioPlayer variant={activity.variant} text={activity.transcript} media={activity.media} />
       )}
@@ -92,7 +127,7 @@ export function ExerciseCard({
                 className={`option ${answer === value ? "selected" : ""}`}
                 role="radio"
                 aria-checked={answer === value}
-                disabled={!!result}
+                disabled={!!result || recorded}
                 onClick={() => setAnswer(value)}
               >
                 <span className="option-letter">{String.fromCharCode(65 + index)}</span>
@@ -100,12 +135,19 @@ export function ExerciseCard({
                   as="span"
                   presentation={activity.presentation}
                   field="options"
-                  textRole={activity.type === "true_false" ? "interface" : "target"}
+                  itemIndex={index}
+                  textRole={
+                    activity.type === "true_false"
+                      ? "interface"
+                      : targetOptions
+                        ? "target"
+                        : "source"
+                  }
                   text={label}
                 />
                 {answer === value && <Check size={17} />}
               </button>
-              {activity.type !== "true_false" && (
+              {!onRecordAnswer && activity.type !== "true_false" && targetOptions && (
                 <SpeakButton variant={activity.variant} text={label} label={`Ouvir ${label}`} />
               )}
             </div>
@@ -132,7 +174,7 @@ export function ExerciseCard({
                 void submit();
               }
             }}
-            disabled={!!result}
+            disabled={!!result || recorded}
             placeholder={
               activity.type === "fill_blank"
                 ? "Digite o trecho que falta…"
@@ -158,12 +200,13 @@ export function ExerciseCard({
                   data-token-id={token.id}
                   type="button"
                   className="word-chip chosen"
-                  disabled={!!result}
+                  disabled={!!result || recorded}
                   onClick={() => setOrdered((current) => current.filter((id) => id !== token.id))}
                 >
                   <LearningText
                     presentation={activity.presentation}
                     field="tokens"
+                    itemIndex={token.position}
                     textRole="fragment"
                     text={token.text}
                   />
@@ -176,7 +219,7 @@ export function ExerciseCard({
               </span>
             )}
           </div>
-          {ordered.length > 0 && (
+          {!onRecordAnswer && ordered.length > 0 && (
             <SpeakButton
               variant={activity.variant}
               text={selectedAnswer}
@@ -191,79 +234,150 @@ export function ExerciseCard({
                   className="word-chip"
                   type="button"
                   data-token-id={token.id}
-                  disabled={!!result || ordered.includes(token.id)}
+                  disabled={!!result || recorded || ordered.includes(token.id)}
                   onClick={() => setOrdered((current) => [...current, token.id])}
                 >
                   <LearningText
                     presentation={activity.presentation}
                     field="tokens"
+                    itemIndex={token.position}
                     textRole="fragment"
                     text={token.text}
                   />
                 </button>
-                <SpeakButton
-                  variant={activity.variant}
-                  text={token.text}
-                  label={`Ouvir ${token.text}`}
-                />
+                {!onRecordAnswer && (
+                  <SpeakButton
+                    variant={activity.variant}
+                    text={token.text}
+                    label={`Ouvir ${token.text}`}
+                  />
+                )}
               </span>
             ))}
           </div>
         </div>
       )}
-      {!result && (
+      {!result && !recorded && (
         <button
           type="button"
           className="primary-button exercise-submit"
           onClick={() => void submit()}
           disabled={!selectedAnswer.trim() || loading || composing}
         >
-          {loading ? "Corrigindo…" : "Verificar resposta"}
+          {loading ? "Corrigindo…" : onRecordAnswer ? "Confirmar resposta" : "Verificar resposta"}
         </button>
+      )}
+      {recorded && (
+        <div className="assessment-answer-recorded" role="status">
+          <Check size={18} /> Resposta pronta. O resultado aparece ao terminar a prova.
+        </div>
       )}
       {error && (
         <p className="inline-error" role="alert">
           {error}
         </p>
       )}
-      {result && !onAssessed && (
+      {result && (!onAssessed || onSubmitAnswer) && (
         <div className={`feedback-card ${result.correct ? "correct" : "incorrect"}`} role="status">
           <span className="feedback-icon">
             {result.correct ? <Check size={18} /> : <X size={18} />}
           </span>
           <div>
             <strong>
-              {result.correct ? "Muito bem! Resposta correta." : "Ainda não. Vamos ajustar."}
+              <LearningText
+                as="span"
+                presentation={result.presentation ?? activity.presentation}
+                field="feedbackSummary"
+                textRole="source"
+                text={
+                  result.feedback?.summary ??
+                  (result.correct ? "Muito bem! Resposta correta." : "Ainda não. Vamos ajustar.")
+                }
+              />
             </strong>
             <LearningText
               as="p"
-              presentation={activity.presentation}
-              field="feedback"
+              presentation={result.presentation ?? activity.presentation}
+              field={
+                result.presentation
+                  ? result.feedback?.detail
+                    ? "feedback"
+                    : "explanation"
+                  : "feedback"
+              }
               textRole="source"
-              text={result.explanation}
+              text={result.feedback?.detail ?? result.explanation}
             />
+            {result.feedback && result.feedback.alternatives.length > 0 && (
+              <section className="feedback-comparison" aria-label="Comparação das alternativas">
+                <h3>
+                  <ListChecks size={18} aria-hidden="true" /> Compare as alternativas
+                </h3>
+                <ul className="feedback-alternative-list">
+                  {result.feedback.alternatives.map((item, index) => {
+                    const optionIndex =
+                      "options" in activity ? activity.options.indexOf(item.answer) : index;
+                    const chosen = item.answer === selectedAnswer;
+                    return (
+                      <li
+                        key={item.answer}
+                        className={"feedback-alternative" + (chosen ? " chosen" : "")}
+                      >
+                        <div className="feedback-alternative-heading">
+                          <span className="feedback-alternative-letter" aria-hidden="true">
+                            {optionIndex >= 0 ? String.fromCharCode(65 + optionIndex) : index + 1}
+                          </span>
+                          <LearningText
+                            as="strong"
+                            presentation={activity.presentation}
+                            field="options"
+                            itemIndex={optionIndex}
+                            text={item.answer}
+                          />
+                        </div>
+                        {chosen && <span className="feedback-choice-label">Sua escolha</span>}
+                        <LearningText
+                          as="p"
+                          presentation={result.presentation ?? activity.presentation}
+                          field="feedbackAlternative"
+                          itemIndex={index}
+                          textRole="source"
+                          text={item.detail}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            )}
             {!result.correct && (
               <>
                 <p className="correct-answer">
                   {activity.type === "fill_blank" ? "Trecho esperado: " : "Resposta esperada: "}
                   <LearningText
                     as="strong"
-                    presentation={activity.presentation}
+                    presentation={result.presentation ?? activity.presentation}
                     field="answer"
                     text={result.correctAnswer}
                   />
-                  <SpeakButton
-                    variant={activity.variant}
-                    text={result.correctAnswer}
-                    label="Ouvir resposta esperada"
-                  />
+                  {targetOptions && (
+                    <SpeakButton
+                      variant={activity.variant}
+                      text={result.correctAnswer}
+                      label="Ouvir resposta esperada"
+                    />
+                  )}
                 </p>
                 {activity.type === "fill_blank" && result.completeAnswer && (
                   <p className="correct-answer">
                     Frase completa:{" "}
                     <LearningText
                       as="strong"
-                      presentation={activity.presentation}
+                      presentation={
+                        result.presentation
+                          ? { ...result.presentation, annotations: undefined }
+                          : activity.presentation
+                      }
                       field="answer"
                       text={result.completeAnswer}
                     />
@@ -282,7 +396,7 @@ export function ExerciseCard({
                 <div className="text-audio-row">
                   <LearningText
                     as="p"
-                    presentation={activity.presentation}
+                    presentation={result.presentation ?? activity.presentation}
                     field="transcript"
                     text={result.transcript}
                   />
@@ -303,5 +417,10 @@ export function ExerciseCard({
         </button>
       )}
     </div>
+  );
+  return conversation || activity.scene ? (
+    <PracticeConversation activity={activity}>{content}</PracticeConversation>
+  ) : (
+    content
   );
 }

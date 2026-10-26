@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/activities/lesson-experience.css";
 
 :root {
   --background: #f7f7f8;
@@ -1056,3 +1057,81 @@ select:focus-visible {
 }
 .study-sync-notice p { margin: 0 0 0.625rem; }
 .study-sync-notice > div { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+/* Optional structured teaching, CoursePackage 1.6. */
+.teaching-content { display: grid; gap: 1.25rem; min-width: 0; }
+.teaching-lines { display: grid; gap: 1rem; min-width: 0; }
+.teaching-line { padding: 1.1rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); min-width: 0; overflow-wrap: anywhere; }
+.teaching-dialogue .teaching-line { margin: 0; border-start-start-radius: .25rem; }
+.teaching-speaker { margin: 0 0 .5rem; font-size: .9rem; color: var(--text-secondary); }
+.teaching-phrase { margin: 0 0 .8rem; font-size: 1.35rem; font-weight: 650; line-height: 1.5; }
+.recorded-phrase { display: grid; gap: .65rem; margin-block: .7rem; min-width: 0; }
+.recorded-phrase audio { display: block; max-width: 100%; width: 100%; }
+.audio-speed { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; font-size: .9rem; }
+.audio-speed select { padding: .4rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--surface); color: var(--text-primary); }
+.teaching-content details, .feedback-details, .media-credit { padding: .65rem 0; }
+.teaching-content summary, .feedback-details summary, .media-credit summary { cursor: pointer; font-weight: 600; }
+.teaching-content summary:focus-visible, .feedback-details summary:focus-visible, .media-credit summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.media-credit { font-size: .85rem; color: var(--text-secondary); overflow-wrap: anywhere; }
+.media-credit a { text-decoration: underline; }
+.teaching-diagram { margin: 0; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; }
+.teaching-diagram figcaption { font-weight: 600; margin-bottom: .5rem; }
+.teaching-diagram ul { padding: 0; margin: 0; list-style: none; display: grid; gap: .75rem; }
+.teaching-diagram li { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.teaching-diagram li strong { padding: .5rem .75rem; border: 1px solid var(--border); border-radius: .5rem; }
+.deferred-recovery { margin-block: 1.25rem; padding: 1rem; border: 2px solid var(--primary); border-radius: .75rem; }
+.feedback-details ul { display: grid; gap: .8rem; padding-inline-start: 1.3rem; }
+@media(max-width:520px) {
+  .teaching-line { padding: .85rem; }
+  .teaching-phrase { font-size: 1.2rem; }
+  .teaching-dialogue .teaching-line { margin-inline-end: .5rem; }
+}
+
+.phrase-audio-controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.phrase-play-button,.phrase-repeat-button { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:40px; padding:8px 12px; border:1px solid #e7e4e3; border-radius:12px; background:white; color:#be2946; font-size:12px; font-weight:700; }
+.phrase-play-button:hover,.phrase-repeat-button:hover { background:#fff3f4; }
+.audio-speed span { font-size:11px; color:#667380; }
+.teaching-diagram li strong { display:flex; align-items:center; gap:8px; }
+.teaching-avatar { width:38px; height:38px; flex:0 0 38px; display:grid; place-items:center; border-radius:14px; background:#f1d8c6; color:#945a32; font-size:12px; font-weight:800; }
+.teaching-dialogue .teaching-turn { display:flex; align-items:flex-start; gap:10px; }
+.teaching-dialogue .teaching-turn .teaching-line { flex:1; min-width:0; margin:0; }
+.teaching-dialogue .teaching-turn[data-speaker-position="1"] { flex-direction:row-reverse; }
+.teaching-dialogue .teaching-turn[data-speaker-position="1"] .teaching-avatar { background:#dceee7; color:#347764; }
+.teaching-dialogue .teaching-turn[data-speaker-position="1"] .teaching-line { margin:0; background:#edf8f2; border-color:#d9e9e0; border-radius:15px 5px 15px 15px; }
+@media(max-width:390px) { .teaching-avatar { width:30px; height:30px; flex-basis:30px; } .teaching-dialogue .teaching-turn { gap:7px; } }
+
+/* Authored inline language spans: distinguish the expression from its explanation. */
+.learning-inline-term {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.08em;
+  color: #185e55;
+  background: #ecf5ef;
+  border-radius: .3rem;
+  padding: .06em .25em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.recall-context-card { display:flex; align-items:center; justify-content:space-between; gap:24px; padding:24px; background:#fff3e5; border:1px solid #f4ddc0; border-radius:20px; }
+.recall-context-card h3 { margin:12px 0 8px; font-size:clamp(1.25rem,2.2vw,1.75rem); color:#20352f; }
+.recall-context-card p { margin:0; max-width:45ch; line-height:1.7; }
+.recall-context-card svg { flex-shrink:0; }
+.recall-context-card > svg { width:170px; max-width:30%; height:auto; }
+.recall-attempt { margin-top:20px; }
+.recall-attempt label { display:flex; align-items:center; gap:10px; margin-bottom:14px; font-weight:600; color:#20352f; line-height:1.6; }
+.recall-attempt textarea { width:100%; border:1px solid #ccdcd4; border-radius:12px; background:#fff; padding:14px; min-height:96px; resize:vertical; font-size:1rem; }
+.recall-attempt small { display:block; margin-top:10px; color:#60766c; }
+.recall-actions { display:flex; flex-wrap:wrap; gap:12px; padding:20px 0; }
+.recall-actions button { display:inline-flex; align-items:center; gap:8px; }
+.recall-model { border:1px solid #dce8e2; border-radius:18px; padding:20px; background:#f8fbf9; }
+.recall-model > h3 { margin:0 0 18px; font-size:1.05rem; }
+.recall-model .teaching-lines { gap:14px; }
+.recall-legacy-answer { display:flex; flex-wrap:wrap; align-items:center; gap:16px; }
+@media(max-width:600px) {
+  .recall-context-card { padding:18px; gap:12px; }
+  .recall-context-card > svg { width:95px; }
+  .recall-actions { flex-direction:column; }
+  .recall-actions button { justify-content:center; width:100%; }
+  .recall-model { padding:14px; }
+}

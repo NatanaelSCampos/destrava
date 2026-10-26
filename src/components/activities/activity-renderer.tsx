@@ -1,11 +1,26 @@
 "use client";
 
-import { BookOpen, Check, Clock3 } from "lucide-react";
+import { LearningAccessCard } from "./learning-access-card";
+import {
+  BookOpen,
+  Check,
+  Clock3,
+  MessageCircle,
+  Ear,
+  Puzzle,
+  PenLine,
+  Mic,
+  Brain,
+} from "lucide-react";
 import type { PublicActivity } from "@/content/public";
 import { useStudy } from "@/components/study-provider";
 import { featureFlags } from "@/lib/feature-flags";
+import { TeachingCard } from "./teaching-card";
+import { ReviewRecall } from "./review-recall";
+import { DeferredRecovery } from "./deferred-recovery";
 import { ExerciseCard } from "./exercise-card";
 import { WritingEditor } from "./writing-editor";
+import { FlashcardPractice } from "./flashcard-practice";
 import { SpeakingRecorder } from "./speaking-recorder";
 import { SpeakButton } from "@/components/audio/speak-button";
 import type { GradeResult } from "@/domain/activities/grader";
@@ -14,35 +29,89 @@ import { resolveLearningVariant } from "@/engine/variants/resolution";
 import { variantLabel } from "@/content/language-variant";
 import { LearningText } from "@/components/learning/text-presentation";
 
+export function activityEligibility(
+  activity: PublicActivity,
+  context: {
+    language: Parameters<typeof resolveLearningVariant>[0];
+    course: Parameters<typeof resolveLearningVariant>[1] & {
+      availability?: { unavailableActivityIds: string[] };
+    };
+    preference: unknown;
+  },
+) {
+  const variant = resolveLearningVariant(
+    context.language,
+    context.course,
+    context.preference,
+    activity.variant,
+  );
+  return {
+    variant,
+    eligible:
+      variant.status !== "invalid" &&
+      !context.course?.availability?.unavailableActivityIds.includes(activity.id),
+  };
+}
+
 export function ActivityRenderer({
   activity,
   onAssessed,
   onSpeakingSaved,
   onWritingSaved,
+  onActivityComplete,
   onSubmitAnswer,
   onSubmitWriting,
   onSubmitSpeaking,
+  writingDraft,
+  suspended = false,
+  hideContentCompletion = false,
 }: {
   activity: PublicActivity;
+  suspended?: boolean;
+  hideContentCompletion?: boolean;
+  writingDraft?: { text: string; onChange: (text: string) => void };
   onSubmitAnswer?: (answer: string) => Promise<GradeResult>;
   onSubmitWriting?: (text: string) => Promise<void>;
   onSubmitSpeaking?: (transcription: string, audio: Blob) => Promise<void>;
   onAssessed?: (answer: string, result: GradeResult) => void;
   onWritingSaved?: (text: string) => void;
+  onActivityComplete?: (activityId: string) => void;
   onSpeakingSaved?: (result?: {
     submissionId: string;
     transcription: string;
     feedback?: PronunciationFeedback;
   }) => void;
 }) {
-  const { course, language, state, completeActivity } = useStudy();
+  const { course, language, state, completeActivity, learningAccess } = useStudy();
   const done = state.completedActivityIds.includes(activity.id);
-  const variant = resolveLearningVariant(
+  const conversation =
+    Boolean(activity.scene) ||
+    (["short_answer", "ordering", "speaking"].includes(activity.type) &&
+      Boolean(
+        activity.supportActivityIds?.some((id) =>
+          course.units.some((unit) =>
+            unit.lessons.some((lesson) =>
+              lesson.activities.some(
+                (item) =>
+                  item.id === id &&
+                  item.type === "lesson_content" &&
+                  item.teaching &&
+                  (activity.type !== "ordering" || item.teaching.kind === "dialogue"),
+              ),
+            ),
+          ),
+        ),
+      ));
+  const { variant } = activityEligibility(activity, {
     language,
     course,
-    state.profile.variantId,
-    activity.variant,
+    preference: state.profile.variantId,
+  });
+  const owner = course.units.find((u) =>
+    u.lessons.some((l) => l.activities.some((a) => a.id === activity.id)),
   );
+  if (owner?.access && !learningAccess?.units[owner.id]?.allowed)
+    return <LearningAccessCard decision={learningAccess?.units[owner.id]} />;
   if (variant.status === "invalid")
     return (
       <article className="activity-panel panel" role="status">
@@ -75,7 +144,7 @@ export function ActivityRenderer({
       </article>
     );
   return (
-    <article className="activity-panel panel">
+    <article className="activity-panel panel" id={"activity-" + activity.id} tabIndex={-1}>
       <div className="activity-top">
         <div>
           <span className="eyebrow">
@@ -88,13 +157,40 @@ export function ActivityRenderer({
             textRole="source"
             text={activity.title}
           />
-          <LearningText
-            as="p"
-            presentation={activity.presentation}
-            field="prompt"
-            textRole="source"
-            text={activity.prompt}
-          />
+          {!conversation && !(activity.type === "flashcard" && activity.recallScene) && (
+            <div
+              className={
+                activity.type === "lesson_content"
+                  ? "activity-prompt"
+                  : "activity-prompt activity-prompt-illustrated"
+              }
+            >
+              {activity.type !== "lesson_content" && (
+                <span className="activity-prompt-icon" aria-hidden="true">
+                  {activity.type === "listening" ? (
+                    <Ear />
+                  ) : activity.type === "ordering" ? (
+                    <Puzzle />
+                  ) : activity.type === "writing" ? (
+                    <PenLine />
+                  ) : activity.type === "speaking" ? (
+                    <Mic />
+                  ) : activity.type === "flashcard" ? (
+                    <Brain />
+                  ) : (
+                    <MessageCircle />
+                  )}
+                </span>
+              )}
+              <LearningText
+                as="p"
+                presentation={activity.presentation}
+                field="prompt"
+                textRole="source"
+                text={activity.prompt}
+              />
+            </div>
+          )}
           {activity.variant?.requiredVariant && (
             <small>
               Esta atividade usa {variantLabel(language, variant.variantId, course)}. Sua
@@ -124,7 +220,22 @@ export function ActivityRenderer({
           activity.type === "review" ||
           activity.type === "quiz") && (
           <div className="lesson-body">
-            {activity.type === "review" && activity.cards.length > 0 ? (
+            {activity.type === "lesson_content" && activity.teaching && (
+              <TeachingCard
+                teaching={activity.teaching}
+                presentation={activity.presentation}
+                scene={activity.scene}
+              />
+            )}
+            {activity.type === "review" && activity.reviewMode === "recall" ? (
+              <ReviewRecall
+                key={activity.id}
+                activity={activity}
+                done={done}
+                hideCompletion={hideContentCompletion}
+                onComplete={() => completeActivity(activity.id)}
+              />
+            ) : activity.type === "review" && activity.cards.length > 0 ? (
               <div className="review-guide">
                 <div className="review-guide-intro">
                   <span className="eyebrow">COMO FAZER</span>
@@ -188,6 +299,7 @@ export function ActivityRenderer({
                 </p>
               </div>
             ) : (
+              !(activity.type === "lesson_content" && activity.teaching && activity.scene) &&
               activity.body
                 .split("\n\n")
                 .map((paragraph, index) => (
@@ -196,44 +308,51 @@ export function ActivityRenderer({
                     key={index}
                     presentation={activity.presentation}
                     field="body"
+                    itemIndex={index}
                     textRole="source"
                     text={paragraph}
                   />
                 ))
             )}
-            {activity.type === "lesson_content" && activity.highlights.length > 0 && (
-              <div className="phrase-strip">
-                {activity.highlights.map((phrase) => (
-                  <span className="phrase-audio-item" key={phrase}>
-                    <LearningText
-                      as="span"
-                      presentation={activity.presentation}
-                      field="highlights"
-                      text={phrase}
-                    />
-                    <SpeakButton
-                      variant={activity.variant}
-                      text={phrase}
-                      label={`Ouvir ${phrase}`}
-                    />
-                  </span>
-                ))}
-              </div>
-            )}
-            <button
-              type="button"
-              className={done ? "secondary-button" : "primary-button"}
-              onClick={() => completeActivity(activity.id)}
-            >
-              <Check size={16} />{" "}
-              {done
-                ? activity.type === "review"
-                  ? "Revisão concluída"
-                  : "Conteúdo concluído"
-                : activity.type === "review"
-                  ? "Concluí a revisão"
-                  : "Marcar como estudado"}
-            </button>
+            {activity.type === "lesson_content" &&
+              !(activity.teaching && activity.scene) &&
+              activity.highlights.length > 0 && (
+                <div className="phrase-strip">
+                  {activity.highlights.map((phrase, index) => (
+                    <span className="phrase-audio-item" key={phrase}>
+                      <LearningText
+                        as="span"
+                        presentation={activity.presentation}
+                        field="highlights"
+                        itemIndex={index}
+                        text={phrase}
+                      />
+                      <SpeakButton
+                        variant={activity.variant}
+                        text={phrase}
+                        label={`Ouvir ${phrase}`}
+                      />
+                    </span>
+                  ))}
+                </div>
+              )}
+            {!hideContentCompletion &&
+              !(activity.type === "review" && activity.reviewMode === "recall") && (
+                <button
+                  type="button"
+                  className={done ? "secondary-button" : "primary-button"}
+                  onClick={() => completeActivity(activity.id)}
+                >
+                  <Check size={16} />{" "}
+                  {done
+                    ? activity.type === "review"
+                      ? "Revisão concluída"
+                      : "Conteúdo concluído"
+                    : activity.type === "review"
+                      ? "Concluí a revisão"
+                      : "Marcar como estudado"}
+                </button>
+              )}
           </div>
         )}
         {activity.type === "listening" && !featureFlags.LISTENING ? (
@@ -252,63 +371,48 @@ export function ActivityRenderer({
             <ExerciseCard
               key={activity.id}
               activity={activity as Parameters<typeof ExerciseCard>[0]["activity"]}
+              conversation={conversation}
               onAssessed={onAssessed}
               onSubmitAnswer={onSubmitAnswer}
             />
           )
         )}
         {activity.type === "writing" && (
-          <WritingEditor key={activity.id} activity={activity} onSaved={onWritingSaved} onSubmitWriting={onSubmitWriting} />
+          <WritingEditor
+            key={activity.id}
+            activity={activity}
+            draft={writingDraft}
+            onSaved={onWritingSaved}
+            onSubmitWriting={onSubmitWriting}
+          />
         )}
         {activity.type === "speaking" &&
           (featureFlags.SPEAKING ? (
-            <SpeakingRecorder key={activity.id} activity={activity} onSaved={onSpeakingSaved} onSubmitSpeaking={onSubmitSpeaking} />
+            <SpeakingRecorder
+              key={activity.id}
+              activity={activity}
+              conversation={conversation}
+              showReference={!conversation}
+              showReferenceAudio={!conversation}
+              suspended={suspended}
+              onSaved={onSpeakingSaved}
+              onSubmitSpeaking={onSubmitSpeaking}
+            />
           ) : (
             <p className="muted">A prática oral está temporariamente indisponível.</p>
           ))}
         {activity.type === "flashcard" && (
-          <div className="lesson-body">
-            <div className="phrase-strip">
-              <span className="phrase-audio-item">
-                <LearningText
-                  as="span"
-                  presentation={activity.presentation}
-                  field="front"
-                  text={activity.front}
-                />
-                <SpeakButton
-                  variant={activity.variant}
-                  text={activity.front}
-                  label={`Ouvir ${activity.front}`}
-                />
-              </span>
-              <LearningText
-                as="span"
-                presentation={activity.presentation}
-                field="back"
-                textRole="source"
-                text={activity.back}
-              />
-            </div>
-            <div className="text-audio-row">
-              <LearningText
-                as="p"
-                presentation={activity.presentation}
-                field="example"
-                text={activity.example}
-              />
-              <SpeakButton
-                variant={activity.variant}
-                text={activity.example}
-                label="Ouvir frase de exemplo"
-              />
-            </div>
-            <button className="primary-button" onClick={() => completeActivity(activity.id)}>
-              Concluir flashcard
-            </button>
-          </div>
+          <FlashcardPractice
+            key={activity.id}
+            activity={activity}
+            onComplete={() => {
+              completeActivity(activity.id);
+              onActivityComplete?.(activity.id);
+            }}
+          />
         )}
       </div>
+      <DeferredRecovery key={activity.id} activityId={activity.id} />
       {activity.source && (
         <div className="activity-source">
           Base pedagógica:{" "}

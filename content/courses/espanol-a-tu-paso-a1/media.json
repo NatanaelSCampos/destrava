@@ -1,0 +1,2238 @@
+[
+  {
+    "id": "atp-audio-biblioteca",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/biblioteca.wav",
+    "metadata": {
+      "author": "Centenoyespelta",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALL-Q1321%20(spa)-Centenoyespelta-biblioteca.wav",
+      "credit": "Centenoyespelta — Lingua Libre / Wikimedia Commons — CC0 — gravação integral sem alterações.",
+      "unchanged": true,
+      "listeningScope": "isolated_word"
+    }
+  },
+  {
+    "id": "atp-audio-tres",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/tres.wav",
+    "metadata": {
+      "author": "Rachlel",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALL-Q1321%20(spa)-Rachlel-tres.wav",
+      "credit": "Rachlel — Lingua Libre / Wikimedia Commons — CC0 — gravação integral sem alterações.",
+      "unchanged": true,
+      "listeningScope": "isolated_word"
+    }
+  },
+  {
+    "id": "atp-audio-agua",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/agua.wav",
+    "metadata": {
+      "author": "Precision27",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File%3ALL-Q1321%20(spa)-Precision27-agua.wav",
+      "credit": "Precision27 — Lingua Libre / Wikimedia Commons — CC BY 4.0 — gravação integral sem alterações.",
+      "unchanged": true,
+      "listeningScope": "isolated_word"
+    }
+  },
+  {
+    "id": "atp-audio-location-library",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-location-library.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en la biblioteca.",
+      "durationSeconds": 1.738,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-location-square",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-location-square.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en la plaza.",
+      "durationSeconds": 1.418,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-where-are-you",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-where-are-you.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Dónde estás?",
+      "durationSeconds": 1.13,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-not-understand",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-not-understand.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "No entiendo.",
+      "durationSeconds": 1.13,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-repeat-please",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-repeat-please.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Puedes repetir, por favor?",
+      "durationSeconds": 2.154,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-repair-combined",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-repair-combined.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Modelo: Piper carlfm, treinado do zero; repositório MIT, dataset declarado domínio público. Uma voz sintetizada; não é gravação de conversa natural.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "No entiendo. ¿Puedes repetir, por favor?",
+      "durationSeconds": 3.252,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance"
+    }
+  },
+  {
+    "id": "atp-audio-v14-time-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-time-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿A qué hora es el encuentro?",
+      "durationSeconds": 1.594,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pergunta de horário"
+    }
+  },
+  {
+    "id": "atp-audio-v14-time-one",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-time-one.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a la una.",
+      "durationSeconds": 1.402,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Horário singular"
+    }
+  },
+  {
+    "id": "atp-audio-v14-time-two",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-time-two.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las dos.",
+      "durationSeconds": 1.546,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Horário plural"
+    }
+  },
+  {
+    "id": "atp-audio-v14-time-half",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-time-half.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las siete y media.",
+      "durationSeconds": 1.994,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Meia hora"
+    }
+  },
+  {
+    "id": "atp-audio-v14-time-now",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-time-now.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Son las dos.",
+      "durationSeconds": 1.21,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Hora atual, em contraste com encontro"
+    }
+  },
+  {
+    "id": "atp-audio-v14-meeting-six",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-meeting-six.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las seis en la plaza.",
+      "durationSeconds": 1.93,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Combinação de encontro"
+    }
+  },
+  {
+    "id": "atp-audio-v14-agree",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-agree.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "De acuerdo.",
+      "durationSeconds": 0.938,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Confirmação"
+    }
+  },
+  {
+    "id": "atp-audio-v14-goodbye",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-goodbye.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Hasta luego.",
+      "durationSeconds": 1.114,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Despedida"
+    }
+  },
+  {
+    "id": "atp-audio-v14-repair-slower",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-repair-slower.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Más despacio, por favor.",
+      "durationSeconds": 2.09,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido de menos velocidade"
+    }
+  },
+  {
+    "id": "atp-audio-v14-repair-usted",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-repair-usted.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Puede repetir, por favor?",
+      "durationSeconds": 2.218,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Repetição no tratamento usted"
+    }
+  },
+  {
+    "id": "atp-audio-v14-repair-price",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-repair-price.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Puede repetir el precio, por favor?",
+      "durationSeconds": 2.65,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido específico sobre preço"
+    }
+  },
+  {
+    "id": "atp-audio-v14-location-hotel",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-location-hotel.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en el hotel.",
+      "durationSeconds": 1.482,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Localização em outro lugar"
+    }
+  },
+  {
+    "id": "atp-audio-v14-greeting",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-greeting.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Buenos días.",
+      "durationSeconds": 1.114,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Abertura de atendimento"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Qué desea?",
+      "durationSeconds": 1.018,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pergunta da atendente"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-coffee",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-coffee.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café con leche, por favor.",
+      "durationSeconds": 2.266,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido com condição"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-tea",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-tea.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un té, por favor.",
+      "durationSeconds": 1.578,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido de chá"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-water",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-water.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Agua sin gas, por favor.",
+      "durationSeconds": 1.77,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido de água sem gás"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-here-you-are",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-here-you-are.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Aquí tiene.",
+      "durationSeconds": 1.146,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Entrega de pedido"
+    }
+  },
+  {
+    "id": "atp-audio-v14-thanks",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-thanks.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Gracias.",
+      "durationSeconds": 1.002,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Agradecimento"
+    }
+  },
+  {
+    "id": "atp-audio-v14-spell",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-spell.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Puede deletrear la palabra, por favor?",
+      "durationSeconds": 2.57,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedir a grafia"
+    }
+  },
+  {
+    "id": "atp-audio-v14-price-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-price-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Cuánto cuesta un té?",
+      "durationSeconds": 1.402,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pergunta do preço de um item"
+    }
+  },
+  {
+    "id": "atp-audio-v14-total-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-total-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Cuánto es?",
+      "durationSeconds": 1.226,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pergunta do valor a pagar"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-two",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-two.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Dos cafés, por favor.",
+      "durationSeconds": 1.754,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Quantidade do pedido"
+    }
+  },
+  {
+    "id": "atp-audio-v14-total-four",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-total-four.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Son cuatro euros.",
+      "durationSeconds": 1.386,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Total do modelo"
+    }
+  },
+  {
+    "id": "atp-audio-v14-number-sixteen",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-number-sixteen.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "dieciséis",
+      "durationSeconds": 1.258,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Número 16"
+    }
+  },
+  {
+    "id": "atp-audio-v14-number-twenty",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-number-twenty.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "veinte",
+      "durationSeconds": 1.21,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Número 20"
+    }
+  },
+  {
+    "id": "atp-audio-v14-takeaway-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-takeaway-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Para aquí o para llevar?",
+      "durationSeconds": 1.738,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Escolha de consumo"
+    }
+  },
+  {
+    "id": "atp-audio-v14-takeaway",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-takeaway.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Para llevar, por favor.",
+      "durationSeconds": 1.546,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Resposta para levar"
+    }
+  },
+  {
+    "id": "atp-audio-v14-for-here",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-for-here.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Para aquí, por favor.",
+      "durationSeconds": 2.01,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Resposta para consumir no local"
+    }
+  },
+  {
+    "id": "atp-audio-v14-milk-question",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-milk-question.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Con leche?",
+      "durationSeconds": 0.746,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Confirmação de condição"
+    }
+  },
+  {
+    "id": "atp-audio-v14-no-milk",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-no-milk.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "No, sin leche, por favor.",
+      "durationSeconds": 1.866,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Correção de condição"
+    }
+  },
+  {
+    "id": "atp-audio-v14-availability-tea",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-availability-tea.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "¿Tiene té?",
+      "durationSeconds": 1.146,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Disponibilidade de chá"
+    }
+  },
+  {
+    "id": "atp-audio-v14-availability-yes",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-availability-yes.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Sí, tenemos té.",
+      "durationSeconds": 1.77,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Resposta de disponibilidade"
+    }
+  },
+  {
+    "id": "atp-audio-v14-order-tea-bread",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-order-tea-bread.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un té y un pan, por favor.",
+      "durationSeconds": 2.09,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido combinado"
+    }
+  },
+  {
+    "id": "atp-audio-v14-total-three",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-total-three.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Son tres euros.",
+      "durationSeconds": 1.562,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Total confirmado do modelo"
+    }
+  },
+  {
+    "id": "atp-audio-v14-end-order",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-end-order.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Eso es todo, gracias.",
+      "durationSeconds": 1.722,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Fechamento de pedido"
+    }
+  },
+  {
+    "id": "atp-audio-v14-guided-order",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-guided-order.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café sin azúcar, para aquí, por favor.",
+      "durationSeconds": 3.242,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Pedido composto guiado"
+    }
+  },
+  {
+    "id": "atp-audio-v14-guided-confirm",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-guided-confirm.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café sin azúcar, para aquí.",
+      "durationSeconds": 2.442,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Confirmação da atendente"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-no-gas",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-no-gas.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Sin gas",
+      "durationSeconds": 1.098,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada água, sua condição"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-water-confirm",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-water-confirm.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Agua sin gas. De acuerdo.",
+      "durationSeconds": 2.292,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada água, confirmação"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-fifteen",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-fifteen.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Quince",
+      "durationSeconds": 0.81,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada número15"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-fifteen-confirm",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-fifteen-confirm.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Sí, son quince pesos.",
+      "durationSeconds": 1.674,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada total, confirmação"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-takeaway",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-takeaway.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Para llevar",
+      "durationSeconds": 0.97,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada consumo, sua escolha"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-takeaway-confirm",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-takeaway-confirm.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café para llevar. De acuerdo.",
+      "durationSeconds": 2.404,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada consumo, confirmação"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-time-half",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-time-half.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "A las ocho y media.",
+      "durationSeconds": 1.274,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada horário, resposta"
+    }
+  },
+  {
+    "id": "atp-audio-v14-recall-meeting-entry",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-recall-meeting-entry.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las seis en la entrada.",
+      "durationSeconds": 2.09,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": "Retomada confirmação, outra pessoa"
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-01",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-01.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las siete.",
+      "durationSeconds": 1.594,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l3-half",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-5",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-3",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-02",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-02.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "El taller es a las cinco y media.",
+      "durationSeconds": 2.026,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l3-events",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-03",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-03.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos a las cinco en la entrada.",
+      "durationSeconds": 2.122,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l3-events",
+          "lineIndex": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-04",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-04.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Es la una.",
+      "durationSeconds": 1.05,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l3-now",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-05",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-05.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "De acuerdo. Nos vemos a las seis.",
+      "durationSeconds": 2.58,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-confirmations",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-06",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-06.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Vale. Nos vemos a las seis.",
+      "durationSeconds": 3.3,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-confirmations",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-07",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-07.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Nos vemos en el parque.",
+      "durationSeconds": 1.674,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-places",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-7",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-5",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-08",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-08.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en la estación.",
+      "durationSeconds": 1.514,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-places",
+          "lineIndex": 2
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-7",
+          "lineIndex": 2
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-5",
+          "lineIndex": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-09",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-09.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en el museo.",
+      "durationSeconds": 1.562,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-places",
+          "lineIndex": 3
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-7",
+          "lineIndex": 3
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-5",
+          "lineIndex": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-10",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-10.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Estoy en la puerta del hotel.",
+      "durationSeconds": 1.738,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-places",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-7",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-5",
+          "lineIndex": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-11",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-11.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Luz está en el mercado.",
+      "durationSeconds": 1.482,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u1-l4-places",
+          "lineIndex": 5
+        },
+        {
+          "activityId": "atp-u1-final-bank-support-7",
+          "lineIndex": 5
+        },
+        {
+          "activityId": "atp-u1-recovery-bank-support-5",
+          "lineIndex": 5
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-12",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-12.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Café con leche.",
+      "durationSeconds": 2.346,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-diagnostic-bank-support-3",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u2-l1-conditions",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-1",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u2-recovery-bank-support-1",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-13",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-13.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Café sin leche.",
+      "durationSeconds": 1.642,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-diagnostic-bank-support-3",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u2-l1-conditions",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-1",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u2-recovery-bank-support-1",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-14",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-14.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Agua con gas.",
+      "durationSeconds": 1.242,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-diagnostic-bank-support-3",
+          "lineIndex": 2
+        },
+        {
+          "activityId": "atp-u2-l1-conditions",
+          "lineIndex": 2
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-1",
+          "lineIndex": 2
+        },
+        {
+          "activityId": "atp-u2-recovery-bank-support-1",
+          "lineIndex": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-15",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-15.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Café sin azúcar.",
+      "durationSeconds": 1.882,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-diagnostic-bank-support-3",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u2-l1-conditions",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-1",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u2-recovery-bank-support-1",
+          "lineIndex": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-16",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-16.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café, por favor.",
+      "durationSeconds": 1.642,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l1-scene",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-17",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-17.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Agua: a, ge, u, a.",
+      "durationSeconds": 2.33,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l1-spelling",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-18",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-18.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Un café.",
+      "durationSeconds": 1.562,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l2-scene",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-19",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-19.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Una botella de agua.",
+      "durationSeconds": 1.45,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l2-scene",
+          "lineIndex": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-20",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-20.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Tres, cuatro, cinco, seis.",
+      "durationSeconds": 2.17,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l2-numbers",
+          "lineIndex": 0
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-2",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-21",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-21.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Diez, quince.",
+      "durationSeconds": 1.546,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l2-numbers",
+          "lineIndex": 1
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-2",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-22",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-22.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Treinta.",
+      "durationSeconds": 0.97,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l2-numbers",
+          "lineIndex": 4
+        },
+        {
+          "activityId": "atp-u2-final-bank-support-2",
+          "lineIndex": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-23",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-23.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Sin azúcar.",
+      "durationSeconds": 1.194,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-guided-help",
+          "lineIndex": 0
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-24",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-24.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Sin leche.",
+      "durationSeconds": 1.482,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-guided-help",
+          "lineIndex": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-25",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-25.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Para aquí.",
+      "durationSeconds": 0.938,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-guided-help",
+          "lineIndex": 2
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v14-c5-teaching-26",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v14-c5-teaching-26.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Texto preservado da autoria Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Geração técnica conferida; audição qualitativa pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Para llevar.",
+      "durationSeconds": 1.034,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-guided-help",
+          "lineIndex": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "atp-audio-v17-dos-panes",
+    "type": "audio",
+    "src": "/media/courses/espanol-a-tu-paso-a1/1.7.0/fabf662d3b118bf44e8b3fa309bd8f3bf0bae59f8066682f4ad3ab0f4470747d/assets/atp-audio-v17-dos-panes.wav",
+    "metadata": {
+      "author": "Language Foundry — roteiro original e síntese local; modelo carlfm / Rhasspy",
+      "license": "Modelo MIT; dataset Public domain; áudio sintético de roteiro original",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/README.md",
+      "sourceUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/carlfm/x_low/MODEL_CARD",
+      "credit": "Voz sintética local em espanhol da Espanha. Roteiro original: Language Foundry. Piper carlfm; repositório do modelo MIT e dataset declarado domínio público. Uma voz sintética; não é gravação de conversa natural. Audição qualitativa desta gravação pendente.",
+      "speechOrigin": "synthetic_local",
+      "variant": "es-ES",
+      "transcript": "Dos panes, por favor.",
+      "durationSeconds": 1.85,
+      "voice": "es_ES-carlfm-x_low",
+      "voiceQuality": "x_low",
+      "modelSHA256": "d69677323a907cd4963f42b29c20a98b5d6bfa7f3e64df339915e4650c00d125",
+      "datasetSourceUrl": "https://github.com/carlfm01/my-speech-datasets",
+      "listeningScope": "short_utterance",
+      "toolExeSHA256": "96f3da3811151580073e40bb4dd20eb0fb8115f5f5f76e2fb54282b3edfa5c1f",
+      "origin": "synthetic_local",
+      "audioStatus": "GENERATED_NOT_AUDITIONED",
+      "usage": [
+        {
+          "activityId": "atp-u2-l4-enrich-pan-plural",
+          "lineIndex": 1
+        }
+      ]
+    }
+  }
+]

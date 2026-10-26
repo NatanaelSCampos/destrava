@@ -1,6 +1,10 @@
 "use client";
+import type { LearningAccessSnapshot } from "@/domain/study/learning-access";
 
-import { interactiveLessonProgressReceiptSchema, type InteractiveLessonProgressReceipt } from "@/domain/interactive-lesson/progress-receipt";
+import {
+  interactiveLessonProgressReceiptSchema,
+  type InteractiveLessonProgressReceipt,
+} from "@/domain/interactive-lesson/progress-receipt";
 
 import {
   createContext,
@@ -78,9 +82,15 @@ import {
 export type { VocabularyItem } from "@/content/language-resources";
 
 type StudyContextValue = {
+  learningAccess: LearningAccessSnapshot | null;
+  learningAccessError: string;
+  refreshLearningAccess: () => Promise<LearningAccessSnapshot | null>;
   runtime?: InstalledRuntimeContext;
   captureInteractiveLessonOwner: () => { generation: number; userId: string };
-  applyInteractiveLessonReceipt: (receipt: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => void;
+  applyInteractiveLessonReceipt: (
+    receipt: InteractiveLessonProgressReceipt,
+    owner: { generation: number; userId: string },
+  ) => void;
   assessActivity: (
     activity: PublicActivity,
     answer: string,
@@ -153,7 +163,10 @@ type StudyContextValue = {
     targetMinutes: number,
   ) => Promise<void>;
   updateActiveSessionDuration: (sessionId: string, seconds: number) => void;
-  checkpointStudySession: (sessionId: string, input: { seconds?: number; cursor?: number; paused?: boolean }) => Promise<void>;
+  checkpointStudySession: (
+    sessionId: string,
+    input: { seconds?: number; cursor?: number; paused?: boolean },
+  ) => Promise<void>;
   confirmAdaptiveProgress: (input: AdaptiveProgress) => Promise<AdaptiveProgress>;
   finishSession: (seconds?: number) => Promise<void>;
   correctSessionDuration: (sessionId: string, minutes: number) => void;
@@ -187,7 +200,13 @@ export function StudyProvider({
     () =>
       new StudyProgressSync(
         () => readCourseState(null, course.id, course.languageCode),
-        browserStudySyncCache(course.id, course.languageCode, runtime),
+        browserStudySyncCache(
+          course.id,
+          course.languageCode,
+          runtime,
+          runtime ? undefined : course.contentVersion,
+        ),
+        runtime ? undefined : { courseId: course.id, contentVersion: course.contentVersion },
       ),
   );
   const snapshot = useSyncExternalStore(sync.subscribe, sync.getSnapshot, sync.getServerSnapshot);
@@ -277,36 +296,52 @@ export function StudyProvider({
             await sync.load(generation, accountId, repository);
             return;
           }
-          const repository = new SupabaseStudyRepository(client, accountId, {
-            course,
-            load: async () => {
-              const response = await fetch(
-                `/api/assessments?courseId=${encodeURIComponent(course.id)}`,
-                { cache: "no-store" },
-              );
-              if (!response.ok)
-                throw new Error("Não foi possível carregar os resultados das avaliações.");
-              const body = await response.json();
-              if (!Array.isArray(body.results)) throw new Error("Formato dos resultados inválido.");
-              return body.results.map((result: unknown) =>
-                serverAssessmentResultSchema.parse(result),
-              );
+          const repository = new SupabaseStudyRepository(
+            client,
+            accountId,
+            {
+              course,
+              load: async () => {
+                const response = await fetch(
+                  `/api/assessments?courseId=${encodeURIComponent(course.id)}`,
+                  { cache: "no-store" },
+                );
+                if (!response.ok)
+                  throw new Error("Não foi possível carregar os resultados das avaliações.");
+                const body = await response.json();
+                if (!Array.isArray(body.results))
+                  throw new Error("Formato dos resultados inválido.");
+                return body.results.map((result: unknown) =>
+                  serverAssessmentResultSchema.parse(result),
+                );
+              },
             },
-          }, {
-            course,
-            load: async () => {
-              const response = await fetch("/api/interactive-lessons/session?courseId=" + encodeURIComponent(course.id) + "&receipts=1", { cache: "no-store" });
-              if (!response.ok) throw new Error("Não foi possível recuperar as tentativas da aula.");
-              const body = await response.json();
-              if (!Array.isArray(body.receipts)) throw new Error("Recibos da aula inválidos.");
-              return body.receipts.map((value: unknown) => {
-                const receipt = interactiveLessonProgressReceiptSchema.parse(value);
-                if (receipt.evidence.userId !== accountId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
-                  throw new Error("A tentativa da aula pertence a outro contexto.");
-                return receipt;
-              });
+            {
+              course,
+              load: async () => {
+                const response = await fetch(
+                  "/api/interactive-lessons/session?courseId=" +
+                    encodeURIComponent(course.id) +
+                    "&receipts=1",
+                  { cache: "no-store" },
+                );
+                if (!response.ok)
+                  throw new Error("Não foi possível recuperar as tentativas da aula.");
+                const body = await response.json();
+                if (!Array.isArray(body.receipts)) throw new Error("Recibos da aula inválidos.");
+                return body.receipts.map((value: unknown) => {
+                  const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+                  if (
+                    receipt.evidence.userId !== accountId ||
+                    receipt.evidence.courseId !== course.id ||
+                    receipt.evidence.contentVersion !== course.contentVersion
+                  )
+                    throw new Error("A tentativa da aula pertence a outro contexto.");
+                  return receipt;
+                });
+              },
             },
-          });
+          );
           await sync.load(generation, accountId, {
             load: () => repository.load(course.id, course.languageCode),
             save: (nextState) => repository.save(nextState, course, vocabularyItems),
@@ -400,17 +435,29 @@ export function StudyProvider({
 
   const captureInteractiveLessonOwner = useCallback(() => {
     const current = sync.getSnapshot();
-    if (runtime || !current.userId || !["loaded", "absent"].includes(current.loadStatus)) throw new Error("A aula requer uma conta autenticada no curso embutido.");
+    if (runtime || !current.userId || !["loaded", "absent"].includes(current.loadStatus))
+      throw new Error("A aula requer uma conta autenticada no curso embutido.");
     return { generation: current.generation, userId: current.userId };
   }, [sync, runtime]);
-  const applyInteractiveLessonReceipt = useCallback((value: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => {
-    if (runtime || !sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
-      throw new Error("Sua conta ou contexto mudou durante a tentativa da aula.");
-    const receipt = interactiveLessonProgressReceiptSchema.parse(value);
-    if (receipt.evidence.userId !== owner.userId || receipt.evidence.courseId !== course.id || receipt.evidence.contentVersion !== course.contentVersion)
-      throw new Error("A tentativa não corresponde ao curso e à conta atuais.");
-    setState((current) => recordInteractiveLessonReceipt(current, course, receipt));
-  }, [runtime, sync, course, setState]);
+  const applyInteractiveLessonReceipt = useCallback(
+    (value: InteractiveLessonProgressReceipt, owner: { generation: number; userId: string }) => {
+      if (
+        runtime ||
+        !sync.isCurrent(owner.generation) ||
+        sync.getSnapshot().userId !== owner.userId
+      )
+        throw new Error("Sua conta ou contexto mudou durante a tentativa da aula.");
+      const receipt = interactiveLessonProgressReceiptSchema.parse(value);
+      if (
+        receipt.evidence.userId !== owner.userId ||
+        receipt.evidence.courseId !== course.id ||
+        receipt.evidence.contentVersion !== course.contentVersion
+      )
+        throw new Error("A tentativa não corresponde ao curso e à conta atuais.");
+      setState((current) => recordInteractiveLessonReceipt(current, course, receipt));
+    },
+    [runtime, sync, course, setState],
+  );
   const updateProfile = useCallback(
     (profile: Partial<StudentProfile>) =>
       setState((current) => ({ ...current, profile: { ...current.profile, ...profile } })),
@@ -751,8 +798,12 @@ export function StudyProvider({
   const startSessionOperation = useCallback(
     async (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
       const generation = sync.getSnapshot().generation;
-      if (!["loaded", "absent"].includes(sync.getSnapshot().loadStatus)) throw new Error("Confirme a leitura do progresso antes de iniciar.");
-      if (sync.getSnapshot().state.activeSessionId) { await sync.flush(generation); return; }
+      if (!["loaded", "absent"].includes(sync.getSnapshot().loadStatus))
+        throw new Error("Confirme a leitura do progresso antes de iniciar.");
+      if (sync.getSnapshot().state.activeSessionId) {
+        await sync.flush(generation);
+        return;
+      }
       if (runtime) {
         const response = await fetch("/api/course/active", { cache: "no-store" });
         if (!response.ok)
@@ -829,41 +880,85 @@ export function StudyProvider({
     [setState, course.id, runtime, sync],
   );
   const starting = useRef<Promise<void> | null>(null);
-  const startSession = useCallback((unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
-    if (starting.current) return starting.current;
-    const operation = startSessionOperation(unitId, plan, mode, targetMinutes);
-    starting.current = operation;
-    void operation.finally(() => { if (starting.current === operation) starting.current = null; }).catch(() => undefined);
-    return operation;
-  }, [startSessionOperation]);
-  const checkpointStudySession = useCallback(async (sessionId: string, input: { seconds?: number; cursor?: number; paused?: boolean }) => {
-    const generation = sync.getSnapshot().generation;
-    setState(current => checkpointSession(current, sessionId, input));
-    await sync.flush(generation);
-  }, [sync, setState]);
-  const confirmAdaptiveProgress = useCallback(async (input: AdaptiveProgress): Promise<AdaptiveProgress> => {
-    const owner = sync.getSnapshot();
-    if (!runtime) throw new Error("Retomada de respostas confirmadas disponível no curso instalado.");
-    const { answers: ignored, ...submitted } = input;
-    void ignored;
-    setState(current => ({ ...current, adaptiveProgress: [submitted,
-      ...(current.adaptiveProgress ?? []).filter(value => value.assessmentId !== input.assessmentId)] }));
-    await sync.flush(owner.generation);
-    const response = await fetch("/api/course-installations/progress?versionSessionId=" + encodeURIComponent(runtime.versionSessionId), { cache: "no-store" });
-    if (!response.ok) throw new Error("Não foi possível confirmar as respostas submetidas. Tente novamente.");
-    const body = await response.json();
-    if (!sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
-      throw new Error("Sua conta ou contexto mudou durante a avaliação.");
-    if (body.versionSessionId !== runtime.versionSessionId || !matchingInstalledReference(body.reference, runtime.reference))
-      throw new Error("As respostas pertencem a outra instalação.");
-    const confirmed = body.state?.adaptiveProgress?.find((value: AdaptiveProgress) => value.attemptId === input.attemptId) as AdaptiveProgress | undefined;
-    if (!confirmed || confirmed.assessmentId !== input.assessmentId || confirmed.startedAt !== input.startedAt ||
-        JSON.stringify(confirmed.responses) !== JSON.stringify(input.responses) || !Array.isArray(confirmed.answers) ||
-        confirmed.answers.length !== input.responses.length) throw new Error("As respostas ainda não foram confirmadas.");
-    setState(current => ({ ...current, adaptiveProgress: [confirmed,
-      ...(current.adaptiveProgress ?? []).filter(value => value.assessmentId !== input.assessmentId)] }));
-    return confirmed;
-  }, [runtime, sync, setState]);
+  const startSession = useCallback(
+    (unitId: string, plan: PlannedItem[], mode: SessionMode, targetMinutes: number) => {
+      if (starting.current) return starting.current;
+      const operation = startSessionOperation(unitId, plan, mode, targetMinutes);
+      starting.current = operation;
+      void operation
+        .finally(() => {
+          if (starting.current === operation) starting.current = null;
+        })
+        .catch(() => undefined);
+      return operation;
+    },
+    [startSessionOperation],
+  );
+  const checkpointStudySession = useCallback(
+    async (sessionId: string, input: { seconds?: number; cursor?: number; paused?: boolean }) => {
+      const generation = sync.getSnapshot().generation;
+      setState((current) => checkpointSession(current, sessionId, input));
+      await sync.flush(generation);
+    },
+    [sync, setState],
+  );
+  const confirmAdaptiveProgress = useCallback(
+    async (input: AdaptiveProgress): Promise<AdaptiveProgress> => {
+      const owner = sync.getSnapshot();
+      if (!runtime)
+        throw new Error("Retomada de respostas confirmadas disponível no curso instalado.");
+      const { answers: ignored, ...submitted } = input;
+      void ignored;
+      setState((current) => ({
+        ...current,
+        adaptiveProgress: [
+          submitted,
+          ...(current.adaptiveProgress ?? []).filter(
+            (value) => value.assessmentId !== input.assessmentId,
+          ),
+        ],
+      }));
+      await sync.flush(owner.generation);
+      const response = await fetch(
+        "/api/course-installations/progress?versionSessionId=" +
+          encodeURIComponent(runtime.versionSessionId),
+        { cache: "no-store" },
+      );
+      if (!response.ok)
+        throw new Error("Não foi possível confirmar as respostas submetidas. Tente novamente.");
+      const body = await response.json();
+      if (!sync.isCurrent(owner.generation) || sync.getSnapshot().userId !== owner.userId)
+        throw new Error("Sua conta ou contexto mudou durante a avaliação.");
+      if (
+        body.versionSessionId !== runtime.versionSessionId ||
+        !matchingInstalledReference(body.reference, runtime.reference)
+      )
+        throw new Error("As respostas pertencem a outra instalação.");
+      const confirmed = body.state?.adaptiveProgress?.find(
+        (value: AdaptiveProgress) => value.attemptId === input.attemptId,
+      ) as AdaptiveProgress | undefined;
+      if (
+        !confirmed ||
+        confirmed.assessmentId !== input.assessmentId ||
+        confirmed.startedAt !== input.startedAt ||
+        JSON.stringify(confirmed.responses) !== JSON.stringify(input.responses) ||
+        !Array.isArray(confirmed.answers) ||
+        confirmed.answers.length !== input.responses.length
+      )
+        throw new Error("As respostas ainda não foram confirmadas.");
+      setState((current) => ({
+        ...current,
+        adaptiveProgress: [
+          confirmed,
+          ...(current.adaptiveProgress ?? []).filter(
+            (value) => value.assessmentId !== input.assessmentId,
+          ),
+        ],
+      }));
+      return confirmed;
+    },
+    [runtime, sync, setState],
+  );
   const updateActiveSessionDuration = useCallback(
     (sessionId: string, seconds: number) =>
       setState((current) => {
@@ -930,13 +1025,127 @@ export function StudyProvider({
     [setState],
   );
 
+  const accessRequest = useRef(0);
+  const hasLearningAccess =
+    course.units.some((u) => u.access) ||
+    course.assessments.some((a) => a.method === "fixed" && a.exam);
+  const [accessState, setAccessState] = useState<{
+    owner: string;
+    snapshot: LearningAccessSnapshot;
+  } | null>(null);
+  const [learningAccessError, setLearningAccessError] = useState("");
+  const learningAccess =
+    accessState?.owner === authUserId &&
+    accessState.snapshot.courseId === course.id &&
+    accessState.snapshot.contentVersion === course.contentVersion
+      ? accessState.snapshot
+      : null;
+  const refreshLearningAccess = useCallback(async () => {
+    if (!hasLearningAccess || !sync.getSnapshot().userId) return null;
+    const generation = sync.getSnapshot().generation,
+      owner = sync.getSnapshot().userId!,
+      requestId = ++accessRequest.current;
+    try {
+      await sync.flush(generation);
+      const response = await fetch(
+        "/api/learning-access?courseId=" + encodeURIComponent(course.id),
+        { cache: "no-store" },
+      );
+      const result = await response.json();
+      if (
+        !sync.isCurrent(generation) ||
+        sync.getSnapshot().userId !== owner ||
+        requestId !== accessRequest.current
+      )
+        return null;
+      if (
+        !response.ok ||
+        result.courseId !== course.id ||
+        result.contentVersion !== course.contentVersion
+      )
+        throw new Error(result.error ?? "Não foi possível conferir seu percurso.");
+      setAccessState({ owner, snapshot: result });
+      setLearningAccessError("");
+      return result as LearningAccessSnapshot;
+    } catch (error) {
+      if (
+        sync.isCurrent(generation) &&
+        sync.getSnapshot().userId === owner &&
+        requestId === accessRequest.current
+      ) {
+        setAccessState(null);
+        setLearningAccessError(
+          error instanceof Error ? error.message : "Não foi possível conferir seu percurso.",
+        );
+      }
+      return null;
+    }
+  }, [course.id, course.contentVersion, hasLearningAccess, sync]);
+  useEffect(() => {
+    if (!ready || !authUserId || !["loaded", "absent"].includes(progressLoadStatus)) return;
+    const timer = window.setTimeout(() => void refreshLearningAccess(), 250);
+    return () => window.clearTimeout(timer);
+  }, [
+    ready,
+    authUserId,
+    progressLoadStatus,
+    state.attempts.length,
+    state.assessmentAttempts.length,
+    refreshLearningAccess,
+  ]);
+
+  const accessibleCourse = useMemo(() => {
+    if (!hasLearningAccess) return visibleCourse;
+    const locked = visibleCourse.units.filter(
+      (u) => u.access && !learningAccess?.units[u.id]?.allowed,
+    );
+    const activityIds = locked.flatMap((u) =>
+      u.lessons.flatMap((l) => l.activities.map((a) => a.id)),
+    );
+    const reasons = Object.fromEntries(
+      activityIds.map((id) => [
+        id,
+        ["Conclua a prova da unidade anterior para abrir esta prática."],
+      ]),
+    );
+    return {
+      ...visibleCourse,
+      availability: {
+        ...visibleCourse.availability!,
+        unavailableUnitIds: [
+          ...new Set([
+            ...(visibleCourse.availability?.unavailableUnitIds ?? []),
+            ...locked.map((u) => u.id),
+          ]),
+        ],
+        unavailableActivityIds: [
+          ...new Set([
+            ...(visibleCourse.availability?.unavailableActivityIds ?? []),
+            ...activityIds,
+          ]),
+        ],
+        unavailableAssessmentIds: [
+          ...new Set([
+            ...(visibleCourse.availability?.unavailableAssessmentIds ?? []),
+            ...visibleCourse.assessments
+              .filter((a) => locked.some((u) => u.id === a.unitId))
+              .map((a) => a.id),
+          ]),
+        ],
+        reasons: { ...visibleCourse.availability?.reasons, ...reasons },
+      },
+    };
+  }, [visibleCourse, hasLearningAccess, learningAccess]);
   const value = useMemo(
     () => ({
+      learningAccess,
+      learningAccessError,
+      refreshLearningAccess,
       runtime,
       assessActivity,
       captureInteractiveLessonOwner,
       applyInteractiveLessonReceipt,
-      course: visibleCourse,
+      course: accessibleCourse,
       resources,
       language,
       assessments,
@@ -978,7 +1187,10 @@ export function StudyProvider({
       correctSessionDuration,
     }),
     [
-      visibleCourse,
+      learningAccess,
+      learningAccessError,
+      refreshLearningAccess,
+      accessibleCourse,
       runtime,
       assessActivity,
       captureInteractiveLessonOwner,

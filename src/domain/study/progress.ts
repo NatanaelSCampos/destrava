@@ -118,19 +118,27 @@ export function courseProgress(course: PublicCourse, state: StudyState) {
 }
 
 /** Content coverage is independent of passing the course's completion policy. */
-export function courseStudyProgress(course: PublicCourse, state: StudyState) {
-  if (state.courseId && state.courseId !== course.id) return 0;
+export function courseStudySummary(course: PublicCourse, state: StudyState) {
   const activityIds = new Set(
-    course.units.filter((unit) => unit.active).flatMap((unit) =>
-      unit.lessons.filter((lesson) => lesson.active).flatMap((lesson) =>
-        lesson.activities.map((activity) => activity.id),
+    course.units.filter(unit => unit.active).flatMap(unit =>
+      unit.lessons.filter(lesson => lesson.active).flatMap(lesson =>
+        lesson.activities.map(activity => activity.id),
       ),
     ),
   );
-  if (!activityIds.size) return 0;
-  const completed = new Set(state.completedActivityIds.filter((id) => activityIds.has(id)));
-  // Keep early progress visible in large courses and never round an unfinished course to 100%.
-  return Math.floor((1000 * completed.size) / activityIds.size) / 10;
+  const completed = new Set(
+    state.courseId && state.courseId !== course.id ? [] :
+      state.completedActivityIds.filter(id => activityIds.has(id)),
+  ).size;
+  return {
+    completed,
+    total: activityIds.size,
+    percentage: activityIds.size ? Math.floor((1000 * completed) / activityIds.size) / 10 : 0,
+  };
+}
+
+export function courseStudyProgress(course: PublicCourse, state: StudyState) {
+  return courseStudySummary(course, state).percentage;
 }
 
 export function currentUnit(course: PublicCourse, state: StudyState) {

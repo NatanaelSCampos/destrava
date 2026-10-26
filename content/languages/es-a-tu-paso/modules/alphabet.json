@@ -1,0 +1,245 @@
+[
+  {
+    "letter": "A",
+    "name": "a",
+    "word": "agua",
+    "translation": "água",
+    "example": "Agua sin gas, por favor.",
+    "kind": "vowel",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "B",
+    "name": "be",
+    "word": "biblioteca",
+    "translation": "biblioteca",
+    "example": "Estoy en la biblioteca.",
+    "kind": "consonant",
+    "note": "Nome recomendado aqui: be. Be larga, be grande e be alta também têm uso; não são declarados erros por este guia."
+  },
+  {
+    "letter": "C",
+    "name": "ce",
+    "word": "café",
+    "translation": "café",
+    "example": "Un café con leche, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "D",
+    "name": "de",
+    "word": "dos",
+    "translation": "dois",
+    "example": "Dos cafés, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "E",
+    "name": "e",
+    "word": "entrada",
+    "translation": "entrada",
+    "example": "Nos vemos en la entrada.",
+    "kind": "vowel",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "F",
+    "name": "efe",
+    "word": "favor",
+    "translation": "favor",
+    "example": "Más despacio, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "G",
+    "name": "ge",
+    "word": "gas",
+    "translation": "gás",
+    "example": "¿Hay agua con gas?",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "H",
+    "name": "hache",
+    "word": "hotel",
+    "translation": "hotel",
+    "example": "Estoy en el hotel.",
+    "kind": "consonant",
+    "note": "Hache é o nome da letra h; nome de letra e pronúncia da palavra são informações diferentes."
+  },
+  {
+    "letter": "I",
+    "name": "i",
+    "word": "información",
+    "translation": "informação",
+    "example": "Necesito información.",
+    "kind": "vowel",
+    "note": "Nome recomendado aqui: i. I latina também é uma denominação usada para distinguir de i griega."
+  },
+  {
+    "letter": "J",
+    "name": "jota",
+    "word": "jugo",
+    "translation": "suco",
+    "example": "Un jugo de naranja, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "K",
+    "name": "ka",
+    "word": "kilo",
+    "translation": "quilo",
+    "example": "Un kilo de pan, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "L",
+    "name": "ele",
+    "word": "leche",
+    "translation": "leite",
+    "example": "Un té sin leche, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "M",
+    "name": "eme",
+    "word": "media",
+    "translation": "meia hora",
+    "example": "A las seis y media.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "N",
+    "name": "ene",
+    "word": "nombre",
+    "translation": "nome",
+    "example": "¿Puedes repetir tu nombre?",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "Ñ",
+    "name": "eñe",
+    "word": "mañana",
+    "translation": "amanhã",
+    "example": "Nos vemos mañana.",
+    "kind": "consonant",
+    "note": "Ñ aparece no interior de mañana. Não é uma letra n com acento agudo: ñ tem seu lugar próprio no alfabeto."
+  },
+  {
+    "letter": "O",
+    "name": "o",
+    "word": "ocho",
+    "translation": "oito",
+    "example": "Son ocho pesos.",
+    "kind": "vowel",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "P",
+    "name": "pe",
+    "word": "pan",
+    "translation": "pão",
+    "example": "¿Tiene pan?",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "Q",
+    "name": "cu",
+    "word": "qué",
+    "translation": "que / o que",
+    "example": "¿Qué desea?",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "R",
+    "name": "erre",
+    "word": "repetir",
+    "translation": "repetir",
+    "example": "¿Puede repetir el precio?",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "S",
+    "name": "ese",
+    "word": "sin",
+    "translation": "sem",
+    "example": "Sin azúcar, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "T",
+    "name": "te",
+    "word": "té",
+    "translation": "chá",
+    "example": "Un té, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "U",
+    "name": "u",
+    "word": "uno",
+    "translation": "um",
+    "example": "Uno, por favor.",
+    "kind": "vowel",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  },
+  {
+    "letter": "V",
+    "name": "uve",
+    "word": "veinte",
+    "translation": "vinte",
+    "example": "Son veinte pesos.",
+    "kind": "consonant",
+    "note": "Nome recomendado aqui: uve. Ve e nomes acompanhados de corta/baja também têm uso; a escolha não é uma regra exclusiva de país."
+  },
+  {
+    "letter": "W",
+    "name": "uve doble",
+    "word": "wifi",
+    "translation": "wi-fi",
+    "example": "¿Hay wifi aquí?",
+    "kind": "consonant",
+    "note": "Nome recomendado aqui: uve doble. Ve doble, doble uve, doble ve e doble u também têm uso; não são declarados incorretos."
+  },
+  {
+    "letter": "X",
+    "name": "equis",
+    "word": "taxi",
+    "translation": "táxi",
+    "example": "El taxi está en la entrada.",
+    "kind": "consonant",
+    "note": "X aparece no interior de taxi. Este cartão mostra grafia e nome de letra, sem ensinar uma regra única de pronúncia."
+  },
+  {
+    "letter": "Y",
+    "name": "ye",
+    "word": "yo",
+    "translation": "eu",
+    "example": "Yo estoy en el parque.",
+    "kind": "consonant",
+    "note": "Nome recomendado aqui: ye. I griega também é válido. O nome da letra não garante um som único em todas as palavras."
+  },
+  {
+    "letter": "Z",
+    "name": "zeta",
+    "word": "zumo",
+    "translation": "suco",
+    "example": "Un zumo de naranja, por favor.",
+    "kind": "consonant",
+    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+  }
+]

@@ -1,4 +1,7 @@
+import { unitAccessSchema, examPolicySchema } from "@/content/learning-access";
 import { z } from "zod";
+import { lessonStagesSchema } from "@/content/lesson-stages";
+import { activitySceneSchema } from "@/content/activity-scene";
 import {
   activityPayloadSchemas,
   activityTypeSchema,
@@ -6,9 +9,12 @@ import {
   objectiveActivityTypes,
   legacyOrderingPayloadSchema,
   legacyWritingPayloadSchema,
+  legacyActivityPayloadSchema,
+  previousActivityPayloadSchema,
 } from "@/content/activity-data";
 import {
   assessmentSchema,
+  lessonSchema,
   interactiveLessonSchema,
   lexiconEntrySchema,
   alphabetModuleSchema,
@@ -28,7 +34,11 @@ import {
   orderingTokens,
 } from "@/engine/text/representation";
 import { activityVariantSchema, answerPolicySchema } from "@/content/variant-contracts";
-import { activityPresentationSchema, textDirectionSchema } from "@/content/text-presentation";
+import {
+  activityPresentationSchema,
+  legacyActivityPresentationSchema,
+  textDirectionSchema,
+} from "@/content/text-presentation";
 
 export type ImplementationReference = { file: string; symbol: string; method?: string };
 // Internal references checked by AST, never loaded from content or exported to producers.
@@ -41,6 +51,12 @@ export const executionBindings = {
   reconstruction: { file: "src/engine/text/representation.ts", symbol: "reconstructText" },
   measurement: { file: "src/engine/text/representation.ts", symbol: "measureText" },
   activity: { file: "src/components/activities/activity-renderer.tsx", symbol: "ActivityRenderer" },
+  learningAccess: { file: "src/domain/study/learning-access.ts", symbol: "evaluateLearningAccess" },
+  lessonStages: { file: "src/engine/presentation/lesson-stages.ts", symbol: "resolveLessonStages" },
+  deferredRecovery: {
+    file: "src/domain/study/deferred-recovery.ts",
+    symbol: "deferredRecoveryStatus",
+  },
   objective: { file: "src/domain/activities/grader.ts", symbol: "gradeActivity" },
   normalization: { file: "src/domain/activities/grader.ts", symbol: "normalizeAnswer" },
   assessment: { file: "src/domain/assessments/assessment-engine.ts", symbol: "evaluateAssessment" },
@@ -230,7 +246,7 @@ export const capabilityDefinitions: readonly CapabilityDefinition[] = [
   ),
   one(
     "presentation.bidi",
-    activityPresentationSchema,
+    legacyActivityPresentationSchema,
     "bidiText",
     "Isolate plain educational text using HTML dir/bdi and logical CSS; retain logical Unicode data.",
     {
@@ -240,8 +256,25 @@ export const capabilityDefinitions: readonly CapabilityDefinition[] = [
     },
   ),
   one(
-    "text.input",
+    "presentation.scene",
+    activitySceneSchema,
+    "activity",
+    "Render an authored illustrated context, optional dialogue cue, clock and item cards; no inference of language or correct answers.",
+    {
+      restrictions: [
+        "Context and cue are public stimulus; producers must exclude models and answer clues from unaided assessments. Illustration is decorative, not a measurement of competence.",
+      ],
+    },
+  ),
+  one(
+    "presentation.inline",
     activityPresentationSchema,
+    "bidiText",
+    "Render exact authored inline language spans; no language detection or arbitrary markup.",
+  ),
+  one(
+    "text.input",
+    legacyActivityPresentationSchema,
     "textInput",
     "Native text inputs with auto direction, original values, selection and composition-aware keyboard handling.",
     {
@@ -287,6 +320,59 @@ export const capabilityDefinitions: readonly CapabilityDefinition[] = [
       },
     },
   ),
+  one(
+    "learning.access",
+    unitAccessSchema,
+    "learningAccess",
+    "Require an official passing final before entering a later unit.",
+    {
+      operational: ["learning.session_store"],
+      restrictions: ["Compiled authenticated courses; installed access is not qualified."],
+    },
+  ),
+  one(
+    "assessment.exam",
+    examPolicySchema,
+    "learningAccess",
+    "Open a unit exam after acknowledged practice; collect answers without per-item correction.",
+    {
+      operational: ["learning.session_store"],
+      presentation: {
+        file: "src/components/activities/fixed-assessment-runner.tsx",
+        symbol: "FixedAssessmentRunner",
+      },
+      restrictions: [
+        "Compiled authenticated courses; installed exams are not qualified.",
+        "Participation is server-acknowledged objective practice, not a claim of attention or mastery.",
+      ],
+    },
+  ),
+  one(
+    "lesson.stages",
+    z.object({ stages: lessonStagesSchema }).strict(),
+    "lessonStages",
+    "Present ordered activities as several parts of one ordinary lesson stage.",
+    {
+      presentation: {
+        file: "src/components/activities/lesson-experience.tsx",
+        symbol: "LessonExperience",
+      },
+      restrictions: [
+        "Presentation grouping only; each activity retains its own grading and completion.",
+        "Compiled ordinary lesson experience; installed integration is not qualified.",
+      ],
+    },
+  ),
+  one(
+    "lesson.deferred_recovery",
+    lessonSchema.shape.deferredRecovery.unwrap(),
+    "deferredRecovery",
+    "One authored, deferred recovery per concept using distinct intervening learning activities and persisted attempts.",
+    {
+      evidence: ["initial_objective_answer", "subsequent_objective_answer"],
+      restrictions: ["Optional within-lesson practice, no automatic mastery or completion credit."],
+    },
+  ),
   ...activityTypeSchema.options.map((type) =>
     one(
       `activity.${type}`,
@@ -294,24 +380,32 @@ export const capabilityDefinitions: readonly CapabilityDefinition[] = [
       "activity",
       `Execute ${type} using the existing activity interaction.`,
       {
-        ...(type === "ordering"
-          ? {
-              versions: ["1.0.0", "1.1.0"],
-              versionSchemas: {
-                "1.0.0": legacyOrderingPayloadSchema,
-                "1.1.0": activityPayloadSchemas.ordering,
-              },
-            }
-          : {}),
-        ...(type === "writing"
-          ? {
-              versions: ["1.0.0", "1.1.0"],
-              versionSchemas: {
-                "1.0.0": legacyWritingPayloadSchema,
-                "1.1.0": activityPayloadSchemas.writing,
-              },
-            }
-          : {}),
+        versions:
+          type === "ordering" || type === "writing"
+            ? ["1.0.0", "1.1.0", "2.0.0", "3.0.0"]
+            : type === "flashcard"
+              ? ["1.0.0", "2.0.0", "3.0.0", "4.0.0"]
+              : ["1.0.0", "2.0.0", "3.0.0"],
+        versionSchemas: {
+          "1.0.0":
+            type === "ordering"
+              ? legacyOrderingPayloadSchema.omit({ feedback: true, supportActivityIds: true })
+              : type === "writing"
+                ? legacyWritingPayloadSchema.omit({ feedback: true, supportActivityIds: true })
+                : legacyActivityPayloadSchema(type),
+          ...(type === "ordering" || type === "writing"
+            ? { "1.1.0": legacyActivityPayloadSchema(type) }
+            : {}),
+          "2.0.0":
+            type === "flashcard"
+              ? previousActivityPayloadSchema("flashcard").omit({ recallScene: true })
+              : previousActivityPayloadSchema(type),
+          "3.0.0":
+            type === "flashcard"
+              ? previousActivityPayloadSchema("flashcard")
+              : activityPayloadSchemas[type],
+          ...(type === "flashcard" ? { "4.0.0": activityPayloadSchemas.flashcard } : {}),
+        },
         evidence: objectiveTypes.has(type)
           ? ["participation", "objective_answer"]
           : type === "writing"

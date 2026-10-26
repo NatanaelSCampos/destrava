@@ -1,0 +1,3746 @@
+[
+  {
+    "id": "personal-en-u1-fc-001-word",
+    "language": "en",
+    "lemma": "hello",
+    "surface": "hello",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-001-meaning",
+        "translations": {
+          "pt-BR": [
+            "olá"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-002-word",
+    "language": "en",
+    "lemma": "good morning",
+    "surface": "good morning",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-002-meaning",
+        "translations": {
+          "pt-BR": [
+            "bom dia"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-003-word",
+    "language": "en",
+    "lemma": "good afternoon",
+    "surface": "good afternoon",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-003-meaning",
+        "translations": {
+          "pt-BR": [
+            "boa tarde"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-004-word",
+    "language": "en",
+    "lemma": "good evening",
+    "surface": "good evening",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-004-meaning",
+        "translations": {
+          "pt-BR": [
+            "boa noite ao chegar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-005-word",
+    "language": "en",
+    "lemma": "good night",
+    "surface": "good night",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-005-meaning",
+        "translations": {
+          "pt-BR": [
+            "boa noite ao se despedir ou dormir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-006-word",
+    "language": "en",
+    "lemma": "goodbye",
+    "surface": "goodbye",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-006-meaning",
+        "translations": {
+          "pt-BR": [
+            "adeus / tchau"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-007-word",
+    "language": "en",
+    "lemma": "see you later",
+    "surface": "see you later",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-007-meaning",
+        "translations": {
+          "pt-BR": [
+            "até mais tarde"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-008-word",
+    "language": "en",
+    "lemma": "nice to meet you",
+    "surface": "nice to meet you",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-008-meaning",
+        "translations": {
+          "pt-BR": [
+            "prazer em conhecer você"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-009-word",
+    "language": "en",
+    "lemma": "first name",
+    "surface": "first name",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-009-meaning",
+        "translations": {
+          "pt-BR": [
+            "nome próprio"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-010-word",
+    "language": "en",
+    "lemma": "last name",
+    "surface": "last name",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-010-meaning",
+        "translations": {
+          "pt-BR": [
+            "sobrenome"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-011-word",
+    "language": "en",
+    "lemma": "spell",
+    "surface": "spell",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-011-meaning",
+        "translations": {
+          "pt-BR": [
+            "soletrar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-012-word",
+    "language": "en",
+    "lemma": "letter",
+    "surface": "letter",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-012-meaning",
+        "translations": {
+          "pt-BR": [
+            "letra"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-013-word",
+    "language": "en",
+    "lemma": "alphabet",
+    "surface": "alphabet",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-013-meaning",
+        "translations": {
+          "pt-BR": [
+            "alfabeto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-014-word",
+    "language": "en",
+    "lemma": "capital letter",
+    "surface": "capital letter",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-014-meaning",
+        "translations": {
+          "pt-BR": [
+            "letra maiúscula"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-015-word",
+    "language": "en",
+    "lemma": "email address",
+    "surface": "email address",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-015-meaning",
+        "translations": {
+          "pt-BR": [
+            "endereço de e-mail"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-016-word",
+    "language": "en",
+    "lemma": "dot",
+    "surface": "dot",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-016-meaning",
+        "translations": {
+          "pt-BR": [
+            "ponto em e-mail"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-017-word",
+    "language": "en",
+    "lemma": "I",
+    "surface": "I",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-017-meaning",
+        "translations": {
+          "pt-BR": [
+            "eu"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-018-word",
+    "language": "en",
+    "lemma": "you",
+    "surface": "you",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-018-meaning",
+        "translations": {
+          "pt-BR": [
+            "você"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-019-word",
+    "language": "en",
+    "lemma": "he",
+    "surface": "he",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-019-meaning",
+        "translations": {
+          "pt-BR": [
+            "ele"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-020-word",
+    "language": "en",
+    "lemma": "she",
+    "surface": "she",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-020-meaning",
+        "translations": {
+          "pt-BR": [
+            "ela"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-021-word",
+    "language": "en",
+    "lemma": "we",
+    "surface": "we",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-021-meaning",
+        "translations": {
+          "pt-BR": [
+            "nós"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-022-word",
+    "language": "en",
+    "lemma": "they",
+    "surface": "they",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-022-meaning",
+        "translations": {
+          "pt-BR": [
+            "eles / elas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-023-word",
+    "language": "en",
+    "lemma": "am",
+    "surface": "am",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-023-meaning",
+        "translations": {
+          "pt-BR": [
+            "sou / estou com I"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-024-word",
+    "language": "en",
+    "lemma": "are",
+    "surface": "are",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-024-meaning",
+        "translations": {
+          "pt-BR": [
+            "é / são / estamos com you, we, they"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-025-word",
+    "language": "en",
+    "lemma": "are you",
+    "surface": "are you",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-025-meaning",
+        "translations": {
+          "pt-BR": [
+            "você é / está?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-026-word",
+    "language": "en",
+    "lemma": "is she",
+    "surface": "is she",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-026-meaning",
+        "translations": {
+          "pt-BR": [
+            "ela é / está?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-027-word",
+    "language": "en",
+    "lemma": "is he",
+    "surface": "is he",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-027-meaning",
+        "translations": {
+          "pt-BR": [
+            "ele é / está?"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-028-word",
+    "language": "en",
+    "lemma": "I'm not",
+    "surface": "I'm not",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-028-meaning",
+        "translations": {
+          "pt-BR": [
+            "eu não sou / estou"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-029-word",
+    "language": "en",
+    "lemma": "isn't",
+    "surface": "isn't",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-029-meaning",
+        "translations": {
+          "pt-BR": [
+            "não é / não está com he/she/it"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-030-word",
+    "language": "en",
+    "lemma": "aren't",
+    "surface": "aren't",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-030-meaning",
+        "translations": {
+          "pt-BR": [
+            "não são / não estão com we/you/they"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-031-word",
+    "language": "en",
+    "lemma": "yes, I am",
+    "surface": "yes, I am",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-031-meaning",
+        "translations": {
+          "pt-BR": [
+            "sim, sou / estou"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-032-word",
+    "language": "en",
+    "lemma": "no, they aren't",
+    "surface": "no, they aren't",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-032-meaning",
+        "translations": {
+          "pt-BR": [
+            "não, eles não estão / são"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-033-word",
+    "language": "en",
+    "lemma": "what",
+    "surface": "what",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-033-meaning",
+        "translations": {
+          "pt-BR": [
+            "o que / qual"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-034-word",
+    "language": "en",
+    "lemma": "where",
+    "surface": "where",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-034-meaning",
+        "translations": {
+          "pt-BR": [
+            "onde"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-035-word",
+    "language": "en",
+    "lemma": "how",
+    "surface": "how",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-035-meaning",
+        "translations": {
+          "pt-BR": [
+            "como"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-036-word",
+    "language": "en",
+    "lemma": "who",
+    "surface": "who",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-036-meaning",
+        "translations": {
+          "pt-BR": [
+            "quem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-037-word",
+    "language": "en",
+    "lemma": "how old",
+    "surface": "how old",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-037-meaning",
+        "translations": {
+          "pt-BR": [
+            "quantos anos de idade"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-038-word",
+    "language": "en",
+    "lemma": "what's",
+    "surface": "what's",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-038-meaning",
+        "translations": {
+          "pt-BR": [
+            "qual é / o que é"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-039-word",
+    "language": "en",
+    "lemma": "from",
+    "surface": "from",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-039-meaning",
+        "translations": {
+          "pt-BR": [
+            "de, origem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-040-word",
+    "language": "en",
+    "lemma": "address",
+    "surface": "address",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-040-meaning",
+        "translations": {
+          "pt-BR": [
+            "endereço"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-041-word",
+    "language": "en",
+    "lemma": "Brazil",
+    "surface": "Brazil",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-041-meaning",
+        "translations": {
+          "pt-BR": [
+            "Brasil"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-042-word",
+    "language": "en",
+    "lemma": "Brazilian",
+    "surface": "Brazilian",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-042-meaning",
+        "translations": {
+          "pt-BR": [
+            "brasileiro / brasileira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-043-word",
+    "language": "en",
+    "lemma": "Mexico",
+    "surface": "Mexico",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-043-meaning",
+        "translations": {
+          "pt-BR": [
+            "México"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-044-word",
+    "language": "en",
+    "lemma": "Mexican",
+    "surface": "Mexican",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-044-meaning",
+        "translations": {
+          "pt-BR": [
+            "mexicano / mexicana"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-045-word",
+    "language": "en",
+    "lemma": "Japan",
+    "surface": "Japan",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-045-meaning",
+        "translations": {
+          "pt-BR": [
+            "Japão"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-046-word",
+    "language": "en",
+    "lemma": "Japanese",
+    "surface": "Japanese",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-046-meaning",
+        "translations": {
+          "pt-BR": [
+            "japonês / japonesa; idioma japonês"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-047-word",
+    "language": "en",
+    "lemma": "Spanish",
+    "surface": "Spanish",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-047-meaning",
+        "translations": {
+          "pt-BR": [
+            "espanhol; idioma espanhol"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-048-word",
+    "language": "en",
+    "lemma": "English",
+    "surface": "English",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-048-meaning",
+        "translations": {
+          "pt-BR": [
+            "inglês; idioma inglês"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-049-word",
+    "language": "en",
+    "lemma": "zero",
+    "surface": "zero",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-049-meaning",
+        "translations": {
+          "pt-BR": [
+            "zero"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-050-word",
+    "language": "en",
+    "lemma": "eleven",
+    "surface": "eleven",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-050-meaning",
+        "translations": {
+          "pt-BR": [
+            "onze"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-051-word",
+    "language": "en",
+    "lemma": "fifteen",
+    "surface": "fifteen",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-051-meaning",
+        "translations": {
+          "pt-BR": [
+            "quinze"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-052-word",
+    "language": "en",
+    "lemma": "twenty",
+    "surface": "twenty",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-052-meaning",
+        "translations": {
+          "pt-BR": [
+            "vinte"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-053-word",
+    "language": "en",
+    "lemma": "thirty",
+    "surface": "thirty",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-053-meaning",
+        "translations": {
+          "pt-BR": [
+            "trinta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-054-word",
+    "language": "en",
+    "lemma": "forty",
+    "surface": "forty",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-054-meaning",
+        "translations": {
+          "pt-BR": [
+            "quarenta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-055-word",
+    "language": "en",
+    "lemma": "sixty",
+    "surface": "sixty",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-055-meaning",
+        "translations": {
+          "pt-BR": [
+            "sessenta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-056-word",
+    "language": "en",
+    "lemma": "one hundred",
+    "surface": "one hundred",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-056-meaning",
+        "translations": {
+          "pt-BR": [
+            "cem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-057-word",
+    "language": "en",
+    "lemma": "developer",
+    "surface": "developer",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-057-meaning",
+        "translations": {
+          "pt-BR": [
+            "desenvolvedor(a)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-058-word",
+    "language": "en",
+    "lemma": "designer",
+    "surface": "designer",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-058-meaning",
+        "translations": {
+          "pt-BR": [
+            "designer"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-059-word",
+    "language": "en",
+    "lemma": "engineer",
+    "surface": "engineer",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-059-meaning",
+        "translations": {
+          "pt-BR": [
+            "engenheiro(a)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-060-word",
+    "language": "en",
+    "lemma": "teacher",
+    "surface": "teacher",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-060-meaning",
+        "translations": {
+          "pt-BR": [
+            "professor(a)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-061-word",
+    "language": "en",
+    "lemma": "manager",
+    "surface": "manager",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-061-meaning",
+        "translations": {
+          "pt-BR": [
+            "gerente"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-062-word",
+    "language": "en",
+    "lemma": "colleague",
+    "surface": "colleague",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-062-meaning",
+        "translations": {
+          "pt-BR": [
+            "colega de trabalho"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-063-word",
+    "language": "en",
+    "lemma": "team",
+    "surface": "team",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-063-meaning",
+        "translations": {
+          "pt-BR": [
+            "equipe"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-064-word",
+    "language": "en",
+    "lemma": "office",
+    "surface": "office",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-064-meaning",
+        "translations": {
+          "pt-BR": [
+            "escritório"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-065-word",
+    "language": "en",
+    "lemma": "my",
+    "surface": "my",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-065-meaning",
+        "translations": {
+          "pt-BR": [
+            "meu / minha"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-066-word",
+    "language": "en",
+    "lemma": "your",
+    "surface": "your",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-066-meaning",
+        "translations": {
+          "pt-BR": [
+            "seu / sua"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-067-word",
+    "language": "en",
+    "lemma": "his",
+    "surface": "his",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-067-meaning",
+        "translations": {
+          "pt-BR": [
+            "dele"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-068-word",
+    "language": "en",
+    "lemma": "her",
+    "surface": "her",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-068-meaning",
+        "translations": {
+          "pt-BR": [
+            "dela"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-069-word",
+    "language": "en",
+    "lemma": "our",
+    "surface": "our",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-069-meaning",
+        "translations": {
+          "pt-BR": [
+            "nosso / nossa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-070-word",
+    "language": "en",
+    "lemma": "their",
+    "surface": "their",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-070-meaning",
+        "translations": {
+          "pt-BR": [
+            "deles / delas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-071-word",
+    "language": "en",
+    "lemma": "name",
+    "surface": "name",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-071-meaning",
+        "translations": {
+          "pt-BR": [
+            "nome"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-072-word",
+    "language": "en",
+    "lemma": "phone",
+    "surface": "phone",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-072-meaning",
+        "translations": {
+          "pt-BR": [
+            "telefone"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-073-word",
+    "language": "en",
+    "lemma": "please",
+    "surface": "please",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-073-meaning",
+        "translations": {
+          "pt-BR": [
+            "por favor"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-074-word",
+    "language": "en",
+    "lemma": "repeat",
+    "surface": "repeat",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-074-meaning",
+        "translations": {
+          "pt-BR": [
+            "repetir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-075-word",
+    "language": "en",
+    "lemma": "slowly",
+    "surface": "slowly",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-075-meaning",
+        "translations": {
+          "pt-BR": [
+            "devagar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-076-word",
+    "language": "en",
+    "lemma": "understand",
+    "surface": "understand",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-076-meaning",
+        "translations": {
+          "pt-BR": [
+            "entender"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-077-word",
+    "language": "en",
+    "lemma": "sorry",
+    "surface": "sorry",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-077-meaning",
+        "translations": {
+          "pt-BR": [
+            "desculpe"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-078-word",
+    "language": "en",
+    "lemma": "meaning",
+    "surface": "meaning",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-078-meaning",
+        "translations": {
+          "pt-BR": [
+            "significado"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-079-word",
+    "language": "en",
+    "lemma": "again",
+    "surface": "again",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-079-meaning",
+        "translations": {
+          "pt-BR": [
+            "de novo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-080-word",
+    "language": "en",
+    "lemma": "help",
+    "surface": "help",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-080-meaning",
+        "translations": {
+          "pt-BR": [
+            "ajuda / ajudar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-081-word",
+    "language": "en",
+    "lemma": "form",
+    "surface": "form",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-081-meaning",
+        "translations": {
+          "pt-BR": [
+            "formulário"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-082-word",
+    "language": "en",
+    "lemma": "profile",
+    "surface": "profile",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-082-meaning",
+        "translations": {
+          "pt-BR": [
+            "perfil"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-083-word",
+    "language": "en",
+    "lemma": "company",
+    "surface": "company",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-083-meaning",
+        "translations": {
+          "pt-BR": [
+            "empresa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-084-word",
+    "language": "en",
+    "lemma": "city",
+    "surface": "city",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-084-meaning",
+        "translations": {
+          "pt-BR": [
+            "cidade"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-085-word",
+    "language": "en",
+    "lemma": "country",
+    "surface": "country",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-085-meaning",
+        "translations": {
+          "pt-BR": [
+            "país"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-086-word",
+    "language": "en",
+    "lemma": "job title",
+    "surface": "job title",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-086-meaning",
+        "translations": {
+          "pt-BR": [
+            "cargo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-087-word",
+    "language": "en",
+    "lemma": "telephone number",
+    "surface": "telephone number",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-087-meaning",
+        "translations": {
+          "pt-BR": [
+            "número de telefone"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-088-word",
+    "language": "en",
+    "lemma": "postcode",
+    "surface": "postcode",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-088-meaning",
+        "translations": {
+          "pt-BR": [
+            "código postal"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-089-word",
+    "language": "en",
+    "lemma": "introduce",
+    "surface": "introduce",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-089-meaning",
+        "translations": {
+          "pt-BR": [
+            "apresentar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-090-word",
+    "language": "en",
+    "lemma": "classmate",
+    "surface": "classmate",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-090-meaning",
+        "translations": {
+          "pt-BR": [
+            "colega de turma"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-091-word",
+    "language": "en",
+    "lemma": "meeting",
+    "surface": "meeting",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-091-meaning",
+        "translations": {
+          "pt-BR": [
+            "reunião"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-092-word",
+    "language": "en",
+    "lemma": "student",
+    "surface": "student",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-092-meaning",
+        "translations": {
+          "pt-BR": [
+            "estudante"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-093-word",
+    "language": "en",
+    "lemma": "question",
+    "surface": "question",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-093-meaning",
+        "translations": {
+          "pt-BR": [
+            "pergunta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-094-word",
+    "language": "en",
+    "lemma": "answer",
+    "surface": "answer",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-094-meaning",
+        "translations": {
+          "pt-BR": [
+            "resposta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-095-word",
+    "language": "en",
+    "lemma": "ready",
+    "surface": "ready",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-095-meaning",
+        "translations": {
+          "pt-BR": [
+            "pronto / pronta"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u1-fc-096-word",
+    "language": "en",
+    "lemma": "welcome",
+    "surface": "welcome",
+    "level": "A1",
+    "lessonId": "personal-en-u1-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u1-fc-096-meaning",
+        "translations": {
+          "pt-BR": [
+            "bem-vindo / bem-vinda"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-001-word",
+    "language": "en",
+    "lemma": "house",
+    "surface": "house",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-001-meaning",
+        "translations": {
+          "pt-BR": [
+            "casa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-002-word",
+    "language": "en",
+    "lemma": "apartment",
+    "surface": "apartment",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-002-meaning",
+        "translations": {
+          "pt-BR": [
+            "apartamento (EUA)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-003-word",
+    "language": "en",
+    "lemma": "flat",
+    "surface": "flat",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-003-meaning",
+        "translations": {
+          "pt-BR": [
+            "apartamento (Reino Unido)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-004-word",
+    "language": "en",
+    "lemma": "building",
+    "surface": "building",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-004-meaning",
+        "translations": {
+          "pt-BR": [
+            "prédio"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-005-word",
+    "language": "en",
+    "lemma": "home",
+    "surface": "home",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-005-meaning",
+        "translations": {
+          "pt-BR": [
+            "lar / casa em sentido amplo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-006-word",
+    "language": "en",
+    "lemma": "floor",
+    "surface": "floor",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-006-meaning",
+        "translations": {
+          "pt-BR": [
+            "andar ou piso"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-007-word",
+    "language": "en",
+    "lemma": "address",
+    "surface": "address",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-007-meaning",
+        "translations": {
+          "pt-BR": [
+            "endereço"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-008-word",
+    "language": "en",
+    "lemma": "rent",
+    "surface": "rent",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l01-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-008-meaning",
+        "translations": {
+          "pt-BR": [
+            "aluguel / alugar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-009-word",
+    "language": "en",
+    "lemma": "kitchen",
+    "surface": "kitchen",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-009-meaning",
+        "translations": {
+          "pt-BR": [
+            "cozinha"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-010-word",
+    "language": "en",
+    "lemma": "bedroom",
+    "surface": "bedroom",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-010-meaning",
+        "translations": {
+          "pt-BR": [
+            "quarto de dormir"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-011-word",
+    "language": "en",
+    "lemma": "bathroom",
+    "surface": "bathroom",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-011-meaning",
+        "translations": {
+          "pt-BR": [
+            "banheiro"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-012-word",
+    "language": "en",
+    "lemma": "living room",
+    "surface": "living room",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-012-meaning",
+        "translations": {
+          "pt-BR": [
+            "sala de estar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-013-word",
+    "language": "en",
+    "lemma": "dining room",
+    "surface": "dining room",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-013-meaning",
+        "translations": {
+          "pt-BR": [
+            "sala de jantar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-014-word",
+    "language": "en",
+    "lemma": "hallway",
+    "surface": "hallway",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-014-meaning",
+        "translations": {
+          "pt-BR": [
+            "corredor"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-015-word",
+    "language": "en",
+    "lemma": "balcony",
+    "surface": "balcony",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-015-meaning",
+        "translations": {
+          "pt-BR": [
+            "varanda"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-016-word",
+    "language": "en",
+    "lemma": "garden",
+    "surface": "garden",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l02-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-016-meaning",
+        "translations": {
+          "pt-BR": [
+            "jardim"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-017-word",
+    "language": "en",
+    "lemma": "sofa",
+    "surface": "sofa",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-017-meaning",
+        "translations": {
+          "pt-BR": [
+            "sofá"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-018-word",
+    "language": "en",
+    "lemma": "chair",
+    "surface": "chair",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-018-meaning",
+        "translations": {
+          "pt-BR": [
+            "cadeira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-019-word",
+    "language": "en",
+    "lemma": "table",
+    "surface": "table",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-019-meaning",
+        "translations": {
+          "pt-BR": [
+            "mesa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-020-word",
+    "language": "en",
+    "lemma": "bed",
+    "surface": "bed",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-020-meaning",
+        "translations": {
+          "pt-BR": [
+            "cama"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-021-word",
+    "language": "en",
+    "lemma": "wardrobe",
+    "surface": "wardrobe",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-021-meaning",
+        "translations": {
+          "pt-BR": [
+            "guarda-roupa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-022-word",
+    "language": "en",
+    "lemma": "fridge",
+    "surface": "fridge",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-022-meaning",
+        "translations": {
+          "pt-BR": [
+            "geladeira"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-023-word",
+    "language": "en",
+    "lemma": "washing machine",
+    "surface": "washing machine",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-023-meaning",
+        "translations": {
+          "pt-BR": [
+            "máquina de lavar roupas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-024-word",
+    "language": "en",
+    "lemma": "lamp",
+    "surface": "lamp",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l03-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-024-meaning",
+        "translations": {
+          "pt-BR": [
+            "luminária"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-025-word",
+    "language": "en",
+    "lemma": "there is",
+    "surface": "there is",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-025-meaning",
+        "translations": {
+          "pt-BR": [
+            "há / existe no singular"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-026-word",
+    "language": "en",
+    "lemma": "there are",
+    "surface": "there are",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-026-meaning",
+        "translations": {
+          "pt-BR": [
+            "há / existem no plural"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-027-word",
+    "language": "en",
+    "lemma": "there isn't",
+    "surface": "there isn't",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-027-meaning",
+        "translations": {
+          "pt-BR": [
+            "não há no singular"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-028-word",
+    "language": "en",
+    "lemma": "there aren't",
+    "surface": "there aren't",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-028-meaning",
+        "translations": {
+          "pt-BR": [
+            "não há no plural"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-029-word",
+    "language": "en",
+    "lemma": "is there",
+    "surface": "is there",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-029-meaning",
+        "translations": {
+          "pt-BR": [
+            "há? singular"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-030-word",
+    "language": "en",
+    "lemma": "are there",
+    "surface": "are there",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-030-meaning",
+        "translations": {
+          "pt-BR": [
+            "há? plural"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-031-word",
+    "language": "en",
+    "lemma": "one",
+    "surface": "one",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-031-meaning",
+        "translations": {
+          "pt-BR": [
+            "um"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-032-word",
+    "language": "en",
+    "lemma": "two",
+    "surface": "two",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l04-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-032-meaning",
+        "translations": {
+          "pt-BR": [
+            "dois"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-033-word",
+    "language": "en",
+    "lemma": "a",
+    "surface": "a",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-033-meaning",
+        "translations": {
+          "pt-BR": [
+            "artigo indefinido antes de som consonantal"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-034-word",
+    "language": "en",
+    "lemma": "an",
+    "surface": "an",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-034-meaning",
+        "translations": {
+          "pt-BR": [
+            "artigo indefinido antes de som vocálico"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-035-word",
+    "language": "en",
+    "lemma": "the",
+    "surface": "the",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-035-meaning",
+        "translations": {
+          "pt-BR": [
+            "artigo definido"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-036-word",
+    "language": "en",
+    "lemma": "box",
+    "surface": "box",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-036-meaning",
+        "translations": {
+          "pt-BR": [
+            "caixa"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-037-word",
+    "language": "en",
+    "lemma": "city",
+    "surface": "city",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-037-meaning",
+        "translations": {
+          "pt-BR": [
+            "cidade"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-038-word",
+    "language": "en",
+    "lemma": "child",
+    "surface": "child",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-038-meaning",
+        "translations": {
+          "pt-BR": [
+            "criança"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-039-word",
+    "language": "en",
+    "lemma": "children",
+    "surface": "children",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-039-meaning",
+        "translations": {
+          "pt-BR": [
+            "crianças"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-040-word",
+    "language": "en",
+    "lemma": "window",
+    "surface": "window",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l05-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-040-meaning",
+        "translations": {
+          "pt-BR": [
+            "janela"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-041-word",
+    "language": "en",
+    "lemma": "this",
+    "surface": "this",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-041-meaning",
+        "translations": {
+          "pt-BR": [
+            "este / esta perto singular"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-042-word",
+    "language": "en",
+    "lemma": "that",
+    "surface": "that",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-042-meaning",
+        "translations": {
+          "pt-BR": [
+            "aquele / aquela longe singular"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-043-word",
+    "language": "en",
+    "lemma": "these",
+    "surface": "these",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-043-meaning",
+        "translations": {
+          "pt-BR": [
+            "estes / estas perto plural"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-044-word",
+    "language": "en",
+    "lemma": "those",
+    "surface": "those",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-044-meaning",
+        "translations": {
+          "pt-BR": [
+            "aqueles / aquelas longe plural"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-045-word",
+    "language": "en",
+    "lemma": "here",
+    "surface": "here",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-045-meaning",
+        "translations": {
+          "pt-BR": [
+            "aqui"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-046-word",
+    "language": "en",
+    "lemma": "there",
+    "surface": "there",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-046-meaning",
+        "translations": {
+          "pt-BR": [
+            "lá / ali"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-047-word",
+    "language": "en",
+    "lemma": "near",
+    "surface": "near",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-047-meaning",
+        "translations": {
+          "pt-BR": [
+            "perto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-048-word",
+    "language": "en",
+    "lemma": "far",
+    "surface": "far",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l06-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-048-meaning",
+        "translations": {
+          "pt-BR": [
+            "longe"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-049-word",
+    "language": "en",
+    "lemma": "small",
+    "surface": "small",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-049-meaning",
+        "translations": {
+          "pt-BR": [
+            "pequeno"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-050-word",
+    "language": "en",
+    "lemma": "large",
+    "surface": "large",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-050-meaning",
+        "translations": {
+          "pt-BR": [
+            "grande / amplo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-051-word",
+    "language": "en",
+    "lemma": "quiet",
+    "surface": "quiet",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-051-meaning",
+        "translations": {
+          "pt-BR": [
+            "silencioso / tranquilo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-052-word",
+    "language": "en",
+    "lemma": "noisy",
+    "surface": "noisy",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-052-meaning",
+        "translations": {
+          "pt-BR": [
+            "barulhento"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-053-word",
+    "language": "en",
+    "lemma": "bright",
+    "surface": "bright",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-053-meaning",
+        "translations": {
+          "pt-BR": [
+            "bem iluminado"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-054-word",
+    "language": "en",
+    "lemma": "dark",
+    "surface": "dark",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-054-meaning",
+        "translations": {
+          "pt-BR": [
+            "escuro"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-055-word",
+    "language": "en",
+    "lemma": "comfortable",
+    "surface": "comfortable",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-055-meaning",
+        "translations": {
+          "pt-BR": [
+            "confortável"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-056-word",
+    "language": "en",
+    "lemma": "modern",
+    "surface": "modern",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l07-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-056-meaning",
+        "translations": {
+          "pt-BR": [
+            "moderno"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-057-word",
+    "language": "en",
+    "lemma": "have",
+    "surface": "have",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-057-meaning",
+        "translations": {
+          "pt-BR": [
+            "ter com I/you/we/they"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-058-word",
+    "language": "en",
+    "lemma": "has",
+    "surface": "has",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-058-meaning",
+        "translations": {
+          "pt-BR": [
+            "tem com he/she/it"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-059-word",
+    "language": "en",
+    "lemma": "doesn't have",
+    "surface": "doesn't have",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-059-meaning",
+        "translations": {
+          "pt-BR": [
+            "não tem com he/she/it"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-060-word",
+    "language": "en",
+    "lemma": "don't have",
+    "surface": "don't have",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-060-meaning",
+        "translations": {
+          "pt-BR": [
+            "não tenho / não têm com I/you/we/they"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-061-word",
+    "language": "en",
+    "lemma": "have a desk",
+    "surface": "have a desk",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-061-meaning",
+        "translations": {
+          "pt-BR": [
+            "ter uma mesa de trabalho"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-062-word",
+    "language": "en",
+    "lemma": "has a balcony",
+    "surface": "has a balcony",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-062-meaning",
+        "translations": {
+          "pt-BR": [
+            "tem varanda"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-063-word",
+    "language": "en",
+    "lemma": "have two rooms",
+    "surface": "have two rooms",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-063-meaning",
+        "translations": {
+          "pt-BR": [
+            "ter dois cômodos"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-064-word",
+    "language": "en",
+    "lemma": "has a lift",
+    "surface": "has a lift",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l08-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-064-meaning",
+        "translations": {
+          "pt-BR": [
+            "tem elevador"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-065-word",
+    "language": "en",
+    "lemma": "in",
+    "surface": "in",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-065-meaning",
+        "translations": {
+          "pt-BR": [
+            "dentro de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-066-word",
+    "language": "en",
+    "lemma": "on",
+    "surface": "on",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-066-meaning",
+        "translations": {
+          "pt-BR": [
+            "sobre"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-067-word",
+    "language": "en",
+    "lemma": "under",
+    "surface": "under",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-067-meaning",
+        "translations": {
+          "pt-BR": [
+            "embaixo de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-068-word",
+    "language": "en",
+    "lemma": "behind",
+    "surface": "behind",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-068-meaning",
+        "translations": {
+          "pt-BR": [
+            "atrás de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-069-word",
+    "language": "en",
+    "lemma": "in front of",
+    "surface": "in front of",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-069-meaning",
+        "translations": {
+          "pt-BR": [
+            "na frente de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-070-word",
+    "language": "en",
+    "lemma": "next to",
+    "surface": "next to",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-070-meaning",
+        "translations": {
+          "pt-BR": [
+            "ao lado de"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-071-word",
+    "language": "en",
+    "lemma": "between",
+    "surface": "between",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-071-meaning",
+        "translations": {
+          "pt-BR": [
+            "entre dois elementos"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-072-word",
+    "language": "en",
+    "lemma": "opposite",
+    "surface": "opposite",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l09-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-072-meaning",
+        "translations": {
+          "pt-BR": [
+            "em frente a / do lado oposto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-073-word",
+    "language": "en",
+    "lemma": "supermarket",
+    "surface": "supermarket",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-073-meaning",
+        "translations": {
+          "pt-BR": [
+            "supermercado"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-074-word",
+    "language": "en",
+    "lemma": "pharmacy",
+    "surface": "pharmacy",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-074-meaning",
+        "translations": {
+          "pt-BR": [
+            "farmácia"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-075-word",
+    "language": "en",
+    "lemma": "bank",
+    "surface": "bank",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-075-meaning",
+        "translations": {
+          "pt-BR": [
+            "banco"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-076-word",
+    "language": "en",
+    "lemma": "park",
+    "surface": "park",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-076-meaning",
+        "translations": {
+          "pt-BR": [
+            "parque"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-077-word",
+    "language": "en",
+    "lemma": "hospital",
+    "surface": "hospital",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-077-meaning",
+        "translations": {
+          "pt-BR": [
+            "hospital"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-078-word",
+    "language": "en",
+    "lemma": "coffee shop",
+    "surface": "coffee shop",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-078-meaning",
+        "translations": {
+          "pt-BR": [
+            "cafeteria"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-079-word",
+    "language": "en",
+    "lemma": "bus stop",
+    "surface": "bus stop",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-079-meaning",
+        "translations": {
+          "pt-BR": [
+            "ponto de ônibus"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-080-word",
+    "language": "en",
+    "lemma": "train station",
+    "surface": "train station",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l10-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-080-meaning",
+        "translations": {
+          "pt-BR": [
+            "estação de trem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-081-word",
+    "language": "en",
+    "lemma": "go straight",
+    "surface": "go straight",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-081-meaning",
+        "translations": {
+          "pt-BR": [
+            "siga reto"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-082-word",
+    "language": "en",
+    "lemma": "turn left",
+    "surface": "turn left",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-082-meaning",
+        "translations": {
+          "pt-BR": [
+            "vire à esquerda"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-083-word",
+    "language": "en",
+    "lemma": "turn right",
+    "surface": "turn right",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-083-meaning",
+        "translations": {
+          "pt-BR": [
+            "vire à direita"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-084-word",
+    "language": "en",
+    "lemma": "cross",
+    "surface": "cross",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-084-meaning",
+        "translations": {
+          "pt-BR": [
+            "atravessar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-085-word",
+    "language": "en",
+    "lemma": "corner",
+    "surface": "corner",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-085-meaning",
+        "translations": {
+          "pt-BR": [
+            "esquina"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-086-word",
+    "language": "en",
+    "lemma": "block",
+    "surface": "block",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-086-meaning",
+        "translations": {
+          "pt-BR": [
+            "quarteirão"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-087-word",
+    "language": "en",
+    "lemma": "traffic lights",
+    "surface": "traffic lights",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-087-meaning",
+        "translations": {
+          "pt-BR": [
+            "semáforo"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-088-word",
+    "language": "en",
+    "lemma": "excuse me",
+    "surface": "excuse me",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l11-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-088-meaning",
+        "translations": {
+          "pt-BR": [
+            "com licença"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-089-word",
+    "language": "en",
+    "lemma": "some",
+    "surface": "some",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-089-meaning",
+        "translations": {
+          "pt-BR": [
+            "alguns / algumas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-090-word",
+    "language": "en",
+    "lemma": "any",
+    "surface": "any",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-090-meaning",
+        "translations": {
+          "pt-BR": [
+            "algum / alguma em perguntas e negativas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-091-word",
+    "language": "en",
+    "lemma": "how many",
+    "surface": "how many",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-091-meaning",
+        "translations": {
+          "pt-BR": [
+            "quantos / quantas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-092-word",
+    "language": "en",
+    "lemma": "many",
+    "surface": "many",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-092-meaning",
+        "translations": {
+          "pt-BR": [
+            "muitos / muitas"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-093-word",
+    "language": "en",
+    "lemma": "a few",
+    "surface": "a few",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-093-meaning",
+        "translations": {
+          "pt-BR": [
+            "alguns poucos"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-094-word",
+    "language": "en",
+    "lemma": "none",
+    "surface": "none",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-094-meaning",
+        "translations": {
+          "pt-BR": [
+            "nenhum / nenhuma"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-095-word",
+    "language": "en",
+    "lemma": "enough",
+    "surface": "enough",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-095-meaning",
+        "translations": {
+          "pt-BR": [
+            "suficiente"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-096-word",
+    "language": "en",
+    "lemma": "several",
+    "surface": "several",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l12-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-096-meaning",
+        "translations": {
+          "pt-BR": [
+            "vários / várias"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-097-word",
+    "language": "en",
+    "lemma": "price",
+    "surface": "price",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-097-meaning",
+        "translations": {
+          "pt-BR": [
+            "preço"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-098-word",
+    "language": "en",
+    "lemma": "dollar",
+    "surface": "dollar",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-098-meaning",
+        "translations": {
+          "pt-BR": [
+            "dólar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-099-word",
+    "language": "en",
+    "lemma": "pound",
+    "surface": "pound",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-099-meaning",
+        "translations": {
+          "pt-BR": [
+            "libra esterlina"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-100-word",
+    "language": "en",
+    "lemma": "first floor",
+    "surface": "first floor",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-100-meaning",
+        "translations": {
+          "pt-BR": [
+            "primeiro andar; uso regional varia"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-101-word",
+    "language": "en",
+    "lemma": "second floor",
+    "surface": "second floor",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-101-meaning",
+        "translations": {
+          "pt-BR": [
+            "segundo andar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-102-word",
+    "language": "en",
+    "lemma": "third floor",
+    "surface": "third floor",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-102-meaning",
+        "translations": {
+          "pt-BR": [
+            "terceiro andar"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-103-word",
+    "language": "en",
+    "lemma": "hundred",
+    "surface": "hundred",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-103-meaning",
+        "translations": {
+          "pt-BR": [
+            "cem"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-104-word",
+    "language": "en",
+    "lemma": "per month",
+    "surface": "per month",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l13-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-104-meaning",
+        "translations": {
+          "pt-BR": [
+            "por mês"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-105-word",
+    "language": "en",
+    "lemma": "listing",
+    "surface": "listing",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-105-meaning",
+        "translations": {
+          "pt-BR": [
+            "anúncio de imóvel"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-106-word",
+    "language": "en",
+    "lemma": "furnished",
+    "surface": "furnished",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-106-meaning",
+        "translations": {
+          "pt-BR": [
+            "mobiliado"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-107-word",
+    "language": "en",
+    "lemma": "unfurnished",
+    "surface": "unfurnished",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-107-meaning",
+        "translations": {
+          "pt-BR": [
+            "sem móveis"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-108-word",
+    "language": "en",
+    "lemma": "lift",
+    "surface": "lift",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-108-meaning",
+        "translations": {
+          "pt-BR": [
+            "elevador (Reino Unido)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-109-word",
+    "language": "en",
+    "lemma": "elevator",
+    "surface": "elevator",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-109-meaning",
+        "translations": {
+          "pt-BR": [
+            "elevador (EUA)"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-110-word",
+    "language": "en",
+    "lemma": "nearby",
+    "surface": "nearby",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-110-meaning",
+        "translations": {
+          "pt-BR": [
+            "nas proximidades"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-111-word",
+    "language": "en",
+    "lemma": "available",
+    "surface": "available",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-111-meaning",
+        "translations": {
+          "pt-BR": [
+            "disponível"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "personal-en-u2-fc-112-word",
+    "language": "en",
+    "lemma": "viewing",
+    "surface": "viewing",
+    "level": "A1",
+    "lessonId": "personal-en-u2-l14-cards",
+    "meanings": [
+      {
+        "id": "personal-en-u2-fc-112-meaning",
+        "translations": {
+          "pt-BR": [
+            "visita para conhecer o imóvel"
+          ]
+        }
+      }
+    ]
+  }
+]

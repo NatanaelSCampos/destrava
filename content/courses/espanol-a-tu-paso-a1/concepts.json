@@ -1,0 +1,100 @@
+[
+  {
+    "id": "atp-location-state",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Localizar uma pessoa",
+    "description": {
+      "pt-BR": "Você vai encontrar um grupo em um centro cultural. Uma pessoa manda uma mensagem:\n\nVera: «Hola, soy Vera. Estoy en la entrada del centro cultural. ¿Dónde estás?»\nTomás: «Estoy en la plaza, frente al centro. Voy ahora.»\n\nVera está na entrada. Tomás está na praça, em frente ao centro. Ele avisa que está indo agora.\n\nPara dizer onde você está: Estoy en…\nPara perguntar onde a outra pessoa está: ¿Dónde estás?\n\nOutro exemplo: «Estoy en el parque. ¿Y tú?» — Estou no parque. E você?\n\nAqui, Vera e Tomás usam tratamento de proximidade. Em outros relacionamentos, a forma de se dirigir à pessoa pode mudar.\n\nPara falar de localização:\nEu: (yo) estoy — Estoy en el parque.\nVocê, nesta conversa de proximidade: (tú) estás — ¿Dónde estás?\nOutra pessoa: está — Vera está en la entrada.\nO pronome yo pode aparecer ou ficar implícito: Yo estoy en el parque / Estoy en el parque."
+    }
+  },
+  {
+    "id": "atp-repair",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Pedir ajuda para entender",
+    "description": {
+      "pt-BR": "Uma informação não ficou clara. Você não precisa responder como se tivesse entendido.\n\nEntre pessoas próximas:\n— Estoy en la entrada norte.\n— No entiendo. ¿Puedes repetir el lugar, por favor?\n— En la entrada norte.\n\nEm um atendimento em que você mantém distância:\n— ¿Puede repetir, por favor?\n\nPuedes combina com tú; puede combina com usted. Aqui você pratica essas formas nos relacionamentos descritos, sem uma regra universal por idade ou país.\n\nSe a velocidade atrapalha: Más despacio, por favor. — Mais devagar, por favor.\nNo entiendo significa “Não entendo”. Por favor ajuda a formular o pedido nesta situação."
+    }
+  },
+  {
+    "id": "atp-time",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Combinar um horário",
+    "description": {
+      "pt-BR": "Clara manda uma combinação:\n«El taller es a las cinco y media. Estoy en la entrada a las cinco.»\n\nO encontro de Clara na entrada é às cinco. A oficina começa às cinco e meia. Observe qual evento tem cada horário.\n\n¿A qué hora? pergunta o horário de alguma coisa.\nA la una = à uma. A las dos = às duas. A las siete y media = às sete e meia.\nPara dizer a hora de agora: Es la una. Son las dos.\nPara combinar: Nos vemos a la una / a las dos.\n\nAqui usamos o relógio de doze horas. Quando necessário, acrescente de la mañana, de la tarde ou de la noche para esclarecer o período. Não adivinhe o período sem contexto.\n\nNúmeros para consultar: uno, dos, tres, cuatro, cinco, seis, siete, ocho, nueve, diez, once, doce."
+    }
+  },
+  {
+    "id": "atp-meeting",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Confirmar lugar e horário",
+    "description": {
+      "pt-BR": "Você já sabe buscar lugar e horário. Agora use as informações juntas.\n\nCena em Madri, entre duas pessoas que já combinaram se encontrar:\n— Nos vemos a las seis en la plaza.\n— Vale. Estoy en la biblioteca. Voy ahora.\n— Hasta luego.\n\nVale confirma a combinação nesta cena informal. De acuerdo também pode confirmar. A escolha de uma não torna a outra errada. Vale tem outros usos e não é uma palavra universal para toda situação.\n\nNos vemos pode fazer parte de uma combinação e de uma despedida. Quedamos a las seis também combina um encontro. Estas fórmulas são aprendidas aqui como expressões completas, não como toda a conjugação dos verbos.\n\nAntes de enviar, confira: onde? a que horas? a outra pessoa precisa confirmar alguma coisa?"
+    }
+  },
+  {
+    "id": "atp-order",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Escolher e pedir uma bebida",
+    "description": {
+      "pt-BR": "Você faz uma pausa e lê uma oferta curta:\nCafé · Café con leche · Té · Agua con gas · Agua sin gas · Pan\n\nCon indica uma presença: café con leche, café com leite.\nSin indica uma ausência: agua sin gas, água sem gás.\nPara começar um pedido simples: Un café, por favor. / Un té, por favor.\nVocê pode cumprimentar antes: Buenos días. Un té, por favor.\n\nNa cena deste atendimento, o cliente e a atendente usam usted:\n— ¿Qué desea?\n— Un café con leche, por favor.\n— Aquí tiene.\n— Gracias.\n\nUm pedido curto com por favor pode ser suficiente nesta situação. O tom e a relação importam; não é uma frase que garante cortesia em qualquer contexto."
+    }
+  },
+  {
+    "id": "atp-price-quantity",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Conferir quantidade e preço",
+    "description": {
+      "pt-BR": "No balcão, confirme quantidade e valor.\n\nNesta oferta de um café em Madri:\nUn café: 2 euros\nUn té: 3 euros\nDos cafés: 4 euros\n\nUn café é uma unidade. Dos cafés são duas. Com uma palavra feminina como botella, você pode dizer una botella.\nPara perguntar o preço de um item: ¿Cuánto cuesta un té?\nPara perguntar o valor a pagar pelo pedido: ¿Cuánto es?\n\n— Dos cafés, por favor.\n— Son cuatro euros.\n— Gracias.\n\nConfira os valores e a moeda da oferta. Em outras cenas, a moeda pode ser outra; confira o símbolo e o contexto.\nNúmeros úteis: uno, dos, tres, cuatro, cinco, diez, quince, veinte, treinta. Você pode consultar os demais na prática de números."
+    }
+  },
+  {
+    "id": "atp-order-condition",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Confirmar e mudar condições",
+    "description": {
+      "pt-BR": "A atendente confirma como você quer receber o pedido:\n— ¿Para aquí o para llevar?\n— Para llevar, por favor.\n\nPara aquí: para consumir no local. Para llevar: para levar.\nSe uma informação do pedido não corresponde ao que você quer, esclareça:\n— ¿Con leche?\n— No, sin leche, por favor.\n\nDuas ofertas em cenas diferentes:\nMadri: Zumo de naranja.\nCidade do México: Jugo de naranja.\nAs duas expressões se referem aqui ao suco de laranja. O uso de jugo é documentado no espanhol do México; zumo aparece na oferta espanhola desta cena. O vocabulário varia, e essa comparação não torna um sinônimo errado fora do seu país.\n\nConfira a escolha, não apenas a palavra isolada."
+    }
+  },
+  {
+    "id": "atp-service",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Resolver uma compra simples",
+    "description": {
+      "pt-BR": "Você entra em outro café e precisa juntar as informações.\n\nOferta:\nTé: 2 euros. Café con leche: 3 euros. Pan: 1 euro.\n\n— Buenos días. ¿Tiene té?\n— Sí. ¿Para aquí o para llevar?\n— Para aquí. Un té y un pan, por favor.\n— Son tres euros.\n— Gracias. Eso es todo.\n\n¿Tiene…? pergunta se há o item disponível nesse atendimento com usted. Eso es todo indica que você terminou de pedir. Se não entender o total ou outra informação, peça repetição antes de confirmar.\n\nCompare este encontro com uma conversa entre conhecidos: a escolha de forma e tom acompanha a relação. Você não precisa usar todas as expressões em toda interação."
+    }
+  },
+  {
+    "id": "atp-location-question",
+    "language": "es-a-tu-paso",
+    "type": "usage",
+    "name": "Perguntar onde a outra pessoa está",
+    "description": {
+      "pt-BR": "¿Dónde estás? pergunta o lugar em que a outra pessoa está nesta conversa entre pessoas próximas. Uma resposta como Estoy en la plaza. informa esse lugar. A tarefa verifica compreender a pergunta e escolher uma resposta de localização; não certifica produção oral espontânea."
+    },
+    "prerequisites": [
+      "atp-location-state"
+    ],
+    "examples": [
+      {
+        "target": "¿Dónde estás?",
+        "translations": {
+          "pt-BR": "Onde você está?"
+        }
+      },
+      {
+        "target": "Estoy en la plaza.",
+        "translations": {
+          "pt-BR": "Estou na praça."
+        }
+      }
+    ]
+  }
+]

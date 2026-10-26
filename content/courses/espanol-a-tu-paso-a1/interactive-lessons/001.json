@@ -1,0 +1,200 @@
+{
+  "id": "atp-u1-guided-board",
+  "courseId": "espanol-a-tu-paso-a1",
+  "unitId": "atp-u1",
+  "lessonId": "atp-u1-guided",
+  "title": "Uma conversa que continua",
+  "objectives": [
+    "atp-repair-understanding"
+  ],
+  "concepts": [
+    "atp-repair"
+  ],
+  "skills": [
+    "reading",
+    "writing",
+    "speaking",
+    "listening"
+  ],
+  "estimatedMinutes": 10,
+  "alternativeExamples": [
+    {
+      "conceptId": "atp-repair",
+      "text": "¿Puedes repetir, por favor?",
+      "translation": "Você pode repetir, por favor?"
+    }
+  ],
+  "segments": [
+    {
+      "id": "atp-u1-guided-intro",
+      "title": "Ouça, peça e encontre",
+      "type": "explanation",
+      "objectives": [],
+      "concepts": [
+        "atp-repair"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 8000,
+            "text": "Ouça uma fala de cada vez. Observe como pedir repetição ajuda a usar uma informação de lugar.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 8000,
+            "endMs": 16000,
+            "text": "Use o apoio da etapa para ouvir as falas e consultar as traduções.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "atp-u1-guided-cue-1",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "atp-u1-guided-board-help",
+              "text": "Ouça uma fala de cada vez. Observe como pedir repetição ajuda a usar uma informação de lugar.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "activityRef": "atp-u1-guided-support",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ],
+      "explanation": "Ouça uma fala de cada vez. Observe como pedir repetição ajuda a usar uma informação de lugar."
+    },
+    {
+      "id": "atp-u1-guided-model",
+      "title": "O pedido mudou a conversa",
+      "type": "example",
+      "objectives": [],
+      "concepts": [
+        "atp-repair"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 8000,
+            "text": "No entiendo. ¿Puedes repetir, por favor?",
+            "textPresentation": {
+              "language": "es",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 8000,
+            "endMs": 16000,
+            "text": "O pedido permite ouvir a informação outra vez. Depois da repetição, procure a pessoa no lugar informado.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "atp-u1-guided-cue-3",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "example",
+              "id": "atp-u1-guided-board-model",
+              "text": "No entiendo. ¿Puedes repetir, por favor?",
+              "translation": "Não entendo. Você pode repetir, por favor?",
+              "textPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "required": false,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u1-guided-choice",
+      "title": "Uma nova situação",
+      "type": "checkpoint",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u1-guided-checkpoint",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u1-guided-writing",
+      "title": "Sua frase",
+      "type": "checkpoint",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u1-guided-write",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u1-guided-speaking",
+      "title": "Seu ensaio",
+      "type": "speaking",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u1-guided-speak",
+      "required": false,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u1-guided-finish",
+      "title": "Volte a esta ideia",
+      "type": "summary",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u1-guided-review",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    }
+  ]
+}

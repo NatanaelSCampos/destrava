@@ -32,6 +32,7 @@ export type StudentProfile = {
 };
 
 export type Attempt = {
+  serverReceipt?: string;
   interactiveReceipt?: true;
   id: string;
   activityId: string;
@@ -628,6 +629,7 @@ export function recordAttempt(
     activityId: activity.id,
     answer,
     correct: result.correct,
+    ...(result.completionReceipt ? { serverReceipt: result.completionReceipt } : {}),
     ...(result.variantId ? { variantId: result.variantId } : {}),
     skill: activity.skill,
     createdAt,
@@ -979,39 +981,103 @@ export function restoreServerAssessmentResults(
 }
 
 /** Reuse the existing projection rules; this DTO cannot authorize interactive session progress. */
-export function recordInteractiveLessonReceipt(state: StudyState, course: PublicCourse,
-  receipt: InteractiveLessonProgressReceipt): StudyState {
+export function recordInteractiveLessonReceipt(
+  state: StudyState,
+  course: PublicCourse,
+  receipt: InteractiveLessonProgressReceipt,
+): StudyState {
   const proof = receipt.evidence;
-  if (state.courseId !== course.id || proof.courseId !== course.id || proof.contentVersion !== course.contentVersion) return state;
-  const activity = course.units.flatMap((unit) => unit.lessons).find((lesson) => lesson.id === proof.lessonId)
+  if (
+    state.courseId !== course.id ||
+    proof.courseId !== course.id ||
+    proof.contentVersion !== course.contentVersion
+  )
+    return state;
+  const activity = course.units
+    .flatMap((unit) => unit.lessons)
+    .find((lesson) => lesson.id === proof.lessonId)
     ?.activities.find((item) => item.id === proof.activityId);
-  if (!activity || (proof.kind === "speaking_submitted") !== (activity.type === "speaking") ||
-    (proof.kind === "writing_submitted") !== (activity.type === "writing")) return state;
-  const context: StudyRecordingContext = { now: new Date(receipt.createdAt), idFor: (key) => {
-    if (key === "attempt:" + activity.id) return proof.attemptId;
-    const id = receipt.recordingIds[key];
-    if (!id) throw new Error("Recibo de aula sem identidade de projeção.");
-    return id;
-  } };
+  if (
+    !activity ||
+    (proof.kind === "speaking_submitted") !== (activity.type === "speaking") ||
+    (proof.kind === "writing_submitted") !== (activity.type === "writing")
+  )
+    return state;
+  const context: StudyRecordingContext = {
+    now: new Date(receipt.createdAt),
+    idFor: (key) => {
+      if (key === "attempt:" + activity.id) return proof.attemptId;
+      const id = receipt.recordingIds[key];
+      if (!id) throw new Error("Recibo de aula sem identidade de projeção.");
+      return id;
+    },
+  };
   if (proof.kind === "objective_correct") {
-    if (!receipt.grade || receipt.grade.correct !== proof.accepted || state.attempts.some((item) => item.id === proof.attemptId)) return state;
+    if (
+      !receipt.grade ||
+      receipt.grade.correct !== proof.accepted ||
+      state.attempts.some((item) => item.id === proof.attemptId)
+    )
+      return state;
     // A receipt belongs to the interactive session; never credit an unrelated active study session during replay.
-    const next = recordAttempt({ ...state, activeSessionId: null }, activity, receipt.answer, receipt.grade, context);
-    const newer = state.attempts.some((item) => item.activityId === activity.id && Date.parse(item.createdAt) > Date.parse(receipt.createdAt));
-    return { ...next, activeSessionId: state.activeSessionId, mistakes: newer ? state.mistakes : next.mistakes,
-      attempts: next.attempts.map((item) => item.id === proof.attemptId ? { ...item, interactiveReceipt: true } : item) };
+    const next = recordAttempt(
+      { ...state, activeSessionId: null },
+      activity,
+      receipt.answer,
+      receipt.grade,
+      context,
+    );
+    const newer = state.attempts.some(
+      (item) =>
+        item.activityId === activity.id &&
+        Date.parse(item.createdAt) > Date.parse(receipt.createdAt),
+    );
+    return {
+      ...next,
+      activeSessionId: state.activeSessionId,
+      mistakes: newer ? state.mistakes : next.mistakes,
+      attempts: next.attempts.map((item) =>
+        item.id === proof.attemptId ? { ...item, interactiveReceipt: true } : item,
+      ),
+    };
   }
   if (!proof.accepted) return state;
   if (proof.kind === "writing_submitted") {
     if (state.writing.some((item) => item.id === proof.attemptId)) return state;
     const next = markActivityComplete({ ...state, activeSessionId: null }, activity.id, context);
-    return { ...next, activeSessionId: state.activeSessionId, writing: [{ id: proof.attemptId,
-      interactiveReceipt: true, activityId: activity.id, sessionId: null, text: receipt.answer,
-      createdAt: receipt.createdAt }, ...next.writing] };
+    return {
+      ...next,
+      activeSessionId: state.activeSessionId,
+      writing: [
+        {
+          id: proof.attemptId,
+          interactiveReceipt: true,
+          activityId: activity.id,
+          sessionId: null,
+          text: receipt.answer,
+          createdAt: receipt.createdAt,
+        },
+        ...next.writing,
+      ],
+    };
   }
   if (state.speaking.some((item) => item.id === proof.attemptId)) return state;
   const next = markActivityComplete({ ...state, activeSessionId: null }, activity.id, context);
-  return { ...next, activeSessionId: state.activeSessionId, speaking: [{ id: proof.attemptId,
-    interactiveReceipt: true, activityId: activity.id, sessionId: null, transcription: receipt.answer,
-    audioUrl: null, createdAt: receipt.createdAt, practiceMode: "lesson" }, ...next.speaking] };
+  return {
+    ...next,
+    activeSessionId: state.activeSessionId,
+    speaking: [
+      {
+        id: proof.attemptId,
+        interactiveReceipt: true,
+        activityId: activity.id,
+        sessionId: null,
+        transcription: receipt.answer,
+        audioUrl: null,
+        createdAt: receipt.createdAt,
+        practiceMode: "lesson",
+      },
+      ...next.speaking,
+    ],
+  };
 }

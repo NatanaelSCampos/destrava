@@ -47,7 +47,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             </span>
             <h2 className="section-title">Uma letra de cada vez.</h2>
             <p className="section-subtitle">
-              Ouça o nome de cada letra, conheça uma palavra e pratique com uma frase curta.
+              Consulte o nome de cada letra, uma palavra e uma frase curta. O áudio depende de uma voz compatível no dispositivo.
             </p>
           </div>
           <Link href="/vocabulary" className="secondary-button">
@@ -62,7 +62,7 @@ export function AlphabetGuide({ embedded = false }: { embedded?: boolean }) {
             </span>
             <h1 className="page-title">Uma letra de cada vez.</h1>
             <p className="page-subtitle">
-              Ouça o nome de cada letra, conheça uma palavra e pratique com uma frase curta.
+              Consulte o nome de cada letra, uma palavra e uma frase curta. O áudio depende de uma voz compatível no dispositivo.
             </p>
           </div>
           <Link href="/basics" className="secondary-button">

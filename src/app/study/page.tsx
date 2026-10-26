@@ -1,7 +1,7 @@
 "use client";
 import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -21,13 +21,15 @@ import { LearningRecommendationEngine } from "@/domain/study/learning-recommenda
 import { recommendationLink } from "@/lib/recommendation-link";
 import { currentUnit } from "@/domain/study/progress";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
+import { SpeechPlaybackScope } from "@/components/audio/speak-button";
+import type { PlaybackHandle } from "@/lib/speak-text";
 import { ReviewQueue } from "@/components/review/review-queue";
 import { FocusedConversation } from "@/components/study/focused-conversation";
 import { formatMinutes } from "@/lib/utils";
 import { buildPracticeHistory, sessionComparisons } from "@/domain/study/practice-history";
 import type { SessionMode } from "@/domain/study/study-state";
 import {
-  advanceActiveStudySeconds,
+  StudyActivityClock,
   countedStudySeconds,
   MAX_STUDY_SESSION_SECONDS,
   sessionTimeNeedsCorrection,
@@ -121,16 +123,27 @@ function StudyContent() {
   };
   const [elapsed, setElapsed] = useState(0);
   const elapsedRef = useRef(0);
+  const [activitySuspended, setActivitySuspended] = useState(false);
+  const activityRegion = useRef<HTMLDivElement | null>(null);
+  const playback = useRef<PlaybackHandle | null>(null);
+  const registerPlayback = useCallback((handle: PlaybackHandle) => { playback.current = handle; }, []);
+  const stopPlayback = useCallback(() => {
+    playback.current?.cancel();
+    activityRegion.current?.querySelectorAll<HTMLMediaElement>("audio,video").forEach((element) => element.pause());
+  }, []);
+  useEffect(() => { if (paused) stopPlayback(); }, [paused, stopPlayback]);
   const activeSessionId = activeSession?.id;
   const savedSeconds = activeSession?.durationSeconds ?? 0;
   useEffect(() => {
     if (!activeSessionId || progressLoadStatus === "failed") return;
     let seconds = savedSeconds;
     let lastSaved = Math.floor(seconds);
-    let lastTick = performance.now();
-    let lastInteraction = lastTick;
+    const clock = new StudyActivityClock(performance.now(), document.visibilityState === "visible");
     elapsedRef.current = seconds;
-    const initial = window.setTimeout(() => setElapsed(Math.floor(seconds)), 0);
+    const initial = window.setTimeout(() => {
+      setElapsed(Math.floor(seconds));
+      setActivitySuspended(!clock.isActive(performance.now()));
+    }, 0);
     const checkpoint = () => {
       const wholeSeconds = Math.floor(seconds);
       if (wholeSeconds > lastSaved) {
@@ -139,33 +152,39 @@ function StudyContent() {
       }
     };
     const tick = () => {
-      const now = performance.now();
-      if (!paused && document.visibilityState === "visible" && seconds < MAX_STUDY_SESSION_SECONDS) {
-        seconds = advanceActiveStudySeconds(seconds, lastTick, now, lastInteraction, true);
+      const now = performance.now(), elapsedMs = clock.takeElapsedMs(now);
+      const suspended = !clock.isActive(now);
+      setActivitySuspended(suspended);
+      if (suspended) stopPlayback();
+      if (!paused && seconds < MAX_STUDY_SESSION_SECONDS) {
+        seconds = Math.min(MAX_STUDY_SESSION_SECONDS, seconds + elapsedMs / 1000);
         elapsedRef.current = seconds;
         setElapsed(Math.floor(seconds));
         if (seconds - lastSaved >= 30) checkpoint();
       }
-      if (!paused && now - lastInteraction >= 300000) {
-        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
-      }
-      lastTick = now;
+      if (suspended) checkpoint();
     };
     const markActivity = () => {
-      lastInteraction = performance.now();
-      lastTick = lastInteraction;
+      if (document.visibilityState !== "visible") return;
+      clock.interact(performance.now());
+      setActivitySuspended(false);
     };
     const visibilityChanged = () => {
-      if (document.visibilityState === "hidden") {
+      const visible = document.visibilityState === "visible";
+      clock.setVisible(visible, performance.now());
+      setActivitySuspended(!visible);
+      if (!visible) {
+        stopPlayback();
         checkpoint();
-        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
+        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(() => undefined);
       }
-      else markActivity();
-      lastTick = performance.now();
     };
     const pageHidden = () => {
+      clock.setVisible(false, performance.now());
+      setActivitySuspended(true);
+      stopPlayback();
       checkpoint();
-      void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds), paused: true }).catch(() => undefined);
+      void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(() => undefined);
     };
     const interval = window.setInterval(tick, 1000);
     document.addEventListener("pointerdown", markActivity);
@@ -173,19 +192,20 @@ function StudyContent() {
     document.addEventListener("wheel", markActivity, { passive: true });
     document.addEventListener("visibilitychange", visibilityChanged);
     window.addEventListener("pagehide", pageHidden);
+    window.addEventListener("pageshow", visibilityChanged);
     return () => {
-      window.clearTimeout(initial);
-      window.clearInterval(interval);
+      window.clearTimeout(initial); window.clearInterval(interval);
       document.removeEventListener("pointerdown", markActivity);
       document.removeEventListener("keydown", markActivity);
       document.removeEventListener("wheel", markActivity);
       document.removeEventListener("visibilitychange", visibilityChanged);
       window.removeEventListener("pagehide", pageHidden);
+      window.removeEventListener("pageshow", visibilityChanged);
       checkpoint();
     };
-    // The persisted duration is the starting point for this session. Checkpoints must not restart the timer.
+    // Persisted duration starts this session; checkpoints must not restart its clock.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSessionId, paused, progressLoadStatus, updateActiveSessionDuration, checkpointStudySession]);
+  }, [activeSessionId, paused, progressLoadStatus, updateActiveSessionDuration, checkpointStudySession, stopPlayback]);
   const item = plan[index];
   const activity =
     item?.kind === "activity"
@@ -438,7 +458,8 @@ function StudyContent() {
     );
 
   return (
-    <div className="study-page">
+    <SpeechPlaybackScope.Provider value={registerPlayback}>
+    <div className="study-page" ref={activityRegion}>
       {syncError && <p role="alert">{syncError}</p>}
         {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
       <div className="study-running-head">
@@ -460,7 +481,7 @@ function StudyContent() {
             <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
             {String(elapsed % 60).padStart(2, "0")}
           </div>
-          <small>{paused ? "Sessão pausada. O tempo está congelado." : "O tempo pausa ao sair ou após 5 min sem interação."}</small>
+          <small>{paused ? "Sessão pausada. O tempo está congelado." : "O tempo conta apenas com a aba visível e até 5 min sem interação. Sua etapa fica preservada."}</small>
           <button type="button" className="secondary-button" disabled={controlling}
             onClick={() => void control({ paused: !paused })}>{paused ? "Retomar sessão" : "Pausar sessão"}</button>
           {controlError && <p role="alert">{controlError}</p>}
@@ -486,7 +507,9 @@ function StudyContent() {
           <div className="progress-track">
             <span style={{ width: `${Math.round((100 * index) / Math.max(1, plan.length))}%` }} />
           </div>
-          {paused ? <section className="panel" role="status">Retome a sessão para continuar a etapa confirmada.</section> : itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
+          {paused && <section className="panel" role="status">Retome a sessão para continuar a etapa confirmada.</section>}
+          <div hidden={paused} inert={paused}>
+          {itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
             <ReviewQueue
               key={item.id}
               plannedItems={item.reviewItems}
@@ -495,7 +518,7 @@ function StudyContent() {
           ) : item?.kind === "conversation" ? (
             <><p className="helper-note">Tentativa condicional: a disponibilidade da conversa será verificada ao enviar sua resposta.</p><FocusedConversation key={item.id} scenarioId={item.id} /></>
           ) : activity ? (
-            <ActivityRenderer key={activity.id} activity={activity} />
+            <ActivityRenderer key={activity.id} activity={activity} suspended={paused || activitySuspended} />
           ) : (
             <div className="review-finished panel">
               <span className="review-finished-icon">
@@ -505,6 +528,7 @@ function StudyContent() {
               <p>Feche a sessão para registrar seu tempo e desempenho.</p>
             </div>
           )}
+          </div>
           <div className="lesson-controls">
             <button
               className="ghost-button"
@@ -552,6 +576,7 @@ function StudyContent() {
         </aside>
       </div>
     </div>
+    </SpeechPlaybackScope.Provider>
   );
 }
 

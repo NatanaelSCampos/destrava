@@ -2,7 +2,7 @@
 
 import { useId, useRef, type ComponentProps, type ReactNode } from "react";
 import { useStudy } from "@/components/study-provider";
-import type { ActivityPresentation, PresentationField } from "@/content/text-presentation";
+import { annotatedParts, type ActivityPresentation, type PresentationField } from "@/content/text-presentation";
 import {
   resolveTextPresentation,
   inspectBidiControls,
@@ -41,16 +41,20 @@ export function LearningText({
   presentation,
   field,
   textRole = "target",
+  itemIndex = 0,
   ...props
 }: PresentationProps & {
   as?: "bdi" | "span" | "p" | "div" | "strong" | "h2" | "h3" | "li";
   children?: ReactNode;
   text?: string;
+  itemIndex?: number;
 } & Omit<ComponentProps<"span">, "dir" | "lang" | "ref" | "dangerouslySetInnerHTML">) {
-  const attributes = useTextPresentation(presentation)(field, textRole);
+  const resolve = useTextPresentation(presentation);
+  const attributes = resolve(field, textRole);
+  const parts = text !== undefined && field ? annotatedParts(text, presentation?.annotations?.[field], itemIndex) : undefined;
   return (
     <Tag {...props} {...attributes}>
-      {text ?? children}
+      {parts ? parts.map((part, index) => part.role ? <bdi key={index} {...resolve(undefined, part.role)} className="learning-inline-term">{part.text}</bdi> : part.text) : text ?? children}
       {text !== undefined && <BidiTextWarning text={text} />}
     </Tag>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { RecordedPhrase } from "./teaching-card";
 import { Volume2 } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { useStudy } from "@/components/study-provider";
@@ -14,7 +15,9 @@ export function AudioPlayer({
   variant?: ActivityVariant;
   media?: { kind: "tts"; language: string } | { kind: "audio"; url: string };
 }) {
-  const { language } = useStudy();
+  const { language, course } = useStudy();
+  const asset = media?.kind === "audio" ? course.teachingMedia?.find(item => item.src === media.url) : undefined;
+  if (asset) return <RecordedPhrase mediaId={asset.id} label="Ouvir a mensagem desta atividade" />;
   if (media?.kind === "audio")
     return (
       <div className="audio-player">

@@ -1,0 +1,371 @@
+[
+  {
+    "id": "atp-diagnostic",
+    "title": "Seu ponto de partida",
+    "purpose": "diagnostic",
+    "lessonId": "atp-diagnostic-bank",
+    "objectiveIds": [
+      "atp-locate-person",
+      "atp-confirm-time",
+      "atp-request-refreshment",
+      "atp-check-quantity-price"
+    ],
+    "passingPolicy": {
+      "overall": 0.5
+    },
+    "method": "adaptive",
+    "skillWeights": {
+      "reading": 0.5,
+      "grammar": 0.3,
+      "vocabulary": 0.2
+    },
+    "skillPlan": [
+      "reading",
+      "grammar",
+      "vocabulary",
+      "reading",
+      "grammar",
+      "vocabulary",
+      "reading"
+    ],
+    "bank": [
+      {
+        "activityId": "atp-diag-place",
+        "skill": "reading",
+        "difficulty": 1
+      },
+      {
+        "activityId": "atp-diag-time",
+        "skill": "reading",
+        "difficulty": 2
+      },
+      {
+        "activityId": "atp-diag-condition",
+        "skill": "reading",
+        "difficulty": 3
+      },
+      {
+        "activityId": "atp-diag-number",
+        "skill": "vocabulary",
+        "difficulty": 1
+      },
+      {
+        "activityId": "atp-diag-question",
+        "skill": "grammar",
+        "difficulty": 2
+      },
+      {
+        "activityId": "atp-diag-form",
+        "skill": "grammar",
+        "difficulty": 3
+      },
+      {
+        "activityId": "atp-diag-price-quantity",
+        "skill": "vocabulary",
+        "difficulty": 2
+      }
+    ]
+  },
+  {
+    "id": "atp-u1-final",
+    "title": "Encontrar e combinar",
+    "purpose": "summative",
+    "unitId": "atp-u1",
+    "lessonId": "atp-u1-final-bank",
+    "objectiveIds": [
+      "atp-locate-person",
+      "atp-repair-understanding",
+      "atp-confirm-time",
+      "atp-arrange-meeting"
+    ],
+    "passingPolicy": {
+      "overall": 0.8
+    },
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "exam": {
+      "entry": {
+        "activityIds": [
+          "atp-u1-l1-enrich-state-owner",
+          "atp-u1-l1-enrich-state-link",
+          "atp-u1-l1-listen-location",
+          "atp-u1-l1-enrich-listen-library",
+          "atp-u1-l1-enrich-heard-square",
+          "atp-u1-l1-order",
+          "atp-u1-l1-enrich-change-place",
+          "atp-u1-l1-enrich-ask-function",
+          "atp-u1-l1-ask-check",
+          "atp-u1-l1-enrich-build-question",
+          "atp-u1-l1-enrich-listen-question",
+          "atp-u1-l1-enrich-retrieve-question",
+          "atp-u1-l1-locate",
+          "atp-u1-l1-enrich-read-role",
+          "atp-u1-l1-translate",
+          "atp-u1-l1-enrich-keep-place-block",
+          "atp-u1-l1-build-conversation",
+          "atp-u1-l1-enrich-retrieve-two-moves",
+          "atp-u1-l2-reactivate",
+          "atp-u1-l2-reactivate-order",
+          "atp-u1-l2-reactivate-question",
+          "atp-u1-l2-enrich-understanding-next",
+          "atp-u1-l2-understand-listen",
+          "atp-u1-l2-enrich-combine-repair-build",
+          "atp-u1-l2-choose",
+          "atp-u1-l2-enrich-retrieve-repeat",
+          "atp-u1-l2-order-repeat",
+          "atp-u1-l2-enrich-repeat-action",
+          "atp-u1-l2-enrich-listen-slower",
+          "atp-u1-l2-enrich-repeat-or-speed",
+          "atp-u1-l2-choose-slower",
+          "atp-u1-l2-enrich-retrieve-speed",
+          "atp-u1-l2-translate",
+          "atp-u1-l2-enrich-build-warning",
+          "atp-u1-l2-enrich-retrieve-repeat-again",
+          "atp-u1-l2-clarification",
+          "atp-u1-l2-enrich-use-repeated-place",
+          "atp-u1-l2-enrich-choose-treatment-model",
+          "atp-u1-l2-enrich-treatment-form",
+          "atp-u1-l2-enrich-retrieve-repair-sequence",
+          "atp-u1-l3-enrich-time-one-two",
+          "atp-u1-l3-enrich-time-plural",
+          "atp-u1-l3-enrich-half-word",
+          "atp-u1-l3-enrich-clock-whole-half",
+          "atp-u1-l3-enrich-event-listen",
+          "atp-u1-l3-enrich-event-sequence",
+          "atp-u1-l3-choose",
+          "atp-u1-l3-enrich-meeting-entry",
+          "atp-u1-l3-fill",
+          "atp-u1-l3-enrich-one-hour-retrieve",
+          "atp-u1-l3-order",
+          "atp-u1-l3-enrich-half-listen",
+          "atp-u1-l3-enrich-current-intention",
+          "atp-u1-l3-enrich-current-one",
+          "atp-u1-l3-listen-meeting",
+          "atp-u1-l3-enrich-half-retrieve",
+          "atp-u1-l3-correct",
+          "atp-u1-l3-enrich-article-check",
+          "atp-u1-l3-enrich-retrieve-time-question",
+          "atp-u1-l3-translate",
+          "atp-u1-l3-enrich-time-link",
+          "atp-u1-l3-listen-number",
+          "atp-u1-l3-enrich-time-retrieve-late",
+          "atp-u1-l4-enrich-confirm-or-close",
+          "atp-u1-l4-enrich-combine-six-square",
+          "atp-u1-l4-enrich-confirm-both-valid",
+          "atp-u1-l4-enrich-confirm-listen",
+          "atp-u1-l4-enrich-place-article",
+          "atp-u1-l4-enrich-place-fill",
+          "atp-u1-l4-enrich-place-retrieve",
+          "atp-u1-l4-choose",
+          "atp-u1-l4-enrich-confirm-two",
+          "atp-u1-l4-fill",
+          "atp-u1-l4-order",
+          "atp-u1-l4-enrich-meeting-place-link",
+          "atp-u1-l4-correct",
+          "atp-u1-l4-enrich-current-listen",
+          "atp-u1-l4-enrich-agree-retrieve",
+          "atp-u1-l4-translate",
+          "atp-u1-l4-enrich-bye-function",
+          "atp-u1-l4-enrich-repair-before-confirm"
+        ],
+        "minimumRatio": 0.8
+      },
+      "feedback": "after_submission"
+    },
+    "activityIds": [
+      "atp-u1-l1-check-a",
+      "atp-u1-l1-check-b",
+      "atp-u1-l2-check-1",
+      "atp-u1-l2-check-2",
+      "atp-u1-l3-check-1",
+      "atp-u1-l3-check-2",
+      "atp-u1-l4-check-1",
+      "atp-u1-l4-check-2",
+      "atp-u1-exam-place",
+      "atp-u1-exam-repair",
+      "atp-u1-exam-time",
+      "atp-u1-exam-meeting",
+      "atp-u1-exam-place-link",
+      "atp-u1-exam-repair-action",
+      "atp-u1-exam-time-one",
+      "atp-u1-exam-meeting-place",
+      "atp-u1-exam-location-audio",
+      "atp-u1-exam-event-audio"
+    ]
+  },
+  {
+    "id": "atp-u1-recovery",
+    "title": "Revisão antes da prova",
+    "purpose": "formative",
+    "unitId": "atp-u1",
+    "lessonId": "atp-u1-recovery-bank",
+    "objectiveIds": [
+      "atp-locate-person",
+      "atp-repair-understanding",
+      "atp-confirm-time",
+      "atp-arrange-meeting"
+    ],
+    "passingPolicy": {
+      "overall": 0.75
+    },
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "activityIds": [
+      "atp-rem-u1-place",
+      "atp-rem-u1-repair",
+      "atp-rem-u1-time",
+      "atp-rem-u1-confirm"
+    ]
+  },
+  {
+    "id": "atp-u2-final",
+    "title": "Pedir e confirmar",
+    "purpose": "summative",
+    "unitId": "atp-u2",
+    "lessonId": "atp-u2-final-bank",
+    "objectiveIds": [
+      "atp-request-refreshment",
+      "atp-check-quantity-price",
+      "atp-confirm-adjust-order",
+      "atp-resolve-small-service"
+    ],
+    "passingPolicy": {
+      "overall": 0.8
+    },
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "exam": {
+      "entry": {
+        "activityIds": [
+          "atp-u2-l1-enrich-drink-meaning",
+          "atp-u2-l1-enrich-order-courtesy",
+          "atp-u2-l1-enrich-condition-not-drink",
+          "atp-u2-l1-enrich-condition-listen",
+          "atp-u2-l1-enrich-condition-water",
+          "atp-u2-l1-enrich-dialogue-role",
+          "atp-u2-l1-enrich-delivery-listen",
+          "atp-u2-l1-enrich-answer-order",
+          "atp-u2-l1-choose",
+          "atp-u2-l1-enrich-retrieve-coffee-milk",
+          "atp-u2-l1-fill",
+          "atp-u2-l1-enrich-gas-choice",
+          "atp-u2-l1-order",
+          "atp-u2-l1-enrich-retrieve-tea",
+          "atp-u2-l1-correct",
+          "atp-u2-l1-enrich-listen-milk-confirmation",
+          "atp-u2-l1-enrich-retrieve-water",
+          "atp-u2-l1-translate",
+          "atp-u2-l1-enrich-coffee-build",
+          "atp-u2-l1-enrich-spelling-or-price",
+          "atp-u2-l1-listen-drink",
+          "atp-u2-l1-enrich-whole-water-listen",
+          "atp-u2-l1-enrich-retrieve-order-late",
+          "atp-u2-l2-enrich-count-noun",
+          "atp-u2-l2-enrich-coffee-plural",
+          "atp-u2-l2-enrich-question-select",
+          "atp-u2-l2-enrich-price-question-build",
+          "atp-u2-l2-enrich-total-four-listen",
+          "atp-u2-l2-enrich-number-function",
+          "atp-u2-l2-choose",
+          "atp-u2-l2-enrich-retrieve-item-price",
+          "atp-u2-l2-fill",
+          "atp-u2-l2-enrich-two-coffees-build",
+          "atp-u2-l2-order",
+          "atp-u2-l2-enrich-price-verb",
+          "atp-u2-l2-enrich-sixteen-retrieve",
+          "atp-u2-l2-enrich-value-not-count",
+          "atp-u2-l2-listen-total",
+          "atp-u2-l2-enrich-unit-versus-total",
+          "atp-u2-l2-correct",
+          "atp-u2-l2-enrich-two-coffees-retrieve",
+          "atp-u2-l2-enrich-total-question-retrieve",
+          "atp-u2-l2-translate",
+          "atp-u2-l2-enrich-total-question-purpose",
+          "atp-u2-l2-listen-number",
+          "atp-u2-l2-enrich-total-three-listen",
+          "atp-u2-l2-enrich-count-and-question-retrieve",
+          "atp-u2-l3-enrich-consumption-listen",
+          "atp-u2-l3-enrich-stay-choice",
+          "atp-u2-l3-enrich-milk-not-location",
+          "atp-u2-l3-enrich-milk-correction-listen",
+          "atp-u2-l3-choose",
+          "atp-u2-l3-enrich-takeaway-retrieve",
+          "atp-u2-l3-fill",
+          "atp-u2-l3-enrich-here-build",
+          "atp-u2-l3-order",
+          "atp-u2-l3-enrich-milk-correction-retrieve",
+          "atp-u2-l3-verify-condition",
+          "atp-u2-l3-enrich-two-independent-choices",
+          "atp-u2-l3-correct",
+          "atp-u2-l3-enrich-two-choices-fill",
+          "atp-u2-l3-enrich-here-retrieve",
+          "atp-u2-l3-translate",
+          "atp-u2-l3-enrich-milk-response",
+          "atp-u2-l3-enrich-combined-choices-build",
+          "atp-u2-l3-enrich-combined-receipt",
+          "atp-u2-l4-enrich-availability-purpose",
+          "atp-u2-l4-enrich-availability-block",
+          "atp-u2-l4-enrich-pan-quantity",
+          "atp-u2-l4-enrich-before-confirming",
+          "atp-u2-l4-choose",
+          "atp-u2-l4-enrich-availability-coffee",
+          "atp-u2-l4-fill",
+          "atp-u2-l4-enrich-end-order-build",
+          "atp-u2-l4-order",
+          "atp-u2-l4-enrich-items-check",
+          "atp-u2-l4-correct",
+          "atp-u2-l4-enrich-availability-response-listen",
+          "atp-u2-l4-translate",
+          "atp-u2-l4-enrich-order-end-function",
+          "atp-u2-l4-enrich-price-repair-retrieve"
+        ],
+        "minimumRatio": 0.8
+      },
+      "feedback": "after_submission"
+    },
+    "activityIds": [
+      "atp-u2-l1-check-1",
+      "atp-u2-l1-check-2",
+      "atp-u2-l2-check-1",
+      "atp-u2-l2-check-2",
+      "atp-u2-l3-check-1",
+      "atp-u2-l3-check-2",
+      "atp-u2-l4-check-1",
+      "atp-u2-l4-check-2",
+      "atp-u2-exam-order",
+      "atp-u2-exam-quantity",
+      "atp-u2-exam-condition",
+      "atp-u2-exam-service",
+      "atp-u2-exam-order-condition",
+      "atp-u2-exam-quantity-number",
+      "atp-u2-exam-consumption",
+      "atp-u2-exam-availability",
+      "atp-u2-exam-order-audio",
+      "atp-u2-exam-total-audio"
+    ]
+  },
+  {
+    "id": "atp-u2-recovery",
+    "title": "Revisão antes da prova",
+    "purpose": "formative",
+    "unitId": "atp-u2",
+    "lessonId": "atp-u2-recovery-bank",
+    "objectiveIds": [
+      "atp-request-refreshment",
+      "atp-check-quantity-price",
+      "atp-confirm-adjust-order",
+      "atp-resolve-small-service"
+    ],
+    "passingPolicy": {
+      "overall": 0.75
+    },
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "activityIds": [
+      "atp-rem-u2-drink",
+      "atp-rem-u2-total",
+      "atp-rem-u2-takeaway",
+      "atp-rem-u2-availability"
+    ]
+  }
+]

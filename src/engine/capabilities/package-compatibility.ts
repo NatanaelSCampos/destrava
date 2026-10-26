@@ -1,7 +1,9 @@
+import { hasExperiencePayload, payloadScene } from "@/content/activity-scene";
 import type { CoursePackage, LanguagePackage } from "@/content/contracts";
 import type { CapabilityRequirement } from "@/content/capability-contracts";
 import { coreSkillSchema } from "@/content/contract-vocabulary";
 import { resolveActivityMedia } from "@/content/activity-media";
+import { hasTeachingPayload, teachingAudioReferences } from "@/content/teaching";
 import {
   negotiateCapabilities,
   CapabilityCompatibilityError,
@@ -47,9 +49,14 @@ export function packageCapabilityRequests(
       moduleId === "numbers" ? (data as Record<string, unknown>) : { entries: data },
     );
   }
+  course.assessments.forEach((a, i) => {
+    if (a.method === "fixed" && a.exam)
+      add("assessment.exam", `course.assessments[${i}].exam`, a.exam);
+  });
   course.units.forEach((unit, u) => {
     const unitPath = `course.units[${u}]`;
     declared(unit.capabilityRequirements, unitPath);
+    if (unit.access) add("learning.access", unitPath + ".access", unit.access);
     add("policy.unit", `${unitPath}.learningPolicy`, unit.learningPolicy);
     for (const policy of [unit.learningPolicy.completion, unit.learningPolicy.mastery])
       if (policy.requirements.some((rule) => rule.kind === "review_score"))
@@ -57,16 +64,42 @@ export function packageCapabilityRequests(
     unit.lessons.forEach((lesson, l) => {
       const lessonPath = `${unitPath}.lessons[${l}]`;
       declared(lesson.capabilityRequirements, lessonPath);
-      lesson.activities.forEach((activity, a) => {
-        const location = `${lessonPath}.activities[${a}]`;
+      if (lesson.stages) add("lesson.stages", `${lessonPath}.stages`, { stages: lesson.stages });
+      if (lesson.deferredRecovery)
+        add("lesson.deferred_recovery", `${lessonPath}.deferredRecovery`, lesson.deferredRecovery);
+      [
+        ...lesson.activities.map((activity, a) => ({
+          activity,
+          location: `${lessonPath}.activities[${a}]`,
+        })),
+        ...(lesson.deferredRecovery?.rules.map((rule, r) => ({
+          activity: rule.activity,
+          location: `${lessonPath}.deferredRecovery.rules[${r}].activity`,
+        })) ?? []),
+      ].forEach(({ activity, location }) => {
         declared(activity.capabilityRequirements, location);
         const { payload } = resolveActivityMedia(activity, course.media);
-        const version =
-          (activity.type === "ordering" && (payload.reconstruction || payload.answerOrder)) ||
-          (activity.type === "writing" && payload.textRequirement)
-            ? "1.1.0"
-            : "1.0.0";
+        const version = hasExperiencePayload(payload)
+          ? activity.type === "flashcard"
+            ? "4.0.0"
+            : "3.0.0"
+          : payload.recallScene
+            ? "3.0.0"
+            : hasTeachingPayload(payload)
+              ? "2.0.0"
+              : (activity.type === "ordering" && (payload.reconstruction || payload.answerOrder)) ||
+                  (activity.type === "writing" && payload.textRequirement)
+                ? "1.1.0"
+                : "1.0.0";
         add(`activity.${activity.type}`, location, payload, version);
+        if (hasExperiencePayload(payload)) {
+          const scene = payloadScene(payload);
+          if (scene) add("presentation.scene", location + ".scene", scene);
+        }
+        for (const mediaId of teachingAudioReferences(payload))
+          add("media.audio", `${location}.teachingAudio.${mediaId}`, {
+            src: course.media.find((asset) => asset.id === mediaId)?.src,
+          });
         if (activity.type === "ordering" && payload.reconstruction)
           add(
             "text.reconstruction",
@@ -85,10 +118,28 @@ export function packageCapabilityRequests(
         if (activity.evaluation)
           add(`grading.${activity.evaluation.strategy}`, `${location}.evaluation`);
         if (activity.variant) add("linguistic.variant", `${location}.variant`, activity.variant);
+        const { annotations, ...basePresentation } = activity.presentation ?? {};
+        const legacyFields = Object.fromEntries(
+          Object.entries(basePresentation.fields ?? {}).filter(
+            ([key]) =>
+              !["support", "explanation", "feedbackSummary", "feedbackAlternative"].includes(key),
+          ),
+        );
+        const legacyPresentation = {
+          ...basePresentation,
+          ...(basePresentation.fields ? { fields: legacyFields } : {}),
+        };
         if (activity.presentation)
-          add("presentation.bidi", `${location}.presentation`, activity.presentation);
+          add("presentation.bidi", location + ".presentation", legacyPresentation);
+        if (
+          annotations ||
+          Object.keys(basePresentation.fields ?? {}).some((key) =>
+            ["support", "explanation", "feedbackSummary", "feedbackAlternative"].includes(key),
+          )
+        )
+          add("presentation.inline", location + ".presentation.inline", activity.presentation);
         if (["fill_blank", "short_answer", "writing", "speaking"].includes(activity.type))
-          add("text.input", `${location}.input`, activity.presentation ?? {});
+          add("text.input", `${location}.input`, legacyPresentation);
         if (activity.evaluation?.answerPolicy)
           add("linguistic.answers", `${location}.answerPolicy`, activity.evaluation.answerPolicy);
         if (activity.type === "listening")
@@ -142,7 +193,10 @@ export function validatePackageCapabilities(
   const report = negotiateCapabilities(requests, environment);
   course.units.forEach((unit, u) =>
     unit.lessons.forEach((lesson, l) =>
-      lesson.activities.forEach((activity, a) => {
+      [
+        ...lesson.activities,
+        ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? []),
+      ].forEach((activity, a) => {
         const mediaErrors = resolveActivityMedia(activity, course.media).errors;
         if (mediaErrors.length) {
           report.compatible = false;

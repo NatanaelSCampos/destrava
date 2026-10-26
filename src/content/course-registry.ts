@@ -1,9 +1,9 @@
-import { compiledPackages } from "./generated/registry";
+import { compiledPackages, defaultCompiledCourseId } from "./generated/registry";
 import { runtimeBundle } from "./runtime-package";
 
 const bundles = compiledPackages.map(runtimeBundle);
 
-const defaultBundle = bundles.find((bundle) => bundle.coursePackage.isDefault);
+const defaultBundle = bundles.find((bundle) => bundle.course.id === defaultCompiledCourseId);
 if (!defaultBundle) throw new Error("No default course is available.");
 export const defaultCourseId = defaultBundle.course.id;
 

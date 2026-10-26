@@ -1,0 +1,192 @@
+[
+  {
+    "id": "personal-en-u1-assess-diagnostic",
+    "title": "Diagnóstico opcional · Olá! Vamos nos conhecer",
+    "purpose": "diagnostic",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u1",
+    "objectiveIds": [
+      "personal-en-u1-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0
+    },
+    "activityIds": [
+      "personal-en-u1-multiple-choice-0001",
+      "personal-en-u1-multiple-choice-0007",
+      "personal-en-u1-multiple-choice-0013",
+      "personal-en-u1-multiple-choice-0019",
+      "personal-en-u1-multiple-choice-0025",
+      "personal-en-u1-multiple-choice-0031",
+      "personal-en-u1-multiple-choice-0037",
+      "personal-en-u1-multiple-choice-0043",
+      "personal-en-u1-multiple-choice-0049",
+      "personal-en-u1-multiple-choice-0055",
+      "personal-en-u1-multiple-choice-0061",
+      "personal-en-u1-multiple-choice-0067"
+    ]
+  },
+  {
+    "id": "personal-en-u1-assess-formative",
+    "title": "Revisão formativa opcional · Olá! Vamos nos conhecer",
+    "purpose": "formative",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u1",
+    "objectiveIds": [
+      "personal-en-u1-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0
+    },
+    "activityIds": [
+      "personal-en-u1-multiple-choice-0002",
+      "personal-en-u1-multiple-choice-0008",
+      "personal-en-u1-multiple-choice-0014",
+      "personal-en-u1-multiple-choice-0020",
+      "personal-en-u1-multiple-choice-0026",
+      "personal-en-u1-multiple-choice-0032",
+      "personal-en-u1-multiple-choice-0038",
+      "personal-en-u1-multiple-choice-0044",
+      "personal-en-u1-multiple-choice-0050",
+      "personal-en-u1-multiple-choice-0056",
+      "personal-en-u1-multiple-choice-0062",
+      "personal-en-u1-multiple-choice-0068",
+      "personal-en-u1-multiple-choice-0001",
+      "personal-en-u1-multiple-choice-0003",
+      "personal-en-u1-multiple-choice-0004"
+    ]
+  },
+  {
+    "id": "personal-en-u1-assess-summative",
+    "title": "Avaliação final · Olá! Vamos nos conhecer",
+    "purpose": "summative",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u1",
+    "objectiveIds": [
+      "personal-en-u1-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0.8
+    },
+    "activityIds": [
+      "personal-en-u1-multiple-choice-0001",
+      "personal-en-u1-fill-blank-0005",
+      "personal-en-u1-ordering-0007",
+      "personal-en-u1-reading-comprehension-0007",
+      "personal-en-u1-grammar-multiple-choice-0009",
+      "personal-en-u1-multiple-choice-0031",
+      "personal-en-u1-fill-blank-0025",
+      "personal-en-u1-ordering-0022",
+      "personal-en-u1-reading-comprehension-0017",
+      "personal-en-u1-grammar-multiple-choice-0019",
+      "personal-en-u1-multiple-choice-0061",
+      "personal-en-u1-fill-blank-0045",
+      "personal-en-u1-multiple-choice-0002",
+      "personal-en-u1-fill-blank-0001",
+      "personal-en-u1-ordering-0001",
+      "personal-en-u1-ordering-0002",
+      "personal-en-u1-reading-comprehension-0001",
+      "personal-en-u1-reading-comprehension-0002",
+      "personal-en-u1-grammar-multiple-choice-0001",
+      "personal-en-u1-grammar-multiple-choice-0002"
+    ]
+  },
+  {
+    "id": "personal-en-u2-assess-diagnostic",
+    "title": "Diagnóstico opcional · Minha casa e meu bairro",
+    "purpose": "diagnostic",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u2",
+    "objectiveIds": [
+      "personal-en-u2-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0
+    },
+    "activityIds": [
+      "personal-en-u2-multiple-choice-0001",
+      "personal-en-u2-multiple-choice-0007",
+      "personal-en-u2-multiple-choice-0013",
+      "personal-en-u2-multiple-choice-0019",
+      "personal-en-u2-multiple-choice-0025",
+      "personal-en-u2-multiple-choice-0031",
+      "personal-en-u2-multiple-choice-0037",
+      "personal-en-u2-multiple-choice-0043",
+      "personal-en-u2-multiple-choice-0049",
+      "personal-en-u2-multiple-choice-0055",
+      "personal-en-u2-multiple-choice-0061",
+      "personal-en-u2-multiple-choice-0067"
+    ]
+  },
+  {
+    "id": "personal-en-u2-assess-formative",
+    "title": "Revisão formativa opcional · Minha casa e meu bairro",
+    "purpose": "formative",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u2",
+    "objectiveIds": [
+      "personal-en-u2-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0
+    },
+    "activityIds": [
+      "personal-en-u2-multiple-choice-0002",
+      "personal-en-u2-multiple-choice-0008",
+      "personal-en-u2-multiple-choice-0014",
+      "personal-en-u2-multiple-choice-0020",
+      "personal-en-u2-multiple-choice-0026",
+      "personal-en-u2-multiple-choice-0032",
+      "personal-en-u2-multiple-choice-0038",
+      "personal-en-u2-multiple-choice-0044",
+      "personal-en-u2-multiple-choice-0050",
+      "personal-en-u2-multiple-choice-0056",
+      "personal-en-u2-multiple-choice-0062",
+      "personal-en-u2-multiple-choice-0068",
+      "personal-en-u2-multiple-choice-0074",
+      "personal-en-u2-multiple-choice-0080",
+      "personal-en-u2-multiple-choice-0001"
+    ]
+  },
+  {
+    "id": "personal-en-u2-assess-summative",
+    "title": "Avaliação final · Minha casa e meu bairro",
+    "purpose": "summative",
+    "method": "fixed",
+    "gradingStrategy": "objective_mean",
+    "unitId": "personal-en-u2",
+    "objectiveIds": [
+      "personal-en-u2-goal"
+    ],
+    "passingPolicy": {
+      "overall": 0.8
+    },
+    "activityIds": [
+      "personal-en-u2-multiple-choice-0001",
+      "personal-en-u2-fill-blank-0005",
+      "personal-en-u2-ordering-0007",
+      "personal-en-u2-reading-comprehension-0007",
+      "personal-en-u2-grammar-multiple-choice-0009",
+      "personal-en-u2-multiple-choice-0031",
+      "personal-en-u2-fill-blank-0025",
+      "personal-en-u2-ordering-0022",
+      "personal-en-u2-reading-comprehension-0017",
+      "personal-en-u2-grammar-multiple-choice-0019",
+      "personal-en-u2-multiple-choice-0061",
+      "personal-en-u2-fill-blank-0045",
+      "personal-en-u2-ordering-0037",
+      "personal-en-u2-reading-comprehension-0027",
+      "personal-en-u2-multiple-choice-0002",
+      "personal-en-u2-fill-blank-0001",
+      "personal-en-u2-ordering-0001",
+      "personal-en-u2-reading-comprehension-0001",
+      "personal-en-u2-grammar-multiple-choice-0001",
+      "personal-en-u2-grammar-multiple-choice-0002"
+    ]
+  }
+]

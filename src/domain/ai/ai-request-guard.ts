@@ -1,3 +1,6 @@
+import { hasDuplicateLearningScope } from "@/domain/study/learning-access";
+import { findCourseBundle } from "@/content/course-registry";
+import { authorizeLearningTarget } from "@/lib/learning-access-server";
 import { serverServiceAvailability } from "@/lib/capability-environment";
 import { projectActionAvailability } from "@/engine/capabilities/availability-projection";
 import { NextResponse } from "next/server";
@@ -12,20 +15,30 @@ import {
   type VersionPayloadParser,
 } from "@/lib/versioned-operation-guard";
 
-
 /** Known missing configuration is rejected before quota; configured is not a health check. */
 function unavailableService(feature: string) {
   const capabilities: Record<string, string> = {
-    tutor: "ai.tutor", writing: "ai.writing_feedback", conversation: "ai.conversation",
-    micro_lesson: "ai.micro_lesson", image_description: "ai.image_description",
-    interactive_lesson: "ai.interactive_support", pronunciation: "speech.pronunciation",
+    tutor: "ai.tutor",
+    writing: "ai.writing_feedback",
+    conversation: "ai.conversation",
+    micro_lesson: "ai.micro_lesson",
+    image_description: "ai.image_description",
+    interactive_lesson: "ai.interactive_support",
+    pronunciation: "speech.pronunciation",
     conversation_transcription: "speech.recognition",
   };
   const capability = capabilities[feature];
   if (!capability) return;
-  const state = projectActionAvailability({ dependencies: serverServiceAvailability() })[capability];
+  const state = projectActionAvailability({ dependencies: serverServiceAvailability() })[
+    capability
+  ];
   if (!state || state.state === "unavailable")
-    return { error: NextResponse.json({ error: state?.reasons.join(" ") ?? "Leitura de disponibilidade indisponível." }, { status: 503 }) };
+    return {
+      error: NextResponse.json(
+        { error: state?.reasons.join(" ") ?? "Leitura de disponibilidade indisponível." },
+        { status: 503 },
+      ),
+    };
 }
 
 const windows = new Map<string, { count: number; resetAt: number }>();
@@ -67,6 +80,42 @@ export async function guardAIRequest(
             { status: 503 },
           ),
         };
+      }
+    }
+    // Check curricular access before reserving quota or sending content to any provider.
+    const payload = await (
+      parser === "form" ? request.clone().formData() : request.clone().json()
+    ).catch(() => null);
+    if (payload instanceof FormData && hasDuplicateLearningScope(payload))
+      return {
+        error: NextResponse.json(
+          { error: "Envie uma única identificação para esta atividade." },
+          { status: 400 },
+        ),
+      };
+    const fields = payload instanceof FormData ? Object.fromEntries(payload.entries()) : payload;
+    if (fields && typeof fields.courseId === "string") {
+      const bundle = findCourseBundle(fields.courseId);
+      if (bundle) {
+        try {
+          const decision = await authorizeLearningTarget(user.id, bundle.course, bundle.language, {
+            ...(typeof fields.activityId === "string" ? { activityId: fields.activityId } : {}),
+            ...(typeof fields.lessonId === "string" ? { lessonId: fields.lessonId } : {}),
+            ...(typeof fields.unitId === "string" ? { unitId: fields.unitId } : {}),
+            ...(typeof fields.assessmentId === "string"
+              ? { assessmentId: fields.assessmentId }
+              : {}),
+          });
+          if (!decision.allowed)
+            return { error: NextResponse.json({ error: decision.message }, { status: 403 }) };
+        } catch {
+          return {
+            error: NextResponse.json(
+              { error: "Não foi possível conferir seu percurso." },
+              { status: 503 },
+            ),
+          };
+        }
       }
     }
     const missingService = unavailableService(feature);

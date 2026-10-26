@@ -118,7 +118,7 @@ export function loadContent(): Array<{
   assertUnique(
     bundles.flatMap((bundle) =>
       bundle.course.units.flatMap((unit) =>
-        unit.lessons.flatMap((lesson) => lesson.activities.map((activity) => activity.id)),
+        unit.lessons.flatMap((lesson) => [...lesson.activities, ...(lesson.deferredRecovery?.rules.map(rule => rule.activity) ?? [])].map((activity) => activity.id)),
       ),
     ),
     "global activity",

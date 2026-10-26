@@ -86,7 +86,10 @@ export function evaluateAssessment(
   };
 
   if (definition.method === "adaptive") {
-    if (responses.length > definition.skillPlan.length || (!options?.allowPartialAdaptive && responses.length !== definition.skillPlan.length))
+    if (
+      responses.length > definition.skillPlan.length ||
+      (!options?.allowPartialAdaptive && responses.length !== definition.skillPlan.length)
+    )
       throw new AssessmentExecutionError("Complete a sequência de questões da avaliação.");
     const answers: AdaptiveAnswer[] = [];
     for (const response of responses) {
@@ -106,9 +109,11 @@ export function evaluateAssessment(
       definition.passingPolicy,
       definition.skillWeights,
     );
-    const insufficient = responses.length < definition.skillPlan.length || report.bySkill.some(
-      (item) => item.status === "insufficient" || item.status === "not_assessed",
-    );
+    const insufficient =
+      responses.length < definition.skillPlan.length ||
+      report.bySkill.some(
+        (item) => item.status === "insufficient" || item.status === "not_assessed",
+      );
     return {
       definition,
       answers,
@@ -150,7 +155,9 @@ export function evaluateAssessment(
     answers,
     status: "completed" as const,
     objectiveScore,
-    passed: objectiveScore >= definition.passingPolicy.overall * 100 && minimumsMet,
+    passed:
+      objective.filter((item) => item.correct).length >=
+        definition.passingPolicy.overall * objective.length && minimumsMet,
     responseKey: JSON.stringify(definition.activityIds.map((id) => byId.get(id))),
   };
 }

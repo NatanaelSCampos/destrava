@@ -33,9 +33,20 @@ export type StoredAssessmentRow = {
     unitId?: string;
     variantId?: string;
     canonical?: ServerAssessmentResult;
+    attestation?: string;
   };
 };
 type AssessmentApiDependencies = {
+  authorize?: (
+    userId: string | null,
+    bundle: { course: Course; language: LanguagePackage },
+    assessmentId: string,
+  ) => Promise<{ allowed: boolean; message: string }>;
+  trustStored?: (
+    row: StoredAssessmentRow,
+    bundle: { course: Course; language: LanguagePackage },
+    userId: string,
+  ) => boolean;
   resolveCourse: (
     id: string,
     versionSessionId?: string,
@@ -147,6 +158,26 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
           !bundle.course.assessments.some((item) => item.id === input.data.assessmentId)
         )
           return Response.json({ error: "Avaliação não encontrada neste curso." }, { status: 404 });
+        if (
+          bundle.versionReference &&
+          (bundle.course.units.some((u) => u.access) ||
+            bundle.course.assessments.some((a) => a.method === "fixed" && a.exam))
+        )
+          return Response.json(
+            { error: "Esta prova ainda não está disponível nesta forma de curso." },
+            { status: 422 },
+          );
+        const protectedExam = bundle.course.assessments.find(
+          (a) => a.id === input.data.assessmentId && a.method === "fixed" && a.exam,
+        );
+        if (protectedExam && !dependencies.authorize) throw new Error("Exam authority unavailable");
+        const permission = await dependencies.authorize?.(
+          user?.id ?? null,
+          bundle,
+          input.data.assessmentId,
+        );
+        if (permission && !permission.allowed)
+          return Response.json({ error: permission.message }, { status: 403 });
         const preference = await dependencies.variantPreference?.(
           user?.id ?? null,
           bundle.course.id,
@@ -247,6 +278,10 @@ export function createAssessmentApi(dependencies: AssessmentApiDependencies) {
         for (const row of rows) {
           // Old/versioned results remain in history; never regrade them as current results.
           if (row.result?.contentVersion !== bundle.course.contentVersion) continue;
+          const protectedExam = bundle.course.assessments.find(
+            (a) => a.id === row.assessment_id && a.method === "fixed" && a.exam,
+          );
+          if (protectedExam && !dependencies.trustStored?.(row, bundle, user.id)) continue;
           const input = assessmentRequestSchema.safeParse(row.result.input);
           if (
             !input.success ||

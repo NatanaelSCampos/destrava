@@ -1,3 +1,4 @@
+import { authorizeLearningTarget, completionReceipt } from "@/lib/learning-access-server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { courseInstallationRuntime } from "@/lib/course-installation-runtime";
@@ -52,8 +53,32 @@ export async function POST(request: Request) {
     );
   }
   if (!bundle) return NextResponse.json({ error: "Curso não encontrado." }, { status: 404 });
+  if (
+    input.data.versionSessionId &&
+    (bundle.course.units.some((u) => u.access) ||
+      bundle.course.assessments.some((a) => a.method === "fixed" && a.exam))
+  )
+    return NextResponse.json(
+      { error: "Este percurso ainda não está disponível nesta forma de curso." },
+      { status: 422 },
+    );
   const activity = findActivity(bundle.course, input.data.activityId);
   if (!activity) return NextResponse.json({ error: "Atividade não encontrada." }, { status: 404 });
+  try {
+    const permission = await authorizeLearningTarget(
+      user?.id ?? null,
+      bundle.course,
+      bundle.language,
+      { activityId: activity.id },
+    );
+    if (!permission.allowed)
+      return NextResponse.json({ error: permission.message }, { status: 403 });
+  } catch {
+    return NextResponse.json(
+      { error: "Não foi possível conferir seu percurso. Tente novamente." },
+      { status: 503 },
+    );
+  }
   let result;
   try {
     const installed =
@@ -138,6 +163,27 @@ export async function POST(request: Request) {
     } catch {
       return NextResponse.json(
         { error: "Não foi possível preservar a evidência desta versão." },
+        { status: 503 },
+      );
+    }
+  }
+  const eligible = bundle.course.assessments.some(
+    (a) => a.method === "fixed" && a.exam?.entry.activityIds.includes(activity.id),
+  );
+  if (eligible) {
+    if (!user)
+      return NextResponse.json(
+        { error: "Entre na sua conta para registrar sua prática." },
+        { status: 401 },
+      );
+    try {
+      return NextResponse.json(
+        { ...result, completionReceipt: completionReceipt(bundle.course, user.id, activity.id) },
+        { headers: { "Cache-Control": "private, no-store" } },
+      );
+    } catch {
+      return NextResponse.json(
+        { error: "Não foi possível registrar sua prática. Tente novamente." },
         { status: 503 },
       );
     }

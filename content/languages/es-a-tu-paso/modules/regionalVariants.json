@@ -1,0 +1,67 @@
+[
+  {
+    "id": "atp-region-confirm",
+    "title": "Uma confirmação em uma conversa",
+    "meaning": "Confirmar uma combinação",
+    "note": "Na cena informal situada em Madri, Vale confirma o encontro. De acuerdo também pode confirmar. A escolha depende da interação; não existe uma palavra obrigatória para todo um país.",
+    "category": "conversation",
+    "variants": [
+      {
+        "region": "es-ES",
+        "term": "Vale",
+        "example": "A las seis en la entrada. — Vale."
+      }
+    ],
+    "checkPrompt": "Na primeira cena de Madri, qual palavra foi usada para confirmar a combinação?",
+    "checkRegion": "es-ES",
+    "checkOptions": [
+      "Vale",
+      "Hasta luego",
+      "¿Dónde?"
+    ],
+    "checkAnswer": "Vale",
+    "sources": [
+      {
+        "label": "RAE — valer, subentrada vale",
+        "url": "https://dle.rae.es/valer"
+      }
+    ]
+  },
+  {
+    "id": "atp-region-juice",
+    "title": "Duas palavras no balcão",
+    "meaning": "Suco de fruta nestas ofertas",
+    "note": "Compare duas ofertas de cenas localizadas: zumo numa oferta de Madri e jugo numa oferta do México. Jugo é registrado no Diccionario del español de México. O exemplo não cria exclusividade geográfica nem torna sinônimos errados.",
+    "category": "food",
+    "variants": [
+      {
+        "region": "es-ES",
+        "term": "zumo de naranja",
+        "example": "Un zumo de naranja, por favor."
+      },
+      {
+        "region": "es-MX",
+        "term": "jugo de naranja",
+        "example": "Un jugo de naranja, por favor."
+      }
+    ],
+    "checkPrompt": "Na oferta mexicana desta cena, como aparece a bebida de laranja?",
+    "checkRegion": "es-MX",
+    "checkOptions": [
+      "jugo de naranja",
+      "té con leche",
+      "café solo"
+    ],
+    "checkAnswer": "jugo de naranja",
+    "sources": [
+      {
+        "label": "El Colegio de México — jugo",
+        "url": "https://dem.colmex.mx/ver/jugo"
+      },
+      {
+        "label": "RAE — zumo",
+        "url": "https://dle.rae.es/zumo"
+      }
+    ]
+  }
+]

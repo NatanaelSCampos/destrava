@@ -97,8 +97,10 @@ async function main() {
         error instanceof CapabilityCompatibilityError && has(error.report, "CAPABILITY_UNKNOWN"),
     );
   });
-  await test("newer minor, major and patch versions are not implicitly accepted", () => {
-    for (const version of ["1.1.0", "2.0.0", "1.0.1", "0.9.0"]) {
+  await test("only explicitly declared versions are accepted; undeclared minor, major and patch are rejected", () => {
+    for (const version of ["1.0.0", "2.0.0", "3.0.0"])
+      assert.equal(check({ ...core, version }).compatible, true);
+    for (const version of ["1.1.0", "2.1.0", "4.0.0", "1.0.1", "0.9.0"]) {
       const result = check({ ...core, version });
       assert.equal(result.compatible, false);
       assert(has(result, "CAPABILITY_VERSION_INCOMPATIBLE"));
@@ -421,17 +423,26 @@ async function main() {
     assert(!published.includes('"capabilityRequests"'));
     assert(!published.includes('"executor"'));
     assert(!JSON.stringify(exposed).includes('"answer":'));
-    const publicDatabaseRows = JSON.stringify({ assessments: assessmentSeedRows(bundle.coursePackage),
-      activities: bundle.course.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities.map(activitySeedPayload))) });
-    assert(!publicDatabaseRows.includes(secret)); assert(!publicDatabaseRows.includes('"answer":'));
+    const publicDatabaseRows = JSON.stringify({
+      assessments: assessmentSeedRows(bundle.coursePackage),
+      activities: bundle.course.units.flatMap((unit) =>
+        unit.lessons.flatMap((lesson) => lesson.activities.map(activitySeedPayload)),
+      ),
+    });
+    assert(!publicDatabaseRows.includes(secret));
+    assert(!publicDatabaseRows.includes('"answer":'));
   });
   await test("changing language characteristics does not fabricate engine support", () => {
     const input = structuredClone(fixture);
     input.language.id = "synthetic-other";
     input.language.identity.nativeName = "Other";
     input.course.targetLanguage = input.language.id;
-    input.course.concepts.forEach((item) => { item.language = input.language.id; });
-    input.course.lexicon.forEach((item) => { item.language = input.language.id; });
+    input.course.concepts.forEach((item) => {
+      item.language = input.language.id;
+    });
+    input.course.lexicon.forEach((item) => {
+      item.language = input.language.id;
+    });
     input.language.writingSystem.direction = "rtl";
     input.language.linguisticFeatures.tones = true;
     const bundle = runtimeBundle(input);
@@ -538,16 +549,24 @@ async function main() {
     const input = mutate((course) => {
       course.media.push({ id: "synthetic.audio", type: "audio", src: "/synthetic-audio.wav" });
       const activity = course.units[0].lessons[0].activities[0];
-      activity.type = "listening"; activity.media = ["synthetic.audio"];
+      activity.type = "listening";
+      activity.media = ["synthetic.audio"];
       activity.payload = { transcript: "Example", options: ["A", "B"], answer: "A" };
     });
-    const bundle = runtimeBundle(input), activity = bundle.course.units[0].lessons[0].activities[0];
+    const bundle = runtimeBundle(input),
+      activity = bundle.course.units[0].lessons[0].activities[0];
     assert.equal(activity.media?.kind, "audio");
     assert(activity.media?.kind === "audio" && activity.media.url === "/synthetic-audio.wav");
-    const exposed = publicCourse(bundle.course, bundle.language, { dependencies: { "client.media_playback": { state: "available" } }, resources: { "/synthetic-audio.wav": { state: "unavailable", reason: "Synthetic missing asset" } } });
+    const exposed = publicCourse(bundle.course, bundle.language, {
+      dependencies: { "client.media_playback": { state: "available" } },
+      resources: {
+        "/synthetic-audio.wav": { state: "unavailable", reason: "Synthetic missing asset" },
+      },
+    });
     assert(exposed.availability?.unavailableActivityIds.includes(activity.id));
     assert(has(exposed.capabilityReport!, "CAPABILITY_UNAVAILABLE"));
-    const wrong = structuredClone(input); wrong.course.units[0].lessons[0].activities[0].type = "lesson_content";
+    const wrong = structuredClone(input);
+    wrong.course.units[0].lessons[0].activities[0].type = "lesson_content";
     wrong.course.units[0].lessons[0].activities[0].payload = { body: "Does not play media" };
     assert.throws(() => runtimeBundle(wrong), CapabilityCompatibilityError);
   });
@@ -555,37 +574,59 @@ async function main() {
     const before = process.env.OPENAI_API_KEY;
     try {
       process.env.OPENAI_API_KEY = "synthetic-placeholder-with-no-network";
-      assert.equal(serverCapabilityEnvironment(fixture.language).dependencies?.["ai.text_service"]?.state, "unknown");
+      assert.equal(
+        serverCapabilityEnvironment(fixture.language).dependencies?.["ai.text_service"]?.state,
+        "unknown",
+      );
       delete process.env.OPENAI_API_KEY;
-      assert.equal(serverCapabilityEnvironment(fixture.language).dependencies?.["ai.text_service"]?.state, "unavailable");
-    } finally { if (before === undefined) delete process.env.OPENAI_API_KEY; else process.env.OPENAI_API_KEY = before; }
+      assert.equal(
+        serverCapabilityEnvironment(fixture.language).dependencies?.["ai.text_service"]?.state,
+        "unavailable",
+      );
+    } finally {
+      if (before === undefined) delete process.env.OPENAI_API_KEY;
+      else process.env.OPENAI_API_KEY = before;
+    }
   });
   await test("manual speaking remains executable without recognition coverage", () => {
     const input = mutate((course) => {
-      const activity = course.units[0].lessons[0].activities[0]; activity.type = "speaking";
+      const activity = course.units[0].lessons[0].activities[0];
+      activity.type = "speaking";
       activity.payload = { guidance: ["Record and write the transcript"] };
     });
-    const bundle = runtimeBundle(input), exposed = publicCourse(bundle.course, bundle.language);
+    const bundle = runtimeBundle(input),
+      exposed = publicCourse(bundle.course, bundle.language);
     assert.equal(bundle.language.speech.support.speechRecognition, false);
-    const html = renderToString(<StudyProvider course={exposed} language={bundle.language} resources={bundle.resources}>
-      <ActivityRenderer activity={exposed.units[0].lessons[0].activities[0]} />
-    </StudyProvider>);
-    assert(html.includes("Gravar resposta")); assert(!html.includes("prática oral está temporariamente indisponível"));
+    const html = renderToString(
+      <StudyProvider course={exposed} language={bundle.language} resources={bundle.resources}>
+        <ActivityRenderer activity={exposed.units[0].lessons[0].activities[0]} />
+      </StudyProvider>,
+    );
+    assert(html.includes("Gravar resposta"));
+    assert(!html.includes("prática oral está temporariamente indisponível"));
   });
   await test("temporarily unavailable alternatives do not become structural incompatibility", () => {
-    const environment: CapabilityEnvironment = { dependencies: { "ai.text_service": { state: "unavailable" } } };
+    const environment: CapabilityEnvironment = {
+      dependencies: { "ai.text_service": { state: "unavailable" } },
+    };
     const fallback = { id: "ai.tutor", version: "1.0.0" };
-    const pending = check(request("unknown.optional", undefined, { required: false, fallback }), environment);
-    assert.equal(pending.compatible, true); assert.equal(pending.readiness, "unavailable");
+    const pending = check(
+      request("unknown.optional", undefined, { required: false, fallback }),
+      environment,
+    );
+    assert.equal(pending.compatible, true);
+    assert.equal(pending.readiness, "unavailable");
     assert(!has(pending, "CAPABILITY_FALLBACK_INVALID"));
     const working = check({ ...core, required: false, fallback }, environment);
-    assert.equal(working.compatible, true); assert.equal(working.readiness, "ready");
+    assert.equal(working.compatible, true);
+    assert.equal(working.readiness, "ready");
     assert.equal(working.selections[0].usedFallback, false);
   });
   await test("malformed declarations fail with diagnostics rather than throwing", () => {
     for (const value of [null, undefined, {}, { id: 42, version: false }]) {
       const report = check(value as unknown as CapabilityRequirement);
-      assert.equal(report.compatible, false); assert(has(report, "CAPABILITY_DATA_INVALID"));
+      assert.equal(report.compatible, false);
+      assert(has(report, "CAPABILITY_DATA_INVALID"));
     }
   });
   console.log(

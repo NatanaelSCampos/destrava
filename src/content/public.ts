@@ -1,4 +1,5 @@
 import type { Activity, Course, Lesson, Unit } from "./schema";
+import { publicPresentation } from "./text-presentation";
 import { interactiveLessonSchema, type LanguagePackage } from "./contracts";
 import { featureFlags } from "@/lib/feature-flags";
 import { publicRequirements } from "./capability-contracts";
@@ -14,11 +15,26 @@ export type PublicActivity = Activity extends infer A
   ? A extends Activity
     ? Omit<
         A,
-        "answer" | "answerOrder" | "accepted" | "fullAnswers" | "explanation" | "answerPolicy"
+        "answer" | "answerOrder" | "accepted" | "fullAnswers" | "explanation" | "answerPolicy" | "feedback"
       >
     : never
   : never;
-export type PublicLesson = Omit<Lesson, "activities"> & { activities: PublicActivity[] };
+export type PublicLesson = Omit<Lesson, "activities" | "deferredRecovery"> & {
+  activities: PublicActivity[];
+  deferredRecovery?: Omit<NonNullable<Lesson["deferredRecovery"]>, "rules"> & {
+    rules: Array<Omit<NonNullable<Lesson["deferredRecovery"]>["rules"][number], "activity"> & { activity: PublicActivity }>;
+  };
+};
+export function publicActivity(activity: Activity): PublicActivity {
+  const safe = { ...activity } as Record<string, unknown>;
+  safe.capabilityRequirements = publicRequirements(activity.capabilityRequirements);
+  safe.presentation = publicPresentation(activity.presentation, activity.type === "listening" && activity.media?.kind === "audio" && activity.media.transcriptAvailableAfterAttempt !== false);
+  for (const field of ["answer", "answerOrder", "accepted", "fullAnswers", "explanation", "answerPolicy", "feedback"])
+    delete safe[field];
+  if (activity.type === "listening" && activity.media?.kind === "audio" &&
+    activity.media.transcriptAvailableAfterAttempt !== false) safe.transcript = "";
+  return safe as PublicActivity;
+}
 export type PublicUnit = Omit<Unit, "lessons"> & { lessons: PublicLesson[] };
 export type LearningAvailability = {
   unavailableActivityIds: string[];
@@ -49,10 +65,14 @@ export function publicCourse(
           const scopedActivity = course.units
             .flatMap((unit, u) =>
               unit.lessons.flatMap((lesson, l) =>
-                lesson.activities.map((activity, a) => ({
-                  activity,
-                  location: `course.units[${u}].lessons[${l}].activities[${a}]`,
-                })),
+                [
+                  ...lesson.activities.map((activity, a) => ({
+                    activity, location: `course.units[${u}].lessons[${l}].activities[${a}]`,
+                  })),
+                  ...(lesson.deferredRecovery?.rules.map((rule, r) => ({
+                    activity: rule.activity, location: `course.units[${u}].lessons[${l}].deferredRecovery.rules[${r}].activity`,
+                  })) ?? []),
+                ],
               ),
             )
             .find(
@@ -137,20 +157,13 @@ export function publicCourse(
           .map((lesson) => ({
             ...lesson,
             capabilityRequirements: publicRequirements(lesson.capabilityRequirements),
-            activities: lesson.activities.map((activity) => {
-              const safe = { ...activity } as Record<string, unknown>;
-              safe.capabilityRequirements = publicRequirements(activity.capabilityRequirements);
-              for (const privateField of [
-                "answer",
-                "answerOrder",
-                "accepted",
-                "fullAnswers",
-                "explanation",
-                "answerPolicy",
-              ])
-                delete safe[privateField];
-              return safe as PublicActivity;
-            }),
+            activities: lesson.activities.map(publicActivity),
+            deferredRecovery: lesson.deferredRecovery ? {
+              ...lesson.deferredRecovery,
+              rules: lesson.deferredRecovery.rules.map(rule => ({
+                ...rule, activity: publicActivity(rule.activity),
+              })),
+            } : undefined,
           })),
       })),
   };

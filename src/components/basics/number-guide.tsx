@@ -55,7 +55,7 @@ export function NumberGuide() {
             Consulte a escrita e os exemplos. O áudio depende de uma voz compatível no dispositivo.
           </p>
         </div>
-        {numberAction.eligible ? <Link href="/numbers" className="primary-button">Praticar números (condicional) <ArrowRight size={16} /></Link> : <p role="status">{numberAction.reasons.join(" ")} Você pode continuar consultando os exemplos abaixo.</p>}
+        {numberAction.eligible ? <Link href="/numbers" className="primary-button">Praticar números <ArrowRight size={16} /></Link> : <p role="status">{numberAction.reasons.join(" ")} Você pode continuar consultando os exemplos abaixo.</p>}
       </div>
 
       <div className="alphabet-summary number-guide-summary">

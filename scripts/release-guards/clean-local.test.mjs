@@ -277,9 +277,11 @@ test("current Supabase configuration is accepted after only required identity/po
     ["54329", "55429"], ["8083", "8183"]]);
   let adapted = original.replaceAll("espanhol-plataform", P.id)
     .replace(/5432[0-9]|8083/gu, (number) => replacements.get(number) ?? number)
-    .replaceAll("http://localhost:3000", P.appOrigin)
-    .replaceAll("# smtp_port = 55425", "smtp_port = 55425")
-    .replaceAll("# pop3_port = 55426", "pop3_port = 55426");
+    .replaceAll("http://localhost:3000", P.appOrigin);
+  // F2 may already have explicit ports alongside the CLI's commented examples.
+  // Adapt each example only when no active setting exists; keep duplicate-key rejection intact.
+  if (!/^smtp_port\s*=/mu.test(adapted)) adapted = adapted.replaceAll("# smtp_port = 55425", "smtp_port = 55425");
+  if (!/^pop3_port\s*=/mu.test(adapted)) adapted = adapted.replaceAll("# pop3_port = 55426", "pop3_port = 55426");
   assert.equal(validateCleanLocal(input({ configText: adapted })).ok, true);
   assert.equal(readFileSync(new URL("../../supabase/config.toml", import.meta.url), "utf8"), original);
 });

@@ -9,7 +9,7 @@ import { policyStatusLabels } from "@/components/activities/policy-checklist";
 
 export default function CoursePage() {
   const { courseSlug } = useParams<{ courseSlug: string }>();
-  const { course, state, vocabularyItems } = useStudy();
+  const { course, state, vocabularyItems, learningAccess } = useStudy();
   if (courseSlug !== course.slug) return <div className="empty-state">Curso não encontrado.</div>;
   const progress = courseStudyProgress(course, state);
   return (
@@ -52,6 +52,7 @@ export default function CoursePage() {
         {course.units
           .filter((unit) => unit.active)
           .map((unit) => {
+            const locked = Boolean(unit.access && !learningAccess?.units[unit.id]?.allowed);
             const item = unitProgress(unit, state, vocabularyItems, course);
             return (
               <Link
@@ -78,14 +79,20 @@ export default function CoursePage() {
                   <span
                     className={`pill ${item.isMastered ? "" : item.isCompleted ? "amber" : "gray"}`}
                   >
-                    {item.isMastered ? "Domínio estimado" : item.isCompleted ? "Concluída" : policyStatusLabels[item.completion.status]}
+                    {locked
+                      ? "Aguardando a prova anterior"
+                      : item.isMastered
+                        ? "Domínio estimado"
+                        : item.isCompleted
+                          ? "Concluída"
+                          : policyStatusLabels[item.completion.status]}
                   </span>
                   <strong>{item.participationPercentage}%</strong>
                   <div className="progress-track">
                     <span style={{ width: `${item.participationPercentage}%` }} />
                   </div>
                 </div>
-                <ArrowRight size={18} />
+                {locked ? <LockKeyhole size={18} /> : <ArrowRight size={18} />}
               </Link>
             );
           })}

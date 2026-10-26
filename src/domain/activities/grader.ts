@@ -1,4 +1,6 @@
 import type { Activity } from "@/content/schema";
+import type { ActivityPresentation } from "@/content/text-presentation";
+import { gradePresentation } from "@/content/grade-presentation";
 import type { NormalizationRules } from "@/content/contracts";
 import { objectiveActivityTypes } from "@/content/activity-data";
 import { assertWellFormedText } from "@/engine/text/representation";
@@ -40,10 +42,17 @@ export function normalizeAnswer(value: string, rules: NormalizationRules = stric
 }
 
 export type GradeResult = {
+  completionReceipt?: string;
   correct: boolean;
   correctAnswer: string;
   completeAnswer?: string;
   explanation: string;
+  presentation?: ActivityPresentation;
+  feedback?: {
+    summary: string;
+    detail?: string;
+    alternatives: { answer: string; detail: string }[];
+  };
   transcript?: string;
   variantId?: string;
 };
@@ -81,10 +90,35 @@ export function gradeActivity(
   const correct = candidates.some(
     (candidate) => normalizeAnswer(candidate, rules) === normalizeAnswer(rawAnswer, rules),
   );
+  const detailIndex =
+    activity.feedback?.alternatives.findIndex(
+      (item) => normalizeAnswer(item.answer, rules) === normalizeAnswer(rawAnswer, rules),
+    ) ?? -1;
   return {
     correct,
+    ...(activity.presentation
+      ? {
+          presentation: gradePresentation(activity.presentation, correct, detailIndex, {
+            answer,
+            ...(activity.type === "listening" ? { transcript: activity.transcript } : {}),
+          }),
+        }
+      : {}),
     ...(variantId ? { variantId } : {}),
     correctAnswer: answer,
+    ...(activity.feedback
+      ? {
+          feedback: {
+            summary: correct
+              ? activity.feedback.summaryCorrect
+              : activity.feedback.summaryIncorrect,
+            detail: activity.feedback.alternatives.find(
+              (item) => normalizeAnswer(item.answer, rules) === normalizeAnswer(rawAnswer, rules),
+            )?.detail,
+            alternatives: activity.feedback.alternatives,
+          },
+        }
+      : {}),
     ...(fullAnswers.length ? { completeAnswer: fullAnswers[0] } : {}),
     explanation:
       activity.explanation ??

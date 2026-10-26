@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "1.5",
+  "contentVersion": "0.1.0",
+  "id": "ingles-a1-pessoal",
+  "slug": "ingles-a1-pessoal",
+  "isDefault": false,
+  "sourceLanguage": "pt-BR",
+  "targetLanguage": "en",
+  "defaultVariant": "en-US",
+  "acceptedVariants": [
+    "en-US",
+    "en-GB",
+    "general"
+  ],
+  "framework": {
+    "name": "CEFR",
+    "entryLevel": "A0",
+    "exitLevel": "A1"
+  },
+  "track": "general",
+  "title": "Inglês A1 · estudo pessoal",
+  "description": "Piloto experimental original com duas unidades independentes. Explicações em português e prática em inglês. Escutas indisponíveis; reforços e voz opcionais. Não canônico do Language Foundry.",
+  "learningGoals": [
+    "personal-en-u1-goal",
+    "personal-en-u2-goal"
+  ],
+  "supportedGoals": [
+    "general",
+    "work",
+    "study",
+    "travel",
+    "conversation"
+  ],
+  "assessmentRefs": {
+    "diagnostic": "personal-en-u1-assess-diagnostic"
+  },
+  "provenance": {
+    "origin": "adapted",
+    "sources": [
+      {
+        "type": "original_experimental_editorial",
+        "reference": "Pacote editorial English A1 U1/U2 V1; adaptação experimental sem aprovação canônica."
+      }
+    ],
+    "review": {
+      "status": "review_pending"
+    }
+  }
+}

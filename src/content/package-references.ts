@@ -36,7 +36,7 @@ export function packageReferenceIssues(course: CoursePackage, language: Language
       if (lessons.has(lesson.id))
         issue("DUPLICATE_ID", ["units", u, "lessons", l, "id"], "Lesson ID is duplicated");
       lessons.add(lesson.id);
-      for (const [a, activity] of lesson.activities.entries()) {
+      for (const [a, activity] of [...lesson.activities, ...(lesson.deferredRecovery?.rules.map(rule => rule.activity) ?? [])].entries()) {
         if (Object.getOwnPropertyNames(Object.prototype).includes(activity.id))
           issue(
             "ID_RESERVED",
@@ -135,7 +135,7 @@ export function packageReferenceIssues(course: CoursePackage, language: Language
           "Introduced vocabulary does not exist",
         );
     unit.lessons.forEach((lesson, l) =>
-      lesson.activities.forEach((activity, a) => {
+      [...lesson.activities, ...(lesson.deferredRecovery?.rules.map(rule => rule.activity) ?? [])].forEach((activity, a) => {
         const path = ["units", u, "lessons", l, "activities", a];
         for (const [index, id] of activity.concepts.entries())
           if (!concepts.has(id))

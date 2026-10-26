@@ -376,6 +376,44 @@
             "type": "string",
             "const": "objective_mean"
           },
+          "exam": {
+            "type": "object",
+            "properties": {
+              "entry": {
+                "type": "object",
+                "properties": {
+                  "activityIds": {
+                    "minItems": 1,
+                    "maxItems": 2000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "minimumRatio": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "activityIds",
+                  "minimumRatio"
+                ],
+                "additionalProperties": false
+              },
+              "feedback": {
+                "type": "string",
+                "const": "after_submission"
+              }
+            },
+            "required": [
+              "entry",
+              "feedback"
+            ],
+            "additionalProperties": false
+          },
           "activityIds": {
             "minItems": 1,
             "maxItems": 100,

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { activityPresentationSchema } from "./text-presentation";
 import { assessmentPurposeSchema, skillIdSchema } from "./contracts";
 
 export const assessmentResponseSchema = z
@@ -22,6 +23,7 @@ export const assessedAnswerSchema = z.object({
   difficulty: z.union([z.literal(1), z.literal(2), z.literal(3)]).optional(),
   correctAnswer: z.string().optional(),
   explanation: z.string().optional(),
+  presentation: activityPresentationSchema.optional(),
   variantId: z.string().min(1).optional(),
 });
 export const serverAssessmentResultSchema = z

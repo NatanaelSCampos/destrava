@@ -28,7 +28,7 @@ export function StudySyncNotice() {
   return (
     <div className="study-sync-notice" role={syncError ? "alert" : "status"}>
       <p>
-        {syncError ||
+        {(syncError ? (progressLoadStatus === "failed" ? "Não foi possível carregar seu progresso. Tente novamente." : "Seu progresso ainda não terminou de sincronizar. Mantenha esta página aberta e tente novamente.") : "") ||
           "O progresso remoto foi carregado. Há uma cópia local pendente; ela não foi aplicada sobre seus dados."}
       </p>
       <div>

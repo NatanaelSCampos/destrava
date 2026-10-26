@@ -78,9 +78,13 @@ function requestsFor(course: Course): LocatedRequirement[] {
     requests.push({ requirement: { id, version, required: true }, location });
   declared(course.capabilityRequirements, "course");
   declared(course.languageRequirements, "language");
+  course.assessments.forEach((a, i) => {
+    if (a.method === "fixed" && a.exam) add("assessment.exam", `course.assessments[${i}].exam`);
+  });
   course.units.forEach((unit, u) => {
     const unitPath = "course.units[" + u + "]";
     declared(unit.capabilityRequirements, unitPath);
+    if (unit.access) add("learning.access", unitPath + ".access");
     if (unit.learningPolicy) {
       add("policy.unit", unitPath + ".learningPolicy");
       for (const group of ["completion", "mastery"] as const)
@@ -94,6 +98,7 @@ function requestsFor(course: Course): LocatedRequirement[] {
     unit.lessons.forEach((lesson, l) => {
       const lessonPath = unitPath + ".lessons[" + l + "]";
       declared(lesson.capabilityRequirements, lessonPath);
+      if (lesson.stages) add("lesson.stages", lessonPath + ".stages");
       if (lesson.interactiveLessonRef)
         add("lesson.interactive", lessonPath + ".interactiveLessonRef");
       lesson.activities.forEach((activity, a) => {

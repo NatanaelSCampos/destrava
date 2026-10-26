@@ -1,6 +1,7 @@
 "use client";
 
 import { useTextPresentation } from "@/components/learning/text-presentation";
+import { presentationLanguage } from "@/engine/presentation/language";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Image from "next/image";
@@ -24,6 +25,7 @@ import {
 import type { GradeResult } from "@/domain/activities/grader";
 import type { InteractiveLessonDefinition, LessonAction } from "@/content/contracts";
 import { lessonActionSchema } from "@/content/contracts";
+import { LessonSupport } from "@/components/activities/lesson-support";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { SpeechPlaybackScope } from "@/components/audio/speak-button";
 import { claimAudioPlayback, speakText, type PlaybackHandle } from "@/lib/speak-text";
@@ -34,6 +36,8 @@ import {
   type NarrationLine, type NarrationSnapshot, type TeachingNarration,
 } from "@/domain/interactive-lesson/narration-controller";
 import { useStudy } from "@/components/study-provider";
+import { featureFlags } from "@/lib/feature-flags";
+import { StudyActivityClock } from "@/domain/study/session-time";
 import {
   applyBoardAction,
   initialRuntime,
@@ -45,6 +49,7 @@ import {
 import { HtmlMediaPresentationController } from "@/domain/interactive-lesson/presentation-controller";
 import type { CuratedExample } from "@/content/interactive-examples";
 import { LearningBoard } from "./learning-board";
+import { GuidedStudyActivity } from "./guided-study-activity";
 import { LearningText, LearningTextarea } from "@/components/learning/text-presentation";
 
 type Media = Record<string, { src: string; type: string }>;
@@ -67,14 +72,17 @@ export function InteractiveClassroom({
   contentVersion,
   media,
   curatedExamples,
+  unitHref,
 }: {
   definition: InteractiveLessonDefinition;
   courseId: string;
   contentVersion: string;
   media: Media;
   curatedExamples: CuratedExample[];
+  unitHref?: string;
 }) {
   const textAttrs = useTextPresentation();
+  const returnLabel = unitHref ? "Voltar à unidade" : "Voltar ao curso";
   const { course, language, authUserId, state: studyState, submitAttempt, captureInteractiveLessonOwner, applyInteractiveLessonReceipt } = useStudy();
   const lesson = course.units
     .flatMap((unit) => unit.lessons)
@@ -102,6 +110,8 @@ export function InteractiveClassroom({
   const [showTranslation, setShowTranslation] = useState(false);
   const [lastAssessment, setLastAssessment] = useState<"correct" | "incorrect" | null>(null);
   const [mediaError, setMediaError] = useState(false);
+  const [activitySuspended, setActivitySuspended] = useState(false);
+  const [automaticallyStoppedMedia, setAutomaticallyStoppedMedia] = useState<string | null>(null);
   const [narration, setNarration] = useState<NarrationSnapshot>({ status: "idle", line: null, message: "" });
   const playbackRef = useRef<PlaybackHandle | null>(null);
   const transientRef = useRef<HTMLAudioElement | null>(null);
@@ -112,7 +122,8 @@ export function InteractiveClassroom({
   const revisionRef = useRef<number | null>(null);
   const saveQueue = useRef(Promise.resolve());
   const lastQueued = useRef("");
-  const lastClock = useRef(0);
+  const activityClock = useRef(new StudyActivityClock(0, false));
+  const automaticAudioStop = useRef(false);
   const requestId = useRef(0);
   const readyRef = useRef(false);
   const submittingRef = useRef(false);
@@ -122,11 +133,12 @@ export function InteractiveClassroom({
     stateRef.current = state;
   }, [state]);
   const segment = definition.segments[state.segmentIndex];
+  const mediaStopped = automaticallyStoppedMedia === segment.id;
   const variantResolution = resolveLearningVariant(language, course, studyState.profile.variantId);
   const targetLocale = variantResolution.status === "resolved" && language.speech.support.textToSpeech
     ? textToSpeechLocale(language, variantResolution.variantId, course) : null;
   const narrationContext = {
-    sourceLanguage: course.sourceLanguage ?? "", targetLanguage: course.languageCode,
+    sourceLanguage: course.sourceLanguage ?? "", targetLanguage: presentationLanguage(language),
     targetLocale, targetFallbackAllowed: variantResolution.speechFallback === "same_language",
   };
   const transcriptLines = transcriptNarration(segment.presentation?.transcript ?? [], narrationContext);
@@ -170,15 +182,54 @@ export function InteractiveClassroom({
       dispatch({ type: "PAUSE" });
     }
   }, [narrator, dispatch]);
+  const suspendPlayback = useCallback(() => {
+    setActivitySuspended(true);
+    if (mediaRef.current && stateRef.current.phase === "presenting") setAutomaticallyStoppedMedia(segment.id);
+    automaticAudioStop.current = true;
+    try {
+      narrator.pause();
+      playbackRef.current?.cancel();
+      mediaRef.current?.pause();
+      transientRef.current?.pause();
+    } finally { automaticAudioStop.current = false; }
+  }, [narrator, segment.id]);
   useEffect(() => {
-    const hide = () => { if (document.visibilityState === "hidden") pausePlayback(); };
-    document.addEventListener("visibilitychange", hide);
-    window.addEventListener("pagehide", pausePlayback);
-    return () => {
-      document.removeEventListener("visibilitychange", hide);
-      window.removeEventListener("pagehide", pausePlayback);
+    const clock = activityClock.current;
+    const visibilityChanged = () => {
+      const visible = document.visibilityState === "visible";
+      clock.setVisible(visible, performance.now());
+      if (!visible) suspendPlayback();
+      else setActivitySuspended(false);
     };
-  }, [pausePlayback]);
+    const markActivity = () => {
+      if (document.visibilityState !== "visible") return;
+      clock.interact(performance.now());
+      setActivitySuspended(false);
+    };
+    const pageHidden = () => {
+      clock.setVisible(false, performance.now());
+      suspendPlayback();
+    };
+    visibilityChanged();
+    const timer = window.setInterval(() => {
+      if (!clock.isActive(performance.now())) suspendPlayback();
+    }, 1000);
+    document.addEventListener("visibilitychange", visibilityChanged);
+    document.addEventListener("pointerdown", markActivity);
+    document.addEventListener("keydown", markActivity);
+    document.addEventListener("wheel", markActivity, { passive: true });
+    window.addEventListener("pagehide", pageHidden);
+    window.addEventListener("pageshow", visibilityChanged);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", visibilityChanged);
+      document.removeEventListener("pointerdown", markActivity);
+      document.removeEventListener("keydown", markActivity);
+      document.removeEventListener("wheel", markActivity);
+      window.removeEventListener("pagehide", pageHidden);
+      window.removeEventListener("pageshow", visibilityChanged);
+    };
+  }, [suspendPlayback]);
   function startNarration(lines: NarrationLine[]) {
     pausePlayback();
     narrator.start(lines);
@@ -387,10 +438,13 @@ export function InteractiveClassroom({
     const onHide = () => {
       if (document.visibilityState === "hidden") persist(stateRef.current);
     };
+    const onPageHide = () => persist(stateRef.current);
     document.addEventListener("visibilitychange", onHide);
+    window.addEventListener("pagehide", onPageHide);
     return () => {
       window.clearInterval(timer);
       document.removeEventListener("visibilitychange", onHide);
+      window.removeEventListener("pagehide", onPageHide);
     };
   }, [loading, persist]);
 
@@ -403,10 +457,14 @@ export function InteractiveClassroom({
     const element = mediaRef.current;
     const player = element ? new HtmlMediaPresentationController(element) : null;
     player?.setPlaybackRate(speed);
-    if (state.phase !== "presenting") { player?.pause(); return; }
+    if (state.phase !== "presenting" || mediaStopped) { player?.pause(); return; }
+    if (!activityClock.current.isActive(performance.now())) {
+      player?.pause();
+      return;
+    }
     const owner = claimAudioPlayback(() => {
       player?.pause();
-      if (stateRef.current.phase === "presenting") {
+      if (stateRef.current.phase === "presenting" && !automaticAudioStop.current) {
         stateRef.current = { ...stateRef.current, phase: "paused" };
         dispatch({ type: "PAUSE" });
       }
@@ -417,7 +475,7 @@ export function InteractiveClassroom({
       if (owner.isCurrent()) { owner.cancel(); dispatch({ type: "PAUSE" }); }
     });
     return () => { owner.release(); player?.pause(); };
-  }, [state.phase, state.segmentIndex, speed, currentMedia?.src]);
+  }, [state.phase, state.segmentIndex, speed, currentMedia?.src, mediaStopped, activitySuspended]);
   useEffect(() => {
     if (
       state.phase !== "presenting" ||
@@ -425,16 +483,12 @@ export function InteractiveClassroom({
       (segment.presentation.mode !== "slides" && !mediaError)
     )
       return;
-    lastClock.current = performance.now();
+    activityClock.current.resetTick(performance.now());
     const timer = window.setInterval(() => {
-      if (document.visibilityState === "hidden") {
-        lastClock.current = performance.now();
-        return;
-      }
       if (stateRef.current.phase !== "presenting") return;
       const now = performance.now();
-      const elapsed = Math.min(500, now - lastClock.current);
-      lastClock.current = now;
+      const elapsed = activityClock.current.takeElapsedMs(now, 500);
+      if (!elapsed) return;
       const next = Math.min(
         segment.presentation!.durationMs,
         stateRef.current.positionMs + Math.round(elapsed * speed),
@@ -490,7 +544,8 @@ export function InteractiveClassroom({
     setSpeed((current) => (current === 1 ? 0.75 : 1));
   }
   function onMediaPosition(ms: number) {
-    if (stateRef.current.phase !== "presenting" || !playbackRef.current?.isCurrent()) return;
+    if (stateRef.current.phase !== "presenting" || !playbackRef.current?.isCurrent() ||
+      !activityClock.current.isActive(performance.now())) return;
     const duration = segment.presentation?.durationMs ?? 0;
     const next = Math.min(ms, duration);
     const result = engine.current.tick(next);
@@ -499,7 +554,7 @@ export function InteractiveClassroom({
     if (next >= duration) dispatch({ type: "PAUSE" });
   }
   async function askTeacher(value: string) {
-    if (questionComposing) return;
+    if (!featureFlags.AI_TUTOR || questionComposing) return;
     const trimmed = value.trim();
     if (trimmed.length < 3 || teachingBusy) return;
     const ownRequest = ++requestId.current;
@@ -569,17 +624,17 @@ export function InteractiveClassroom({
         <span className="live-complete-icon">
           <Check size={30} />
         </span>
-        <span className="eyebrow">AULA CONCLUÍDA</span>
-        <h1>Você destravou mais uma estrutura.</h1>
+        <span className="eyebrow">ROTEIRO CONCLUÍDO</span>
+        <h1>Você concluiu este roteiro de prática.</h1>
         <p>
-          Você acompanhou a explicação, respondeu ao exercício e praticou a fala.{" "}
+          Você percorreu as etapas da aula. A participação e as entregas não comprovam domínio do conteúdo.{" "}
           {completionSaved ? "Sua conclusão foi salva." : "Salvando sua conclusão…"}
         </p>
         {saveError && <p role="alert">{saveError} Recarregue para verificar o estado da aula.</p>}
         <div className="live-complete-actions">
           {completionSaved ? (
-            <Link className="primary-button" href={`/course/${course.slug}`}>
-              Voltar ao curso <ArrowRight size={17} />
+            <Link className="primary-button" href={unitHref ?? `/course/${course.slug}`}>
+              {returnLabel} <ArrowRight size={17} />
             </Link>
           ) : (
             <button className="primary-button" disabled>
@@ -620,14 +675,14 @@ export function InteractiveClassroom({
           Este dispositivo não oferece uma capacidade necessária à aula. A indisponibilidade não
           representa erro ou conclusão.
         </p>
-        <Link className="secondary-button" href={`/course/${course.slug}`}>
-          Voltar ao curso
+        <Link className="secondary-button" href={unitHref ?? `/course/${course.slug}`}>
+          {returnLabel}
         </Link>
       </div>
     );
   return (
     <SpeechPlaybackScope.Provider value={(owner) => { playbackRef.current = owner; }}>
-    <div className="live-page" onPlayCapture={(event) => {
+    <div className="live-page lesson-experience" onPlayCapture={(event) => {
       const element = event.target;
       if (!(element instanceof HTMLMediaElement)) return;
       if (element === mediaRef.current) {
@@ -642,14 +697,14 @@ export function InteractiveClassroom({
     }}>
       <div className="live-heading">
         <div>
-          <Link className="live-back" href={`/course/${course.slug}`}>
-            <ArrowLeft size={15} /> Voltar ao curso
+          <Link className="live-back" href={unitHref ?? `/course/${course.slug}`}>
+            <ArrowLeft size={15} /> {returnLabel}
           </Link>
           <span className="eyebrow">
-            <Sparkles size={13} /> AULA PARTICULAR · {language.identity.nativeName.toUpperCase()}
+            <Sparkles size={13} /> {featureFlags.AI_TUTOR ? "AULA PARTICULAR" : "AULA GUIADA"} · {language.identity.nativeName.toUpperCase()}
           </span>
           <h1>{definition.title}</h1>
-          <p>{definition.objectives[0]}</p>
+          <p>{lesson?.description}</p>
         </div>
         <div className="live-time">
           <Clock3 size={15} /> {definition.estimatedMinutes} min <span>·</span> {progress}%
@@ -702,13 +757,13 @@ export function InteractiveClassroom({
                   />
                 )
               ) : null}
-              <Image
+              {featureFlags.AI_TUTOR && (<Image
                 src="/images/professora-sofia.jpg"
                 alt="Ilustração da professora da aula"
                 width={1200}
                 height={1200}
                 priority
-              />
+              />)}
               <div className="live-teacher-overlay">
                 <span className="live-mode-badge">
                   {segment.presentation?.mode === "slides" || mediaError
@@ -717,7 +772,7 @@ export function InteractiveClassroom({
                       ? "Aula com mídia"
                       : "Aula guiada"}
                 </span>
-                <strong>Professora Sofia</strong>
+                <strong>{featureFlags.AI_TUTOR ? "Professora Sofia" : "Apoio da aula"}</strong>
                 <LearningText
                   as="p"
                   presentation={
@@ -757,13 +812,18 @@ export function InteractiveClassroom({
                 type="button"
                 className="live-play"
                 onClick={() => {
+                  if (state.phase === "presenting" && mediaStopped) {
+                    setAutomaticallyStoppedMedia(null);
+                    return;
+                  }
+                  setAutomaticallyStoppedMedia(null);
                   cancelPlayback();
                   if (state.phase === "paused") dispatch({ type: "PLAY" });
                 }}
                 disabled={state.phase === "intervening"}
-                aria-label={state.phase === "presenting" ? "Pausar aula" : "Reproduzir aula"}
+                aria-label={state.phase === "presenting" && !mediaStopped ? "Pausar aula" : "Reproduzir aula"}
               >
-                {state.phase === "presenting" ? <Pause size={18} /> : <Play size={18} />}
+                {state.phase === "presenting" && !mediaStopped ? <Pause size={18} /> : <Play size={18} />}
               </button>
               <span>{seconds(state.positionMs)}</span>
               <input
@@ -804,7 +864,7 @@ export function InteractiveClassroom({
                 {transcriptLines.map((line) => <p key={line.id} lang={line.language ?? undefined}>
                   {line.text}{" "}
                   {line.locale ? <button type="button" onClick={() => startNarration([line])} aria-label={`Ouvir fala ${line.id.split(":")[1]}`}>Ouvir fala</button>
-                    : <small>Somente texto: idioma ou locale de voz não declarado com segurança.</small>}
+                    : <small>Leia o texto: não há voz compatível disponível para esta fala.</small>}
                 </p>)}
               </details>}
             </div>
@@ -828,6 +888,7 @@ export function InteractiveClassroom({
             </div>
           )}
 
+          <div className="live-independent-practice"><GuidedStudyActivity activity={activity || undefined} phase={state.phase} lesson={lesson} unavailableActivityIds={course.availability?.unavailableActivityIds} /></div>
           {(state.phase === "checkpoint" || state.phase === "speaking") && activity && (
             <div className="live-activity" id="live-activity">
               <div className="live-activity-intro">
@@ -836,13 +897,14 @@ export function InteractiveClassroom({
                 </span>
                 <p>
                   {segment.type === "speaking"
-                    ? "Grave e salve sua tentativa. A entrega não recebe nota; a avaliação de pronúncia é opcional."
+                    ? "Grave, ouça e salve sua tentativa. A entrega não recebe nota. A disponibilidade de avaliação aparece na própria atividade."
                     : "Responda antes de avançar. Se precisar, você pode tentar de novo."}
                 </p>
               </div>
               <ActivityRenderer
                 key={segment.id}
                 activity={activity}
+                suspended={activitySuspended}
                 onSubmitAnswer={async (answer) => {
                   const result = await submitSegment(answer);
                   if (typeof result.grade?.correct !== "boolean") throw new Error("Correção inválida.");
@@ -852,6 +914,7 @@ export function InteractiveClassroom({
                 onSubmitWriting={async (text) => { await submitSegment(text); }}
                 onSubmitSpeaking={async (transcription, audio) => { await submitSegment(transcription, audio); }}
               />
+              {lesson && <LessonSupport lesson={lesson} activity={activity} unavailableActivityIds={course.availability?.unavailableActivityIds} />}
               {lastAssessment === "incorrect" && (
                 <p className="live-feedback">Ainda não. Veja a explicação e tente novamente.</p>
               )}
@@ -898,7 +961,7 @@ export function InteractiveClassroom({
           {state.phase === "intervening" && (
             <div className="live-support panel">
               <span className="eyebrow">
-                <Sparkles size={13} /> APOIO DA PROFESSORA
+                <Sparkles size={13} /> {featureFlags.AI_TUTOR ? "APOIO DA PROFESSORA" : "APOIO DA AULA"}
               </span>
               <h2>
                 {supportMode === "example"
@@ -998,10 +1061,10 @@ export function InteractiveClassroom({
         <aside className="live-side">
           <div className="live-teacher-card panel">
             <div className="live-profile">
-              <Image src="/images/professora-sofia.jpg" alt="" width={48} height={48} />
+              {featureFlags.AI_TUTOR && <Image src="/images/professora-sofia.jpg" alt="" width={48} height={48} />}
               <div>
-                <span>SUA PROFESSORA</span>
-                <strong>Sofia</strong>
+                <span>{featureFlags.AI_TUTOR ? "SUA PROFESSORA" : "ESTUDO GUIADO"}</span>
+                <strong>{featureFlags.AI_TUTOR ? "Sofia" : "Explicações e exemplos"}</strong>
               </div>
             </div>
             <p>
@@ -1033,33 +1096,40 @@ export function InteractiveClassroom({
                 <Mic2 size={17} /> Praticar
               </button>
             </div>
-            <form
-              className="live-ask"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void askTeacher(question);
-              }}
-            >
-              <label htmlFor="live-question">
-                <MessageCircle size={16} /> Pergunte à professora
-              </label>
-              <LearningTextarea
-                textRole="source"
-                onCompositionChange={setQuestionComposing}
-                id="live-question"
-                value={question}
-                onChange={(event) => setQuestion(event.target.value)}
-                rows={3}
-                maxLength={400}
-                placeholder="Qual é sua dúvida nesta etapa?"
-              />
-              <button
-                type="submit"
-                disabled={question.trim().length < 3 || teachingBusy || questionComposing}
+            {featureFlags.AI_TUTOR ? (
+              <form
+                className="live-ask"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void askTeacher(question);
+                }}
               >
-                Perguntar <Send size={15} />
-              </button>
-            </form>
+                <label htmlFor="live-question">
+                  <MessageCircle size={16} /> Pergunte à professora
+                </label>
+                <LearningTextarea
+                  textRole="source"
+                  onCompositionChange={setQuestionComposing}
+                  id="live-question"
+                  value={question}
+                  onChange={(event) => setQuestion(event.target.value)}
+                  rows={3}
+                  maxLength={400}
+                  placeholder="Qual é sua dúvida nesta etapa?"
+                />
+                <button
+                  type="submit"
+                  disabled={question.trim().length < 3 || teachingBusy || questionComposing}
+                >
+                  Perguntar <Send size={15} />
+                </button>
+              </form>
+            ) : (
+              <p className="live-side-answer">
+                Esta aula usa apoio preparado. Use as explicações,
+                os exemplos e a prática guiada para continuar estudando. Dúvidas livres não recebem respostas automáticas.
+              </p>
+            )}
             {teaching && state.phase !== "intervening" && (
               <p className="live-side-answer" role="status">
                 {teaching.message}

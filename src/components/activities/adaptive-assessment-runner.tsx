@@ -3,9 +3,10 @@ import { LearningText } from "@/components/learning/text-presentation";
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChartNoAxesCombined, RotateCcw } from "lucide-react";
+import { ArrowRight, Lightbulb, RotateCcw } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ExerciseCard } from "@/components/activities/exercise-card";
+import { AssessmentFeedback } from "./assessment-feedback";
 import {
   adaptiveAssessmentReport,
   nextAdaptiveItem,
@@ -13,7 +14,7 @@ import {
 } from "@/domain/study/adaptive-assessment";
 import type { GradeResult } from "@/domain/activities/grader";
 import type { AdaptiveAssessmentDefinition } from "@/content/contracts";
-import { assessmentPurposeLabels } from "@/content/assessment-references";
+import { AssessmentHeader, AssessmentIntro, AssessmentProgress } from "./assessment-experience";
 
 type AssessmentSkill = AdaptiveAssessmentDefinition["skillPlan"][number];
 
@@ -179,7 +180,7 @@ export function AdaptiveAssessmentRunner({
   if (bank.length < skillPlan.length)
     return (
       <div className="empty-state">
-        Esta avaliação adaptativa ainda não está disponível para este curso.
+        Esta avaliação ainda não está disponível para este curso.
       </div>
     );
 
@@ -191,20 +192,8 @@ export function AdaptiveAssessmentRunner({
     );
 
   return (
-    <div className="adaptive-page">
-      <div className="page-heading">
-        <div>
-          <span className="eyebrow">
-            <ChartNoAxesCombined size={14} />{" "}
-            {assessmentPurposeLabels[assessment.purpose].toUpperCase()} · ADAPTATIVA
-          </span>
-          <h1 className="page-title">{assessment.title}</h1>
-          <p className="page-subtitle">
-            {skillPlan.length} questões do conteúdo {course.level}. A próxima questão considera sua
-            resposta anterior.
-          </p>
-        </div>
-      </div>
+    <div className="adaptive-page lesson-experience assessment-experience">
+      <AssessmentHeader assessment={assessment} />
       {error && (
         <p className="inline-error" role="alert">
           {error}
@@ -218,28 +207,11 @@ export function AdaptiveAssessmentRunner({
         </button>
       )}
       {!startedAt && !latest && (
-        <section className="panel adaptive-intro">
-          <h2>Pronto para começar?</h2>
-          <p>
-            O teste usa{" "}
-            {Array.from(new Set(skillPlan))
-              .map((skill) => labels[skill] ?? skill)
-              .join(", ")}
-            . As questões usam o conteúdo da unidade e o resultado orienta sua prática.
-          </p>
-          <button type="button" className="primary-button" disabled={saving || !!pendingPrefix} onClick={() => void begin()}>
-            Começar avaliação <ArrowRight size={16} />
-          </button>
-        </section>
+        <AssessmentIntro assessment={assessment} skills={Array.from(new Set(skillPlan)).map(skill => labels[skill])} disabled={saving || !!pendingPrefix} onStart={() => void begin()} />
       )}
       {startedAt && !finished && current && next && !saving && !pendingPrefix && (
         <section className="panel adaptive-question">
-          <div className="adaptive-question-head">
-            <span className="eyebrow">
-              QUESTÃO {questionAnswers.length + 1} DE {skillPlan.length}
-            </span>
-            <span className="pill">{labels[next.skill]}</span>
-          </div>
+          <AssessmentProgress current={questionAnswers.length + 1} total={skillPlan.length} skill={labels[next.skill]} />
           <LearningText
             as="h2"
             presentation={current.presentation}
@@ -247,32 +219,24 @@ export function AdaptiveAssessmentRunner({
             textRole="source"
             text={current.title}
           />
-          <LearningText
+          {!current.scene && <LearningText
             as="p"
             presentation={current.presentation}
             field="prompt"
             textRole="source"
             text={current.prompt}
-          />
+          />}
           <ExerciseCard
             key={current.id}
             activity={current as Parameters<typeof ExerciseCard>[0]["activity"]}
             onAssessed={assessed}
           />
           {hasAnswered && !finished && answers.length < skillPlan.length && (
-            <button type="button" className="primary-button" onClick={() => setHasAnswered(false)}>
+            <div className="assessment-next"><button type="button" className="primary-button" onClick={() => setHasAnswered(false)}>
               Próxima questão <ArrowRight size={16} />
-            </button>
+            </button></div>
           )}
-          <p className="helper-note">
-            Complexidade da questão:{" "}
-            {next.difficulty === 1
-              ? "fundamentos"
-              : next.difficulty === 2
-                ? "aplicação"
-                : "contexto"}
-            . O nível continua {course.level}.
-          </p>
+
         </section>
       )}
       {showReport && (
@@ -281,7 +245,7 @@ export function AdaptiveAssessmentRunner({
             <div>
               <span className="eyebrow">SEU RESULTADO</span>
               <h2>
-                {report.bySkill.some((item) => item.status === "insufficient")
+                {report.bySkill.some((item) => item.status === "insufficient" || item.status === "not_assessed")
                   ? "Mais respostas para avaliar"
                   : report.passed
                     ? "Meta alcançada"
@@ -291,16 +255,21 @@ export function AdaptiveAssessmentRunner({
             </div>
             <strong
               aria-label={
-                report.bySkill.some((item) => item.status === "insufficient")
+                report.bySkill.some((item) => item.status === "insufficient" || item.status === "not_assessed")
                   ? "Amostra insuficiente"
                   : `${report.score}% de acertos`
               }
             >
-              {report.bySkill.some((item) => item.status === "insufficient")
+              {report.bySkill.some((item) => item.status === "insufficient" || item.status === "not_assessed")
                 ? "—"
                 : `${report.score}%`}
             </strong>
           </div>
+          <AssessmentFeedback
+            course={course}
+            assessment={assessment}
+            result={finished ? (latest?.id === attemptId ? latest : undefined) : (!startedAt ? latest : undefined)}
+          />
           <h3>Seu próximo passo</h3>
           {report.wrong.length ? (
             <ol className="adaptive-plan">
@@ -327,10 +296,12 @@ export function AdaptiveAssessmentRunner({
             </ol>
           ) : (
             <p>
-              Você acertou todas as questões. Continue praticando e revisando para manter o ritmo.
+              {report.bySkill.some(item => item.status === "insufficient" || item.status === "not_assessed")
+                ? "Continue praticando. Ainda precisamos de mais respostas para observar algumas habilidades."
+                : "Você acertou as questões desta tentativa. Continue praticando e revisando para manter o ritmo."}
             </p>
           )}
-          <h3>Resultado por competência</h3>
+          <h3>O que suas respostas mostram</h3>
           <div className="adaptive-skill-grid">
             {report.bySkill.map((item) => (
               <div key={item.skill}>
@@ -339,7 +310,7 @@ export function AdaptiveAssessmentRunner({
                   {item.status === "not_assessed"
                     ? "Não avaliada"
                     : item.status === "insufficient"
-                      ? "Amostra pequena"
+                      ? "Mais prática para observar"
                       : `${item.score}%`}
                 </strong>
                 <small>
@@ -350,7 +321,7 @@ export function AdaptiveAssessmentRunner({
                       ? "revisar"
                       : item.status === "insufficient"
                         ? "precisa de mais questões"
-                        : "sem evidência"}
+                        : "ainda não observada"}
                 </small>
               </div>
             ))}
@@ -379,16 +350,14 @@ export function AdaptiveAssessmentRunner({
               </Link>
             )}
           </div>
-          <details className="adaptive-report-method">
-            <summary>Como este resultado funciona</summary>
+          <section className="adaptive-report-method" aria-label="Como ler seu resultado">
+            <h3><Lightbulb size={18} aria-hidden="true" /> Como ler seu resultado</h3>
             <p>
-              A meta deste curso é {Math.round(assessment.passingPolicy.overall * 100)}% geral. Cada
-              habilidade precisa de pelo menos duas respostas; o piso por habilidade vem da
-              configuração desta avaliação. Sua finalidade é{" "}
-              {assessmentPurposeLabels[assessment.purpose].toLowerCase()}. Cada resposta entra no
-              perfil de aprendizado; questões erradas entram na revisão.
+              A meta desta prática é {Math.round(assessment.passingPolicy.overall * 100)}% de acertos.
+              Precisamos de pelo menos duas respostas para comentar cada habilidade.
+              Fala, pronúncia e escrita livre precisam de outras formas de avaliação; esta nota não mede essas habilidades.
             </p>
-          </details>
+          </section>
         </section>
       )}
     </div>

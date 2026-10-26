@@ -80,7 +80,7 @@ export function courseWithDeviceAvailability(
   const textDiagnostics: typeof diagnostics = [];
   for (const unit of course.units)
     for (const lesson of unit.lessons)
-      for (const activity of lesson.activities) {
+      for (const activity of [...lesson.activities, ...(lesson.deferredRecovery?.rules.map(rule => rule.activity) ?? [])]) {
         if (language) {
           const variant = resolveLearningVariant(language, course, preference, activity.variant);
           const locale =

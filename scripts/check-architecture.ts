@@ -5,6 +5,7 @@ import {
   formatContractDependencyIssues,
 } from "./contract-dependency-check";
 import { checkCapabilityImplementations } from "./capability-implementation-check";
+import { findLanguageSpecificReferences } from "./architecture-language-check";
 
 const roots = [
   "src/domain",
@@ -15,8 +16,6 @@ const roots = [
   "src/engine",
 ];
 const allowed = new Set(["src/domain/study/course-state-storage.ts"]);
-const leak =
-  /frecuenciasA1|spanishResources|spanishAlphabet|spanishRegions|SpanishRegion|speakSpanish|es-ES|es-MX|es-AR|\bspanish\b|\bespanhol\b|en-US|en-GB|\bEnglish\b|\binglês\b|lang=["'](?:es|en)["']/i;
 const matches: string[] = [];
 function scan(directory: string) {
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
@@ -25,10 +24,9 @@ function scan(directory: string) {
     else if (/\.(ts|tsx)$/.test(entry.name)) {
       const relative = path.slice(resolve(process.cwd()).length + 1).replaceAll("\\", "/");
       if (allowed.has(relative)) continue;
-      const lines = readFileSync(path, "utf8").split(/\r?\n/);
-      lines.forEach((line, index) => {
-        if (leak.test(line)) matches.push(`${relative}:${index + 1}`);
-      });
+      for (const issue of findLanguageSpecificReferences(relative, readFileSync(path, "utf8"))) {
+        matches.push(`${relative}:${issue.line}${issue.reason === "parse-error" ? ":parse-error" : ""}`);
+      }
     }
   }
 }

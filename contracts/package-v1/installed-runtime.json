@@ -36,6 +36,30 @@
       "homologation": "see-test-matrix"
     },
     {
+      "id": "presentation.scene",
+      "versions": [
+        "1.0.0"
+      ],
+      "engineImplementation": "implemented",
+      "installedIntegration": false,
+      "reason": "This execution path is not integrated with installed courses.",
+      "operationalDependencies": [],
+      "operationalAvailability": "evaluate-at-execution",
+      "homologation": "see-test-matrix"
+    },
+    {
+      "id": "presentation.inline",
+      "versions": [
+        "1.0.0"
+      ],
+      "engineImplementation": "implemented",
+      "installedIntegration": false,
+      "reason": "This execution path is not integrated with installed courses.",
+      "operationalDependencies": [],
+      "operationalAvailability": "evaluate-at-execution",
+      "homologation": "see-test-matrix"
+    },
+    {
       "id": "text.input",
       "versions": [
         "1.0.0"
@@ -96,9 +120,35 @@
       "homologation": "see-test-matrix"
     },
     {
-      "id": "activity.lesson_content",
+      "id": "lesson.stages",
       "versions": [
         "1.0.0"
+      ],
+      "engineImplementation": "implemented",
+      "installedIntegration": false,
+      "reason": "This execution path is not integrated with installed courses.",
+      "operationalDependencies": [],
+      "operationalAvailability": "evaluate-at-execution",
+      "homologation": "see-test-matrix"
+    },
+    {
+      "id": "lesson.deferred_recovery",
+      "versions": [
+        "1.0.0"
+      ],
+      "engineImplementation": "implemented",
+      "installedIntegration": false,
+      "reason": "This execution path is not integrated with installed courses.",
+      "operationalDependencies": [],
+      "operationalAvailability": "evaluate-at-execution",
+      "homologation": "see-test-matrix"
+    },
+    {
+      "id": "activity.lesson_content",
+      "versions": [
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -110,7 +160,9 @@
     {
       "id": "activity.multiple_choice",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -122,7 +174,9 @@
     {
       "id": "activity.true_false",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -134,7 +188,9 @@
     {
       "id": "activity.fill_blank",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -147,7 +203,9 @@
       "id": "activity.ordering",
       "versions": [
         "1.0.0",
-        "1.1.0"
+        "1.1.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -159,7 +217,9 @@
     {
       "id": "activity.short_answer",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -172,7 +232,9 @@
       "id": "activity.writing",
       "versions": [
         "1.0.0",
-        "1.1.0"
+        "1.1.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -184,7 +246,9 @@
     {
       "id": "activity.listening",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -196,7 +260,9 @@
     {
       "id": "activity.speaking",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": false,
@@ -208,7 +274,10 @@
     {
       "id": "activity.flashcard",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0",
+        "4.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -220,7 +289,9 @@
     {
       "id": "activity.review",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,
@@ -232,7 +303,9 @@
     {
       "id": "activity.quiz",
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "2.0.0",
+        "3.0.0"
       ],
       "engineImplementation": "implemented",
       "installedIntegration": true,

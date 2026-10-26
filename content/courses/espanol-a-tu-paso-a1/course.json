@@ -1,0 +1,116 @@
+{
+  "capabilityRequirements": [],
+  "schemaVersion": "1.10",
+  "contentVersion": "1.7.0",
+  "id": "espanol-a-tu-paso-a1",
+  "slug": "espanol-a-tu-paso-a1",
+  "isDefault": false,
+  "sourceLanguage": "pt-BR",
+  "targetLanguage": "es-a-tu-paso",
+  "defaultVariant": "es-ES",
+  "acceptedVariants": [
+    "es-ES",
+    "es-MX"
+  ],
+  "framework": {
+    "name": "CEFR",
+    "entryLevel": "Pre-A1",
+    "exitLevel": "A1"
+  },
+  "track": "general",
+  "title": "Español a tu paso",
+  "description": "Comece a participar de encontros e de situações simples no bairro. Pratique informações, pedidos e formas de continuar uma conversa, com apoio quando precisar. Estas primeiras unidades constroem competências iniciais; não equivalem a dominar todo o A1.",
+  "learningGoals": [
+    "atp-locate-person",
+    "atp-repair-understanding",
+    "atp-confirm-time",
+    "atp-arrange-meeting",
+    "atp-request-refreshment",
+    "atp-check-quantity-price",
+    "atp-confirm-adjust-order",
+    "atp-resolve-small-service"
+  ],
+  "assessmentRefs": {},
+  "practice": {
+    "reviewStructures": [
+      {
+        "id": "atp-review-structure-1",
+        "lessonId": "atp-u1-l1",
+        "conceptId": "atp-location-question",
+        "title": "Localizar uma pessoa",
+        "prompt": "Você chegou à praça e quer encontrar uma pessoa conhecida. Como perguntaria onde ela está?",
+        "answer": "¿Dónde estás?",
+        "explanation": "Tente lembrar antes de revelar. Compare o sentido com o modelo. A comparação é autocheck; não demonstra domínio automático."
+      },
+      {
+        "id": "atp-review-structure-2",
+        "lessonId": "atp-u1-l2",
+        "conceptId": "atp-repair",
+        "title": "Pedir ajuda para entender",
+        "prompt": "Seu amigo falou muito rápido. Como você pediria para ele repetir?",
+        "answer": "¿Puedes repetir, por favor?",
+        "explanation": "Tente lembrar antes de revelar. Compare o sentido com o modelo. A comparação é autocheck; não demonstra domínio automático."
+      },
+      {
+        "id": "atp-review-structure-3",
+        "lessonId": "atp-u1-l3",
+        "conceptId": "atp-time",
+        "title": "Combinar um horário",
+        "prompt": "A que horas é o encontro?",
+        "answer": "¿A qué hora es el encuentro?",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      },
+      {
+        "id": "atp-review-structure-4",
+        "lessonId": "atp-u1-l4",
+        "conceptId": "atp-meeting",
+        "title": "Confirmar lugar e horário",
+        "prompt": "Confirme uma combinação sem acrescentar novo lugar ou horário.",
+        "answer": "De acuerdo.",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      },
+      {
+        "id": "atp-review-structure-5",
+        "lessonId": "atp-u2-l1",
+        "conceptId": "atp-order",
+        "title": "Escolher e pedir uma bebida",
+        "prompt": "Sem gás",
+        "answer": "Sin gas",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      },
+      {
+        "id": "atp-review-structure-6",
+        "lessonId": "atp-u2-l2",
+        "conceptId": "atp-price-quantity",
+        "title": "Conferir quantidade e preço",
+        "prompt": "Quinze",
+        "answer": "Quince",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      },
+      {
+        "id": "atp-review-structure-7",
+        "lessonId": "atp-u2-l3",
+        "conceptId": "atp-order-condition",
+        "title": "Confirmar e mudar condições",
+        "prompt": "Para levar",
+        "answer": "Para llevar",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      },
+      {
+        "id": "atp-review-structure-8",
+        "lessonId": "atp-u2-l4",
+        "conceptId": "atp-service",
+        "title": "Resolver uma compra simples",
+        "prompt": "Pergunte se há chá disponível neste atendimento.",
+        "answer": "¿Tiene té?",
+        "explanation": "Primeiro recupere a expressão sem olhar. Depois confira o sentido e experimente outra informação."
+      }
+    ]
+  },
+  "provenance": {
+    "origin": "ai_generated",
+    "review": {
+      "status": "review_pending"
+    }
+  }
+}

@@ -98,7 +98,7 @@ export function RegionalGuide() {
                 {selected && (
                   <p role="status" className={correct ? "inline-success" : "inline-error"}>
                     {correct ? <CheckCircle2 size={16} /> : null}
-                    {correct ? "Isso!" : "Compare as frases acima e tente outra região."}
+                    <span>{correct ? "Isso! Observe o contexto:" : "Veja como as formas se encaixam nesta situação:"}</span><span className="block">{topic.note}</span>
                   </p>
                 )}
               </div>

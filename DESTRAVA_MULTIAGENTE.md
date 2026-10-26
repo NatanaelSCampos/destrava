@@ -173,3 +173,13 @@ Mais agentes adicionam consumo e coordenação. Uma correção pequena com pouco
 Baseline `bccb67e97a2eb4212ba574b6f9030ad706aaf541`, branch Lead `feat/increment-8-runtime-interoperability`. Worktrees Implementador/QA foram alinhadas por fast-forward depois de preservar entregas I7 com hashes. A equipe manteve quatro papéis e carregamento explícito, sem subdelegação, novo orquestrador ou alterações de configuração/permissões.
 
 O [relatório do Incremento 8](DESTRAVA_RUNTIME_INCREMENTO_8.md#f-processo-multiagente-e-comparação) registra ownership, contratos de entrega, correções levantadas por QA/Revisor, candidatos e resultados. Lead integra UI e executa banco/browser/build sequencialmente; testes puros e investigação dos especialistas ocorrem independentemente. Resultados e limites pertencem ao candidato integrado, não apenas aos patches de cada worktree. Não houve autorização de commit, publicação ou próximo incremento.
+
+## Operação integrada com Language Foundry — 24/10/2026
+
+O Destrava Lead coordena a experiência completa, recebe feedback e distribui responsabilidades entre Motor e Foundry. Foundry Lead atua internamente na coordenação editorial; as chamadas de especialistas continuam centralizadas no Lead principal, sem subdelegação e sem exceder o limite da equipe. Não é necessário instalar dez perfis ou manter todos ativos.
+
+Para cada pacote, fixar SHA de referência do Motor **e digest das alterações locais**, versão/hash do pacote, contratos públicos, caminho compilado/instalado e ambiente. Autoria e revisão editorial precisam de execuções distintas; QA técnico e Revisor não certificam conhecimento linguístico por testes sintéticos. Usar contratos de papel V2 explicitamente quando os TOMLs históricos ainda tiverem restrições de bootstrap, registrando o modo de carregamento sem presumir sandbox.
+
+A preparação local corrente está em [docs/features/foundry-integration/README.md](docs/features/foundry-integration/README.md). Entrega compilada é o alvo da release; ensaio instalado local comprova somente esse caminho. Nunca executar a receita Foundry histórica contra espanhol-plataform. Preservar todos os runs antigos, leases e versões; não promover QA IA a aprovação humana.
+
+A próxima autoria deve partir de objetivos comunicativos e evidência nova, não de reedição dos pilotos. Separar conclusão/participação, desempenho em itens e domínio demonstrado em recuperação/transferência. Sem avaliador real, resposta aberta não recebe nota linguística. Feedback do proprietário informa melhorias FOUNDRY/MOTOR/SHARED/UNKNOWN, não substitui QA independente.

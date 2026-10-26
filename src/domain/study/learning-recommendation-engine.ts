@@ -1,3 +1,4 @@
+import { assessmentsForLesson } from "@/lib/assessment-lesson";
 import { learningActionAvailability, type LearningActionContext } from "./learning-action-availability";
 import type { PublicCourse } from "@/content/public";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
@@ -51,7 +52,7 @@ export class LearningRecommendationEngine {
     const recommendations = new Map<string, LearningRecommendation>();
     const activities = course.units.flatMap((unit) =>
       unit.lessons.flatMap((lesson) =>
-        lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, options.actionContext).eligible).map((activity) => ({ activity, lesson, unit })),
+        assessmentsForLesson(course, unit, lesson).length ? [] : lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, options.actionContext).eligible).map((activity) => ({ activity, lesson, unit })),
       ),
     );
     const pendingPolicyIds = new Set(course.units.flatMap(unit => [...outstandingPolicyActivityIds(unit,state,course)]));

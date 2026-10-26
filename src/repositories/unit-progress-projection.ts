@@ -17,7 +17,7 @@ export function projectUnitProgress(
     unit_id: unit.id,
     content_version: course.contentVersion,
     completion_percent: progress.percentage,
-    participation_percent: progress.participationPercentage,
+    participation_percent: Math.round(progress.participationPercentage),
     completed_at: progress.isCompleted ? now : null,
     mastered_at: progress.isMastered ? now : null,
     exercise_score: progress.exerciseScore,

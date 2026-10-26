@@ -15,9 +15,9 @@ const tours: Record<string, PageTour> = {
     id: "live-classes",
     name: "Aula particular",
     steps: [
-      { title: "Uma aula guiada", description: "A professora explica um tema, você pratica e pode retomar de onde parou.", target: ".live-heading" },
-      { title: "Professora e quadro", description: "A apresentação e os exemplos do quadro avançam juntos. Use o controle para pausar ou voltar um trecho.", target: ".live-stage" },
-      { title: "Interrompa quando precisar", description: "Peça outra explicação, ouça um exemplo mais devagar, pratique ou faça uma pergunta sem perder seu lugar.", target: ".live-teacher-card" },
+      { title: "Uma aula guiada", description: "O roteiro apresenta um tema, você pratica e pode retomar de onde parou.", target: ".live-heading" },
+      { title: "Apresentação e quadro", description: "A apresentação e os exemplos do quadro avançam juntos. Use o controle para pausar ou voltar um trecho.", target: ".live-stage" },
+      { title: "Interrompa quando precisar", description: "Consulte outra explicação, leia os exemplos e pratique sem perder seu lugar.", target: ".live-teacher-card" },
       { title: "Acompanhe as etapas", description: "O roteiro mostra explicação, exercício e fala. Acertar e praticar são etapas separadas de apenas assistir.", target: ".live-timeline" },
     ],
   },

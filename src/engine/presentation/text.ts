@@ -4,9 +4,15 @@ import {
   type PresentationField,
 } from "@/content/text-presentation";
 
+import { presentationLanguage } from "./language";
+
 export type TextRole = "target" | "source" | "user" | "interface" | "fragment";
 export const interfacePresentation = { language: "pt-BR", direction: "ltr" as const };
-type Language = { id: string; writingSystem: { direction: "ltr" | "rtl" } };
+type Language = {
+  id: string;
+  identity?: { iso639_1?: string; iso639_3?: string };
+  writingSystem: { direction: "ltr" | "rtl" };
+};
 /** Presentation never mutates content, derives direction from a language name, or changes grading. */
 export function resolveTextPresentation(
   language: Language,
@@ -25,7 +31,7 @@ export function resolveTextPresentation(
             direction: "auto" as const,
           }
         : {
-            language: language.id,
+            language: presentationLanguage(language),
             direction:
               role === "user" || role === "fragment"
                 ? ("auto" as const)

@@ -1,3 +1,8 @@
+import {
+  authorizeLearningTarget,
+  assessmentAttestation,
+  trustedAssessmentRow,
+} from "@/lib/learning-access-server";
 import { findCourseBundle } from "@/content/course-registry";
 import { courseInstallationRuntime } from "@/lib/course-installation-runtime";
 import { resolveApplicationOperation } from "@/lib/application-course-runtime";
@@ -29,6 +34,10 @@ const api = createAssessmentApi({
       }
     );
   },
+  authorize: (userId, bundle, assessmentId) =>
+    authorizeLearningTarget(userId, bundle.course, bundle.language, { assessmentId }),
+  trustStored: (row, bundle, userId) =>
+    trustedAssessmentRow(row, bundle.course, userId, bundle.language),
   authenticatedUser: getAuthenticatedUser,
   requiresAuth: isSupabaseConfigured,
   async variantPreference(userId, courseId, resolved) {
@@ -68,12 +77,26 @@ const api = createAssessmentApi({
     if (!db) throw new Error("Assessment database unavailable");
     const { data: existing, error: readError } = await db
       .from("assessment_attempts")
-      .select("result,finished_at")
+      .select("id,assessment_id,started_at,objective_score,result,finished_at")
       .eq("user_id", userId)
       .eq("id", result.id)
       .maybeSingle();
     if (readError) throw readError;
+    const compiled = findCourseBundle(input.courseId)?.course;
+    const protectedExam = compiled?.assessments.some(
+      (a) => a.id === input.assessmentId && a.method === "fixed" && a.exam,
+    );
     if (existing) {
+      if (
+        protectedExam &&
+        !trustedAssessmentRow(
+          existing,
+          compiled!,
+          userId,
+          findCourseBundle(input.courseId)!.language,
+        )
+      )
+        throw new Error("Untrusted assessment attempt");
       if (
         existing.result?.contentVersion !== result.contentVersion ||
         !sameAssessmentRequest(existing.result?.input, input) ||
@@ -98,6 +121,18 @@ const api = createAssessmentApi({
         method: result.method,
         passed: result.passed,
         input,
+        ...(protectedExam
+          ? {
+              attestation: assessmentAttestation(
+                compiled!,
+                userId,
+                input,
+                result.finishedAt,
+                result.variantId,
+                findCourseBundle(input.courseId)!.language,
+              ),
+            }
+          : {}),
       },
     });
     if (error) throw error;

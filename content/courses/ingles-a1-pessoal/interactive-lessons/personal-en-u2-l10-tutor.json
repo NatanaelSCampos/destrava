@@ -1,0 +1,416 @@
+{
+  "id": "personal-en-u2-l10-tutor",
+  "courseId": "ingles-a1-pessoal",
+  "unitId": "personal-en-u2",
+  "lessonId": "personal-en-u2-l10-guided",
+  "title": "Estabelecimentos do bairro",
+  "objectives": [
+    "Nomear lugares e descrevê-los em frases curtas."
+  ],
+  "concepts": [
+    "personal-en-u2-l10-concept"
+  ],
+  "skills": [
+    "speaking",
+    "writing"
+  ],
+  "estimatedMinutes": 18,
+  "alternativeExamples": [],
+  "segments": [
+    {
+      "id": "personal-en-u2-l10-tutor-stage-1",
+      "title": "Boas-vindas",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Hoje vamos praticar estabelecimentos do bairro. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-1-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-1-text-0",
+              "text": "Hoje vamos praticar estabelecimentos do bairro. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-stage-2",
+      "title": "Explicação em português e exemplo em inglês",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Nesta lição, nosso objetivo é nomear lugares e descrevê-los em frases curtas. Descreva serviços úteis do bairro combinando there is/are e localização: There is a pharmacy near the park. Vocabulário pode variar por região.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "The supermarket is near my building.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-2-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-2-text-0",
+              "text": "Nesta lição, nosso objetivo é nomear lugares e descrevê-los em frases curtas. Descreva serviços úteis do bairro combinando there is/are e localização: There is a pharmacy near the park. Vocabulário pode variar por região.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l10-tutor-stage-2-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-2-text-1",
+              "text": "The supermarket is near my building.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-stage-3",
+      "title": "Demonstração",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "There is a pharmacy near the park.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-3-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-3-text-0",
+              "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l10-tutor-stage-3-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-3-text-1",
+              "text": "There is a pharmacy near the park.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-stage-4",
+      "title": "Orientação para praticar",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Apresente oralmente serviços úteis para trabalhar de casa no seu bairro.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "The bank is opposite the coffee shop.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-4-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-4-text-0",
+              "text": "Apresente oralmente serviços úteis para trabalhar de casa no seu bairro.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l10-tutor-stage-4-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-4-text-1",
+              "text": "The bank is opposite the coffee shop.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-speaking",
+      "title": "Prática oral opcional",
+      "type": "speaking",
+      "activityRef": "personal-en-u2-speaking-prompt-0010",
+      "required": false,
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-stage-5",
+      "title": "Atenção ao uso",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Drugstore e pharmacy podem ter escopos diferentes; não impor equivalência completa fora do contexto.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-5-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-5-text-0",
+              "text": "Drugstore e pharmacy podem ter escopos diferentes; não impor equivalência completa fora do contexto.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-stage-6",
+      "title": "Verifique o que aprendeu",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Agora explique em português o que você aprendeu sobre estabelecimentos do bairro. Se preferir, tente dar um exemplo em inglês.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l10-tutor-stage-6-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l10-tutor-stage-6-text-0",
+              "text": "Agora explique em português o que você aprendeu sobre estabelecimentos do bairro. Se preferir, tente dar um exemplo em inglês.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-checkpoint",
+      "title": "Prática escrita livre",
+      "type": "checkpoint",
+      "activityRef": "personal-en-u2-short-answer-0010",
+      "required": false,
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l10-tutor-summary",
+      "title": "Resumo",
+      "type": "summary",
+      "explanation": "O professor explica em português e pratica inglês. Sem voz adequada, acompanhe o texto. Esta prática é opcional e formativa, sem nota oficial.",
+      "concepts": [
+        "personal-en-u2-l10-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    }
+  ],
+  "provenance": {
+    "origin": "adapted",
+    "sources": [
+      {
+        "type": "original_experimental_editorial",
+        "reference": "ROTEIROS_AULA_PARTICULAR_BILINGUE_PT_EN.json#EN-U2-L10-TUTOR"
+      }
+    ],
+    "review": {
+      "status": "review_pending"
+    }
+  }
+}

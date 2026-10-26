@@ -1,0 +1,131 @@
+{
+  "prompts": [
+    {
+      "id": "atp-number-1",
+      "category": "quantities",
+      "display": "1",
+      "spoken": "uno",
+      "example": "Un café, por favor.",
+      "exampleTranslation": "Um café, por favor.",
+      "accepted": [
+        "1",
+        "uno"
+      ]
+    },
+    {
+      "id": "atp-number-2",
+      "category": "quantities",
+      "display": "2",
+      "spoken": "dos",
+      "example": "Dos tés, por favor.",
+      "exampleTranslation": "Dois chás, por favor.",
+      "accepted": [
+        "2",
+        "dos"
+      ]
+    },
+    {
+      "id": "atp-number-3",
+      "category": "quantities",
+      "display": "3",
+      "spoken": "tres",
+      "example": "Son tres euros.",
+      "exampleTranslation": "São três euros.",
+      "accepted": [
+        "3",
+        "tres"
+      ]
+    },
+    {
+      "id": "atp-number-12",
+      "category": "quantities",
+      "display": "12",
+      "spoken": "doce",
+      "example": "Son doce pesos.",
+      "exampleTranslation": "São doze pesos.",
+      "accepted": [
+        "12",
+        "doce"
+      ]
+    },
+    {
+      "id": "atp-number-16",
+      "category": "quantities",
+      "display": "16",
+      "spoken": "dieciséis",
+      "example": "Son dieciséis pesos.",
+      "exampleTranslation": "São dezesseis pesos.",
+      "accepted": [
+        "16",
+        "dieciséis"
+      ]
+    },
+    {
+      "id": "atp-number-20",
+      "category": "quantities",
+      "display": "20",
+      "spoken": "veinte",
+      "example": "Son veinte pesos.",
+      "exampleTranslation": "São vinte pesos.",
+      "accepted": [
+        "20",
+        "veinte"
+      ]
+    },
+    {
+      "id": "atp-time-130",
+      "category": "time",
+      "display": "1:30",
+      "spoken": "la una y media",
+      "example": "Nos vemos a la una y media.",
+      "exampleTranslation": "Nos vemos à uma e meia.",
+      "accepted": [
+        "1:30",
+        "01:30"
+      ]
+    },
+    {
+      "id": "atp-time-730",
+      "category": "time",
+      "display": "7:30",
+      "spoken": "las siete y media",
+      "example": "La visita es a las siete y media.",
+      "exampleTranslation": "A visita é às sete e meia.",
+      "accepted": [
+        "7:30",
+        "07:30"
+      ]
+    },
+    {
+      "id": "atp-price-3",
+      "category": "prices",
+      "display": "3€",
+      "spoken": "tres euros",
+      "example": "Un té: tres euros.",
+      "exampleTranslation": "Um chá: três euros.",
+      "accepted": [
+        "3",
+        "3€",
+        "3 euros"
+      ]
+    },
+    {
+      "id": "atp-price-20",
+      "category": "prices",
+      "display": "20$",
+      "spoken": "veinte pesos",
+      "example": "Un café: veinte pesos.",
+      "exampleTranslation": "Um café: vinte pesos.",
+      "accepted": [
+        "20",
+        "20$",
+        "20 pesos"
+      ]
+    }
+  ],
+  "categoryLabels": {
+    "quantities": "Quantidades",
+    "time": "Horários",
+    "prices": "Preços"
+  }
+}

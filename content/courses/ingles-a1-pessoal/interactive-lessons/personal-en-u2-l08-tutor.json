@@ -1,0 +1,416 @@
+{
+  "id": "personal-en-u2-l08-tutor",
+  "courseId": "ingles-a1-pessoal",
+  "unitId": "personal-en-u2",
+  "lessonId": "personal-en-u2-l08-guided",
+  "title": "Posses e características: have/has",
+  "objectives": [
+    "Dizer o que pessoas e casas possuem."
+  ],
+  "concepts": [
+    "personal-en-u2-l08-concept"
+  ],
+  "skills": [
+    "speaking",
+    "writing"
+  ],
+  "estimatedMinutes": 18,
+  "alternativeExamples": [],
+  "segments": [
+    {
+      "id": "personal-en-u2-l08-tutor-stage-1",
+      "title": "Boas-vindas",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Hoje vamos praticar posses e características: have/has. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-1-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-1-text-0",
+              "text": "Hoje vamos praticar posses e características: have/has. Primeiro eu explico em português. Depois lemos e praticamos frases em inglês. A voz do dispositivo é opcional, quando estiver disponível.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-stage-2",
+      "title": "Explicação em português e exemplo em inglês",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Nesta lição, nosso objetivo é dizer o que pessoas e casas possuem. Have e has descrevem posse e características. Em afirmativas, he/she/it usa has. Em perguntas e negativas com present simple, do/does controla o verbo base.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "We have a small balcony.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-2-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-2-text-0",
+              "text": "Nesta lição, nosso objetivo é dizer o que pessoas e casas possuem. Have e has descrevem posse e características. Em afirmativas, he/she/it usa has. Em perguntas e negativas com present simple, do/does controla o verbo base.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l08-tutor-stage-2-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-2-text-1",
+              "text": "We have a small balcony.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-stage-3",
+      "title": "Demonstração",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "We have a small garden.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-3-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-3-text-0",
+              "text": "Preste atenção à ordem das palavras. Agora vou demonstrar outra frase em inglês.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l08-tutor-stage-3-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-3-text-1",
+              "text": "We have a small garden.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-stage-4",
+      "title": "Orientação para praticar",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 32000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Diga três características de sua casa fictícia com has/doesn't have.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 16000,
+            "endMs": 32000,
+            "text": "She has two bedrooms.",
+            "textPresentation": {
+              "language": "en-US",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-4-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-4-text-0",
+              "text": "Diga três características de sua casa fictícia com has/doesn't have.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "personal-en-u2-l08-tutor-stage-4-cue-1",
+          "atMs": 16000,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-4-text-1",
+              "text": "She has two bedrooms.",
+              "textPresentation": {
+                "language": "en-US",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0,
+        16000
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-speaking",
+      "title": "Prática oral opcional",
+      "type": "speaking",
+      "activityRef": "personal-en-u2-speaking-prompt-0008",
+      "required": false,
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-stage-5",
+      "title": "Atenção ao uso",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Depois de doesn't, use have, não has. Não tratar have e there is como formas equivalentes.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-5-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-5-text-0",
+              "text": "Depois de doesn't, use have, não has. Não tratar have e there is como formas equivalentes.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-stage-6",
+      "title": "Verifique o que aprendeu",
+      "type": "presentation",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 16000,
+            "text": "Agora explique em português o que você aprendeu sobre posses e características: have/has. Se preferir, tente dar um exemplo em inglês.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "personal-en-u2-l08-tutor-stage-6-cue-0",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "personal-en-u2-l08-tutor-stage-6-text-0",
+              "text": "Agora explique em português o que você aprendeu sobre posses e características: have/has. Se preferir, tente dar um exemplo em inglês.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-checkpoint",
+      "title": "Prática escrita livre",
+      "type": "checkpoint",
+      "activityRef": "personal-en-u2-short-answer-0008",
+      "required": false,
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "personal-en-u2-l08-tutor-summary",
+      "title": "Resumo",
+      "type": "summary",
+      "explanation": "O professor explica em português e pratica inglês. Sem voz adequada, acompanhe o texto. Esta prática é opcional e formativa, sem nota oficial.",
+      "concepts": [
+        "personal-en-u2-l08-concept"
+      ],
+      "cues": [],
+      "resumeAnchorsMs": [
+        0
+      ]
+    }
+  ],
+  "provenance": {
+    "origin": "adapted",
+    "sources": [
+      {
+        "type": "original_experimental_editorial",
+        "reference": "ROTEIROS_AULA_PARTICULAR_BILINGUE_PT_EN.json#EN-U2-L08-TUTOR"
+      }
+    ],
+    "review": {
+      "status": "review_pending"
+    }
+  }
+}

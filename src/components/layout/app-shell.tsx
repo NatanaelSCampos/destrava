@@ -1,8 +1,12 @@
 "use client";
-import { learningActionAvailability, learningActionForPath } from "@/domain/study/learning-action-availability";
+import {
+  learningActionAvailability,
+  learningActionForPath,
+} from "@/domain/study/learning-action-availability";
 
 import { Suspense, useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { LearningAccessGate } from "./learning-access-gate";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -47,7 +51,7 @@ const navigation = (courseSlug: string) => [
   { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
   { href: "/basics", label: "Fundamentos", icon: CaseUpper },
   { href: "/study", label: "Aula de hoje", icon: Play },
-  { href: "/live-classes", label: "Aula particular", icon: Sparkles },
+  { href: "/live-classes", label: "Aula guiada", icon: Sparkles },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
   { href: "/conversation", label: "Conversar", icon: MessageCircle },
@@ -70,16 +74,22 @@ export function AssessmentAvailabilityGate({ children }: { children: ReactNode }
   const searchParams = useSearchParams();
   const action = learningActionForPath("/assessment", searchParams)!;
   const availability = learningActionAvailability(course, action, {
-    source: runtime ? "installed" : "compiled", permitted: true,
+    source: runtime ? "installed" : "compiled",
+    permitted: true,
   });
-  if (!availability.eligible) return (
-    <section className="panel" role="status">
-      <h1>Esta avaliação está indisponível no curso atual</h1>
-      <p>{availability.reasons.join(" ")} Nenhuma nota será registrada.</p>
-      <Link className="secondary-button" href="/assessment">Escolher outra avaliação</Link>
-      <Link className="text-link" href={`/course/${course.slug}`}>Consultar meu curso</Link>
-    </section>
-  );
+  if (!availability.eligible)
+    return (
+      <section className="panel" role="status">
+        <h1>Esta avaliação está indisponível no curso atual</h1>
+        <p>{availability.reasons.join(" ")} Nenhuma nota será registrada.</p>
+        <Link className="secondary-button" href="/assessment">
+          Escolher outra avaliação
+        </Link>
+        <Link className="text-link" href={`/course/${course.slug}`}>
+          Consultar meu curso
+        </Link>
+      </section>
+    );
   return <>{children}</>;
 }
 
@@ -203,36 +213,46 @@ export function AppShell({
     activityIds,
     resources.structures,
   ).total;
-  const actionContext = { source: runtime ? "installed" as const : "compiled" as const, permitted: true };
+  const actionContext = {
+    source: runtime ? ("installed" as const) : ("compiled" as const),
+    permitted: true,
+  };
   const reviewAction = learningActionAvailability(course, { kind: "review" }, actionContext);
-  const conversationAction = learningActionAvailability(course, { kind: "conversation" }, actionContext);
+  const conversationAction = learningActionAvailability(
+    course,
+    { kind: "conversation" },
+    actionContext,
+  );
   const tutorAction = learningActionAvailability(course, { kind: "tutor" }, actionContext);
-  const navItems = navigation(course.slug).filter(item => {
+  const navItems = navigation(course.slug).filter((item) => {
     const action = learningActionForPath(item.href);
-    return (!action || learningActionAvailability(course, action, actionContext).eligible) &&
+    return (
+      (!action || learningActionAvailability(course, action, actionContext).eligible) &&
       (item.href !== "/describe" || resources.imageScenes.length > 0) &&
-      (item.href !== "/basics" || Object.values(language.modules).some(module => module.enabled));
-  }).map(item => {
-    const action = learningActionForPath(item.href);
-    return action && learningActionAvailability(course, action, actionContext).operation === "unknown"
-      ? { ...item, label: item.label + " (condicional)" } : item;
+      (item.href !== "/basics" || Object.values(language.modules).some((module) => module.enabled))
+    );
   });
   const studyNavCount = navItems.findIndex((item) => item.href === "/vocabulary");
   const activeNav = navItems.find((item) => isNavActive(item.href, pathname));
   const hasPageTour = Boolean(pageTourFor(pathname, Boolean(state.activeSessionId)));
   const pathAction = pathname === "/assessment" ? undefined : learningActionForPath(pathname);
-  const pathAvailability = pathAction ? learningActionAvailability(course, pathAction, actionContext) : undefined;
+  const pathAvailability = pathAction
+    ? learningActionAvailability(course, pathAction, actionContext)
+    : undefined;
   const installedBlockedPath =
-    runtime &&
-    ["/review", "/speaking", "/conversation", "/describe", "/micro-lesson", "/numbers"].some(
-      (path) => pathname === path,
-    ) || Boolean(pathAvailability && !pathAvailability.eligible);
+    (runtime &&
+      ["/review", "/speaking", "/conversation", "/describe", "/micro-lesson", "/numbers"].some(
+        (path) => pathname === path,
+      )) ||
+    Boolean(pathAvailability && !pathAvailability.eligible);
 
   return (
     <div className="app-frame" aria-busy={switchingCourse}>
       {switchingCourse && (
         <CourseTransitionNotice
-          title={courseOptions.find((option) => option.id === pendingCourseId)?.title ?? course.title}
+          title={
+            courseOptions.find((option) => option.id === pendingCourseId)?.title ?? course.title
+          }
         />
       )}
       {menuOpen && (
@@ -454,7 +474,10 @@ export function AppShell({
             )}
             {tutorAction.eligible && (
               <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
-                <Sparkles size={16} /> {tutorAction.operation === "unknown" ? "Tentar professor (condicional)" : "Perguntar ao professor"}
+                <Sparkles size={16} />{" "}
+                {tutorAction.operation === "unknown"
+                  ? "Tentar professor (condicional)"
+                  : "Perguntar ao professor"}
               </button>
             )}
             <Link href="/settings" className="avatar" aria-label="Configurações">
@@ -463,25 +486,29 @@ export function AppShell({
           </div>
         </header>
         <main className="main-content">
-          <StudySyncNotice />
-          {installedBlockedPath ? (
-            <section className="panel" role="status">
-              <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
-              <h1>Este recurso ainda não está disponível neste curso</h1>
-              <p>
-                {pathAvailability?.reasons.join(" ") ?? "Este caminho não está integrado ao curso atual."} Nenhuma nota ou progresso será alterado por isso.
-              </p>
-              <Link className="secondary-button" href={`/course/${course.slug}`}>
-                Continuar meu curso
-              </Link>
-            </section>
-          ) : pathname === "/assessment" ? (
-            <Suspense fallback={<div className="page-loading">Verificando avaliação…</div>}>
-              <AssessmentAvailabilityGate>{children}</AssessmentAvailabilityGate>
-            </Suspense>
-          ) : (
-            children
-          )}
+          <LearningAccessGate>
+            <StudySyncNotice />
+            {installedBlockedPath ? (
+              <section className="panel" role="status">
+                <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
+                <h1>Este recurso ainda não está disponível neste curso</h1>
+                <p>
+                  {pathAvailability?.reasons.join(" ") ??
+                    "Este caminho não está integrado ao curso atual."}{" "}
+                  Nenhuma nota ou progresso será alterado por isso.
+                </p>
+                <Link className="secondary-button" href={`/course/${course.slug}`}>
+                  Continuar meu curso
+                </Link>
+              </section>
+            ) : pathname === "/assessment" ? (
+              <Suspense fallback={<div className="page-loading">Verificando avaliação…</div>}>
+                <AssessmentAvailabilityGate>{children}</AssessmentAvailabilityGate>
+              </Suspense>
+            ) : (
+              children
+            )}
+          </LearningAccessGate>
         </main>
       </div>
       <nav className="mobile-primary-nav" aria-label="Atalhos de estudo">
@@ -493,7 +520,9 @@ export function AppShell({
         </Link>
         <Link
           href={reviewAction.eligible ? "/review" : "/history"}
-          aria-current={pathname === (reviewAction.eligible ? "/review" : "/history") ? "page" : undefined}
+          aria-current={
+            pathname === (reviewAction.eligible ? "/review" : "/history") ? "page" : undefined
+          }
         >
           <RotateCcw size={20} /> <span>{reviewAction.eligible ? "Revisar" : "Histórico"}</span>
         </Link>
@@ -502,7 +531,10 @@ export function AppShell({
             href="/conversation"
             aria-current={pathname === "/conversation" ? "page" : undefined}
           >
-            <MessageCircle size={20} /> <span>{conversationAction.operation === "unknown" ? "Conversar (condicional)" : "Conversar"}</span>
+            <MessageCircle size={20} />{" "}
+            <span>
+              {conversationAction.operation === "unknown" ? "Conversar (condicional)" : "Conversar"}
+            </span>
           </Link>
         ) : (
           <Link
@@ -520,9 +552,7 @@ export function AppShell({
           <Menu size={20} /> <span>Mais</span>
         </button>
       </nav>
-      {tutorAction.eligible && (
-        <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />
-      )}
+      {tutorAction.eligible && <TutorDrawer open={tutorOpen} onClose={() => setTutorOpen(false)} />}
       <SelectionAudio />
       <PageTour pathname={pathname} replayToken={tourReplayToken} onOpenChange={setTourOpen} />
       <WhatsNewDialog userId={authUserId} enabled={!tourOpen} />

@@ -1,4 +1,5 @@
 import "server-only";
+import { assertInstalledLocalProfile } from "@/lib/installed-local-profile";
 import { createClient } from "@supabase/supabase-js";
 import { findCourseBundle } from "@/content/course-registry";
 import { publicCourse } from "@/content/public";
@@ -11,19 +12,9 @@ import {
 
 /** Server-only integration. No mutation authorizer or test issuer is installed in HTTP runtime. */
 export function courseInstallationRuntime() {
-  // Until a trusted production approval provider exists, installed runtime is local homologation only.
-  if (process.env.NODE_ENV === "production")
-    throw new InstallationError("NOT_AUTHORIZED", "resolution");
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SECRET_KEY;
-  if (
-    process.env.DESTRAVA_LOCAL_ONLY !== "1" ||
-    !process.env.DESTRAVA_LOCAL_PROJECT?.trim() ||
-    url !== "http://127.0.0.1:54321" ||
-    process.env.APP_ORIGIN !== "http://127.0.0.1:3000"
-  )
-    throw new InstallationError("NOT_AUTHORIZED", "resolution");
-  if (!url || !key) throw new InstallationError("CATALOG_FAILED", "resolution");
+  assertInstalledLocalProfile(process.env, "CATALOG_FAILED");
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.SUPABASE_SECRET_KEY!;
   const db = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   return new CourseInstallationService({
     catalog: new SupabaseCourseInstallationCatalog(db),

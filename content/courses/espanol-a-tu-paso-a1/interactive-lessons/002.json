@@ -1,0 +1,227 @@
+{
+  "id": "atp-u2-guided-board",
+  "courseId": "espanol-a-tu-paso-a1",
+  "unitId": "atp-u2",
+  "lessonId": "atp-u2-guided",
+  "title": "Um pedido confirmado",
+  "objectives": [
+    "atp-confirm-adjust-order"
+  ],
+  "concepts": [
+    "atp-order-condition"
+  ],
+  "skills": [
+    "reading",
+    "writing",
+    "speaking"
+  ],
+  "estimatedMinutes": 10,
+  "alternativeExamples": [
+    {
+      "conceptId": "atp-order-condition",
+      "text": "Un té sin leche, para llevar, por favor.",
+      "translation": "Um chá sem leite, para levar, por favor."
+    }
+  ],
+  "segments": [
+    {
+      "id": "atp-u2-guided-intro",
+      "title": "Uma informação de cada vez",
+      "type": "explanation",
+      "objectives": [],
+      "concepts": [
+        "atp-order-condition"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 16000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 8000,
+            "text": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 8000,
+            "endMs": 16000,
+            "text": "Use o apoio da etapa para ouvir as falas e consultar as traduções.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "atp-u2-guided-cue-1",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "atp-u2-guided-board-help",
+              "text": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo.",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-cue-2",
+          "atMs": 8000,
+          "action": {
+            "type": "caption.show",
+            "text": "Confira se a confirmação mantém as escolhas do pedido.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        }
+      ],
+      "activityRef": "atp-u2-guided-support",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ],
+      "explanation": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo."
+    },
+    {
+      "id": "atp-u2-guided-model",
+      "title": "Um exemplo para comparar",
+      "type": "example",
+      "objectives": [],
+      "concepts": [
+        "atp-order-condition"
+      ],
+      "presentation": {
+        "mode": "slides",
+        "durationMs": 20000,
+        "transcript": [
+          {
+            "startMs": 0,
+            "endMs": 10000,
+            "text": "Un café sin azúcar, para aquí, por favor.",
+            "textPresentation": {
+              "language": "es",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 10000,
+            "endMs": 20000,
+            "text": "Um café sem açúcar, para consumir aqui, por favor.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          }
+        ]
+      },
+      "cues": [
+        {
+          "id": "atp-u2-guided-cue-3",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "example",
+              "id": "atp-u2-guided-board-model",
+              "text": "Un café sin azúcar, para aquí, por favor.",
+              "translation": "Um café sem açúcar, para consumir aqui, por favor.",
+              "textPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          }
+        }
+      ],
+      "required": false,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u2-guided-parts",
+      "title": "Confira as partes",
+      "type": "explanation",
+      "objectives": [],
+      "concepts": [
+        "atp-order-condition"
+      ],
+      "cues": [],
+      "activityRef": "atp-u2-guided-help",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u2-guided-choice",
+      "title": "Uma nova situação",
+      "type": "checkpoint",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u2-guided-checkpoint",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u2-guided-writing",
+      "title": "Sua frase",
+      "type": "checkpoint",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u2-guided-write",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u2-guided-speaking",
+      "title": "Seu ensaio",
+      "type": "speaking",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u2-guided-speak",
+      "required": false,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    },
+    {
+      "id": "atp-u2-guided-finish",
+      "title": "Volte a esta ideia",
+      "type": "summary",
+      "objectives": [],
+      "concepts": [],
+      "cues": [],
+      "activityRef": "atp-u2-guided-review",
+      "required": true,
+      "allowInterruption": true,
+      "resumeAnchorsMs": [
+        0
+      ]
+    }
+  ]
+}

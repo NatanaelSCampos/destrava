@@ -1,0 +1,236 @@
+[
+  {
+    "id": "personal-en-u1-l01-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Saudações e despedidas",
+    "description": {
+      "pt-BR": "Cumprimentar, despedir-se e escolher registro social."
+    }
+  },
+  {
+    "id": "personal-en-u1-l02-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Nomes, sobrenomes e alfabeto",
+    "description": {
+      "pt-BR": "Soletrar nomes e confirmar dados básicos."
+    }
+  },
+  {
+    "id": "personal-en-u1-l03-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Verbo to be e pronomes",
+    "description": {
+      "pt-BR": "Construir frases afirmativas com am, is e are."
+    }
+  },
+  {
+    "id": "personal-en-u1-l04-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Perguntas e negativas com be",
+    "description": {
+      "pt-BR": "Perguntar informações e responder afirmativa/negativamente."
+    }
+  },
+  {
+    "id": "personal-en-u1-l05-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Dados pessoais e interrogativos",
+    "description": {
+      "pt-BR": "Usar what, where, how e who em perguntas simples."
+    }
+  },
+  {
+    "id": "personal-en-u1-l06-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Países, nacionalidades e línguas",
+    "description": {
+      "pt-BR": "Diferenciar país, nacionalidade e idioma."
+    }
+  },
+  {
+    "id": "personal-en-u1-l07-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Números, idade e contatos",
+    "description": {
+      "pt-BR": "Reconhecer números de zero a cem e contatos simples."
+    }
+  },
+  {
+    "id": "personal-en-u1-l08-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Profissões e apresentações no trabalho",
+    "description": {
+      "pt-BR": "Apresentar profissão, equipe e local de trabalho em A1."
+    }
+  },
+  {
+    "id": "personal-en-u1-l09-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Possessivos básicos",
+    "description": {
+      "pt-BR": "Usar my, your, his, her, our e their em frases."
+    }
+  },
+  {
+    "id": "personal-en-u1-l10-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Inglês para sobreviver na aula",
+    "description": {
+      "pt-BR": "Pedir ajuda, repetição e explicações simples."
+    }
+  },
+  {
+    "id": "personal-en-u1-l11-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Formulários, cartões e perfis",
+    "description": {
+      "pt-BR": "Ler e completar perfis simples com dados fictícios."
+    }
+  },
+  {
+    "id": "personal-en-u1-l12-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Revisão e comunicação prática U1",
+    "description": {
+      "pt-BR": "Integrar apresentação, números, profissão e pedidos de esclarecimento."
+    }
+  },
+  {
+    "id": "personal-en-u2-l01-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Tipos de moradia",
+    "description": {
+      "pt-BR": "Reconhecer formas simples de falar da própria casa."
+    }
+  },
+  {
+    "id": "personal-en-u2-l02-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Cômodos e partes da casa",
+    "description": {
+      "pt-BR": "Nomear ambientes domésticos e localizar pessoas."
+    }
+  },
+  {
+    "id": "personal-en-u2-l03-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Móveis e eletrodomésticos",
+    "description": {
+      "pt-BR": "Relacionar objetos domésticos e seus usos."
+    }
+  },
+  {
+    "id": "personal-en-u2-l04-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Existência: there is e there are",
+    "description": {
+      "pt-BR": "Descrever existência de objetos e lugares no singular e plural."
+    }
+  },
+  {
+    "id": "personal-en-u2-l05-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Artigos e plural",
+    "description": {
+      "pt-BR": "Usar a/an e plurais regulares frequentes."
+    }
+  },
+  {
+    "id": "personal-en-u2-l06-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Demonstração de objetos",
+    "description": {
+      "pt-BR": "Diferenciar this, that, these e those."
+    }
+  },
+  {
+    "id": "personal-en-u2-l07-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Descrever a moradia",
+    "description": {
+      "pt-BR": "Usar adjetivos simples para ambientes e objetos."
+    }
+  },
+  {
+    "id": "personal-en-u2-l08-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Posses e características: have/has",
+    "description": {
+      "pt-BR": "Dizer o que pessoas e casas possuem."
+    }
+  },
+  {
+    "id": "personal-en-u2-l09-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Posições e preposições",
+    "description": {
+      "pt-BR": "Localizar objetos em uma casa ou sala."
+    }
+  },
+  {
+    "id": "personal-en-u2-l10-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Estabelecimentos do bairro",
+    "description": {
+      "pt-BR": "Nomear lugares e descrevê-los em frases curtas."
+    }
+  },
+  {
+    "id": "personal-en-u2-l11-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Pedir e dar direções",
+    "description": {
+      "pt-BR": "Usar instruções simples para localizar endereços."
+    }
+  },
+  {
+    "id": "personal-en-u2-l12-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Quantidades e perguntas",
+    "description": {
+      "pt-BR": "Usar some, any e how many em situações simples."
+    }
+  },
+  {
+    "id": "personal-en-u2-l13-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Preços, números e andares",
+    "description": {
+      "pt-BR": "Ler preços, endereços e ordinais básicos."
+    }
+  },
+  {
+    "id": "personal-en-u2-l14-concept",
+    "language": "en",
+    "type": "experimental_course_concept",
+    "name": "Anúncios, casa e bairro: revisão U2",
+    "description": {
+      "pt-BR": "Integrar descrição, existência, localização, valores e perguntas."
+    }
+  }
+]

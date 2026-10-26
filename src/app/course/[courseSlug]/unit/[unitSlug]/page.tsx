@@ -1,5 +1,7 @@
 "use client";
 
+import { assessmentsForLesson } from "@/lib/assessment-lesson";
+import { courseLessonPath } from "@/lib/course-lesson-navigation";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, ChevronRight, Clock3, Play, Target } from "lucide-react";
@@ -9,15 +11,17 @@ import { PolicyChecklist, policyStatusLabels } from "@/components/activities/pol
 
 export default function UnitPage() {
   const { courseSlug, unitSlug } = useParams<{ courseSlug: string; unitSlug: string }>();
-  const { course, state, vocabularyItems } = useStudy();
+  const { course, state, vocabularyItems, learningAccess } = useStudy();
   const unit = course.units.find(
     (item) => item.slug === unitSlug || String(item.number) === unitSlug,
   );
   if (courseSlug !== course.slug || !unit)
     return <div className="empty-state">Unidade não encontrada.</div>;
   const progress = unitProgress(unit, state, vocabularyItems, course);
-  const nextLesson = unit.lessons.find((lesson) =>
-    lesson.activities.some((activity) => !state.completedActivityIds.includes(activity.id)),
+  const nextLesson = unit.lessons.find(
+    (lesson) =>
+      !assessmentsForLesson(course, unit, lesson).length &&
+      lesson.activities.some((activity) => !state.completedActivityIds.includes(activity.id)),
   );
   return (
     <div className="unit-page">
@@ -71,16 +75,22 @@ export default function UnitPage() {
           </div>
           <div className="lesson-list">
             {unit.lessons.map((lesson, index) => {
-              const completed = lesson.activities.length > 0 && lesson.activities.every((activity) =>
-                state.completedActivityIds.includes(activity.id),
+              const exam = assessmentsForLesson(course, unit, lesson).find(
+                (a) => a.method === "fixed" && a.exam,
               );
+              const access = exam ? learningAccess?.assessments[exam.id] : undefined;
+              const completed =
+                lesson.activities.length > 0 &&
+                lesson.activities.every((activity) =>
+                  state.completedActivityIds.includes(activity.id),
+                );
               const partial = lesson.activities.some((activity) =>
                 state.completedActivityIds.includes(activity.id),
               );
               return (
                 <Link
                   key={lesson.id}
-                  href={`/course/${course.slug}/unit/${unit.number}/lesson/${lesson.slug}`}
+                  href={courseLessonPath(course, unit, lesson)}
                   className="lesson-row"
                 >
                   <span className={`lesson-step ${completed ? "done" : partial ? "current" : ""}`}>
@@ -90,6 +100,15 @@ export default function UnitPage() {
                     <span className="eyebrow">{lesson.eyebrow}</span>
                     <h3>{lesson.title}</h3>
                     <p>{lesson.description}</p>
+                    {exam && (
+                      <small className="exam-entry-status">
+                        {access?.allowed
+                          ? "Prova disponível"
+                          : access
+                            ? `${access.completed} de ${access.total} práticas · abre com ${access.required}`
+                            : "Conferindo seu percurso…"}
+                      </small>
+                    )}
                   </div>
                   <span className="lesson-row-time">
                     <Clock3 size={14} /> {lesson.minutes} min
@@ -126,16 +145,26 @@ export default function UnitPage() {
             <p>Concluir atividades e dominar o conteúdo são marcos diferentes.</p>
             <div>
               <span>Exercícios</span>
-              <strong>{progress.exerciseScore === null ? "Sem evidência" : `${progress.exerciseScore}%`}</strong>
+              <strong>
+                {progress.exerciseScore === null ? "Sem evidência" : `${progress.exerciseScore}%`}
+              </strong>
             </div>
             <div>
               <span>Revisão</span>
-              <strong>{progress.reviewScore === null ? "Sem evidência" : `${progress.reviewScore}%`}</strong>
+              <strong>
+                {progress.reviewScore === null ? "Sem evidência" : `${progress.reviewScore}%`}
+              </strong>
             </div>
             <div>
               <span>Teste final</span>
               <strong>
-                {!progress.assessmentDefined ? "Não declarada" : progress.assessmentFinished ? `${progress.assessmentScore}%` : progress.assessmentStatus === "historical" ? "Resultado anterior" : "Não realizada"}
+                {!progress.assessmentDefined
+                  ? "Não declarada"
+                  : progress.assessmentFinished
+                    ? `${progress.assessmentScore}%`
+                    : progress.assessmentStatus === "historical"
+                      ? "Resultado anterior"
+                      : "Não realizada"}
               </strong>
             </div>
             <PolicyChecklist title="Conclusão" result={progress.completion} />

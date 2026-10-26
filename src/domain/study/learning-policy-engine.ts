@@ -28,11 +28,7 @@ export type PolicyCourse = Pick<
   "id" | "contentVersion" | "assessments" | "availability"
 >;
 
-export function currentAssessmentResult(
-  course: PolicyCourse,
-  state: StudyState,
-  assessmentId: string,
-) {
+function assessmentCandidates(course: PolicyCourse, state: StudyState, assessmentId: string) {
   const definition = resolveAssessment(course.assessments, assessmentId)!;
   const candidates =
     definition.method === "fixed" ? state.assessmentAttempts : state.adaptiveAssessments;
@@ -46,7 +42,21 @@ export function currentAssessmentResult(
         item.purpose === definition.purpose &&
         item.method === definition.method,
     )
-    .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt))[0];
+    .sort((a, b) => b.finishedAt.localeCompare(a.finishedAt));
+}
+
+export function currentAssessmentResult(
+  course: PolicyCourse,
+  state: StudyState,
+  assessmentId: string,
+) {
+  return assessmentCandidates(course, state, assessmentId)[0];
+}
+function exactAssessmentScore(attempt: NonNullable<ReturnType<typeof currentAssessmentResult>>) {
+  const objective = attempt.answers?.filter((a) => a.correct !== null);
+  return attempt.method === "fixed" && objective?.length
+    ? (100 * objective.filter((a) => a.correct === true).length) / objective.length
+    : attempt.objectiveScore;
 }
 
 function aggregate(requirements: RequirementResult[]): PolicyResult {
@@ -68,7 +78,12 @@ function aggregate(requirements: RequirementResult[]): PolicyResult {
 /** Pure AND evaluator. No host flags, providers, clock, scripts or persisted policy decisions. */
 export function evaluateUnitPolicies(unit: PublicUnit, state: StudyState, course?: PolicyCourse) {
   const policy = unit.learningPolicy;
-  if (!policy || !course || course.availability?.unavailableUnitIds?.includes(unit.id) || (state.courseId && state.courseId !== course.id)) {
+  if (
+    !policy ||
+    !course ||
+    course.availability?.unavailableUnitIds?.includes(unit.id) ||
+    (state.courseId && state.courseId !== course.id)
+  ) {
     const unavailable: PolicyResult = { status: "unavailable", percentage: 0, requirements: [] };
     return { completion: unavailable, mastery: unavailable };
   }
@@ -155,18 +170,35 @@ export function evaluateUnitPolicies(unit: PublicUnit, state: StudyState, course
             )
           )
             return { ...result, status: "unavailable" };
-          const attempt = currentAssessmentResult(course!, state, definition.id);
+          const candidates = assessmentCandidates(course!, state, definition.id);
+          const protectedExam = definition.method === "fixed" && Boolean(definition.exam);
+          const qualifies = (candidate: (typeof candidates)[number]) => {
+            const score = exactAssessmentScore(candidate);
+            return (
+              candidate.status === "completed" &&
+              score != null &&
+              (!protectedExam || candidate.passed === true) &&
+              (rule.minimumScore === undefined
+                ? candidate.passed === true
+                : score >= rule.minimumScore)
+            );
+          };
+          // A later retry does not revoke a previously achieved protected final.
+          const attempt = (protectedExam ? candidates.find(qualifies) : undefined) ?? candidates[0];
           if (!attempt || attempt.status !== "completed" || attempt.objectiveScore == null)
             return result;
           if (rule.minimumScore === undefined && attempt.passed == null) return result;
           const met =
             rule.minimumScore === undefined
               ? attempt.passed === true
-              : attempt.objectiveScore >= rule.minimumScore;
+              : (exactAssessmentScore(attempt) ?? -1) >= rule.minimumScore &&
+                (!protectedExam || attempt.passed === true);
           return {
             ...result,
             status: met ? "satisfied" : "not_met",
-            score: attempt.objectiveScore,
+            score: protectedExam
+              ? Math.floor((exactAssessmentScore(attempt) ?? 0) * 10) / 10
+              : attempt.objectiveScore,
             observed: 1,
             progress: met ? 1 : 0,
           };

@@ -14,7 +14,7 @@ type CourseScopes = {
   units: Array<{
     id: string;
     active: boolean;
-    lessons: Array<{ id: string; active: boolean; activities: Array<{ id: string }> }>;
+    lessons: Array<{ id: string; active: boolean; activities: Array<{ id: string }>; deferredRecovery?: { rules: Array<{ activity: { id: string } }> } }>;
   }>;
   assessments: AssessmentDefinition[];
 };
@@ -51,18 +51,24 @@ export function projectCapabilityAvailability(
       const lessonPath = originalLocations?.[`lesson:${lesson.id}`] ?? `${unitPath}.lessons[${l}]`;
       scopeLocations[`lesson:${lesson.id}`] = lessonPath;
       const lessonBlockers = blocking.filter((item) =>
-        item.location === lessonPath || item.location.startsWith(`${lessonPath}.capabilityRequirements`),
+        item.location === lessonPath || item.location.startsWith(`${lessonPath}.capabilityRequirements`) ||
+        item.location === `${lessonPath}.stages` || item.location.startsWith(`${lessonPath}.stages[`),
       );
       if (!unit.active || !lesson.active || globalBlockers.length || unitBlockers.length || lessonBlockers.length)
         unavailableLessonIds.add(lesson.id);
-      lesson.activities.forEach((activity, a) => {
-        const prefix =
-          originalLocations?.[`activity:${activity.id}`] ?? `${lessonPath}.activities[${a}]`;
+      [
+        ...lesson.activities.map((activity, a) => ({ activity, location: `${lessonPath}.activities[${a}]`, recovery: false })),
+        ...(lesson.deferredRecovery?.rules.map((rule, r) => ({
+          activity: rule.activity, location: `${lessonPath}.deferredRecovery.rules[${r}].activity`, recovery: true,
+        })) ?? []),
+      ].forEach(({ activity, location, recovery }) => {
+        const prefix = originalLocations?.[`activity:${activity.id}`] ?? location;
         scopeLocations[`activity:${activity.id}`] = prefix;
         const activityBlockers = [
           ...globalBlockers,
           ...unitBlockers,
           ...lessonBlockers,
+          ...(recovery ? blocking.filter(item => item.location === `${lessonPath}.deferredRecovery`) : []),
           ...blocking.filter(
             (item) => item.location === prefix || item.location.startsWith(`${prefix}.`),
           ),

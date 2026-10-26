@@ -39,3 +39,14 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Banco, navegador, portas e processos compartilhados são coordenados sequencialmente pelo Lead. Worktrees não recebem credenciais remotas. Não use comandos remotos ou destrutivos sem autorização específica.
 - Toda entrega identifica baseline, candidato, arquivos, decisões, comandos/resultados, limitações, patch com arquivos novos, impedimentos e recomendações. Revalide após mudanças.
 - Commits exigem autorização da tarefa. Aprovação da estrutura multiagente não autoriza automaticamente push, deploy, publicação, migrações remotas, chamadas pagas ou o próximo incremento.
+
+## Coordenação integrada Motor + Language Foundry — 24/10/2026
+
+O Destrava Lead é a entrada única do proprietário e coordena os dois projetos independentes. O Foundry Lead é coordenador editorial interno; não cria uma segunda cadeia de subdelegação nem aprova a própria autoria. Especialistas são acionados sob demanda, mantendo o limite global da equipe e QA independente.
+
+- Motor operacional desta release: `D:/Documents/destrava-worktrees/destrava-release-clean`, projeto `destrava-release-clean`, API55421/DB55422/app3100. Reutilizar os dez IDs substitutos e procedimentos F2-R comprovados; os wrappers históricos `checkpoint:*`, `dev:local`, `installations:local` não são comandos deste ambiente.
+- Foundry: `D:/Documents/Destrva Foundry`. Acesso ao Motor por contratos públicos versionados; conteúdo específico de idioma, currículo, gabaritos, feedback contextual, roteiros e mídias educacionais pertencem ao Foundry. Textos genéricos de interface e mecanismos de execução pertencem ao Motor.
+- QA editorial é autônomo por execuções independentes. Não exigir revisão humana item a item. Aprovação editorial, autorização administrativa local, experiência do proprietário e publicação são estados separados. Escrita sem avaliador contextual permanece NOT_ASSESSED.
+- Ocorrências chegam ao Lead e recebem FOUNDRY/MOTOR/SHARED/UNKNOWN, versão/IDs e evidência. Mudanças coordenadas exigem reteste integrado.
+- Candidatos/runs congelados não são sobrescritos. Novo curso deve ter autoria e pesquisa próprias, sem derivar currículo, exemplos ou gabaritos dos pilotos ES/EN. Os pilotos continuam fixtures de regressão.
+- Referência operacional e preparação da próxima autoria: [integração Foundry](docs/features/foundry-integration/README.md). Autorização de trabalho local não concede commit, publicação, APIs pagas ou acesso remoto.

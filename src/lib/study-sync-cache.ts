@@ -1,5 +1,5 @@
 import { readPersistedCourseState } from "@/domain/study/course-state-storage";
-import type { StudySyncCache } from "@/domain/study/study-progress-sync";
+import { matchingCompiledPendingBase, type StudySyncCache } from "@/domain/study/study-progress-sync";
 import type { InstalledRuntimeContext } from "@/lib/installed-runtime-types";
 
 const storageKey = "destrava-study:v2:demo";
@@ -9,6 +9,7 @@ export function browserStudySyncCache(
   courseId: string,
   languageCode: string,
   runtime?: InstalledRuntimeContext,
+  compiledContentVersion?: string,
 ): StudySyncCache {
   const keyFor = (userId: string | null) =>
     runtime
@@ -16,6 +17,9 @@ export function browserStudySyncCache(
       : userId
         ? `${storageKey}:${userId}:${courseId}`
         : `${storageKey}:${courseId}`;
+  const compiledScope = !runtime && compiledContentVersion ? { courseId, contentVersion: compiledContentVersion } : null;
+  const baseKey = (userId: string | null) => compiledScope && userId ?
+    `${keyFor(userId)}:pending-base:v1:${encodeURIComponent(compiledScope.contentVersion)}` : null;
   const read = (key: string, legacy = false) => {
     const value = window.localStorage.getItem(key);
     return value === null
@@ -27,6 +31,12 @@ export function browserStudySyncCache(
       if (runtime && userId !== runtime.userId) return { state: null, pending: null, recovery: [] };
       const key = keyFor(userId);
       const pending = read(`${key}:pending`);
+      const sidecarKey = baseKey(userId);
+      let compiledPendingBase: unknown = null;
+      if (sidecarKey) {
+        try { compiledPendingBase = JSON.parse(window.localStorage.getItem(sidecarKey) ?? "null"); }
+        catch { /* Unreadable metadata never authorizes local restoration. */ }
+      }
       const recoveryValue = window.localStorage.getItem(`${key}:recovery`);
       const recovery = recoveryValue === null ? [] : JSON.parse(recoveryValue);
       if (!Array.isArray(recovery)) throw new Error("Cópia local de recuperação ilegível.");
@@ -41,6 +51,7 @@ export function browserStudySyncCache(
               : (read(`${legacyStorageKey}:${courseId}`, true) ?? read(legacyStorageKey, true))),
         pending,
         recovery: recovery.map((raw) => readPersistedCourseState(raw, courseId, languageCode)!),
+        ...(compiledScope ? { compiledPendingBase: matchingCompiledPendingBase(compiledPendingBase, pending, userId, compiledScope) ? compiledPendingBase : null } : {}),
       };
     },
     write(userId, entry) {
@@ -53,6 +64,12 @@ export function browserStudySyncCache(
       if (entry.pending)
         window.localStorage.setItem(`${key}:pending`, JSON.stringify(entry.pending));
       else window.localStorage.removeItem(`${key}:pending`);
+      const sidecarKey = baseKey(userId);
+      if (sidecarKey && compiledScope) {
+        if (matchingCompiledPendingBase(entry.compiledPendingBase, entry.pending, userId, compiledScope))
+          window.localStorage.setItem(sidecarKey, JSON.stringify(entry.compiledPendingBase));
+        else window.localStorage.removeItem(sidecarKey);
+      }
       if (entry.state) window.localStorage.setItem(key, JSON.stringify(entry.state));
     },
   };

@@ -1,6 +1,7 @@
 import { canonicalAdaptiveProgress } from "@/domain/assessments/adaptive-progress";
 import { createHash } from "node:crypto";
 import { z } from "zod";
+import { activityPresentationSchema } from "@/content/text-presentation";
 import { evaluateWritingText } from "@/engine/text/representation";
 import { objectiveActivityTypes } from "@/content/activity-data";
 import { serverAssessmentResultSchema } from "@/content/assessment-results";
@@ -87,6 +88,8 @@ const gradeSchema = z
   .object({
     correct: z.boolean(),
     correctAnswer: z.string(),
+    presentation: activityPresentationSchema.optional(),
+    feedback: z.object({ summary: z.string(), detail: z.string().optional(), alternatives: z.array(z.object({answer: z.string(), detail: z.string()}).strict()) }).strict().optional(),
     explanation: z.string(),
     completeAnswer: z.string().optional(),
     transcript: z.string().optional(),

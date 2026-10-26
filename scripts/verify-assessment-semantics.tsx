@@ -611,7 +611,7 @@ async function main() {
         <FixedAssessmentRunner assessment={fixed} />
       </StudyProvider>,
     );
-    assert(html.includes("SOMATIVA"));
+    assert(html.includes("Para concluir"));
     assert(html.includes("Começar avaliação"));
   });
   await check(
@@ -635,7 +635,7 @@ async function main() {
             <AdaptiveAssessmentRunner assessment={adaptive} />
           </StudyProvider>,
         );
-        assert(html.includes(purpose === "formative" ? "FORMATIVA" : "SOMATIVA"));
+        assert(html.includes(purpose === "formative" ? "Para praticar" : "Para concluir"));
         assert(!html.includes("DIAGNÓSTICO ADAPTATIVO"));
         const grade = evaluateAssessment(
           scoped.course,

@@ -1,3 +1,4 @@
+import { assessmentsForLesson } from "@/lib/assessment-lesson";
 import { learningActionAvailability, type LearningActionContext } from "./learning-action-availability";
 import type { PublicCourse, PublicActivity } from "@/content/public";
 import type { PlannedItem, PlannedReviewItem, SessionMode, StudyState } from "./study-state";
@@ -20,7 +21,7 @@ function reviewCandidates(
 ): PlannedReviewItem[] {
   const activityIds = new Set(
     course.units.flatMap((unit) =>
-      unit.lessons.flatMap((lesson) => lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible).map((activity) => activity.id)),
+      unit.lessons.flatMap((lesson) => assessmentsForLesson(course, unit, lesson).length ? [] : lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible).map((activity) => activity.id)),
     ),
   );
   const lessonIds = new Set(
@@ -180,7 +181,7 @@ export function buildStudyPlan(
 
 export function nextActivity(course: PublicCourse, state: StudyState, actionContext?: LearningActionContext): PublicActivity | undefined {
   const activities = course.units.flatMap((unit) =>
-    unit.lessons.flatMap((lesson) => lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible)),
+    unit.lessons.flatMap((lesson) => assessmentsForLesson(course, unit, lesson).length ? [] : lesson.activities.filter(activity => learningActionAvailability(course, { kind: "activity", activityId: activity.id }, actionContext).eligible)),
   );
   const required = new Set(
     course.units.flatMap((unit) => [...outstandingPolicyActivityIds(unit, state, course)]),

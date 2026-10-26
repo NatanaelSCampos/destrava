@@ -4,7 +4,7 @@ import {
   type CoursePackage,
   type LanguagePackage,
 } from "./contracts";
-import { courseSchema, type Course, type Skill } from "./schema";
+import { courseSchema, type Course, type Skill, type Activity } from "./schema";
 import type { LanguageResources, DictionaryEntry, VocabularyItem } from "./language-resources";
 import type { AlphabetLetter, RegionalTopic } from "./fundamentals-types";
 import type { NumberPrompt } from "@/domain/numbers/number-practice";
@@ -34,7 +34,10 @@ export function runtimeBundle(raw: CompiledPackage) {
   requireLearningVariant(language, coursePackage);
   for (const unit of coursePackage.units)
     for (const lesson of unit.lessons)
-      for (const activity of lesson.activities) {
+      for (const activity of [
+        ...lesson.activities,
+        ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? []),
+      ]) {
         // Validate references independently of a learner's future preference.
         requireLearningVariant(
           language,
@@ -83,6 +86,27 @@ export function runtimeBundle(raw: CompiledPackage) {
     if (!core) throw new Error(`Activity has no runtime skill: ${skills.join(", ")}`);
     return core as Skill;
   };
+  const adaptActivity = (
+    activity: CoursePackage["units"][number]["lessons"][number]["activities"][number],
+  ): Activity =>
+    ({
+      ...resolveActivityMedia(activity, coursePackage.media).payload,
+      id: activity.id,
+      type: activity.type,
+      title: activity.title,
+      prompt: activity.prompt,
+      skill: activitySkill(activity.skills),
+      skills: activity.skills,
+      conceptIds: activity.concepts,
+      minutes: activity.minutes,
+      goals: activity.goals,
+      contexts: activity.contexts,
+      capabilityRequirements: activity.capabilityRequirements,
+      normalization: activity.evaluation?.normalization,
+      variant: activity.variant,
+      presentation: activity.presentation,
+      answerPolicy: activity.evaluation?.answerPolicy,
+    }) as Activity;
   const course: Course = courseSchema.parse({
     id: coursePackage.id,
     slug: coursePackage.slug,
@@ -94,6 +118,22 @@ export function runtimeBundle(raw: CompiledPackage) {
     acceptedVariants: coursePackage.acceptedVariants,
     description: coursePackage.description,
     contentVersion: coursePackage.contentVersion,
+    ...(["1.6", "1.7", "1.8", "1.9", "1.10"].includes(coursePackage.schemaVersion)
+      ? {
+          teachingMedia: coursePackage.media
+            .filter((asset) => asset.type === "audio")
+            .map((asset) => ({
+              id: asset.id,
+              src: asset.src,
+              ...Object.fromEntries(
+                ["author", "license", "licenseUrl", "sourceUrl", "credit"].map((key) => [
+                  key,
+                  typeof asset.metadata?.[key] === "string" ? asset.metadata[key] : "",
+                ]),
+              ),
+            })),
+        }
+      : {}),
     assessments: coursePackage.assessments,
     assessmentRefs: coursePackage.assessmentRefs,
     capabilityRequirements: coursePackage.capabilityRequirements,
@@ -115,6 +155,7 @@ export function runtimeBundle(raw: CompiledPackage) {
       skills: unit.skills,
       assessmentRefs: unit.assessmentRefs,
       learningPolicy: unit.learningPolicy,
+      access: unit.access,
       capabilityRequirements: unit.capabilityRequirements,
       lessons: unit.lessons.map((lesson) => ({
         id: lesson.id,
@@ -123,35 +164,32 @@ export function runtimeBundle(raw: CompiledPackage) {
         order: lesson.order,
         interactiveLessonRef: lesson.interactiveLessonRef,
         capabilityRequirements: lesson.capabilityRequirements,
+        objectiveLabels: lesson.objectiveLabels,
+        stages: lesson.stages,
         eyebrow: lesson.eyebrow,
         description: lesson.description,
         minutes: lesson.minutes,
         active: lesson.active,
-        activities: lesson.activities.map((activity) => ({
-          ...resolveActivityMedia(activity, coursePackage.media).payload,
-          id: activity.id,
-          type: activity.type,
-          title: activity.title,
-          prompt: activity.prompt,
-          skill: activitySkill(activity.skills),
-          skills: activity.skills,
-          conceptIds: activity.concepts,
-          minutes: activity.minutes,
-          goals: activity.goals,
-          contexts: activity.contexts,
-          capabilityRequirements: activity.capabilityRequirements,
-          normalization: activity.evaluation?.normalization,
-          variant: activity.variant,
-          presentation: activity.presentation,
-          answerPolicy: activity.evaluation?.answerPolicy,
-        })),
+        activities: lesson.activities.map(adaptActivity),
+        deferredRecovery: lesson.deferredRecovery
+          ? {
+              ...lesson.deferredRecovery,
+              rules: lesson.deferredRecovery.rules.map((rule) => ({
+                ...rule,
+                activity: adaptActivity(rule.activity),
+              })),
+            }
+          : undefined,
       })),
     })),
   });
 
   for (const unit of course.units)
     for (const lesson of unit.lessons)
-      for (const activity of lesson.activities) {
+      for (const activity of [
+        ...lesson.activities,
+        ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? []),
+      ]) {
         if (!activity.answerPolicy?.requiredForms) continue;
         const variants = activity.variant?.requiredVariant
           ? [activity.variant.requiredVariant]

@@ -1,0 +1,502 @@
+[
+  {
+    "id": "atp-lex-1",
+    "language": "es-a-tu-paso",
+    "lemma": "entrada",
+    "meanings": [
+      {
+        "id": "atp-meaning-1",
+        "translations": {
+          "pt-BR": [
+            "entrada"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Estoy en la entrada.",
+        "translations": {
+          "pt-BR": "Estou na entrada."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l1"
+  },
+  {
+    "id": "atp-lex-2",
+    "language": "es-a-tu-paso",
+    "lemma": "biblioteca",
+    "meanings": [
+      {
+        "id": "atp-meaning-2",
+        "translations": {
+          "pt-BR": [
+            "biblioteca"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "La biblioteca está aquí.",
+        "translations": {
+          "pt-BR": "A biblioteca fica aqui."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l1"
+  },
+  {
+    "id": "atp-lex-3",
+    "language": "es-a-tu-paso",
+    "lemma": "lugar",
+    "meanings": [
+      {
+        "id": "atp-meaning-3",
+        "translations": {
+          "pt-BR": [
+            "lugar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Puedes repetir el lugar?",
+        "translations": {
+          "pt-BR": "Você pode repetir o lugar?"
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l2"
+  },
+  {
+    "id": "atp-lex-4",
+    "language": "es-a-tu-paso",
+    "lemma": "despacio",
+    "meanings": [
+      {
+        "id": "atp-meaning-4",
+        "translations": {
+          "pt-BR": [
+            "devagar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Más despacio, por favor.",
+        "translations": {
+          "pt-BR": "Mais devagar, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l2"
+  },
+  {
+    "id": "atp-lex-5",
+    "language": "es-a-tu-paso",
+    "lemma": "hora",
+    "meanings": [
+      {
+        "id": "atp-meaning-5",
+        "translations": {
+          "pt-BR": [
+            "hora"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿A qué hora nos vemos?",
+        "translations": {
+          "pt-BR": "A que horas nos vemos?"
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l3"
+  },
+  {
+    "id": "atp-lex-6",
+    "language": "es-a-tu-paso",
+    "lemma": "media",
+    "meanings": [
+      {
+        "id": "atp-meaning-6",
+        "translations": {
+          "pt-BR": [
+            "meia hora"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "A las seis y media.",
+        "translations": {
+          "pt-BR": "Às seis e meia."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l3"
+  },
+  {
+    "id": "atp-lex-7",
+    "language": "es-a-tu-paso",
+    "lemma": "estación",
+    "meanings": [
+      {
+        "id": "atp-meaning-7",
+        "translations": {
+          "pt-BR": [
+            "estação"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Nos vemos en la estación.",
+        "translations": {
+          "pt-BR": "Nos vemos na estação."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l4"
+  },
+  {
+    "id": "atp-lex-8",
+    "language": "es-a-tu-paso",
+    "lemma": "acuerdo",
+    "meanings": [
+      {
+        "id": "atp-meaning-8",
+        "translations": {
+          "pt-BR": [
+            "acordo"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "De acuerdo, a las seis.",
+        "translations": {
+          "pt-BR": "De acordo, às seis."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u1-l4"
+  },
+  {
+    "id": "atp-lex-9",
+    "language": "es-a-tu-paso",
+    "lemma": "agua",
+    "meanings": [
+      {
+        "id": "atp-meaning-9",
+        "translations": {
+          "pt-BR": [
+            "água"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un agua sin gas, por favor.",
+        "translations": {
+          "pt-BR": "Uma água sem gás, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l1"
+  },
+  {
+    "id": "atp-lex-10",
+    "language": "es-a-tu-paso",
+    "lemma": "té",
+    "meanings": [
+      {
+        "id": "atp-meaning-10",
+        "translations": {
+          "pt-BR": [
+            "chá"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un té sin leche.",
+        "translations": {
+          "pt-BR": "Um chá sem leite."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l1"
+  },
+  {
+    "id": "atp-lex-11",
+    "language": "es-a-tu-paso",
+    "lemma": "leche",
+    "meanings": [
+      {
+        "id": "atp-meaning-11",
+        "translations": {
+          "pt-BR": [
+            "leite"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un café con leche.",
+        "translations": {
+          "pt-BR": "Um café com leite."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l1"
+  },
+  {
+    "id": "atp-lex-12",
+    "language": "es-a-tu-paso",
+    "lemma": "azúcar",
+    "meanings": [
+      {
+        "id": "atp-meaning-12",
+        "translations": {
+          "pt-BR": [
+            "açúcar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Sin azúcar, por favor.",
+        "translations": {
+          "pt-BR": "Sem açúcar, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l1"
+  },
+  {
+    "id": "atp-lex-13",
+    "language": "es-a-tu-paso",
+    "lemma": "dos",
+    "meanings": [
+      {
+        "id": "atp-meaning-13",
+        "translations": {
+          "pt-BR": [
+            "dois"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Dos cafés, por favor.",
+        "translations": {
+          "pt-BR": "Dois cafés, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l2"
+  },
+  {
+    "id": "atp-lex-14",
+    "language": "es-a-tu-paso",
+    "lemma": "precio",
+    "meanings": [
+      {
+        "id": "atp-meaning-14",
+        "translations": {
+          "pt-BR": [
+            "preço"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Puede repetir el precio?",
+        "translations": {
+          "pt-BR": "Pode repetir o preço?"
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l2"
+  },
+  {
+    "id": "atp-lex-15",
+    "language": "es-a-tu-paso",
+    "lemma": "aquí",
+    "meanings": [
+      {
+        "id": "atp-meaning-15",
+        "translations": {
+          "pt-BR": [
+            "aqui"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Para aquí, por favor.",
+        "translations": {
+          "pt-BR": "Para consumir aqui, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l3"
+  },
+  {
+    "id": "atp-lex-16",
+    "language": "es-a-tu-paso",
+    "lemma": "llevar",
+    "meanings": [
+      {
+        "id": "atp-meaning-16",
+        "translations": {
+          "pt-BR": [
+            "levar"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Para llevar, por favor.",
+        "translations": {
+          "pt-BR": "Para levar, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l3"
+  },
+  {
+    "id": "atp-lex-17",
+    "language": "es-a-tu-paso",
+    "lemma": "jugo",
+    "meanings": [
+      {
+        "id": "atp-meaning-17",
+        "translations": {
+          "pt-BR": [
+            "suco"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un jugo de naranja, por favor.",
+        "translations": {
+          "pt-BR": "Um suco de laranja, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l3"
+  },
+  {
+    "id": "atp-lex-18",
+    "language": "es-a-tu-paso",
+    "lemma": "zumo",
+    "meanings": [
+      {
+        "id": "atp-meaning-18",
+        "translations": {
+          "pt-BR": [
+            "suco"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un zumo de naranja, por favor.",
+        "translations": {
+          "pt-BR": "Um suco de laranja, por favor."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l3"
+  },
+  {
+    "id": "atp-lex-19",
+    "language": "es-a-tu-paso",
+    "lemma": "pan",
+    "meanings": [
+      {
+        "id": "atp-meaning-19",
+        "translations": {
+          "pt-BR": [
+            "pão"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "Un té y dos panes.",
+        "translations": {
+          "pt-BR": "Um chá e dois pães."
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l4"
+  },
+  {
+    "id": "atp-lex-20",
+    "language": "es-a-tu-paso",
+    "lemma": "hay",
+    "meanings": [
+      {
+        "id": "atp-meaning-20",
+        "translations": {
+          "pt-BR": [
+            "há / tem disponível"
+          ]
+        }
+      }
+    ],
+    "examples": [
+      {
+        "target": "¿Hay agua sin gas?",
+        "translations": {
+          "pt-BR": "Tem água sem gás?"
+        }
+      }
+    ],
+    "level": "A1",
+    "lessonId": "atp-u2-l4"
+  }
+]

@@ -7,10 +7,54 @@ export type StudySyncRepository = {
   save: (state: StudyState) => Promise<void>;
 };
 
+export type CompiledPendingScope = { courseId: string; contentVersion: string };
+export type CompiledPendingBase = CompiledPendingScope & {
+  schemaVersion: 1;
+  source: "compiled";
+  userId: string;
+  base: string;
+  pending: string;
+  transmitted?: string;
+};
+
+/** Complete JSON semantics: only object key order and JSON-omitted undefined fields differ. */
+export function canonicalStudyState(value: StudyState | null): string {
+  const ordered = (input: unknown): unknown => {
+    if (Array.isArray(input)) return input.map(ordered);
+    if (input && typeof input === "object") return Object.fromEntries(Object.entries(input)
+      .filter(([, item]) => item !== undefined).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+      .map(([key, item]) => [key, ordered(item)]));
+    return input;
+  };
+  return JSON.stringify(ordered(value));
+}
+export function matchingCompiledPendingBase(
+  value: unknown, pending: StudyState | null, userId: string | null, scope: CompiledPendingScope,
+): value is CompiledPendingBase {
+  if (!value || typeof value !== "object" || Array.isArray(value) || !pending || !userId) return false;
+  const entry = value as Partial<CompiledPendingBase>;
+  if (Object.keys(value).some(key => !["schemaVersion", "source", "userId", "courseId", "contentVersion", "base", "pending", "transmitted"].includes(key)) ||
+    entry.schemaVersion !== 1 || entry.source !== "compiled" || entry.userId !== userId ||
+    entry.courseId !== scope.courseId || entry.contentVersion !== scope.contentVersion ||
+    pending.courseId !== scope.courseId || typeof entry.base !== "string" ||
+    entry.pending !== canonicalStudyState(pending)) return false;
+  try {
+    const validFingerprint = (fingerprint: string, allowNull: boolean) => {
+      const state: unknown = JSON.parse(fingerprint);
+      return ((state === null && allowNull) || (state !== null && typeof state === "object" && !Array.isArray(state) &&
+        (state as { courseId?: unknown }).courseId === scope.courseId)) &&
+        canonicalStudyState(state as StudyState | null) === fingerprint;
+    };
+    return validFingerprint(entry.base, true) && (entry.transmitted === undefined ||
+      (typeof entry.transmitted === "string" && validFingerprint(entry.transmitted, false)));
+  } catch { return false; }
+}
+
 export type StudySyncCacheEntry = {
   state: StudyState | null;
   pending: StudyState | null;
   recovery: StudyState[];
+  compiledPendingBase?: CompiledPendingBase | null;
 };
 
 export type StudySyncCache = {
@@ -41,10 +85,13 @@ export class StudyProgressSync {
   private listeners = new Set<() => void>();
   private repository: StudySyncRepository | null = null;
   private queue: Promise<void> = Promise.resolve();
+  private confirmedBase: { userId: string; fingerprint: string } | null = null;
+  private transmittedIntent: { userId: string; fingerprint: string } | null = null;
 
   constructor(
     private freshState: () => StudyState,
     private cache: StudySyncCache,
+    private compiledPendingScope?: CompiledPendingScope,
   ) {
     this.snapshot = {
       state: freshState(),
@@ -73,6 +120,8 @@ export class StudyProgressSync {
 
   beginLoading() {
     this.repository = null;
+    this.confirmedBase = null;
+    this.transmittedIntent = null;
     this.publish({
       ...this.snapshot,
       generation: this.snapshot.generation + 1,
@@ -134,20 +183,32 @@ export class StudyProgressSync {
       if (!this.isCurrent(generation)) return;
       const remote = await repository.load();
       if (!this.isCurrent(generation)) return;
-      const restored = remote ?? pending ?? cached.state ?? this.freshState();
+      const compiled = Boolean(this.compiledPendingScope);
+      const resumable = Boolean(compiled && pending && this.compiledPendingScope &&
+        matchingCompiledPendingBase(cached.compiledPendingBase, pending, userId, this.compiledPendingScope) &&
+        (cached.compiledPendingBase.base === canonicalStudyState(remote) ||
+          cached.compiledPendingBase.transmitted === canonicalStudyState(remote)));
+      const conflict = compiled && Boolean(pending) && !resumable;
+      const restored = conflict ? (remote ?? this.freshState()) :
+        resumable ? pending! : remote ?? pending ?? cached.state ?? this.freshState();
+      const dirty = conflict ? false : resumable || (remote === null && !(compiled && recovery.length));
       const backups =
-        remote &&
-        pending &&
+        (remote || conflict) &&
+        pending && !resumable &&
         !recovery.some((draft) => JSON.stringify(draft) === JSON.stringify(pending))
           ? [...recovery, pending]
           : recovery;
       this.repository = repository;
+      this.confirmedBase = compiled && userId ? { userId, fingerprint: canonicalStudyState(remote) } : null;
+      const uncertain = resumable ? cached.compiledPendingBase?.transmitted : undefined;
+      this.transmittedIntent = userId && uncertain && uncertain !== canonicalStudyState(remote)
+        ? { userId, fingerprint: uncertain } : null;
       // State and permission are published together: subscribers never see loaded + stale cache.
       this.publish({
         ...this.snapshot,
         state: restored,
         loadStatus: remote === null ? "absent" : "loaded",
-        dirty: remote === null,
+        dirty,
         loadError: "",
         saveError: "",
         recovery: backups,
@@ -195,11 +256,44 @@ export class StudyProgressSync {
         if (this.snapshot.cacheError) throw new Error(this.snapshot.cacheError);
         return;
       }
-      const state = this.snapshot.state;
+      let state = this.snapshot.state;
+      let transmittedBase = this.compiledPendingScope ? canonicalStudyState(state) : null;
+      const owner = this.snapshot.userId;
       this.publish({ ...this.snapshot, saving: true });
       try {
+        if (this.compiledPendingScope) {
+          if (!owner || this.confirmedBase?.userId !== owner)
+            throw new Error("N\u00e3o foi poss\u00edvel confirmar sua conta e o progresso. Recarregue a p\u00e1gina antes de tentar novamente.");
+          const uncertain = this.transmittedIntent;
+          if (uncertain) {
+            const remote = await repository.load();
+            this.assertWritable(generation);
+            const fingerprint = canonicalStudyState(remote);
+            if (uncertain.userId !== owner || (fingerprint !== this.confirmedBase.fingerprint && fingerprint !== uncertain.fingerprint))
+              throw new Error("O progresso mudou em outra sess\u00e3o. Recarregue a p\u00e1gina; sua altera\u00e7\u00e3o foi preservada.");
+            this.confirmedBase = { userId: owner, fingerprint };
+            this.transmittedIntent = null;
+            state = this.snapshot.state;
+            transmittedBase = canonicalStudyState(state);
+          }
+          this.transmittedIntent = { userId: owner, fingerprint: transmittedBase! };
+          // Persist and verify the exact intent/pending pair before starting save I/O.
+          this.persistCache();
+          if (this.snapshot.cacheError) throw new Error(this.snapshot.cacheError);
+          const persisted = this.cache.read(owner);
+          const metadata = persisted.compiledPendingBase;
+          if (!matchingCompiledPendingBase(metadata, persisted.pending, owner, this.compiledPendingScope) ||
+            metadata.transmitted !== transmittedBase || metadata.base !== this.confirmedBase.fingerprint ||
+            metadata.pending !== canonicalStudyState(this.snapshot.state))
+            throw new Error("N\u00e3o foi poss\u00edvel confirmar a c\u00f3pia local antes do envio. Mantenha esta p\u00e1gina aberta e tente novamente.");
+        }
         await repository.save(state);
         this.assertWritable(generation);
+        if (transmittedBase !== null && owner) {
+          this.confirmedBase = { userId: owner, fingerprint: transmittedBase };
+          if (this.transmittedIntent?.userId === owner && this.transmittedIntent.fingerprint === transmittedBase)
+            this.transmittedIntent = null;
+        }
         this.publish({
           ...this.snapshot,
           saving: false,
@@ -234,11 +328,20 @@ export class StudyProgressSync {
 
   private persistCache() {
     try {
-      this.cache.write(this.snapshot.userId, {
+      const entry: StudySyncCacheEntry = {
         state: this.snapshot.state,
         pending: this.snapshot.dirty ? this.snapshot.state : null,
         recovery: this.snapshot.recovery,
-      });
+      };
+      if (this.compiledPendingScope) {
+        const owner = this.snapshot.userId;
+        entry.compiledPendingBase = owner && entry.pending && this.confirmedBase?.userId === owner ? {
+          schemaVersion: 1, source: "compiled", userId: owner, ...this.compiledPendingScope,
+          base: this.confirmedBase.fingerprint, pending: canonicalStudyState(entry.pending),
+          ...(this.transmittedIntent?.userId === owner ? { transmitted: this.transmittedIntent.fingerprint } : {}),
+        } : null;
+      }
+      this.cache.write(this.snapshot.userId, entry);
       if (this.snapshot.cacheError) this.publish({ ...this.snapshot, cacheError: "" });
     } catch {
       this.publish({

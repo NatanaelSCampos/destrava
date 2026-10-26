@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "1.1",
+  "contentVersion": "1.0.0",
+  "id": "es-a-tu-paso",
+  "identity": {
+    "name": "Espanhol",
+    "nativeName": "Español",
+    "iso639_1": "es"
+  },
+  "writingSystem": {
+    "direction": "ltr",
+    "scripts": [
+      "Latn"
+    ],
+    "caseSensitive": true
+  },
+  "variants": [
+    {
+      "id": "es-ES",
+      "name": "Espanha — situações contextualizadas"
+    },
+    {
+      "id": "es-MX",
+      "name": "México — situações contextualizadas"
+    }
+  ],
+  "linguisticFeatures": {
+    "romanization": false,
+    "tones": false,
+    "grammaticalGender": true
+  },
+  "speech": {
+    "support": {
+      "speechRecognition": false,
+      "textToSpeech": false,
+      "pronunciationAssessment": false
+    },
+    "defaultVariant": "es-ES",
+    "providers": {}
+  },
+  "normalization": {
+    "trimWhitespace": true,
+    "collapseWhitespace": true,
+    "caseInsensitive": true,
+    "ignoreTerminalPunctuation": true,
+    "ignoreDiacritics": false
+  },
+  "modules": {
+    "numbers": {
+      "enabled": true,
+      "source": "modules/numbers.json"
+    },
+    "regionalVariants": {
+      "enabled": true,
+      "source": "modules/regionalVariants.json"
+    },
+    "alphabet": {
+      "enabled": true,
+      "source": "modules/alphabet.json"
+    }
+  }
+}

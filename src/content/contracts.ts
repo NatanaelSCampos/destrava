@@ -1,4 +1,8 @@
+import { unitAccessSchema, examPolicySchema, learningAccessIssues } from "./learning-access";
 import { z } from "zod";
+import { lessonStagesSchema } from "./lesson-stages";
+import { deferredRecoverySchema } from "./teaching";
+import { teachingCourseIssues } from "./validate-teaching";
 import {
   learningGoalSchema,
   learningSkillSchema,
@@ -23,7 +27,16 @@ const id = z.string().trim().min(1);
 const version = z.string().regex(/^\d+\.\d+(?:\.\d+)?$/);
 const localizedTextSchema = z.record(z.string().min(2), z.string().min(1));
 export const supportedLanguageSchemaVersions = ["1.1"] as const;
-export const supportedCourseSchemaVersions = ["1.3", "1.4", "1.5"] as const;
+export const supportedCourseSchemaVersions = [
+  "1.3",
+  "1.4",
+  "1.5",
+  "1.6",
+  "1.7",
+  "1.8",
+  "1.9",
+  "1.10",
+] as const;
 
 export const languageVariantSchema = z.object({
   id,
@@ -367,6 +380,9 @@ export const lessonSchema = z.object({
   order: z.number().int().positive(),
   objectives: z.array(id),
   activities: z.array(activitySchema).min(1),
+  stages: lessonStagesSchema.optional(),
+  deferredRecovery: deferredRecoverySchema(activitySchema).optional(),
+  objectiveLabels: z.record(z.string().min(1), z.string().trim().min(1).max(180)).optional(),
   eyebrow: z.string().default(""),
   description: z.string().default(""),
   minutes: z.number().positive(),
@@ -397,6 +413,7 @@ export const unitSchema = z
       .optional(),
     lessons: z.array(lessonSchema).min(1),
     assessmentRefs: assessmentRefsSchema.default({ formative: [] }),
+    access: unitAccessSchema.optional(),
     learningPolicy: unitLearningPolicySchema,
     description: z.string().default(""),
     active: z.boolean().default(true),
@@ -436,6 +453,7 @@ export const fixedAssessmentSchema = assessmentBaseSchema
   .extend({
     method: z.literal("fixed"),
     gradingStrategy: z.literal("objective_mean"),
+    exam: examPolicySchema.optional(),
     activityIds: z
       .array(id)
       .min(1)
@@ -509,7 +527,7 @@ export const coursePackageSchema = z
         "Declarative learning policies require CoursePackage schemaVersion 1.3",
       );
     if (
-      !["1.4", "1.5"].includes(course.schemaVersion) &&
+      !["1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion) &&
       (course.acceptedVariants ||
         course.units.some((unit) =>
           unit.lessons.some((lesson) =>
@@ -541,11 +559,16 @@ export const coursePackageSchema = z
             ),
         ),
       );
-    if (hasTextMetadata && course.schemaVersion !== "1.5")
+    if (
+      hasTextMetadata &&
+      !["1.5", "1.6", "1.7", "1.8", "1.9", "1.10"].includes(course.schemaVersion)
+    )
       issue(
         ["schemaVersion"],
         "Text presentation metadata requires CoursePackage schemaVersion 1.5",
       );
+    for (const message of learningAccessIssues(course)) issue(["units"], message);
+    for (const message of teachingCourseIssues(course)) issue(["units"], message);
     const definitions = new Map(course.assessments.map((item) => [item.id, item]));
     const activityOwners = new Map(
       course.units.flatMap((unit) =>
@@ -743,7 +766,12 @@ export const coursePackageSchema = z
     for (const item of [
       ...course.missions,
       ...course.roleplays,
-      ...course.units.flatMap((unit) => unit.lessons.flatMap((lesson) => lesson.activities)),
+      ...course.units.flatMap((unit) =>
+        unit.lessons.flatMap((lesson) => [
+          ...lesson.activities,
+          ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? []),
+        ]),
+      ),
     ]) {
       for (const goal of item.goals ?? [])
         if (!goals.has(goal))

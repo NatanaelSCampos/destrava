@@ -13,7 +13,7 @@ const topicDefinitions = [
   {
     id: "alphabet" as const,
     title: "Alfabeto",
-    description: "Letras, nomes e palavras com áudio.",
+    description: "Letras, nomes e exemplos para consultar.",
     countKey: "alphabet",
     countLabel: "letras",
     icon: CaseUpper,

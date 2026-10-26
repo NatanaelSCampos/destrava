@@ -1,4 +1,7 @@
+import { unitAccessSchema } from "./learning-access";
 import { z } from "zod";
+import { lessonStagesSchema, lessonStageIssues } from "./lesson-stages";
+import { deferredRecoverySchema } from "./teaching";
 import {
   activityTypeSchema,
   normalizationRulesSchema,
@@ -71,19 +74,27 @@ export const activitySchema = z.discriminatedUnion("type", [
   activityBase.extend({ ...activityPayloadSchemas.quiz.shape, type: z.literal("quiz") }),
 ]);
 
-export const lessonSchema = z.object({
-  capabilityRequirements: capabilityRequirementsSchema.optional(),
-  id: z.string(),
-  interactiveLessonRef: z.string().optional(),
-  slug: z.string(),
-  title: z.string(),
-  eyebrow: z.string(),
-  description: z.string(),
-  minutes: z.number().positive(),
-  order: z.number().int().positive(),
-  active: z.boolean(),
-  activities: z.array(activitySchema).min(1),
-});
+export const lessonSchema = z
+  .object({
+    capabilityRequirements: capabilityRequirementsSchema.optional(),
+    id: z.string(),
+    interactiveLessonRef: z.string().optional(),
+    slug: z.string(),
+    title: z.string(),
+    eyebrow: z.string(),
+    description: z.string(),
+    minutes: z.number().positive(),
+    order: z.number().int().positive(),
+    active: z.boolean(),
+    activities: z.array(activitySchema).min(1),
+    stages: lessonStagesSchema.optional(),
+    deferredRecovery: deferredRecoverySchema(activitySchema).optional(),
+    objectiveLabels: z.record(z.string().min(1), z.string().trim().min(1).max(180)).optional(),
+  })
+  .superRefine((lesson, context) => {
+    for (const message of lessonStageIssues(lesson))
+      context.addIssue({ code: "custom", message, path: ["stages"] });
+  });
 
 export const unitSchema = z.object({
   capabilityRequirements: capabilityRequirementsSchema.optional(),
@@ -97,6 +108,7 @@ export const unitSchema = z.object({
   active: z.boolean(),
   lessons: z.array(lessonSchema),
   assessmentRefs: assessmentRefsSchema.default({ formative: [] }),
+  access: unitAccessSchema.optional(),
   learningPolicy: unitLearningPolicySchema.optional(),
 });
 
@@ -117,6 +129,21 @@ export const courseSchema = z.object({
   level: z.string(),
   description: z.string(),
   contentVersion: z.string().default("legacy"),
+  teachingMedia: z
+    .array(
+      z
+        .object({
+          id: z.string(),
+          src: z.string(),
+          author: z.string(),
+          license: z.string(),
+          licenseUrl: z.string(),
+          sourceUrl: z.string(),
+          credit: z.string(),
+        })
+        .strict(),
+    )
+    .optional(),
   assessments: z.array(assessmentSchema).default([]),
   assessmentRefs: z.object({ diagnostic: z.string().min(1).optional() }).default({}),
   learningConcepts: z
@@ -135,7 +162,14 @@ export function allActivities(course: Course) {
 }
 
 export function findActivity(course: Course, id: string) {
-  return allActivities(course).find((activity) => activity.id === id);
+  return [
+    ...allActivities(course),
+    ...course.units.flatMap((unit) =>
+      unit.lessons.flatMap(
+        (lesson) => lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? [],
+      ),
+    ),
+  ].find((activity) => activity.id === id);
 }
 
 export function findLesson(course: Course, slug: string) {

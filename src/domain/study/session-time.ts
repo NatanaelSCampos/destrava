@@ -33,3 +33,38 @@ export function advanceActiveStudySeconds(
   const increment = Math.max(0, Math.min(2000, activeUntil - previousTickMs)) / 1000;
   return Math.min(MAX_STUDY_SESSION_SECONDS, Math.max(0, seconds) + increment);
 }
+
+
+/** Local engagement only; never changes a persisted manual pause. */
+export class StudyActivityClock {
+  private previousTickMs: number;
+  private lastInteractionMs: number;
+  private visible: boolean;
+  constructor(nowMs: number, visible: boolean) {
+    this.previousTickMs = nowMs;
+    this.lastInteractionMs = nowMs;
+    this.visible = visible;
+  }
+  setVisible(visible: boolean, nowMs: number) {
+    this.visible = visible;
+    this.previousTickMs = nowMs;
+    if (visible) this.lastInteractionMs = nowMs;
+  }
+  interact(nowMs: number) {
+    if (!this.visible) return;
+    if (!this.isActive(nowMs)) this.previousTickMs = nowMs;
+    this.lastInteractionMs = nowMs;
+  }
+  resetTick(nowMs: number) { this.previousTickMs = nowMs; }
+  isActive(nowMs: number) {
+    return this.visible && Number.isFinite(nowMs) && nowMs >= this.lastInteractionMs &&
+      nowMs - this.lastInteractionMs < STUDY_IDLE_LIMIT_MS;
+  }
+  takeElapsedMs(nowMs: number, maximumMs = 2000) {
+    const elapsed = advanceActiveStudySeconds(
+      0, this.previousTickMs, nowMs, this.lastInteractionMs, this.visible,
+    ) * 1000;
+    this.previousTickMs = nowMs;
+    return Math.max(0, Math.min(maximumMs, elapsed));
+  }
+}

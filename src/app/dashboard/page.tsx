@@ -18,26 +18,14 @@ import {
 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { buildStudyPlan } from "@/domain/study/study-planner";
-import { courseStudyProgress, currentUnit, unitProgress } from "@/domain/study/progress";
+import { currentUnit, unitProgress } from "@/domain/study/progress";
 import { dueReviewCounts } from "@/domain/review/due-review-counts";
 import { buildLearningProfile } from "@/domain/study/learning-profile";
 import { LearningRecommendationEngine } from "@/domain/study/learning-recommendation-engine";
 import { formatMinutes } from "@/lib/utils";
-import { countedStudySeconds } from "@/domain/study/session-time";
+import { studyOverview } from "@/domain/study/study-overview";
 import { featureFlags } from "@/lib/feature-flags";
 import { recommendationLink } from "@/lib/recommendation-link";
-
-function currentStreak(dates: string[]) {
-  const days = new Set(dates.map((value) => new Date(value).toLocaleDateString("en-CA")));
-  const cursor = new Date();
-  if (!days.has(cursor.toLocaleDateString("en-CA"))) cursor.setDate(cursor.getDate() - 1);
-  let count = 0;
-  while (days.has(cursor.toLocaleDateString("en-CA"))) {
-    count++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return count;
-}
 
 export default function DashboardPage() {
   const { course, resources, state, ready, vocabularyItems, runtime } = useStudy();
@@ -46,7 +34,9 @@ export default function DashboardPage() {
   const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const unit = currentUnit(course, state)!;
   const progress = unitProgress(unit, state, vocabularyItems, course);
-  const totalProgress = courseStudyProgress(course, state);
+  const overview = studyOverview(course, state, vocabularyItems);
+  const totalProgress = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(overview.coverage.percentage);
+  const recordedTime = overview.recordedSeconds === 0 ? "Sem registro" : overview.recordedSeconds < 60 ? overview.recordedSeconds + " s" : formatMinutes(Math.floor(overview.recordedSeconds / 60));
   const learningProfile = buildLearningProfile(course, state, vocabularyItems, resources);
   const focus = LearningRecommendationEngine.recommend(
     course,
@@ -57,17 +47,12 @@ export default function DashboardPage() {
     { includeReviews: featureFlags.SPACED_REPETITION, actionContext },
   )[0];
   const plan = buildStudyPlan(course, state, state.profile.learningPreferences.preferredSessionMinutes, vocabularyItems, resources, new Date(), "guided", actionContext);
-  const minutes = Math.round(
-    state.sessions.reduce((sum, session) => sum + countedStudySeconds(session), 0) / 60,
-  );
   const {
     words: dueWords,
     mistakes: dueErrors,
     structures: dueStructures,
   } = dueReviewCounts(state, vocabularyItems, new Date(), undefined, resources.structures);
-  const streak = currentStreak(
-    state.sessions.filter((session) => session.finishedAt).map((session) => session.finishedAt!),
-  );
+  const streak = overview.streak;
   const last = state.attempts[0];
   if (!ready) return <div className="page-loading">Preparando seu espaço de estudo…</div>;
 
@@ -167,31 +152,31 @@ export default function DashboardPage() {
               <span className="stat-icon green">
                 <BookOpen size={18} />
               </span>
-              <span>Progresso geral</span>
+              <span>Conteúdo estudado</span>
               <strong>{totalProgress}%</strong>
               <small>
-                {progress.completed} de {progress.total} atividades concluídas
+                {overview.coverage.completed} de {overview.coverage.total} atividades concluídas
               </small>
             </div>
             <div className="stat-card panel">
               <span className="stat-icon peach">
                 <Clock3 size={18} />
               </span>
-              <span>Tempo estudado</span>
-              <strong>{formatMinutes(minutes)}</strong>
+              <span>Tempo registrado</span>
+              <strong>{recordedTime}</strong>
               <small>
-                {state.sessions.filter((session) => session.finishedAt).length} sessões finalizadas
+                {overview.activeSeconds > 0 ? "Inclui a aula em andamento" : "Tempo medido na Aula de hoje"}
               </small>
             </div>
             <div className="stat-card panel">
               <span className="stat-icon amber">
                 <Flame size={18} />
               </span>
-              <span>Sequência atual</span>
+              <span>Dias seguidos de prática</span>
               <strong>
-                {streak} {streak === 1 ? "dia" : "dias"}
+                {!overview.hasPracticeDates && overview.coverage.completed > 0 ? "Sem registro" : <>{streak} {streak === 1 ? "dia" : "dias"}</>}
               </strong>
-              <small>Estude hoje para manter o ritmo</small>
+              <small>{overview.practicedToday ? "Você já praticou hoje" : streak > 0 ? "Pratique hoje para continuar a sequência" : "Uma atividade hoje inicia sua sequência"}</small>
             </div>
           </div>
           <section className="today-section">

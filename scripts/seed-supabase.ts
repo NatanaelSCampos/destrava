@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { loadContent } from "./content-loader";
+import { readFileSync } from "node:fs";
+import { selectPublishedCourses } from "../src/content/catalog-selection";
 import { runtimeBundle } from "../src/content/runtime-package";
 import { assessmentSeedRows } from "../src/repositories/assessment-content-projection";
 import { activitySeedPayload } from "../src/repositories/activity-content-projection";
@@ -107,7 +109,10 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
           active: lesson.active,
         },
       ]);
-      for (const [index, activity] of lesson.activities.entries()) {
+      for (const [index, activity] of [
+        ...lesson.activities,
+        ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? []),
+      ].entries()) {
         const { id, type, title, prompt, skill, minutes, source, explanation } = activity;
         const payload = activitySeedPayload(activity);
         await upsert("activities", [
@@ -186,7 +191,11 @@ async function seedCourse(raw: ReturnType<typeof loadContent>[number]) {
 }
 
 async function main() {
-  for (const bundle of loadContent()) await seedCourse(bundle);
+  const catalog = selectPublishedCourses(
+    loadContent(),
+    JSON.parse(readFileSync("content/catalog.json", "utf8")),
+  );
+  for (const bundle of catalog.bundles) await seedCourse(bundle);
 }
 
 main().catch((error: unknown) => {

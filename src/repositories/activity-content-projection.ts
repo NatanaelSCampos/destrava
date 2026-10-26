@@ -1,9 +1,9 @@
 import type { Activity } from "@/content/schema";
-import { publicRequirements } from "@/content/capability-contracts";
+import { publicActivity } from "@/content/public";
 
 /** Public content table payload. Private answers and capability data are not installed here. */
 export function activitySeedPayload(activity: Activity) {
-  const payload: Record<string, unknown> = { ...activity };
+  const payload: Record<string, unknown> = { ...publicActivity(activity) };
   for (const key of [
     "id",
     "type",
@@ -22,7 +22,6 @@ export function activitySeedPayload(activity: Activity) {
     "pairs",
   ])
     delete payload[key];
-  if (activity.capabilityRequirements)
-    payload.capabilityRequirements = publicRequirements(activity.capabilityRequirements);
+
   return payload;
 }

@@ -120,7 +120,8 @@ export class SupabaseStudyRepository {
     const activityToUnit = new Map(
       units.flatMap((unit) =>
         unit.lessons.flatMap((lesson) =>
-          lesson.activities.map((activity) => [activity.id, unit.id] as const),
+          [...lesson.activities, ...(lesson.deferredRecovery?.rules.map((rule) => rule.activity) ?? [])]
+            .map((activity) => [activity.id, unit.id] as const),
         ),
       ),
     );
