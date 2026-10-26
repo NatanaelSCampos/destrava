@@ -1,5 +1,5 @@
 "use client";
-import { LockKeyhole, ArrowRight, RefreshCw } from "lucide-react";
+import { LockKeyhole, ArrowRight, RefreshCw, Clock3 } from "lucide-react";
 import Link from "next/link";
 import { useStudy } from "@/components/study-provider";
 import type { AccessDecision } from "@/domain/study/learning-access";
@@ -11,14 +11,15 @@ export function LearningAccessCard({
   title?: string;
 }) {
   const { course, refreshLearningAccess, learningAccessError } = useStudy();
+  const checking = !decision && !learningAccessError;
   return (
-    <section className="panel assessment-access-card" role="status">
+    <section className="panel assessment-access-card" role="status" aria-busy={checking}>
       <span className="assessment-icon">
-        <LockKeyhole size={24} aria-hidden="true" />
+        {checking ? <Clock3 size={24} aria-hidden="true" /> : <LockKeyhole size={24} aria-hidden="true" />}
       </span>
       <div>
         <span className="eyebrow">No seu ritmo</span>
-        <h2>{title}</h2>
+        <h2>{checking ? "Conferindo seu percurso…" : title}</h2>
         <p>{decision?.message || learningAccessError || "Conferindo seu percurso…"}</p>
         {decision?.total !== undefined && (
           <>

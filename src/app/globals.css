@@ -39,6 +39,11 @@ select {
 button {
   cursor: pointer;
 }
+button,
+a,
+summary {
+  touch-action: manipulation;
+}
 a {
   color: inherit;
   text-decoration: none;
@@ -957,7 +962,7 @@ select:focus-visible {
     padding: 31px 28px 70px;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 1024px) {
   .primary-button,
   .secondary-button,
   .ghost-button {
@@ -1134,4 +1139,23 @@ select:focus-visible {
   .recall-actions { flex-direction:column; }
   .recall-actions button { justify-content:center; width:100%; }
   .recall-model { padding:14px; }
+}
+
+/* Touch layout: enough room for controls, focus and the device safe areas. */
+@media(max-width:1024px) {
+  .sidebar { visibility:hidden; overscroll-behavior:contain; }
+  .sidebar.sidebar-open { visibility:visible; }
+  .icon-button,.topbar-tour,.avatar,.speak-button { min-width:44px; min-height:44px; }
+  .topbar-left,.topbar-right { gap:8px; min-width:0; }
+  .topbar-left > strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .topbar-right { flex-shrink:0; }
+  .app-frame input:not([type=checkbox]):not([type=radio]):not([type=range]),.app-frame textarea,.app-frame select,
+  .login-page input,.login-page select,.login-page textarea,
+  .auth-step-page input,.auth-step-page select,.auth-step-page textarea,
+  .pedagogical-onboarding input,.pedagogical-onboarding textarea,.pedagogical-onboarding select { font-size:16px; }
+  .app-frame { min-height:100dvh; }
+  .main-content { padding-inline:max(18px,env(safe-area-inset-left)) max(18px,env(safe-area-inset-right)); }
+  .app-frame:has(input:not([type=checkbox]):not([type=radio]):not([type=range]):focus,textarea:focus,[contenteditable=true]:focus) .mobile-primary-nav { display:none; }
+  html { scroll-padding-block:20px 100px; }
+  .back-link { min-height:44px; display:inline-flex; align-items:center; }
 }

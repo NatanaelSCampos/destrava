@@ -101,3 +101,8 @@
 .assessment-exam-question{padding:28px}.assessment-exam-question h2{margin:14px 0}.assessment-exam-instruction{font-size:1.05rem;line-height:1.65;margin:16px 0 26px;padding:18px;border-radius:16px;background:#fff4e8;border:1px solid #f1d8bc}
 .assessment-answer-recorded{display:flex;gap:10px;align-items:center;border-radius:14px;padding:16px;background:#edf6f1;color:#24594d;margin-top:18px}
 @media(max-width:600px){.assessment-access-card{padding:20px;gap:12px}.assessment-exam-question{padding:18px}}
+
+@media(max-width:600px) {
+  .assessment-fixed-question .assessment-exam-question { padding:0; border:0; box-shadow:none; background:transparent; }
+  .assessment-exam-instruction { padding:14px; font-size:16px; }
+}

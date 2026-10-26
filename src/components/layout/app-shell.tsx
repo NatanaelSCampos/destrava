@@ -45,6 +45,7 @@ import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboa
 import { StudySyncNotice } from "@/components/study-sync-notice";
 import type { RuntimeCourseOption } from "@/lib/installed-runtime-types";
 import { CourseTransitionNotice } from "./course-transition-notice";
+import { ResponsiveSidebar } from "./responsive-sidebar";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
@@ -262,7 +263,7 @@ export function AppShell({
           onClick={() => setMenuOpen(false)}
         />
       )}
-      <aside className={cx("sidebar", menuOpen && "sidebar-open")}>
+      <ResponsiveSidebar open={menuOpen} setOpen={setMenuOpen}>
         <div className="sidebar-top">
           <Link href="/dashboard" className="brand" onClick={() => setMenuOpen(false)}>
             <span className="brand-mark">
@@ -418,7 +419,11 @@ export function AppShell({
         </nav>
         <div className="sidebar-bottom">
           {tutorAction.eligible && (
-            <button className="sidebar-tutor" onClick={() => setTutorOpen(true)}>
+            <button className="sidebar-tutor" onClick={() => {
+                setMenuOpen(false);
+                setTutorOpen(true);
+                window.requestAnimationFrame(() => document.getElementById("tutor-question")?.focus());
+              }}>
               <span className="sidebar-tutor-icon">
                 <Sparkles size={18} />
               </span>
@@ -437,13 +442,15 @@ export function AppShell({
             <span>Configurações</span>
           </Link>
         </div>
-      </aside>
+      </ResponsiveSidebar>
       <div className="app-main">
         <header className="topbar">
           <div className="topbar-left">
             <button
               className="icon-button menu-toggle"
               aria-label="Abrir menu"
+          aria-expanded={menuOpen}
+          aria-controls="study-navigation"
               onClick={() => setMenuOpen(true)}
             >
               <Menu size={21} />
@@ -473,7 +480,11 @@ export function AppShell({
               </button>
             )}
             {tutorAction.eligible && (
-              <button className="topbar-tutor" onClick={() => setTutorOpen(true)}>
+              <button className="topbar-tutor" onClick={() => {
+                setMenuOpen(false);
+                setTutorOpen(true);
+                window.requestAnimationFrame(() => document.getElementById("tutor-question")?.focus());
+              }}>
                 <Sparkles size={16} />{" "}
                 {tutorAction.operation === "unknown"
                   ? "Tentar professor (condicional)"
@@ -547,6 +558,8 @@ export function AppShell({
         <button
           type="button"
           aria-label="Abrir todos os recursos"
+          aria-expanded={menuOpen}
+          aria-controls="study-navigation"
           onClick={() => setMenuOpen(true)}
         >
           <Menu size={20} /> <span>Mais</span>

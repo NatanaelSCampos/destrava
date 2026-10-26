@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -12,6 +12,12 @@ import { AppShell } from "@/components/layout/app-shell";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 import { resolveApplicationRuntime } from "@/lib/application-course-runtime";
 import { RuntimeUnavailablePanel } from "@/components/layout/runtime-unavailable";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
+};
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 

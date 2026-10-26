@@ -68,7 +68,21 @@ export function LessonExperience({ lesson, unit, index, onSelect, nextLesson, pr
   const activityIndex = lesson.activities[index] ? index : 0;
   const active = lesson.activities[activityIndex];
   const committedActivity = useRef(active.id);
-  useLayoutEffect(() => { committedActivity.current = active.id; }, [active.id]);
+  useLayoutEffect(() => {
+    committedActivity.current = active.id;
+    const current = document.querySelector<HTMLButtonElement>(".le-stage-parts button[aria-current]");
+    const rail = current?.closest("ol");
+    if (!current || !rail) return;
+    const center = () => {
+      if (rail.scrollWidth > rail.clientWidth) rail.scrollTo({
+        left: Math.max(0, current.offsetLeft - (rail.clientWidth - current.offsetWidth) / 2), behavior: "instant",
+      });
+    };
+    center();
+    const observer = new ResizeObserver(center);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [active.id]);
   const stages = resolveLessonStages(lesson);
   const { stageIndex, partIndex } = lessonStagePosition(stages, activityIndex);
   const stage = stages[stageIndex];

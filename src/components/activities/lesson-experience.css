@@ -459,3 +459,46 @@
   .lesson-experience .writing-compose .writing-footer { flex-direction:row; align-items:center; }
   .lesson-experience .writing-compose .writing-footer > div { min-height:44px; }
 }
+
+/* Compact navigation follows the available lesson width, including tablet/landscape. */
+.lesson-experience { container:lesson / inline-size; }
+@container lesson (max-width:960px) {
+  .le-layout { display:block; }
+  .le-path { position:static; border:0; border-radius:0; background:transparent; box-shadow:none; padding:0 0 10px; }
+  .le-path-heading,.le-path-note,.le-path nav small { display:none; }
+  .le-path nav { display:flex; gap:7px; overflow-x:auto; padding:3px 3px 10px; }
+  .le-path nav button { min-height:44px; padding:8px 12px; width:auto; flex:0 0 auto; border:1px solid var(--le-border); border-radius:100px; background:white; gap:7px; }
+  .le-number { height:24px; width:24px; flex-basis:24px; font-size:10px; border-radius:50%; }
+  .le-paper { min-height:0; }
+  .le-stage-parts { padding:12px; margin-bottom:18px; }
+  .le-stage-parts > header { align-items:center; margin-bottom:10px; gap:8px; }
+  .le-stage-parts > header .le-eyebrow { display:none; }
+  .lesson-experience .le-stage-parts h2 { margin:0; font-size:14px; }
+  .le-stage-parts ol { display:flex; gap:8px; overflow-x:auto; padding:3px 3px 8px; position:relative; scrollbar-width:thin; scroll-padding-inline:3px; }
+  .le-stage-parts li { flex:0 0 176px; }
+  .le-stage-parts button { min-height:54px; padding:8px; font-size:12px; }
+  .le-stage-parts button > span:last-child { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .le-context { display:none; }
+  .le-mobile-context { display:block; }
+}
+@media(max-width:1024px) {
+  .lesson-experience .le-intro { padding:12px 0 16px; display:flex; flex-wrap:wrap; gap:10px; }
+  .lesson-experience .back-link { margin-bottom:0; }
+  .le-intro h1 { font-size:26px; }
+  .le-intro p { font-size:13px; }
+  .le-duration { margin:0; padding:7px 10px; }
+  .le-mobile-context { margin-bottom:12px; }
+  .le-mobile-context > summary { min-height:44px; }
+  .le-top { padding:16px 16px 12px; }
+  .le-body { padding:18px 14px; }
+  .le-controls { flex-wrap:wrap; padding:14px; }
+  .lesson-experience .phrase-play-button,.lesson-experience .phrase-repeat-button,.lesson-experience .phrase-slow-button { min-width:44px; min-height:44px; }
+  .lesson-experience .phrase-repeat-button { width:44px; }
+  .lesson-help-heading > button,.le-dialog-heading button { min-width:44px; min-height:44px; flex-shrink:0; }
+  .le-audio-information > button { min-height:44px; }
+  .lesson-help-dialog,.lesson-help-surface { max-height:90dvh; }
+  .lesson-help-body { min-height:0; overscroll-behavior:contain; }
+  .lesson-help-surface > header,.lesson-help-surface > footer { flex-shrink:0; }
+  .lesson-help-surface > footer { padding-bottom:max(15px,env(safe-area-inset-bottom)); }
+}
+@media(max-width:390px) { .le-controls > .primary-button { flex:1; justify-content:center; } }
