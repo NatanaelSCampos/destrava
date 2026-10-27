@@ -16,7 +16,6 @@ import {
   Pause,
   Play,
   Send,
-  Search,
   Sparkles,
   Square,
   Volume2,
@@ -41,6 +40,7 @@ import {
   type LiveTopic,
   type LiveTurn,
 } from "@/domain/conversation/live-client";
+import { LiveTopicPicker } from "./live-topic-picker";
 import "./live-conversation.css";
 
 const levels: Array<{ id: LiveLevel; label: string; detail: string }> = [
@@ -48,33 +48,6 @@ const levels: Array<{ id: LiveLevel; label: string; detail: string }> = [
   { id: "intermediate", label: "Intermediário", detail: "Mais espaço para desenvolver" },
   { id: "advanced", label: "Avançado", detail: "Conversa mais espontânea" },
 ];
-
-/** Filters the published topic list without changing eligibility, order or original text. */
-function liveTopicPage(topics: LiveTopic[], query: string, unitId: string, limit = 6) {
-  const fold = (text: string) => text.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase();
-  const terms = fold(query).trim().split(/\s+/u).filter(Boolean);
-  const units = new Map<string, { id: string; title: string; number: number; count: number }>();
-  const matches: LiveTopic[] = [];
-  for (const item of topics) {
-    let unit = units.get(item.unitId);
-    if (!unit) {
-      unit = { id: item.unitId, title: item.unitTitle, number: item.unitNumber, count: 0 };
-      units.set(item.unitId, unit);
-    }
-    const text = fold(
-      [item.title, item.description, item.unitTitle, "unidade " + item.unitNumber].join(" "),
-    );
-    if (!terms.every((term) => text.includes(term))) continue;
-    unit.count++;
-    if (!unitId || item.unitId === unitId) matches.push(item);
-  }
-  return {
-    units: [...units.values()].sort((a, b) => a.number - b.number),
-    visible: matches.slice(0, limit),
-    total: matches.length,
-    remaining: Math.max(0, matches.length - limit),
-  };
-}
 
 const phases = {
   idle: "Vamos conversar?",
@@ -274,15 +247,9 @@ function LiveConversationPanel({
     [topicsLoading, setTopicsLoading] = useState(true);
   const preferences = useRef<HTMLElement>(null),
     preferencesHeading = useRef<HTMLHeadingElement>(null);
-  const [topicQuery, setTopicQuery] = useState(""),
-    [topicUnit, setTopicUnit] = useState(""),
-    [topicLimit, setTopicLimit] = useState(6);
-  const topicSearchId = useId(),
-    topicUnitId = useId(),
-    topicResultsId = useId(),
-    preferencesHeadingId = useId();
-  const [topicId, setTopicId] = useState(""),
-    [languageLabel, setLanguageLabel] = useState(languageName);
+  const preferencesHeadingId = useId();
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [languageLabel, setLanguageLabel] = useState(languageName);
   const [level, setLevel] = useState<LiveLevel>("beginner"),
     [correction, setCorrection] = useState<LiveCorrection>("immediate");
   const correctionChosen = useRef(false);
@@ -367,8 +334,11 @@ function LiveConversationPanel({
       });
     return () => abort.abort();
   }, [courseId, enabled, reload, historyRevision, historyReload]);
-  const topic = topics.find((item) => item.id === topicId);
-  const topicPage = liveTopicPage(topics, topicQuery, topicUnit, topicLimit);
+  const selectedTopics = topics.filter((item) => selectedTopicIds.includes(item.id));
+  const selectionTitle =
+    selectedTopics.length === 1
+      ? selectedTopics[0].title
+      : selectedTopics.length + " etapas para conversar";
   const active = ["connecting", "listening", "speaking", "paused", "ending"].includes(
     snapshot.phase,
   );
@@ -461,24 +431,16 @@ function LiveConversationPanel({
     }
   }
 
-  function clearTopicFilters() {
-    setTopicQuery("");
-    setTopicUnit("");
-    setTopicLimit(6);
-  }
-  function selectTopic(id: string) {
-    setTopicId(id);
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      window.requestAnimationFrame(() => {
-        preferences.current?.scrollIntoView({
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-            ? "instant"
-            : "smooth",
-          block: "start",
-        });
-        preferencesHeading.current?.focus({ preventScroll: true });
+  function goToPreferences() {
+    window.requestAnimationFrame(() => {
+      preferences.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+        block: "start",
       });
-    }
+      preferencesHeading.current?.focus({ preventScroll: true });
+    });
   }
 
   function refresh() {
@@ -489,13 +451,13 @@ function LiveConversationPanel({
     setReload((value) => value + 1);
   }
   function begin() {
-    if (!enabled || !topic || !client.current || active) return;
+    if (!enabled || !selectedTopics.length || !client.current || active) return;
     setView("call");
     selectHistory(null);
     setDraft("");
     void client.current.start({
       courseId,
-      topicId: topic.id,
+      topicIds: selectedTopics.map((topic) => topic.id),
       level,
       correction,
       voice: voice === "preference" ? readVoicePreference(locale) : voice,
@@ -591,7 +553,10 @@ function LiveConversationPanel({
               <span className="live-voice-kicker">
                 {snapshot.session?.languageLabel ?? languageLabel}
               </span>
-              <h2>{snapshot.session?.topic.title ?? topic?.title ?? "Sua conversa"}</h2>
+              <h2>
+                {snapshot.session?.topic.title ??
+                  (selectedTopics.length ? selectionTitle : "Sua conversa")}
+              </h2>
             </div>
             {active && (
               <span
@@ -881,9 +846,12 @@ function LiveConversationPanel({
           <section className="live-voice-topics">
             <div className="live-voice-section-heading">
               <div>
-                <span className="live-voice-kicker">1 · UM ASSUNTO CONHECIDO</span>
+                <span className="live-voice-kicker">1 · ASSUNTOS QUE SE CONECTAM</span>
                 <h2>Sobre o que vamos conversar?</h2>
-                <p>Pratique a partir do que você já estudou neste curso.</p>
+                <p>
+                  Combine etapas e unidades do que você já estudou. Você escolhe o caminho da
+                  conversa.
+                </p>
               </div>
               <BookOpen size={22} aria-hidden="true" />
             </div>
@@ -901,121 +869,12 @@ function LiveConversationPanel({
                 </button>
               </div>
             ) : topics.length ? (
-              <>
-                <div className="live-voice-topic-filters">
-                  <label htmlFor={topicSearchId}>
-                    <span>Buscar assunto</span>
-                    <div className="live-voice-search">
-                      <Search size={17} aria-hidden="true" />
-                      <input
-                        id={topicSearchId}
-                        type="search"
-                        value={topicQuery}
-                        placeholder="Título, unidade ou descrição"
-                        onChange={(event) => {
-                          setTopicQuery(event.target.value);
-                          setTopicLimit(6);
-                        }}
-                        aria-controls={topicResultsId}
-                      />
-                    </div>
-                  </label>
-                  <label htmlFor={topicUnitId}>
-                    <span>Unidade</span>
-                    <select
-                      id={topicUnitId}
-                      value={topicUnit}
-                      onChange={(event) => {
-                        setTopicUnit(event.target.value);
-                        setTopicLimit(6);
-                      }}
-                      aria-controls={topicResultsId}
-                    >
-                      <option value="">
-                        Todas ({topicPage.units.reduce((sum, unit) => sum + unit.count, 0)})
-                      </option>
-                      {topicPage.units.map((unit) => (
-                        <option key={unit.id} value={unit.id}>
-                          Unidade {unit.number} · {unit.title} ({unit.count})
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </div>
-                <div className="live-voice-topic-results">
-                  <p role="status" aria-live="polite">
-                    Mostrando {topicPage.visible.length} de {topicPage.total}{" "}
-                    {topicPage.total === 1 ? "assunto" : "assuntos"}
-                  </p>
-                  {(topicQuery || topicUnit) && (
-                    <button type="button" onClick={clearTopicFilters}>
-                      Limpar filtros
-                    </button>
-                  )}
-                </div>
-                {topicPage.total ? (
-                  <>
-                    <div id={topicResultsId} className="live-voice-topic-grid">
-                      {topicPage.visible.map((item) => (
-                        <button
-                          type="button"
-                          key={item.id}
-                          className={
-                            "live-voice-topic " + (topicId === item.id ? "is-selected" : "")
-                          }
-                          aria-pressed={topicId === item.id}
-                          onClick={() => selectTopic(item.id)}
-                        >
-                          <span className="live-voice-topic-top">
-                            <span>UNIDADE {item.unitNumber}</span>
-                            <span className="live-voice-topic-check">
-                              {topicId === item.id ? (
-                                <Check size={15} />
-                              ) : (
-                                <MessageCircle size={17} />
-                              )}
-                            </span>
-                          </span>
-                          <strong>{item.title}</strong>
-                          <p>{item.description}</p>
-                          <small>{item.unitTitle}</small>
-                          <span className="live-voice-topic-foot">
-                            <CheckCircle2 size={14} aria-hidden="true" />
-                            {item.studiedActivities}{" "}
-                            {item.studiedActivities === 1
-                              ? "atividade estudada"
-                              : "atividades estudadas"}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-
-                    {topicPage.remaining > 0 && (
-                      <button
-                        type="button"
-                        className="live-voice-secondary live-voice-topic-more"
-                        aria-controls={topicResultsId}
-                        onClick={() => setTopicLimit((value) => value + 6)}
-                      >
-                        Mostrar mais {Math.min(6, topicPage.remaining)}{" "}
-                        <ArrowRight size={16} aria-hidden="true" />
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div id={topicResultsId} className="live-voice-empty">
-                    <h3>Nenhum assunto encontrado</h3>
-                    <p>Tente outra palavra ou retire o filtro de unidade.</p>
-                    <button
-                      type="button"
-                      className="live-voice-secondary"
-                      onClick={clearTopicFilters}
-                    >
-                      Limpar filtros
-                    </button>
-                  </div>
-                )}
-              </>
+              <LiveTopicPicker
+                topics={topics}
+                selectedIds={selectedTopicIds}
+                onChange={setSelectedTopicIds}
+                onContinue={goToPreferences}
+              />
             ) : (
               <div className="live-voice-empty">
                 <BookOpen size={30} aria-hidden="true" />
@@ -1033,13 +892,18 @@ function LiveConversationPanel({
             <h2 id={preferencesHeadingId} ref={preferencesHeading} tabIndex={-1}>
               Encontre seu ritmo
             </h2>
-            {topic && (
+            {selectedTopics.length > 0 && (
               <div className="live-voice-selected-topic" aria-live="polite" aria-atomic="true">
-                <span>ASSUNTO ESCOLHIDO</span>
-                <strong>{topic.title}</strong>
-                <small>
-                  Unidade {topic.unitNumber} · {topic.unitTitle}
-                </small>
+                <span>SUA SELEÇÃO</span>
+                <strong>{selectionTitle}</strong>
+                <ul>
+                  {selectedTopics.slice(0, 3).map((topic) => (
+                    <li key={topic.id}>{topic.title}</li>
+                  ))}
+                </ul>
+                {selectedTopics.length > 3 && (
+                  <small>+ {selectedTopics.length - 3} etapas selecionadas</small>
+                )}
               </div>
             )}
 
@@ -1106,7 +970,7 @@ function LiveConversationPanel({
               type="button"
               className="live-voice-primary live-voice-begin"
               disabled={
-                !topic ||
+                !selectedTopics.length ||
                 !enabled ||
                 active ||
                 (snapshot.phase === "error" && Boolean(snapshot.session))
@@ -1116,8 +980,8 @@ function LiveConversationPanel({
               <Mic size={19} aria-hidden="true" /> Começar conversa{" "}
               <ArrowRight size={17} aria-hidden="true" />
             </button>
-            {!topic && topics.length > 0 && (
-              <p className="live-voice-select-hint">Escolha um assunto para começar.</p>
+            {!selectedTopics.length && topics.length > 0 && (
+              <p className="live-voice-select-hint">Escolha uma ou mais etapas para começar.</p>
             )}
             <p className="live-voice-ai-note">Você conversa com uma IA, não com uma pessoa.</p>
           </aside>

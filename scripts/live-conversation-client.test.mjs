@@ -934,3 +934,21 @@ test("history report retry enforces its 60s deadline and clears the timer withou
   await rejected;
   assert.equal(cleared, true);
 });
+
+test("multi-topic request keeps the complete selection and uses the existing single-call lifecycle", async () => {
+  const f = fixture();
+  const { topicId: _legacy, ...base } = settings;
+  void _legacy;
+  const selection = { ...base, topicIds: ["studied-a", "studied-b"] };
+  await f.controller.start(selection);
+  assert.deepEqual(f.calls[0].body, {
+    ...selection,
+    sdp: "local-offer",
+    operationId: f.env.uuid(),
+  });
+  assert.equal(f.calls.filter((call) => call.endpoint === "/session").length, 1);
+  assert.equal(f.tracks[0].enabled, false);
+  f.started();
+  assert.equal(f.tracks[0].enabled, true);
+  f.controller.dispose();
+});

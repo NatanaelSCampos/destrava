@@ -25,6 +25,7 @@ export type LiveTopic = {
   unitTitle: string;
   unitNumber: number;
   studiedActivities: number;
+  lessonOrder?: number;
 };
 export type LiveTopics = { topics: LiveTopic[]; languageLabel: string; sourceLanguage: string };
 export type LiveSession = {
@@ -56,7 +57,8 @@ export type LiveHistory = {
 };
 export type LiveSettings = {
   courseId: string;
-  topicId: string;
+  topicId?: string;
+  topicIds?: string[];
   level: LiveLevel;
   correction: LiveCorrection;
   voice: "female" | "male";
