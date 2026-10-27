@@ -65,7 +65,8 @@
     "ciclo2:a2:verify": "node --import tsx scripts/verify-ciclo2-a2.tsx",
     "ciclo2:b2:verify": "node --import tsx scripts/verify-ciclo2-b2.tsx",
     "ciclo2:verify": "node --import tsx --test scripts/verify-ciclo2-independent.tsx",
-    "ciclo2:verify:local": "node scripts/run-ciclo2-local.mjs"
+    "ciclo2:verify:local": "node scripts/run-ciclo2-local.mjs",
+    "conversation:live:verify": "node --import tsx --test scripts/live-conversation-client.test.mjs scripts/live-conversation-independent.test.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.7.0",

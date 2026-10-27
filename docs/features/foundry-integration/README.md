@@ -131,3 +131,7 @@ A edição local1.4.0 está pronta para estudo do proprietário, com capacidades
 ## Inglês — expansão U3/U4/U5, 26/10/2026
 
 A edição 1.1.0 acrescenta rotina e horários, comida e compras, encontros e planos, com 12 temas e prova final de 31 questões por unidade nova. O [relatório da edição](../english-u345-experience/RELATORIO.md) registra conteúdo, capacidades, validações, transição e situação de publicação; o [padrão de autoria](../english-u345-experience/PADRAO_AUTORIA.md) orienta os próximos pacotes. Os registros acima conservam seus resultados históricos.
+
+## Conversa por voz — 27/10/2026
+
+A nova experiência usa os temas praticados dos pacotes compilados, com níveis, correção configurável, voz simultânea e histórico privado. Veja o [guia e limites operacionais](../live-conversation/README.md). O recurso preserva a conversa por mensagens e não altera o conteúdo nem atribui aprovação de atividade.
