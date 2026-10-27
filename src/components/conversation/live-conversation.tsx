@@ -229,6 +229,14 @@ export function LiveConversation() {
     runtime?.selectionRevision,
     ready,
   ]);
+  if (!ready)
+    return (
+      <div className="live-voice-page">
+        <p className="live-voice-loading" role="status">
+          Preparando suas conversas…
+        </p>
+      </div>
+    );
   return (
     <LiveConversationPanel
       key={scope}
@@ -251,6 +259,12 @@ function LiveConversationPanel({
   languageName: string;
   enabled: boolean;
 }) {
+  const page = useRef<HTMLDivElement>(null);
+  const scrollTransitions = useRef<{
+    completed: string | null;
+    history: string | null;
+    hasReport: boolean;
+  }>({ completed: null, history: null, hasReport: false });
   const audio = useRef<HTMLAudioElement>(null),
     orb = useRef<HTMLDivElement>(null),
     client = useRef<LiveConversationClient | null>(null);
@@ -360,6 +374,35 @@ function LiveConversationPanel({
   );
   const connected = ["listening", "speaking", "paused"].includes(snapshot.phase);
   const showingCall = view === "call" && (active || snapshot.session || snapshot.phase === "error");
+
+  const completedScrollId =
+    showingCall && snapshot.phase === "completed" ? (snapshot.session?.id ?? null) : null;
+  const historyScrollId = !showingCall && tab === "history" ? (selectedHistory?.id ?? null) : null;
+  const historyHasReport = historyScrollId !== null && Boolean(selectedHistory?.report);
+  useEffect(() => {
+    const previous = scrollTransitions.current;
+    const completed = completedScrollId !== null && previous.completed !== completedScrollId;
+    const history =
+      historyScrollId !== null &&
+      (previous.history !== historyScrollId || (!previous.hasReport && historyHasReport));
+    scrollTransitions.current = {
+      completed: completedScrollId,
+      history: historyScrollId,
+      hasReport: historyHasReport,
+    };
+    if (!completed && !history) return;
+    const frame = window.requestAnimationFrame(() => {
+      page.current
+        ?.querySelector<HTMLElement>(completed ? ".live-voice-call" : ".live-voice-history")
+        ?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ? "instant"
+            : "smooth",
+          block: "start",
+        });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [completedScrollId, historyScrollId, historyHasReport]);
 
   function selectHistory(item: LiveHistory | null) {
     ++reportGeneration.current;
@@ -474,7 +517,7 @@ function LiveConversationPanel({
     setReload((value) => value + 1);
   }
   return (
-    <div className="live-voice-page">
+    <div ref={page} className="live-voice-page">
       <audio ref={audio} autoPlay aria-hidden="true" />
       <header className="live-voice-heading">
         <div>

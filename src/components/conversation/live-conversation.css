@@ -1088,3 +1088,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.live-voice-call,
+.live-voice-history {
+  scroll-margin-top: 88px;
+}
