@@ -1,0 +1,41 @@
+name: Support reports
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: support-reports
+  cancel-in-progress: false
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/main' && vars.SUPPORT_REPORTS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Collect consented reports
+        id: collect
+        env:
+          DESTRAVA_REPORT_BRIDGE_KEY: ${{ secrets.DESTRAVA_REPORT_BRIDGE_KEY }}
+        run: node scripts/reports/sync-github.mjs collect
+      - name: Store reviewed evidence
+        if: steps.collect.outputs.has_reports == 'true'
+        id: evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: report-evidence
+          path: report-evidence/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish Issues and acknowledge
+        if: steps.collect.outputs.has_reports == 'true'
+        env:
+          DESTRAVA_REPORT_BRIDGE_KEY: ${{ secrets.DESTRAVA_REPORT_BRIDGE_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          REPORT_ARTIFACT_URL: ${{ steps.evidence.outputs.artifact-url }}
+        run: node scripts/reports/sync-github.mjs publish

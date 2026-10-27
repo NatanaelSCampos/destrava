@@ -1,0 +1,22 @@
+{
+  "en-US": {
+    "female": "en-US-AvaNeural",
+    "male": "en-US-AndrewNeural"
+  },
+  "en-GB": {
+    "female": "en-GB-SoniaNeural",
+    "male": "en-GB-RyanNeural"
+  },
+  "es-ES": {
+    "female": "es-ES-XimenaNeural",
+    "male": "es-ES-TristanMultilingualNeural"
+  },
+  "es-MX": {
+    "female": "es-MX-DaliaNeural",
+    "male": "es-MX-JorgeNeural"
+  },
+  "pt-BR": {
+    "female": "pt-BR-FranciscaNeural",
+    "male": "pt-BR-AntonioNeural"
+  }
+}

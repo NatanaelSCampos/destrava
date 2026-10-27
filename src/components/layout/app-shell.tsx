@@ -480,7 +480,7 @@ export function AppShell({
               </button>
             )}
             {tutorAction.eligible && (
-              <button className="topbar-tutor" onClick={() => {
+              <button aria-label="Tirar dúvida com IA" className="topbar-tutor" onClick={() => {
                 setMenuOpen(false);
                 setTutorOpen(true);
                 window.requestAnimationFrame(() => document.getElementById("tutor-question")?.focus());

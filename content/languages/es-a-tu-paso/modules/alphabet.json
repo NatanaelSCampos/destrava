@@ -5,8 +5,7 @@
     "word": "agua",
     "translation": "água",
     "example": "Agua sin gas, por favor.",
-    "kind": "vowel",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "vowel"
   },
   {
     "letter": "B",
@@ -23,8 +22,7 @@
     "word": "café",
     "translation": "café",
     "example": "Un café con leche, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "D",
@@ -32,8 +30,7 @@
     "word": "dos",
     "translation": "dois",
     "example": "Dos cafés, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "E",
@@ -41,8 +38,7 @@
     "word": "entrada",
     "translation": "entrada",
     "example": "Nos vemos en la entrada.",
-    "kind": "vowel",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "vowel"
   },
   {
     "letter": "F",
@@ -50,8 +46,7 @@
     "word": "favor",
     "translation": "favor",
     "example": "Más despacio, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "G",
@@ -59,8 +54,7 @@
     "word": "gas",
     "translation": "gás",
     "example": "¿Hay agua con gas?",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "H",
@@ -86,8 +80,7 @@
     "word": "jugo",
     "translation": "suco",
     "example": "Un jugo de naranja, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "K",
@@ -95,8 +88,7 @@
     "word": "kilo",
     "translation": "quilo",
     "example": "Un kilo de pan, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "L",
@@ -104,8 +96,7 @@
     "word": "leche",
     "translation": "leite",
     "example": "Un té sin leche, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "M",
@@ -113,8 +104,7 @@
     "word": "media",
     "translation": "meia hora",
     "example": "A las seis y media.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "N",
@@ -122,8 +112,7 @@
     "word": "nombre",
     "translation": "nome",
     "example": "¿Puedes repetir tu nombre?",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "Ñ",
@@ -140,8 +129,7 @@
     "word": "ocho",
     "translation": "oito",
     "example": "Son ocho pesos.",
-    "kind": "vowel",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "vowel"
   },
   {
     "letter": "P",
@@ -149,8 +137,7 @@
     "word": "pan",
     "translation": "pão",
     "example": "¿Tiene pan?",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "Q",
@@ -158,8 +145,7 @@
     "word": "qué",
     "translation": "que / o que",
     "example": "¿Qué desea?",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "R",
@@ -167,8 +153,7 @@
     "word": "repetir",
     "translation": "repetir",
     "example": "¿Puede repetir el precio?",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "S",
@@ -176,8 +161,7 @@
     "word": "sin",
     "translation": "sem",
     "example": "Sin azúcar, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "T",
@@ -185,8 +169,7 @@
     "word": "té",
     "translation": "chá",
     "example": "Un té, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   },
   {
     "letter": "U",
@@ -194,8 +177,7 @@
     "word": "uno",
     "translation": "um",
     "example": "Uno, por favor.",
-    "kind": "vowel",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "vowel"
   },
   {
     "letter": "V",
@@ -239,7 +221,6 @@
     "word": "zumo",
     "translation": "suco",
     "example": "Un zumo de naranja, por favor.",
-    "kind": "consonant",
-    "note": "Consulte o nome da letra para soletrar. A palavra e a frase são exemplos autorais; este cartão não fornece uma gravação."
+    "kind": "consonant"
   }
 ]

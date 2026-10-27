@@ -1,11 +1,13 @@
 import Link from "@/components/navigation-link";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { GuidedLessonCatalog } from "./guided-lesson-catalog";
 import { resolveApplicationRuntime } from "@/lib/application-course-runtime";
 import { getAuthenticatedUser } from "@/lib/supabase/server";
 import { InteractiveClassroom } from "@/components/interactive-lesson/interactive-classroom";
 import { curatedInteractiveExamples } from "@/content/interactive-examples";
 import "@/app/live-classes/live-classes.css";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { courseInteractiveLesson, courseLessonPath, type CourseLessonLocation } from "@/lib/course-lesson-navigation";
 import { learningActionAvailability } from "@/domain/study/learning-action-availability";
 import { publicCourse } from "@/content/public";
@@ -29,6 +31,9 @@ export async function InteractiveLessonEntry({ requested, location }: { requeste
       </div>
     );
   const bundle = selected.bundle;
+  if (requested === undefined && !location) return <GuidedLessonCatalog definitions={bundle.coursePackage.interactiveLessons.map(
+    ({ id, courseId, unitId, lessonId, title, estimatedMinutes }) => ({ id, courseId, unitId, lessonId, title, estimatedMinutes }),
+  )} />;
   const projected = publicCourse(bundle.course, bundle.language);
   const target = location ? courseInteractiveLesson(projected, bundle.coursePackage.interactiveLessons, location) : undefined;
   if (location && !target) return <section className="live-empty panel" role="status">
@@ -50,14 +55,14 @@ export async function InteractiveLessonEntry({ requested, location }: { requeste
   );
   const definition = target?.definition ?? (requested
     ? definitions.find(entry => entry.lessonId === requested || entry.id === requested)
-    : definitions[0]);
+    : undefined);
   if (!definition)
     return (
       <div className="live-empty panel">
         <span className="eyebrow">AULA PARTICULAR</span>
-        <h1>Em preparação para este curso</h1>
+        <h1>Aula não encontrada</h1>
         <p>
-          As aulas particulares aparecem aqui quando o curso tiver um roteiro interativo publicado.
+          Escolha uma das aulas publicadas no catálogo do curso atual.
         </p>
         <Link className="primary-button" href={`/course/${bundle.course.slug}`}>
           Voltar ao curso
@@ -81,6 +86,11 @@ export async function InteractiveLessonEntry({ requested, location }: { requeste
         </Link>
       </div>
     );
+  if (!location) {
+    const ownerUnit = projected.units.find(unit => unit.id === definition.unitId);
+    const ownerLesson = ownerUnit?.lessons.find(lesson => lesson.id === definition.lessonId && lesson.interactiveLessonRef === definition.id);
+    if (ownerUnit && ownerLesson) redirect(courseLessonPath(bundle.course, ownerUnit, ownerLesson));
+  }
   const unitHref = target ? "/course/" + encodeURIComponent(bundle.course.slug) + "/unit/" + target.unit.number : undefined;
   const classroom = <InteractiveClassroom
     key={`${bundle.course.id}:${definition.id}`}
@@ -95,7 +105,6 @@ export async function InteractiveLessonEntry({ requested, location }: { requeste
   const index = target.unit.lessons.findIndex(item => item.id === target.lesson.id);
   const previous = target.unit.lessons[index - 1], next = target.unit.lessons[index + 1];
   return <section className="course-guided-lesson">
-    <Link href={unitHref!} className="back-link"><ArrowLeft size={16} /> Voltar à unidade</Link>
     {classroom}
     <nav className="lesson-neighbors" aria-label="Continuar unidade">
       {previous && <Link href={courseLessonPath(bundle.course, target.unit, previous)}><ChevronLeft size={15} /> Lição anterior</Link>}

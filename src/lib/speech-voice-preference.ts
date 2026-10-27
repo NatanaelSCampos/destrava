@@ -1,26 +1,29 @@
-const storagePrefix = "destrava:speech-voice:v1:";
-
+import { azureLocale, type AzureVoiceGender } from "./azure-voices";
+const storagePrefix = "destrava:azure-voice:v2:";
+const preferenceLanguage = (locale: string) => normalizedVoiceLocale(locale).split("-")[0];
 export function normalizedVoiceLocale(locale: string) {
   return locale.replaceAll("_", "-").toLowerCase();
 }
-
-export function voiceId(voice: SpeechSynthesisVoice) {
-  return `${normalizedVoiceLocale(voice.lang)}:${voice.voiceURI || voice.name}`;
-}
-
-export function readVoicePreference(locale: string) {
+export function readVoicePreference(locale: string): AzureVoiceGender {
+  if (typeof window === "undefined") return "female";
   try {
-    return window.localStorage.getItem(`${storagePrefix}${normalizedVoiceLocale(locale)}`) ?? "";
+    return (window.localStorage.getItem(storagePrefix + preferenceLanguage(locale)) ??
+      window.localStorage.getItem(storagePrefix + normalizedVoiceLocale(locale))) === "male"
+      ? "male"
+      : "female";
   } catch {
-    return "";
+    return "female";
   }
 }
-
-export function saveVoicePreference(locale: string, voiceId: string) {
+export function saveVoicePreference(locale: string, gender: string) {
+  if (!azureLocale(locale) || !["female", "male"].includes(gender)) return false;
   try {
-    const key = `${storagePrefix}${normalizedVoiceLocale(locale)}`;
-    if (voiceId) window.localStorage.setItem(key, voiceId);
-    else window.localStorage.removeItem(key);
+    window.localStorage.setItem(storagePrefix + preferenceLanguage(locale), gender);
+    window.dispatchEvent(
+      new CustomEvent("destrava:voice-preference", {
+        detail: { locale: normalizedVoiceLocale(locale) },
+      }),
+    );
     return true;
   } catch {
     return false;

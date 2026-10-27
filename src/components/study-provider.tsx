@@ -245,7 +245,7 @@ export function StudyProvider({
         deviceCapabilities,
         language,
         state.profile.variantId,
-        typeof window !== "undefined" ? (window.speechSynthesis?.getVoices() ?? []) : [],
+        [], // Azure recordings do not depend on installed browser voices.
       ),
     [course, deviceCapabilities, language, state.profile.variantId],
   );

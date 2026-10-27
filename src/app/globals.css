@@ -1159,3 +1159,8 @@ select:focus-visible {
   html { scroll-padding-block:20px 100px; }
   .back-link { min-height:44px; display:inline-flex; align-items:center; }
 }
+
+/* Recorded voices and a compact teacher action remain available on phones. */
+.azure-voice-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}.azure-voice-option{display:flex;align-items:center;gap:12px;text-align:left;background:white;border:1px solid var(--border);border-radius:16px;padding:16px;min-height:84px;color:var(--text-primary)}.azure-voice-option.selected{border-color:var(--primary);background:#fff2f4}.azure-voice-option strong,.azure-voice-option small{display:block}.azure-voice-option small{margin-top:5px;color:var(--text-secondary)}.azure-voice-avatar{display:grid;place-items:center;border-radius:12px;background:#e8f3ed;padding:10px}.azure-voice-option>svg{margin-left:auto}.audio-settings-panel>.eyebrow{display:flex;align-items:center;gap:7px}
+@media(max-width:1100px){.topbar-tutor{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:10px;font-size:0;gap:0}.topbar-tutor svg{width:20px;height:20px}.topbar-tutor::after{content:""}}
+@media(max-width:420px){.azure-voice-options{grid-template-columns:1fr}}

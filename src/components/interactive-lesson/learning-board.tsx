@@ -4,7 +4,7 @@ import type { BoardState } from "@/domain/interactive-lesson/runtime";
 import type { SceneIllustrationKind, SceneItem } from "@/content/activity-scene";
 import { BidiTextWarning, LearningText } from "@/components/learning/text-presentation";
 import { narrationLine, type NarrationContext } from "@/domain/interactive-lesson/narration-controller";
-import { Coffee, CupSoda, GlassWater, Croissant, Clock3, MapPin, Receipt, ShoppingBag, Users, MessageCircle, House, BedDouble, Sofa, KeyRound, Phone, Mail, BookOpen, BriefcaseBusiness, Volume2 } from "lucide-react";
+import { ArrowRight, Coffee, CupSoda, GlassWater, Croissant, Clock3, MapPin, Receipt, ShoppingBag, Users, MessageCircle, House, BedDouble, Sofa, KeyRound, Phone, Mail, BookOpen, BriefcaseBusiness, Volume2 } from "lucide-react";
 import { SpeakButton } from "@/components/audio/speak-button";
 import { SceneIllustration } from "@/components/activities/lesson-illustrations";
 
@@ -62,6 +62,7 @@ export function LearningBoard({ board, showTranslation, onNarrate, activeNarrati
           </div>}
           {element.kind === "comparison" ? <div className="live-board-comparison">
             <LearningText as="span" presentation={{ content: element.leftPresentation }} text={element.left} />
+            <ArrowRight className="live-board-arrow" size={20} aria-hidden="true" />
             <LearningText as="strong" presentation={{ content: element.rightPresentation }} text={element.right} />
             {onNarrate && <button type="button" className="speak-button" aria-label="Ouvir comparação" onClick={() => onNarrate(element)}><Volume2 size={18} aria-hidden="true" /></button>}
           </div> : <>

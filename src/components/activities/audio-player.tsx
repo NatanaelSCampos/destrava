@@ -6,6 +6,8 @@ import { SpeakButton } from "@/components/audio/speak-button";
 import { useStudy } from "@/components/study-provider";
 import type { ActivityVariant } from "@/content/variant-contracts";
 
+import { useAzureAudioSource } from "@/components/audio/use-azure-audio-source";
+
 export function AudioPlayer({
   text,
   media,
@@ -16,6 +18,7 @@ export function AudioPlayer({
   media?: { kind: "tts"; language: string } | { kind: "audio"; url: string };
 }) {
   const { language, course } = useStudy();
+  const source = useAzureAudioSource(media?.kind === "audio" ? media.url : "");
   const asset = media?.kind === "audio" ? course.teachingMedia?.find(item => item.src === media.url) : undefined;
   if (asset) return <RecordedPhrase mediaId={asset.id} label="Ouvir a mensagem desta atividade" />;
   if (media?.kind === "audio")
@@ -26,7 +29,7 @@ export function AudioPlayer({
         </span>
         <div>
           <strong>Ouça a apresentação</strong>
-          <audio controls src={media.url} aria-label="Áudio da atividade" />
+          <audio controls src={source} aria-label="Áudio da atividade" />
         </div>
       </div>
     );
@@ -40,7 +43,7 @@ export function AudioPlayer({
       />
       <div>
         <strong>Ouça a apresentação</strong>
-        <span>Voz do navegador · {language.identity.nativeName}</span>
+        <span>Áudio de estudo · {language.identity.nativeName}</span>
       </div>
     </div>
   );

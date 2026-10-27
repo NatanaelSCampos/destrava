@@ -1,3 +1,4 @@
+import { azureLocale } from "./azure-voices";
 import type { PublicCourse } from "@/content/public";
 import { negotiateCapabilities } from "@/engine/capabilities/compatibility";
 import { capabilityRegistry } from "@/engine/capabilities/registry";
@@ -6,35 +7,27 @@ import { textMeasureAvailability } from "@/engine/text/representation";
 import type { LanguagePackage } from "@/content/contracts";
 import { resolveLearningVariant } from "@/engine/variants/resolution";
 import { textToSpeechLocale } from "@/content/language-variant";
-import { selectBrowserVoice, type VoiceDescriptor } from "@/engine/variants/speech";
+import { type VoiceDescriptor } from "@/engine/variants/speech";
 
 // Stable primitive snapshots for React hydration. Detect APIs; do not request microphone permission.
 export const serverDeviceSnapshot = () => -1;
 export function deviceCapabilitySnapshot() {
   if (typeof window === "undefined") return -1;
-  const voiceHash = (window.speechSynthesis?.getVoices() ?? []).reduce((hash, voice) => {
-    for (const char of `${voice.lang}:${voice.voiceURI}:${voice.name}`)
-      hash = (hash * 31 + char.charCodeAt(0)) & 0x03ffffff;
-    return hash;
-  }, 0);
   return (
     (window.isSecureContext &&
     typeof navigator.mediaDevices?.getUserMedia === "function" &&
     typeof window.MediaRecorder === "function"
       ? 1
       : 0) |
-    ("speechSynthesis" in window ? 2 : 0) |
+    ("HTMLAudioElement" in window ? 2 : 0) |
     ("HTMLMediaElement" in window ? 4 : 0) |
-    (typeof Intl.Segmenter === "function" ? 8 : 0) |
-    (voiceHash << 4)
+    (typeof Intl.Segmenter === "function" ? 8 : 0)
   );
 }
 export function subscribeDeviceCapabilities(changed: () => void) {
   window.addEventListener("focus", changed);
-  window.speechSynthesis?.addEventListener("voiceschanged", changed);
   return () => {
     window.removeEventListener("focus", changed);
-    window.speechSynthesis?.removeEventListener("voiceschanged", changed);
   };
 }
 export function courseWithDeviceAvailability(
@@ -42,8 +35,9 @@ export function courseWithDeviceAvailability(
   snapshot: number,
   language?: LanguagePackage,
   preference?: unknown,
-  voices: VoiceDescriptor[] = [],
+  _voices: VoiceDescriptor[] = [],
 ): PublicCourse {
+  void _voices;
   if (snapshot < 0 || !course.capabilityReport) return course;
   const condition = (bit: number, reason: string) => ({
     state: snapshot & bit ? ("available" as const) : ("unavailable" as const),
@@ -60,7 +54,7 @@ export function courseWithDeviceAvailability(
           1,
           "Este navegador não oferece gravação de áudio em uma conexão segura.",
         ),
-        "client.audio_output": condition(2, "Este navegador não oferece leitura por voz."),
+        "client.audio_output": condition(2, "Este navegador não oferece reprodução de áudio."),
         "client.media_playback": condition(
           4,
           "Este navegador não oferece reprodução de áudio/vídeo.",
@@ -92,8 +86,7 @@ export function courseWithDeviceAvailability(
             variant.status === "invalid" ||
             (needsVoice &&
               (!locale ||
-                selectBrowserVoice(voices, locale, variant.speechFallback === "same_language")
-                  .status === "unavailable"))
+                !azureLocale(locale)))
           )
             textDiagnostics.push({
               code: "CAPABILITY_UNAVAILABLE",
@@ -105,7 +98,7 @@ export function courseWithDeviceAvailability(
               location: `${course.availability?.scopeLocations?.[`activity:${activity.id}`]}.variantVoice`,
               message:
                 "A variante ou a voz exigida por esta atividade está indisponível. Nenhuma resposta será avaliada.",
-              resolution: "Choose an accepted variant or install a compatible voice.",
+              resolution: "Choose a declared locale with a compatible audio recording.",
             });
         }
         if (activity.type !== "writing" || !activity.textRequirement) continue;

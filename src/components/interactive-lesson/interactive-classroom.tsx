@@ -3,7 +3,7 @@
 import { useTextPresentation } from "@/components/learning/text-presentation";
 import { presentationLanguage } from "@/engine/presentation/language";
 
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
 import Link from "@/components/navigation-link";
 import {
   ArrowLeft,
@@ -45,6 +45,7 @@ import {
   TimelineEngine,
   type LessonRuntimeState,
 } from "@/domain/interactive-lesson/runtime";
+import { GuidedPresentationController, idleGuidedSnapshot, type GuidedSnapshot, type GuidedHandle } from "@/domain/interactive-lesson/guided-presentation";
 import { HtmlMediaPresentationController } from "@/domain/interactive-lesson/presentation-controller";
 import type { CuratedExample } from "@/content/interactive-examples";
 import { LearningBoard, LearningRuns, type BoardTextRun } from "./learning-board";
@@ -147,6 +148,11 @@ function ClassroomSession({
   const [activitySuspended, setActivitySuspended] = useState(false);
   const [automaticallyStoppedMedia, setAutomaticallyStoppedMedia] = useState<string | null>(null);
   const [narration, setNarration] = useState<NarrationSnapshot>({ status: "idle", line: null, message: "" });
+  const [guidedPlaybackEntry, setGuidedPlaybackEntry] = useState<{ identity: string; snapshot: GuidedSnapshot } | null>(null);
+  const guidedRef = useRef<GuidedPresentationController | null>(null);
+  const guidedFinishedRef = useRef<() => void>(() => {});
+  const speedRef = useRef(speed);
+  useEffect(() => { speedRef.current = speed; }, [speed]);
   const playbackRef = useRef<PlaybackHandle | null>(null);
   const transientRef = useRef<HTMLAudioElement | null>(null);
   const nativePlaybackRef = useRef<{ element: HTMLMediaElement; owner: PlaybackHandle } | null>(null);
@@ -165,9 +171,11 @@ function ClassroomSession({
   const teachingAbort = useRef<AbortController | null>(null);
   const autoAdvanceArmed = useRef(false);
   const runtimeIdentityRef = useRef(runtimeIdentity);
-  runtimeIdentityRef.current = runtimeIdentity;
   const requestIdentityRef = useRef(requestIdentity);
-  requestIdentityRef.current = requestIdentity;
+  useLayoutEffect(() => {
+    runtimeIdentityRef.current = runtimeIdentity;
+    requestIdentityRef.current = requestIdentity;
+  }, [runtimeIdentity, requestIdentity]);
   const updateRuntime = useCallback((event: Parameters<typeof reduceRuntime>[2]) => {
     stateRef.current = reduceRuntime(definition, stateRef.current, event);
     dispatch(event);
@@ -178,7 +186,7 @@ function ClassroomSession({
     teachingAbort.current = null;
     teachingPending.current = false;
     setTeachingBusy(false);
-  }, []);
+  }, [setTeachingBusy]);
   const readyRef = useRef(false);
   const submittingRef = useRef(false);
   const saveFailureRef = useRef("");
@@ -196,13 +204,21 @@ function ClassroomSession({
     targetLocale, targetFallbackAllowed: variantResolution.speechFallback === "same_language",
   };
   const transcriptLines = transcriptNarration(segment.presentation?.transcript ?? [], narrationContext);
+  const guidedLines = useMemo(() => transcriptNarration(segment.presentation?.transcript ?? [], {
+    sourceLanguage: course.sourceLanguage ?? "", targetLanguage: presentationLanguage(language),
+    targetLocale, targetFallbackAllowed: variantResolution.speechFallback === "same_language",
+  }).map((line, index) => ({ ...line, endMs: segment.presentation!.transcript[index].endMs })),
+  [segment.presentation, course.sourceLanguage, language, targetLocale, variantResolution.speechFallback]);
+  const guidedPresentation = segment.presentation?.mode === "slides" && guidedLines.length > 0;
+  const guidedPlayback = guidedPlaybackEntry?.identity === requestIdentity ? guidedPlaybackEntry.snapshot : idleGuidedSnapshot;
+  const guidedLineIndex = Math.max(0, guidedLines.findLastIndex(line => line.anchorMs <= state.positionMs));
   const narrator = useMemo(() => {
     // The identity invalidates callbacks on account/course/version/segment/variant changes.
     void [authUserId, courseId, contentVersion, definition.lessonId, segment.id, targetLocale, studyState.profile.variantId];
     return new NarrationController((line, callbacks) => {
       let handle: PlaybackHandle | null = null;
       const started = speakText(line.text, line.locale!, callbacks.error, undefined, {
-        fallbackAllowed: line.fallbackAllowed,
+        courseId, fallbackAllowed: line.fallbackAllowed,
         onHandle: (owner) => { handle = owner; },
         onEnd: callbacks.end, onCancel: callbacks.cancel,
         onSelection: (selection) => {
@@ -217,6 +233,7 @@ function ClassroomSession({
     if (narration.status !== "speaking" || !narration.line?.id.startsWith("transcript:")) return;
     const anchorMs = narration.line.anchorMs;
     const board = engine.current.seek(anchorMs);
+    guidedRef.current?.seek(anchorMs);
     if (mediaRef.current) new HtmlMediaPresentationController(mediaRef.current).seek(anchorMs);
     updateRuntime({ type: "SEEK", positionMs: anchorMs, board });
   }, [narration.status, narration.line, updateRuntime]);
@@ -231,6 +248,7 @@ function ClassroomSession({
   }, [runtimeIdentity, studyState.profile.variantId, targetLocale]);
   const pausePlayback = useCallback(() => {
     autoAdvanceArmed.current = false;
+    guidedRef.current?.pause();
     narrator.pause();
     mediaRef.current?.pause();
     transientRef.current?.pause();
@@ -252,6 +270,7 @@ function ClassroomSession({
     if (mediaRef.current && stateRef.current.phase === "presenting") setAutomaticallyStoppedMedia(segment.id);
     automaticAudioStop.current = true;
     try {
+      guidedRef.current?.pause();
       narrator.pause();
       playbackRef.current?.cancel();
       mediaRef.current?.pause();
@@ -355,6 +374,32 @@ function ClassroomSession({
     },
     [media, narrator, setPracticeActivityRef, setSupportMode, updateRuntime],
   );
+
+  useEffect(() => {
+    if (!guidedPresentation || !guidedLines.length) return;
+    const guided = new GuidedPresentationController((line, callbacks) => {
+      let handle: GuidedHandle | null = null;
+      const options = { courseId, fallbackAllowed: line.fallbackAllowed,
+        onHandle: (owner: PlaybackHandle) => { handle = owner; },
+        onEnd: callbacks.end, onCancel: callbacks.cancel, onProgress: callbacks.progress };
+      const started = speakText(line.text, line.locale!, callbacks.error, speedRef.current, options);
+      return started ? handle : null;
+    }, (snapshot) => {
+      if (runtimeIdentityRef.current !== runtimeIdentity || requestIdentityRef.current !== requestIdentity ||
+        definition.segments[stateRef.current.segmentIndex]?.id !== segment.id) return;
+      setGuidedPlaybackEntry({ identity: requestIdentity, snapshot });
+      if (!readyRef.current || stateRef.current.phase !== "presenting") return;
+      if (snapshot.status === "paused" || snapshot.status === "error") {
+        autoAdvanceArmed.current = false; updateRuntime({ type: "PAUSE" }); return;
+      }
+      const result = engine.current.tick(snapshot.positionMs);
+      updateRuntime({ type: "TICK", positionMs: snapshot.positionMs, board: result.board });
+      handleTransient(result.effects, snapshot.positionMs);
+      if (snapshot.status === "completed") guidedFinishedRef.current();
+    });
+    guidedRef.current = guided;
+    return () => { if (guidedRef.current === guided) guidedRef.current = null; guided.dispose(); };
+  }, [guidedPresentation, guidedLines, runtimeIdentity, requestIdentity, definition, segment.id, courseId, updateRuntime, handleTransient]);
 
   useEffect(() => {
     let cancelled = false;
@@ -525,6 +570,7 @@ function ClassroomSession({
     engine.current.seek(stateRef.current.positionMs);
   }, [segment.id, segment.cues]);
   useEffect(() => {
+    if (guidedPresentation) return;
     const element = mediaRef.current;
     const player = element ? new HtmlMediaPresentationController(element) : null;
     player?.setPlaybackRate(speed);
@@ -553,40 +599,22 @@ function ClassroomSession({
       if (owner.isCurrent()) { owner.cancel(); updateRuntime({ type: "PAUSE" }); }
     });
     return () => { owner.release(); player?.pause(); };
-  }, [state.phase, state.segmentIndex, speed, currentMedia?.src, mediaStopped, activitySuspended, updateRuntime, runtimeIdentity, definition, segment.id, segment.presentation?.durationMs]);
+  }, [state.phase, state.segmentIndex, speed, currentMedia?.src, mediaStopped, activitySuspended, updateRuntime, runtimeIdentity, definition, segment.id, segment.presentation?.durationMs, guidedPresentation]);
   useEffect(() => {
-    if (
-      state.phase !== "presenting" ||
-      !segment.presentation ||
-      (segment.presentation.mode !== "slides" && !mediaError)
-    )
-      return;
-    activityClock.current.resetTick(performance.now());
-    const timer = window.setInterval(() => {
-      if (stateRef.current.phase !== "presenting") return;
-      const now = performance.now();
-      const elapsed = activityClock.current.takeElapsedMs(now, 500);
-      if (!elapsed) return;
-      const next = Math.min(
-        segment.presentation!.durationMs,
-        stateRef.current.positionMs + Math.round(elapsed * speed),
-      );
-      const result = engine.current.tick(next);
-      updateRuntime({ type: "TICK", positionMs: next, board: result.board });
-      handleTransient(result.effects, next);
-      if (next >= segment.presentation!.durationMs) {
-        autoAdvanceArmed.current = false;
-        updateRuntime({ type: "PAUSE" });
-      }
-    }, 200);
-    return () => window.clearInterval(timer);
-  }, [state.phase, segment, speed, handleTransient, mediaError, updateRuntime]);
+    if (!guidedPresentation || state.phase !== "presenting" || !readyRef.current ||
+      !activityClock.current.isActive(performance.now())) return;
+    const controller = guidedRef.current;
+    if (!controller) return;
+    controller.play(guidedLines, segment.presentation!.durationMs, stateRef.current.positionMs);
+    return () => controller.pause();
+  }, [guidedLines, guidedPresentation, state.phase, segment.presentation, activitySuspended]);
 
   function seek(positionMs: number) {
     if (teachingPending.current || stateRef.current.phase === "intervening") return;
     cancelPlayback();
     const exact = Math.max(0, Math.min(positionMs, segment.presentation?.durationMs ?? 0));
     const board = engine.current.seek(exact);
+    if (guidedPresentation) guidedRef.current?.seek(exact);
     if (mediaRef.current) new HtmlMediaPresentationController(mediaRef.current).seek(exact);
     updateRuntime({ type: "SEEK", positionMs: exact, board });
   }
@@ -651,6 +679,7 @@ function ClassroomSession({
     cancelPlayback();
     invalidateTeaching();
     const board = engine.current.seek(point.anchorMs);
+    if (guidedPresentation) guidedRef.current?.seek(point.anchorMs);
     if (mediaRef.current) new HtmlMediaPresentationController(mediaRef.current).seek(point.anchorMs);
     updateRuntime({ type: "RESUME", board });
     setTeaching(null);
@@ -660,11 +689,15 @@ function ClassroomSession({
     updateRuntime({ type: "PLAY" });
   }
   function toggleSpeed() {
+    if (guidedPresentation) {
+      pausePlayback();
+      guidedRef.current?.seek(stateRef.current.positionMs);
+    }
     if (speed === 1) updateRuntime({ type: "SLOWER_REQUESTED" });
     setSpeed((current) => (current === 1 ? 0.75 : 1));
   }
-  function onMediaPosition(ms: number, ended = false) {
-    if (!readyRef.current || stateRef.current.phase !== "presenting" || !playbackRef.current?.isCurrent() ||
+  function onMediaPosition(ms: number, ended = false, fromGuided = false) {
+    if (!readyRef.current || stateRef.current.phase !== "presenting" || (!fromGuided && !playbackRef.current?.isCurrent()) ||
       !activityClock.current.isActive(performance.now())) return;
     const duration = segment.presentation?.durationMs ?? 0;
     const positionMs = Math.min(ms, duration);
@@ -693,6 +726,9 @@ function ClassroomSession({
       updateRuntime({ type: "PLAY" });
     else autoAdvanceArmed.current = false;
   }
+  useEffect(() => {
+    guidedFinishedRef.current = () => onMediaPosition(segment.presentation?.durationMs ?? 0, true, true);
+  });
   async function askTeacher(value: string, mode: typeof supportMode = "ask") {
     if (!featureFlags.AI_TUTOR || questionComposing || teachingPending.current || !canInterrupt()) return;
     const trimmed = value.trim();
@@ -890,6 +926,32 @@ function ClassroomSession({
         </Link>
       </div>
     );
+  const presentationControls = (isPresenting && <div className="live-player" aria-label="Controles da aula">
+                <button type="button" className="live-play" disabled={state.phase === "intervening"}
+                  aria-label={state.phase === "presenting" && !mediaStopped ? "Pausar aula" : "Reproduzir aula"}
+                  onClick={() => {
+                    if (stateRef.current.phase === "presenting" && !mediaStopped) { cancelPlayback(); return; }
+                    cancelPlayback();
+                    setAutomaticallyStoppedMedia(null);
+                    autoAdvanceArmed.current = true;
+                    updateRuntime({ type: "PLAY" });
+                  }}>{state.phase === "presenting" && !mediaStopped ? <Pause size={19} /> : <Play size={19} />}</button>
+                <button type="button" className="live-rewind" disabled={state.phase === "intervening"}
+                  onClick={() => seek(guidedPresentation ? guidedLines[Math.max(0, guidedLineIndex - 1)].anchorMs : Math.max(0, stateRef.current.positionMs - 10000))}
+                  aria-label={guidedPresentation ? "Voltar uma fala" : "Voltar dez segundos"}>
+                  <RotateCcw size={17} aria-hidden="true" /><span>{guidedPresentation ? "Fala" : "10s"}</span></button>
+                <div className="live-player-position"><input aria-label={guidedPresentation ? "Fala da apresentação" : "Posição da apresentação"} type="range" min={0}
+                  max={guidedPresentation ? Math.max(0, guidedLines.length - 1) : segment.presentation?.durationMs ?? 1}
+                  value={guidedPresentation ? guidedLineIndex : state.positionMs}
+                  disabled={state.phase === "intervening" || !segment.presentation}
+                  onChange={(event) => seek(guidedPresentation ? guidedLines[Number(event.target.value)].anchorMs : Number(event.target.value))} />
+                  <span>{guidedPresentation ? <>Fala {guidedLineIndex + 1} de {guidedLines.length}
+                    {guidedPlayback.audioDurationMs > 0 && <> · {seconds(guidedPlayback.audioPositionMs)} / {seconds(guidedPlayback.audioDurationMs)}</>}</>
+                    : <>{seconds(state.positionMs)} <span aria-hidden="true">/</span> {seconds(segment.presentation?.durationMs ?? 0)}</>}</span>
+                </div>
+                <button type="button" className="live-speed" aria-label={`Velocidade ${speed} vezes. Alterar velocidade`}
+                  disabled={state.phase === "intervening"} onClick={toggleSpeed}>{speed}×</button>
+              </div>);
   return (
     <SpeechPlaybackScope.Provider value={(owner) => { playbackRef.current = owner; }}>
     <div className="live-page lesson-experience" onPlayCapture={(event) => {
@@ -901,7 +963,7 @@ function ClassroomSession({
       }
       if (nativePlaybackRef.current?.element === element && nativePlaybackRef.current.owner.isCurrent()) return;
       pausePlayback();
-      const owner = claimAudioPlayback(() => element.pause());
+      const owner = claimAudioPlayback(() => element.pause(), element);
       nativePlaybackRef.current = { element, owner };
       playbackRef.current = owner;
     }}>
@@ -954,6 +1016,8 @@ function ClassroomSession({
                   <span className="live-teacher-status" role="status">
                     <i aria-hidden="true" className={state.phase === "presenting" && !mediaStopped ? "speaking" : ""} />
                     {teachingBusy ? "Preparando sua resposta" : narration.status === "speaking" ? "Lendo com você"
+                      : guidedPresentation && guidedPlayback.status === "playing" && !guidedPlayback.audioDurationMs ? "Preparando a próxima fala"
+                      : guidedPresentation && guidedPlayback.status === "gap" ? "Pausa entre as falas"
                       : state.phase === "presenting" && !mediaStopped ? "Explicando no quadro"
                         : state.phase === "intervening" ? "Aula pausada para sua dúvida" : canStart ? "Pronto para começar" : "Aula pausada"}
                   </span>
@@ -964,6 +1028,7 @@ function ClassroomSession({
                 <span className="live-segment-count">Parte {state.segmentIndex + 1} de {definition.segments.length}</span>
               </div>
             </div>
+            {presentationControls}
             <div ref={answerRef} tabIndex={-1} role="region" className="live-board"
               aria-label={state.phase === "intervening" ? (featureFlags.AI_TUTOR ? "Quadro com a resposta do professor" : "Quadro com apoio preparado") : "Quadro da aula"}
               aria-busy={state.phase === "intervening" && teachingBusy}>
@@ -981,7 +1046,8 @@ function ClassroomSession({
                 }}><Play size={18} aria-hidden="true" /> Iniciar aula</button>
               </div>}
               <LearningBoard board={displayedBoard} showTranslation={showTranslation} narrationContext={narrationContext}
-                activeNarrationText={narration.status === "speaking" ? narration.line?.text : undefined}
+                activeNarrationText={narration.status === "speaking" ? narration.line?.text
+                  : guidedPresentation && guidedPlayback.status === "playing" ? guidedPlayback.line?.text : undefined}
                 onNarrate={(element) => {
                   if (element.kind === "comparison") {
                     startNarration([
@@ -1046,33 +1112,13 @@ function ClassroomSession({
                   </div>
                 </section>
               )}
-              {activeCaption && state.phase !== "intervening" && <div className="live-caption" aria-label="Legenda atual">
+              {transcriptOpen && activeCaption && state.phase !== "intervening" && <div className="live-caption" aria-label="Legenda atual">
                 <LearningText as="p" presentation={{ content: captionLine?.textPresentation }} text={activeCaption} />
               </div>}
               {!activeCaption && !displayedBoard.elements.length && state.phase !== "intervening" && !canStart && segment.explanation &&
                 <div className="live-caption"><LearningText as="p" textRole="source" text={segment.explanation} /></div>}
+              {guidedPresentation && ["error", "paused"].includes(guidedPlayback.status) && guidedPlayback.message && <p className="live-media-notice" role={guidedPlayback.status === "error" ? "alert" : "status"}>{guidedPlayback.message}</p>}
               {mediaError && <p className="live-media-notice" role="status">O áudio da aula não está disponível agora. Você pode acompanhar o quadro e abrir o texto abaixo.</p>}
-              {isPresenting && <div className="live-player" aria-label="Controles da aula">
-                <button type="button" className="live-play" disabled={state.phase === "intervening"}
-                  aria-label={state.phase === "presenting" && !mediaStopped ? "Pausar aula" : "Reproduzir aula"}
-                  onClick={() => {
-                    if (stateRef.current.phase === "presenting" && !mediaStopped) { cancelPlayback(); return; }
-                    cancelPlayback();
-                    setAutomaticallyStoppedMedia(null);
-                    autoAdvanceArmed.current = true;
-                    updateRuntime({ type: "PLAY" });
-                  }}>{state.phase === "presenting" && !mediaStopped ? <Pause size={19} /> : <Play size={19} />}</button>
-                <button type="button" className="live-rewind" disabled={state.phase === "intervening"}
-                  onClick={() => seek(Math.max(0, stateRef.current.positionMs - 10000))} aria-label="Voltar dez segundos">
-                  <RotateCcw size={17} aria-hidden="true" /><span>10s</span></button>
-                <div className="live-player-position"><input aria-label="Posição da apresentação" type="range" min={0}
-                  max={segment.presentation?.durationMs ?? 1} value={state.positionMs}
-                  disabled={state.phase === "intervening" || !segment.presentation} onChange={(event) => seek(Number(event.target.value))} />
-                  <span>{seconds(state.positionMs)} <span aria-hidden="true">/</span> {seconds(segment.presentation?.durationMs ?? 0)}</span>
-                </div>
-                <button type="button" className="live-speed" aria-label={`Velocidade ${speed} vezes. Alterar velocidade`}
-                  disabled={state.phase === "intervening"} onClick={toggleSpeed}>{speed}×</button>
-              </div>}
               <div ref={questionToolsRef} className="live-board-tools">
                 <div className="live-quick">
                   <button type="button" disabled={!interruptionAllowed} onClick={() => intervene("explain")}><CircleHelp size={17} /> Não entendi</button>
@@ -1096,7 +1142,7 @@ function ClassroomSession({
           {state.phase !== "idle" && transcriptLines.length > 0 && <section className="live-transcript panel">
             <button type="button" className="live-transcript-toggle" aria-expanded={transcriptOpen} aria-controls="live-transcript-text"
               onClick={() => setOpenTranscriptFor((owner) => owner === requestIdentity ? null : requestIdentity)}><BookOpen size={18} aria-hidden="true" />
-              <span>Texto da explicação<small>Leia no seu ritmo ou ouça uma frase</small></span><span>{transcriptOpen ? "Fechar" : "Abrir"}</span></button>
+              <span>Texto opcional da explicação<small>Abra quando quiser consultar uma frase</small></span><span>{transcriptOpen ? "Fechar" : "Abrir"}</span></button>
             {transcriptOpen && <div id="live-transcript-text" className="live-transcript-lines">
               <div className="live-transcript-audio"><button type="button" className="secondary-button"
                 onClick={() => startNarration(transcriptLines)}><Volume2 size={17} /> Ouvir texto</button>

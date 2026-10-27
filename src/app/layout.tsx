@@ -6,6 +6,8 @@ import "./pages.css";
 import "./activities.css";
 import "./page-tour.css";
 import "./learning-text.css";
+import "./report.css";
+import { ReportButton } from "@/components/support/report-button";
 import { interfacePresentation } from "@/engine/presentation/text";
 import { StudyProvider } from "@/components/study-provider";
 import { AppShell } from "@/components/layout/app-shell";
@@ -41,7 +43,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     >
       <body
         data-runtime-source={selected.source}
-        data-content-version={context?.reference.contentVersion}
+        data-course-id={view?.course.id}
+        data-content-version={context?.reference.contentVersion ?? view?.course.contentVersion}
         data-version-session={context?.versionSessionId}
         data-installation-id={context?.reference.installationId}
       >
@@ -68,6 +71,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             unavailable={selected.unavailable!}
           />
         )}
+        <ReportButton />
       </body>
     </html>
   );

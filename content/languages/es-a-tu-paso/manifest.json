@@ -32,11 +32,24 @@
   "speech": {
     "support": {
       "speechRecognition": false,
-      "textToSpeech": false,
+      "textToSpeech": true,
       "pronunciationAssessment": false
     },
     "defaultVariant": "es-ES",
-    "providers": {}
+    "providers": {
+      "azure": {
+        "es-ES": {
+          "ttsLocale": "es-ES",
+          "recognitionLocale": null,
+          "assessmentLocale": null
+        },
+        "es-MX": {
+          "ttsLocale": "es-MX",
+          "recognitionLocale": null,
+          "assessmentLocale": null
+        }
+      }
+    }
   },
   "normalization": {
     "trimWhitespace": true,

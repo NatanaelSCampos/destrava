@@ -1,8 +1,7 @@
 "use client";
 
-import { useTextPresentation } from "@/components/learning/text-presentation";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Check, Download, LogOut, Settings2 } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -11,8 +10,7 @@ import {
   textToSpeechLocale,
 } from "@/content/language-variant";
 import { AccountSecurity } from "@/components/auth/account-security";
-import { LinkedAccounts } from "@/components/auth/linked-accounts";
-import { SpeakButton } from "@/components/audio/speak-button";
+import { AzureVoiceSettings } from "@/components/audio/azure-voice-settings";
 import { resolveLearningVariant } from "@/engine/variants/resolution";
 import {
   createLearningPreferences,
@@ -22,12 +20,6 @@ import {
   type LearningGoal,
   type LearningSkill,
 } from "@/domain/study/learning-preferences";
-import {
-  normalizedVoiceLocale,
-  readVoicePreference,
-  saveVoicePreference,
-  voiceId,
-} from "@/lib/speech-voice-preference";
 
 export default function SettingsPage() {
   const { ready } = useStudy();
@@ -35,54 +27,14 @@ export default function SettingsPage() {
 }
 
 function SettingsContent() {
-  const textAttrs = useTextPresentation();
   const { course, language, resources, state, authUserId, updateProfile, recordStudyEvent } =
     useStudy();
   const [saved, setSaved] = useState(false);
   const [preferences, setPreferences] = useState(state.profile.learningPreferences);
   const resolution = resolveLearningVariant(language, course, state.profile.variantId);
   const [region, setRegion] = useState(resolution.variantId ?? "");
-  const [browserVoices, setBrowserVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [voiceSupported, setVoiceSupported] = useState<boolean | null>(null);
-  const [preferredVoiceId, setPreferredVoiceId] = useState("");
-  const [voiceSaveError, setVoiceSaveError] = useState(false);
   const speechLocale = textToSpeechLocale(language, region, course) ?? "";
   const previewText = resources.alphabet[0]?.example ?? resources.vocabulary[0]?.example ?? "";
-  const matchingVoices = useMemo(
-    () =>
-      browserVoices
-        .filter(
-          (voice) => normalizedVoiceLocale(voice.lang) === normalizedVoiceLocale(speechLocale),
-        )
-        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
-    [browserVoices, speechLocale],
-  );
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setPreferredVoiceId(readVoicePreference(speechLocale));
-      setVoiceSaveError(false);
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [speechLocale]);
-
-  useEffect(() => {
-    if (!window.speechSynthesis) {
-      const timer = window.setTimeout(() => setVoiceSupported(false), 0);
-      return () => window.clearTimeout(timer);
-    }
-    const synthesis = window.speechSynthesis;
-    const refreshVoices = () => {
-      setVoiceSupported(true);
-      setBrowserVoices(synthesis.getVoices());
-    };
-    const timer = window.setTimeout(refreshVoices, 0);
-    synthesis.addEventListener("voiceschanged", refreshVoices);
-    return () => {
-      window.clearTimeout(timer);
-      synthesis.removeEventListener("voiceschanged", refreshVoices);
-    };
-  }, []);
   function save() {
     updateProfile({
       learningPreferences: preferences,
@@ -299,79 +251,8 @@ function SettingsContent() {
           )}
         </aside>
       </div>
-      {language.speech.support.textToSpeech && speechLocale && (
-        <section className="panel settings-panel audio-settings-panel">
-          <span className="eyebrow">ÁUDIO DE ESTUDO</span>
-          <h2>Escolha a voz que você prefere ouvir</h2>
-          <p>
-            As vozes vêm do navegador e do dispositivo. Por isso, os áudios podem soar diferentes no
-            celular e no computador.
-          </p>
-          <div className="settings-form">
-            <div className="field">
-              <label htmlFor="language-voice">
-                Voz para {language.identity.nativeName} ({speechLocale})
-              </label>
-              <select
-                id="language-voice"
-                value={
-                  matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId)
-                    ? preferredVoiceId
-                    : ""
-                }
-                disabled={!voiceSupported}
-                onChange={(event) => {
-                  const next = event.target.value;
-                  const didSave = saveVoicePreference(speechLocale, next);
-                  setVoiceSaveError(!didSave);
-                  if (didSave) setPreferredVoiceId(next);
-                }}
-              >
-                <option value="">Automática do navegador</option>
-                {matchingVoices.map((voice) => (
-                  <option key={voiceId(voice)} value={voiceId(voice)}>
-                    {voice.name}
-                  </option>
-                ))}
-              </select>
-              {voiceSupported === null ? (
-                <small>Carregando as vozes deste dispositivo…</small>
-              ) : !voiceSupported ? (
-                <small>Este navegador não oferece leitura de texto por voz.</small>
-              ) : matchingVoices.length === 0 ? (
-                <small>
-                  Nenhuma voz {speechLocale} apareceu neste dispositivo. Uma voz de outra variante
-                  pode servir como apoio, com aviso ao reproduzir. Atividades que exigem a variante
-                  bloqueiam esse fallback.
-                </small>
-              ) : preferredVoiceId &&
-                !matchingVoices.some((voice) => voiceId(voice) === preferredVoiceId) ? (
-                <small>
-                  A voz salva não está disponível neste dispositivo. Será usada outra voz.
-                </small>
-              ) : (
-                <small>
-                  A escolha é salva neste dispositivo e aplicada aos botões de áudio do app. Em
-                  outro dispositivo, escolha a voz novamente.
-                </small>
-              )}
-              {voiceSaveError && (
-                <small role="alert">Não foi possível salvar a voz neste navegador.</small>
-              )}
-            </div>
-            <div className="audio-settings-preview">
-              <span {...textAttrs()}>{previewText}</span>
-              <SpeakButton
-                text={previewText}
-                label="Ouvir exemplo com a voz escolhida"
-                locale={speechLocale}
-                withLabel
-              />
-            </div>
-          </div>
-        </section>
-      )}
-      {authUserId && <LinkedAccounts />}
+      {language.speech.support.textToSpeech && speechLocale && <AzureVoiceSettings locale={speechLocale} label={"Voz para estudar " + language.identity.nativeName} preview={previewText} />}
+      <AzureVoiceSettings locale="pt-BR" label="Voz das explicações" preview="Vamos ouvir com calma. Veja este exemplo e observe como a conversa continua." />
       {authUserId && <AccountSecurity />}
     </div>
   );

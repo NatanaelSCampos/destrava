@@ -75,20 +75,21 @@ export function SpeakButton({
               rate,
               {
                 onHandle: (handle) => { playback.current = handle; registerPlayback?.(handle); },
-                fallbackAllowed: resolution.speechFallback === "same_language",
+                fallbackAllowed: false,
+                courseId: course.id,
                 requestedVariant: resolution.variantId ?? undefined,
                 onSelection: (selection) =>
                   setError(
                     selection.fallback
                       ? `Áudio em ${selection.operationalLocale}: outra variante; use apenas como apoio.`
                       : selection.status === "unavailable"
-                        ? "Não há voz compatível instalada para esta variante."
+                        ? "Não há áudio disponível para esta variante."
                         : "",
                   ),
               },
             )
           )
-            setError("Não há voz compatível disponível neste navegador.");
+            setError("Não há áudio disponível para este idioma.");
           else onPlay?.();
         }}
       >

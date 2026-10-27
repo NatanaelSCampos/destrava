@@ -1,0 +1,14 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { createRequire } from "node:module";
+const require=createRequire(import.meta.url),esbuild=require("esbuild");
+const built=await esbuild.build({stdin:{contents:'export {claimAudioPlayback} from "./src/lib/speak-text";',resolveDir:process.cwd(),loader:"ts"},bundle:true,write:false,platform:"node",format:"cjs",tsconfig:"tsconfig.json"});
+const module={exports:{}};new Function("module","exports",built.outputFiles[0].text)(module,module.exports);
+const {claimAudioPlayback}=module.exports;
+test("capture and bubble handlers share one owner for the same native media without pausing it",()=>{const media={},calls=[];const capture=claimAudioPlayback(()=>calls.push("capture"),media),bubble=claimAudioPlayback(()=>calls.push("bubble"),media);assert.equal(capture,bubble);assert.deepEqual(calls,[]);capture.release();});
+test("different native media cancels only its predecessor",()=>{let a=0,b=0;const old=claimAudioPlayback(()=>a++,{}),next=claimAudioPlayback(()=>b++,{});assert.equal(a,1);assert.equal(b,0);assert(!old.isCurrent());assert(next.isCurrent());next.release();});
+test("recorded clip interrupts a dynamic clip, then a new dynamic clip interrupts the recorded one",()=>{let dynamic=0,recorded=0;claimAudioPlayback(()=>dynamic++);const native=claimAudioPlayback(()=>recorded++,{});assert.equal(dynamic,1);assert.equal(recorded,0);const voice=claimAudioPlayback(()=>{});assert.equal(recorded,1);assert(!native.isCurrent());assert(voice.isCurrent());voice.release();});
+test("stale cancel and release never stop a newer audio owner",()=>{let stopped=0;const old=claimAudioPlayback(()=>{},{}),fresh=claimAudioPlayback(()=>stopped++,{});old.cancel();old.release();assert(fresh.isCurrent());assert.equal(stopped,0);fresh.release();});
+test("release clears media identity, so a later replay obtains a fresh handle",()=>{const media={};let stops=0;const first=claimAudioPlayback(()=>stops++,media);first.release();const second=claimAudioPlayback(()=>stops++,media);assert.notEqual(first,second);assert.equal(stops,0);second.cancel();assert.equal(stops,1);});
+test("unidentified callers retain exclusive ownership and never share undefined identity",()=>{let stops=0;const first=claimAudioPlayback(()=>stops++),second=claimAudioPlayback(()=>{});assert.notEqual(first,second);assert.equal(stops,1);second.release();});
+test("cancellation clears ownership before invoking the native stop callback",()=>{let currentDuringStop=true;const handle=claimAudioPlayback(()=>{currentDuringStop=handle.isCurrent();},{});handle.cancel();assert.equal(currentDuringStop,false);assert(!handle.isCurrent());});

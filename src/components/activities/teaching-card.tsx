@@ -9,10 +9,15 @@ import type { ActivityPresentation } from "@/content/text-presentation";
 import { LearningText } from "@/components/learning/text-presentation";
 import { PlaceIllustration, ConversationAvatar } from "./lesson-illustrations";
 
+import { useAzureAudioSource } from "@/components/audio/use-azure-audio-source";
+import { claimAudioPlayback, type PlaybackHandle } from "@/lib/speak-text";
+
 export function RecordedPhrase({ mediaId, label }: { mediaId: string; label: string }) {
   const { course } = useStudy();
   const asset = course.teachingMedia?.find(item => item.id === mediaId);
   const audio = useRef<HTMLAudioElement>(null);
+  const playback = useRef<PlaybackHandle | null>(null);
+  const source = useAzureAudioSource(asset?.src ?? "");
   const instance = useId();
   const [playing, setPlaying] = useState(false);
   const [slow, setSlow] = useState(false);
@@ -25,9 +30,9 @@ export function RecordedPhrase({ mediaId, label }: { mediaId: string; label: str
     document.addEventListener("visibilitychange", suspend);
     window.addEventListener("pagehide", stop);
     window.addEventListener("destrava-phrase-playing", other);
-    return () => { stop(); document.removeEventListener("visibilitychange", suspend);
+    return () => { playback.current?.cancel(); stop(); document.removeEventListener("visibilitychange", suspend);
       window.removeEventListener("pagehide", stop); window.removeEventListener("destrava-phrase-playing", other); };
-  }, [mediaId, instance]);
+  }, [mediaId, instance, source]);
   if (!asset) return <p role="status">Não foi possível carregar este áudio.</p>;
   async function play(restart = false) {
     const element = audio.current;
@@ -37,9 +42,9 @@ export function RecordedPhrase({ mediaId, label }: { mediaId: string; label: str
     try { await element.play(); } catch { setError("Não foi possível ouvir. Tente novamente."); }
   }
   return <div className="recorded-phrase">
-    <audio ref={audio} preload="metadata" src={asset.src} aria-label={label}
-      onPlay={() => { setPlaying(true); window.dispatchEvent(new CustomEvent("destrava-phrase-playing", { detail: instance })); }}
-      onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)}
+    <audio ref={audio} preload="metadata" src={source} aria-label={label}
+      onPlay={() => { if (audio.current) playback.current = claimAudioPlayback(() => audio.current?.pause(), audio.current); setPlaying(true); window.dispatchEvent(new CustomEvent("destrava-phrase-playing", { detail: instance })); }}
+      onPause={() => { playback.current?.release(); setPlaying(false); }} onEnded={() => { playback.current?.release(); setPlaying(false); }}
       onError={() => { setPlaying(false); setError("O áudio não carregou. Tente novamente."); }} />
     <div className="phrase-audio-controls">
       <button type="button" className="phrase-play-button" aria-label={(playing ? "Pausar: " : "") + label} onClick={() => {

@@ -1,0 +1,238 @@
+.report-trigger {
+  position: fixed;
+  right: 18px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  border: 1px solid #d8e4df;
+  border-radius: 30px;
+  background: #fff;
+  color: #244a41;
+  box-shadow: 0 4px 18px #18382a20;
+  font-size: 12px;
+  font-weight: 700;
+}
+.report-trigger:hover {
+  background: #edf7f2;
+}
+.report-dialog {
+  width: min(620px, calc(100vw - 24px));
+  max-height: calc(100dvh - 28px);
+  padding: 0;
+  border: 1px solid #e4e5e5;
+  border-radius: 22px;
+  color: #21323b;
+  box-shadow: 0 24px 80px #0003;
+  overflow: auto;
+}
+.report-dialog::backdrop {
+  background: #162c2aaa;
+  backdrop-filter: blur(3px);
+}
+.report-dialog header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 22px;
+  border-bottom: 1px solid #edf0ee;
+}
+.report-dialog header h2 {
+  margin: 0;
+  font-size: 23px;
+}
+.report-dialog header p {
+  font-size: 13px;
+  color: #667b84;
+  margin: 5px 0 0;
+}
+.report-heading-icon {
+  padding: 12px;
+  border-radius: 14px;
+  background: #eaf5ef;
+  color: #32766a;
+}
+.report-dialog button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 9px 12px;
+  border: 1px solid #dce1df;
+  border-radius: 12px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+}
+.report-dialog header > button {
+  margin-left: auto;
+}
+.report-fields {
+  padding: 22px;
+  display: grid;
+  gap: 16px;
+}
+.report-fields > label:not(.report-upload):not(.report-consent) {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.report-fields input:not([type]),
+.report-fields textarea {
+  width: 100%;
+  border: 1px solid #d8dfdc;
+  border-radius: 12px;
+  background: #f9fbfa;
+  padding: 12px;
+  font: inherit;
+  color: inherit;
+}
+.report-fields textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+.report-images {
+  display: flex;
+  gap: 12px;
+  overflow: auto;
+}
+.report-images figure {
+  margin: 0;
+  width: 150px;
+  flex-shrink: 0;
+}
+.report-images img {
+  height: 100px;
+  width: 150px;
+  object-fit: cover;
+  object-position: top;
+  border: 1px solid #dde5df;
+  border-radius: 12px;
+}
+.report-images figcaption {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  font-size: 11px;
+}
+.report-images figcaption button {
+  min-height: 36px;
+  margin-left: auto;
+  padding: 7px;
+}
+.report-upload {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.report-upload input {
+  max-width: 100%;
+  font-size: 12px;
+}
+.report-privacy {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #687d85;
+  margin: 0;
+}
+.report-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+  font-size: 12px;
+  background: #f1f7f4;
+  border-radius: 12px;
+  padding: 12px;
+}
+.report-consent input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.report-status {
+  font-size: 13px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.report-dialog footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  padding: 16px 22px;
+  background: #fff;
+  border-top: 1px solid #edf0ee;
+}
+.report-dialog .report-send {
+  background: #bf2447;
+  border-color: #bf2447;
+  color: #fff;
+}
+.report-dialog button:disabled {
+  opacity: 0.5;
+}
+@media (max-width: 767px) {
+  .report-trigger {
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    right: 12px;
+    padding: 11px;
+  }
+  .report-trigger span {
+    display: none;
+  }
+  .report-dialog header,
+  .report-fields {
+    padding: 16px;
+  }
+  .report-dialog header h2 {
+    font-size: 20px;
+  }
+  .report-heading-icon {
+    display: none;
+  }
+  .report-dialog footer {
+    padding: 14px;
+  }
+}
+
+/* Native dialogs also host this reusable control; contain intrinsic file-input widths. */
+.report-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+}
+.report-fields {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+.report-fields > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.report-fields input,
+.report-fields textarea {
+  min-width: 0;
+  box-sizing: border-box;
+}
+.report-upload input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+@media (max-width: 767px) {
+  .report-fields input:not([type="checkbox"]):not([type="file"]),
+  .report-fields textarea {
+    font-size: 16px;
+  }
+}

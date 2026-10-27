@@ -36,22 +36,21 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        14500,
-        26520,
-        28580,
-        40540,
-        42060,
-        52800
+        12010,
+        24910,
+        27590,
+        38430,
+        40480,
+        52100
       ],
       "explanation": "Você chegou à praça. Onde está a outra pessoa? Ouvir → entender → experimentar Uma mensagem informa o seu lugar. A pergunta procura o lugar da outra pessoa. Pode interromper quando precisar.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-01-narration",
-        "durationMs": 65352,
+        "mode": "slides",
+        "durationMs": 62180,
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 13480,
+            "endMs": 11360,
             "text": "Imagine que você combinou um encontro e acabou de chegar à praça. A outra pessoa ainda não apareceu. Hoje vamos conduzir essa conversa, uma mensagem de cada vez.",
             "textPresentation": {
               "language": "pt-BR",
@@ -59,17 +58,17 @@
             }
           },
           {
-            "startMs": 14500,
-            "endMs": 25920,
-            "text": "Primeiro você vai ouvir modelos curtos. Depois vamos separar as partes, trocar o lugar e praticar. Não precisa inventar uma frase antes de ter contato com ela.",
+            "startMs": 12010,
+            "endMs": 24260,
+            "text": "Primeiro você vai ouvir modelos curtos. Depois vamos separar as partes, trocar o lugar e praticar. Não precisa inventar uma frase antes de ter contato com ela. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 26520,
-            "endMs": 27840,
+            "startMs": 24910,
+            "endMs": 26940,
             "text": "Estoy en la plaza.",
             "textPresentation": {
               "language": "es",
@@ -77,8 +76,8 @@
             }
           },
           {
-            "startMs": 28580,
-            "endMs": 39720,
+            "startMs": 27590,
+            "endMs": 37780,
             "text": "Essa mensagem informa onde a própria pessoa está. Ela pode ser enviada quando alguém procura você. Observe que é uma informação, ainda não uma pergunta.",
             "textPresentation": {
               "language": "pt-BR",
@@ -86,8 +85,8 @@
             }
           },
           {
-            "startMs": 40540,
-            "endMs": 41320,
+            "startMs": 38430,
+            "endMs": 39830,
             "text": "¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -95,8 +94,8 @@
             }
           },
           {
-            "startMs": 42060,
-            "endMs": 51940,
+            "startMs": 40480,
+            "endMs": 51450,
             "text": "Agora ouvimos uma pergunta. A pessoa quer descobrir o lugar da outra. Ao longo da aula, o quadro vai mostrar a frase que estamos usando naquele momento.",
             "textPresentation": {
               "language": "pt-BR",
@@ -104,9 +103,9 @@
             }
           },
           {
-            "startMs": 52800,
-            "endMs": 65200,
-            "text": "Você pode pausar, voltar alguns segundos ou escrever uma dúvida. Quando perguntar, eu interrompo a explicação para tratar desse ponto. Depois você retoma a mesma conversa.",
+            "startMs": 52100,
+            "endMs": 61730,
+            "text": "Você pode pausar, voltar alguns segundos ou escrever uma dúvida. Quando você abrir o apoio, a explicação pausa. Depois, retome a mesma conversa.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
@@ -116,128 +115,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-01-01-0",
+          "id": "atp-live-01-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-01-01-1",
+          "id": "atp-live-01-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-01",
               "kind": "text",
-              "label": "Um encontro começa com uma mensagem",
-              "text": "Você chegou à praça. Onde está a outra pessoa?",
+              "id": "atp-live-01-visual-0-topic",
+              "text": "Encontro na praça",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "pin"
+              }
             }
           }
         },
         {
-          "id": "atp-live-01-02-0",
-          "atMs": 14500,
+          "id": "atp-live-01-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-01-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Informar seu lugar",
+              "right": "Perguntar pelo outro lugar",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-01-visual-1-00",
+          "atMs": 24910,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-01-02-1",
-          "atMs": 14500,
+          "id": "atp-live-01-visual-1-01",
+          "atMs": 24910,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-02",
               "kind": "text",
-              "label": "Um encontro começa com uma mensagem",
-              "text": "Ouvir → entender → experimentar",
+              "id": "atp-live-01-visual-1-topic",
+              "text": "Encontro na praça",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "pin"
+              }
             }
           }
         },
         {
-          "id": "atp-live-01-03-0",
-          "atMs": 26520,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-01-03-1",
-          "atMs": 26520,
+          "id": "atp-live-01-visual-1-02",
+          "atMs": 24910,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-03",
+              "id": "atp-live-01-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la plaza.",
               "translation": "Estou na praça.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-01-03-3",
-          "atMs": 26720,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-01-03"
-          }
-        },
-        {
-          "id": "atp-live-01-04-0",
-          "atMs": 28580,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-01-04-1",
-          "atMs": 28580,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-01-04",
-              "kind": "text",
-              "label": "Um encontro começa com uma mensagem",
-              "text": "Uma mensagem informa o seu lugar.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "pin"
-            }
-          }
-        },
-        {
-          "id": "atp-live-01-04-2",
-          "atMs": 28580,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-01-04-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza.",
-              "translation": "Estou na praça.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -246,76 +208,43 @@
           }
         },
         {
-          "id": "atp-live-01-05-0",
-          "atMs": 40540,
+          "id": "atp-live-01-visual-2-00",
+          "atMs": 38430,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-01-05-1",
-          "atMs": 40540,
+          "id": "atp-live-01-visual-2-01",
+          "atMs": 38430,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-05",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "¿Dónde estás?",
-              "translation": "Onde você está?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-01-05-3",
-          "atMs": 40740,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-01-05"
-          }
-        },
-        {
-          "id": "atp-live-01-06-0",
-          "atMs": 42060,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-01-06-1",
-          "atMs": 42060,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-01-06",
               "kind": "text",
-              "label": "Um encontro começa com uma mensagem",
-              "text": "A pergunta procura o lugar da outra pessoa.",
+              "id": "atp-live-01-visual-2-topic",
+              "text": "Encontro na praça",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "pin"
+              }
             }
           }
         },
         {
-          "id": "atp-live-01-06-2",
-          "atMs": 42060,
+          "id": "atp-live-01-visual-2-02",
+          "atMs": 38430,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-06-model",
+              "id": "atp-live-01-visual-2-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "¿Dónde estás?",
               "translation": "Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -324,44 +253,84 @@
           }
         },
         {
-          "id": "atp-live-01-07-0",
-          "atMs": 52800,
+          "id": "atp-live-01-visual-2-03",
+          "atMs": 38430,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-01-visual-2-item-1",
+              "kind": "comparison",
+              "left": "Estoy en la plaza.",
+              "right": "¿Dónde estás?",
+              "label": "Informar e perguntar",
+              "leftPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-01-visual-3-00",
+          "atMs": 52100,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-01-07-1",
-          "atMs": 52800,
+          "id": "atp-live-01-visual-3-01",
+          "atMs": 52100,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-07",
               "kind": "text",
-              "label": "Um encontro começa com uma mensagem",
-              "text": "Pode interromper quando precisar.",
+              "id": "atp-live-01-visual-3-topic",
+              "text": "Encontro na praça",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "pin"
+              }
             }
           }
         },
         {
-          "id": "atp-live-01-07-2",
-          "atMs": 52800,
+          "id": "atp-live-01-visual-3-02",
+          "atMs": 52100,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-01-07-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "¿Dónde estás?",
-              "translation": "Onde você está?",
+              "id": "atp-live-01-visual-3-item-0",
+              "kind": "text",
+              "text": "Ouvir a resposta",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "pin",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-01-visual-3-03",
+          "atMs": 52100,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-01-visual-3-item-1",
+              "kind": "text",
+              "text": "Usar a informação para se encontrar",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -385,33 +354,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        228,
-        14868,
-        17128,
-        31868,
-        34248,
-        47588,
-        64248,
-        66188
+        13680,
+        16360,
+        29040,
+        32200,
+        44880,
+        58780,
+        61460
       ],
       "explanation": "Você vai avisar o seu lugar. A forma do verbo já indica quem fala. Com ou sem o pronome, o lugar continua claro. O lugar vem depois do verbo. Mesmo começo; outro lugar.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-02-narration",
-        "durationMs": 79368,
+        "mode": "slides",
+        "durationMs": 74330,
         "transcript": [
           {
-            "startMs": 228,
-            "endMs": 14148,
-            "text": "Vamos construir a primeira mensagem com calma. Para avisar onde você está agora, usamos uma forma que corresponde a estou. Ouça a frase completa antes de separar as partes.",
+            "startMs": 0,
+            "endMs": 13030,
+            "text": "Vamos construir a primeira mensagem com calma. Para avisar onde você está agora, usamos uma forma que corresponde a estou. Ouça a frase completa antes de separar as partes. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 14868,
-            "endMs": 16768,
+            "startMs": 13680,
+            "endMs": 15710,
             "text": "Estoy en la biblioteca.",
             "textPresentation": {
               "language": "es",
@@ -419,8 +386,8 @@
             }
           },
           {
-            "startMs": 17128,
-            "endMs": 31068,
+            "startMs": 16360,
+            "endMs": 28390,
             "text": "A primeira parte indica a pessoa que fala. Não precisamos colocar eu em toda mensagem: essa forma do verbo já informa quem está falando. Acrescentar o pronome também é possível.",
             "textPresentation": {
               "language": "pt-BR",
@@ -428,8 +395,8 @@
             }
           },
           {
-            "startMs": 31868,
-            "endMs": 33728,
+            "startMs": 29040,
+            "endMs": 31550,
             "text": "Yo estoy en la biblioteca.",
             "textPresentation": {
               "language": "es",
@@ -437,8 +404,8 @@
             }
           },
           {
-            "startMs": 34248,
-            "endMs": 46968,
+            "startMs": 32200,
+            "endMs": 44230,
             "text": "As duas versões informam o mesmo lugar. A versão com o pronome pode destacar quem está falando. Não transforme a ausência dele em erro: ouça como ambas funcionam na conversa.",
             "textPresentation": {
               "language": "pt-BR",
@@ -446,8 +413,8 @@
             }
           },
           {
-            "startMs": 47588,
-            "endMs": 63388,
+            "startMs": 44880,
+            "endMs": 58130,
             "text": "A parte final indica na biblioteca. Em espanhol, a preposição e o artigo ficam separados. Em português, eles aparecem juntos nessa expressão. Compare as frases pelo sentido, sem traduzir letra por letra.",
             "textPresentation": {
               "language": "pt-BR",
@@ -455,8 +422,8 @@
             }
           },
           {
-            "startMs": 64248,
-            "endMs": 65268,
+            "startMs": 58780,
+            "endMs": 60810,
             "text": "Estoy en la plaza.",
             "textPresentation": {
               "language": "es",
@@ -464,8 +431,8 @@
             }
           },
           {
-            "startMs": 66188,
-            "endMs": 79108,
+            "startMs": 61460,
+            "endMs": 73880,
             "text": "Trocamos o lugar e mantivemos o início da mensagem. Você não precisa decorar uma frase diferente para cada situação. Guarde o pequeno bloco inicial e conecte o lugar que deseja informar.",
             "textPresentation": {
               "language": "pt-BR",
@@ -476,102 +443,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-02-01-0",
+          "id": "atp-live-02-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-02-01-1",
+          "id": "atp-live-02-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-01",
               "kind": "text",
-              "label": "Sua mensagem de localização",
-              "text": "Você vai avisar o seu lugar.",
+              "id": "atp-live-02-visual-0-topic",
+              "text": "Quem fala e onde está",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-02-02-0",
-          "atMs": 14868,
+          "id": "atp-live-02-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-02-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Quem fala",
+              "right": "Verbo e lugar",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-02-visual-1-00",
+          "atMs": 13680,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-02-02-1",
-          "atMs": 14868,
+          "id": "atp-live-02-visual-1-01",
+          "atMs": 13680,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-02",
+              "kind": "text",
+              "id": "atp-live-02-visual-1-topic",
+              "text": "Quem fala e onde está",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-02-visual-1-02",
+          "atMs": 13680,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-02-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la biblioteca.",
               "translation": "Estou na biblioteca.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-02-02-3",
-          "atMs": 15068,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-02-02"
-          }
-        },
-        {
-          "id": "atp-live-02-03-0",
-          "atMs": 17128,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-02-03-1",
-          "atMs": 17128,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-02-03",
-              "kind": "text",
-              "label": "Sua mensagem de localização",
-              "text": "A forma do verbo já indica quem fala.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-02-03-2",
-          "atMs": 17128,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-02-03-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la biblioteca.",
-              "translation": "Estou na biblioteca.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -580,76 +536,43 @@
           }
         },
         {
-          "id": "atp-live-02-04-0",
-          "atMs": 31868,
+          "id": "atp-live-02-visual-2-00",
+          "atMs": 29040,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-02-04-1",
-          "atMs": 31868,
+          "id": "atp-live-02-visual-2-01",
+          "atMs": 29040,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-04",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "Yo estoy en la biblioteca.",
-              "translation": "Eu estou na biblioteca.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-02-04-3",
-          "atMs": 32068,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-02-04"
-          }
-        },
-        {
-          "id": "atp-live-02-05-0",
-          "atMs": 34248,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-02-05-1",
-          "atMs": 34248,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-02-05",
               "kind": "text",
-              "label": "Sua mensagem de localização",
-              "text": "Com ou sem o pronome, o lugar continua claro.",
+              "id": "atp-live-02-visual-2-topic",
+              "text": "Quem fala e onde está",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-02-05-2",
-          "atMs": 34248,
+          "id": "atp-live-02-visual-2-02",
+          "atMs": 29040,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-05-model",
+              "id": "atp-live-02-visual-2-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "Yo estoy en la biblioteca.",
               "translation": "Eu estou na biblioteca.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -658,43 +581,21 @@
           }
         },
         {
-          "id": "atp-live-02-06-0",
-          "atMs": 47588,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-02-06-1",
-          "atMs": 47588,
+          "id": "atp-live-02-visual-2-03",
+          "atMs": 29040,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-06",
-              "kind": "text",
-              "label": "Sua mensagem de localização",
-              "text": "O lugar vem depois do verbo.",
-              "textPresentation": {
-                "language": "pt-BR",
+              "id": "atp-live-02-visual-2-item-1",
+              "kind": "comparison",
+              "left": "Estoy en la biblioteca.",
+              "right": "Yo estoy en la biblioteca.",
+              "label": "Duas formas de informar o mesmo lugar",
+              "leftPresentation": {
+                "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "message",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-02-06-2",
-          "atMs": 47588,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-02-06-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Yo estoy en la biblioteca.",
-              "translation": "Eu estou na biblioteca.",
-              "textPresentation": {
+              "rightPresentation": {
                 "language": "es",
                 "direction": "ltr"
               }
@@ -702,78 +603,107 @@
           }
         },
         {
-          "id": "atp-live-02-07-0",
-          "atMs": 64248,
+          "id": "atp-live-02-visual-3-00",
+          "atMs": 58780,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-02-07-1",
-          "atMs": 64248,
+          "id": "atp-live-02-visual-3-01",
+          "atMs": 58780,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-07",
+              "kind": "text",
+              "id": "atp-live-02-visual-3-topic",
+              "text": "Quem fala e onde está",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-02-visual-3-02",
+          "atMs": 58780,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-02-visual-3-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la plaza.",
               "translation": "Estou na praça.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
-              },
-              "illustration": "message"
+              }
             }
           }
         },
         {
-          "id": "atp-live-02-07-3",
-          "atMs": 64448,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-02-07"
-          }
-        },
-        {
-          "id": "atp-live-02-08-0",
-          "atMs": 66188,
+          "id": "atp-live-02-visual-4-00",
+          "atMs": 61460,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-02-08-1",
-          "atMs": 66188,
+          "id": "atp-live-02-visual-4-01",
+          "atMs": 61460,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-08",
               "kind": "text",
-              "label": "Sua mensagem de localização",
-              "text": "Mesmo começo; outro lugar.",
+              "id": "atp-live-02-visual-4-topic",
+              "text": "Quem fala e onde está",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-02-08-2",
-          "atMs": 66188,
+          "id": "atp-live-02-visual-4-02",
+          "atMs": 61460,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-02-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza.",
-              "translation": "Estou na praça.",
+              "id": "atp-live-02-visual-4-item-0",
+              "kind": "text",
+              "text": "Mesmo início de mensagem",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "people",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-02-visual-4-03",
+          "atMs": 61460,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-02-visual-4-item-1",
+              "kind": "text",
+              "text": "Outro lugar para informar",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -797,33 +727,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        140,
-        13180,
-        14660,
-        26420,
-        28280,
-        42160,
-        44900,
-        57360
+        13960,
+        16010,
+        27910,
+        30590,
+        43380,
+        47130,
+        59810
       ],
       "explanation": "Agora você quer encontrar alguém. Uma pergunta de lugar. Pergunta de um lado; informação do outro. Avisar o seu lugar + perguntar pelo outro. Sua próxima ação é responder à pergunta.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-03-narration",
-        "durationMs": 70104,
+        "mode": "slides",
+        "durationMs": 71230,
         "transcript": [
           {
-            "startMs": 140,
-            "endMs": 12440,
-            "text": "Você já consegue avisar seu lugar. Agora quer saber onde está a outra pessoa. Escute a pergunta e perceba que a forma do verbo muda quando falamos diretamente com ela.",
+            "startMs": 0,
+            "endMs": 13310,
+            "text": "Você já consegue avisar seu lugar. Agora quer saber onde está a outra pessoa. Escute a pergunta e perceba que a forma do verbo muda quando falamos diretamente com ela. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 13180,
-            "endMs": 13940,
+            "startMs": 13960,
+            "endMs": 15360,
             "text": "¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -831,8 +759,8 @@
             }
           },
           {
-            "startMs": 14660,
-            "endMs": 25740,
+            "startMs": 16010,
+            "endMs": 27260,
             "text": "A palavra inicial pede uma informação de lugar. A forma final corresponde a você está nesse tratamento entre pessoas próximas. Aqui não estamos perguntando quem a pessoa é.",
             "textPresentation": {
               "language": "pt-BR",
@@ -840,8 +768,8 @@
             }
           },
           {
-            "startMs": 26420,
-            "endMs": 27660,
+            "startMs": 27910,
+            "endMs": 29940,
             "text": "Estoy en la biblioteca.",
             "textPresentation": {
               "language": "es",
@@ -849,8 +777,8 @@
             }
           },
           {
-            "startMs": 28280,
-            "endMs": 41100,
+            "startMs": 30590,
+            "endMs": 42730,
             "text": "Essa resposta resolve a pergunta: a pessoa informa seu lugar. Se ela apenas repetisse a pergunta, você continuaria sem a informação necessária para encontrá-la. Observe a função de cada fala.",
             "textPresentation": {
               "language": "pt-BR",
@@ -858,8 +786,8 @@
             }
           },
           {
-            "startMs": 42160,
-            "endMs": 44200,
+            "startMs": 43380,
+            "endMs": 46480,
             "text": "Estoy en la plaza. ¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -867,8 +795,8 @@
             }
           },
           {
-            "startMs": 44900,
-            "endMs": 56440,
+            "startMs": 47130,
+            "endMs": 59160,
             "text": "Agora a mensagem tem duas ações: você avisa onde está e pergunta pelo outro lugar. A pontuação separa as ações. Você pode fazer uma pequena pausa entre elas ao falar.",
             "textPresentation": {
               "language": "pt-BR",
@@ -876,8 +804,8 @@
             }
           },
           {
-            "startMs": 57360,
-            "endMs": 69240,
+            "startMs": 59810,
+            "endMs": 70780,
             "text": "Antes de continuar, imagine que recebe apenas a pergunta. Qual tipo de mensagem precisa enviar: uma localização ou outra pergunta? Vamos conferir essa decisão numa prática curta.",
             "textPresentation": {
               "language": "pt-BR",
@@ -888,102 +816,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-03-01-0",
+          "id": "atp-live-03-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-03-01-1",
+          "id": "atp-live-03-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-01",
               "kind": "text",
-              "label": "A pergunta abre espaço para a resposta",
-              "text": "Agora você quer encontrar alguém.",
+              "id": "atp-live-03-visual-0-topic",
+              "text": "Uma pergunta pede uma informação",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-03-02-0",
-          "atMs": 13180,
+          "id": "atp-live-03-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-03-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Pergunta de lugar",
+              "right": "Resposta com uma localização",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-03-visual-1-00",
+          "atMs": 13960,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-03-02-1",
-          "atMs": 13180,
+          "id": "atp-live-03-visual-1-01",
+          "atMs": 13960,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-02",
+              "kind": "text",
+              "id": "atp-live-03-visual-1-topic",
+              "text": "Uma pergunta pede uma informação",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "meeting",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-03-visual-1-02",
+          "atMs": 13960,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-03-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "¿Dónde estás?",
               "translation": "Onde você está?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-03-02-3",
-          "atMs": 13380,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-03-02"
-          }
-        },
-        {
-          "id": "atp-live-03-03-0",
-          "atMs": 14660,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-03-03-1",
-          "atMs": 14660,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-03-03",
-              "kind": "text",
-              "label": "A pergunta abre espaço para a resposta",
-              "text": "Uma pergunta de lugar.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-03-03-2",
-          "atMs": 14660,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-03-03-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "¿Dónde estás?",
-              "translation": "Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -992,76 +909,43 @@
           }
         },
         {
-          "id": "atp-live-03-04-0",
-          "atMs": 26420,
+          "id": "atp-live-03-visual-2-00",
+          "atMs": 27910,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-03-04-1",
-          "atMs": 26420,
+          "id": "atp-live-03-visual-2-01",
+          "atMs": 27910,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-04",
+              "kind": "text",
+              "id": "atp-live-03-visual-2-topic",
+              "text": "Uma pergunta pede uma informação",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "meeting",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-03-visual-2-02",
+          "atMs": 27910,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-03-visual-2-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la biblioteca.",
               "translation": "Estou na biblioteca.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-03-04-3",
-          "atMs": 26620,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-03-04"
-          }
-        },
-        {
-          "id": "atp-live-03-05-0",
-          "atMs": 28280,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-03-05-1",
-          "atMs": 28280,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-03-05",
-              "kind": "text",
-              "label": "A pergunta abre espaço para a resposta",
-              "text": "Pergunta de um lado; informação do outro.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-03-05-2",
-          "atMs": 28280,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-03-05-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la biblioteca.",
-              "translation": "Estou na biblioteca.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1070,76 +954,65 @@
           }
         },
         {
-          "id": "atp-live-03-06-0",
-          "atMs": 42160,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-03-06-1",
-          "atMs": 42160,
+          "id": "atp-live-03-visual-2-03",
+          "atMs": 27910,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-06",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "Estoy en la plaza. ¿Dónde estás?",
-              "translation": "Estou na praça. Onde você está?",
-              "textPresentation": {
+              "id": "atp-live-03-visual-2-item-1",
+              "kind": "comparison",
+              "left": "¿Dónde estás?",
+              "right": "Estoy en la biblioteca.",
+              "label": "Perguntar e responder",
+              "leftPresentation": {
                 "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "meeting"
+              "rightPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
             }
           }
         },
         {
-          "id": "atp-live-03-06-3",
-          "atMs": 42360,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-03-06"
-          }
-        },
-        {
-          "id": "atp-live-03-07-0",
-          "atMs": 44900,
+          "id": "atp-live-03-visual-3-00",
+          "atMs": 43380,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-03-07-1",
-          "atMs": 44900,
+          "id": "atp-live-03-visual-3-01",
+          "atMs": 43380,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-07",
               "kind": "text",
-              "label": "A pergunta abre espaço para a resposta",
-              "text": "Avisar o seu lugar + perguntar pelo outro.",
+              "id": "atp-live-03-visual-3-topic",
+              "text": "Uma pergunta pede uma informação",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-03-07-2",
-          "atMs": 44900,
+          "id": "atp-live-03-visual-3-02",
+          "atMs": 43380,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-07-model",
+              "id": "atp-live-03-visual-3-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "Estoy en la plaza. ¿Dónde estás?",
               "translation": "Estou na praça. Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1148,44 +1021,62 @@
           }
         },
         {
-          "id": "atp-live-03-08-0",
-          "atMs": 57360,
+          "id": "atp-live-03-visual-4-00",
+          "atMs": 59810,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-03-08-1",
-          "atMs": 57360,
+          "id": "atp-live-03-visual-4-01",
+          "atMs": 59810,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-08",
               "kind": "text",
-              "label": "A pergunta abre espaço para a resposta",
-              "text": "Sua próxima ação é responder à pergunta.",
+              "id": "atp-live-03-visual-4-topic",
+              "text": "Uma pergunta pede uma informação",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-03-08-2",
-          "atMs": 57360,
+          "id": "atp-live-03-visual-4-02",
+          "atMs": 59810,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-03-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza. ¿Dónde estás?",
-              "translation": "Estou na praça. Onde você está?",
+              "id": "atp-live-03-visual-4-item-0",
+              "kind": "text",
+              "text": "Avise onde você está",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "quote",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-03-visual-4-03",
+          "atMs": 59810,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-03-visual-4-item-1",
+              "kind": "text",
+              "text": "Pergunte pelo lugar da outra pessoa",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -1227,32 +1118,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        13376,
-        15796,
-        27536,
-        30016,
-        44776,
-        48616,
-        63256
+        13400,
+        15450,
+        27350,
+        30140,
+        41760,
+        45620,
+        59580
       ],
       "explanation": "Não ficou claro? Avise a dificuldade. Primeiro, mostre o que aconteceu. Depois, peça para ouvir de novo. Dificuldade + pedido de ajuda. Sua dúvida pode entrar nesta conversa.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-04-narration",
-        "durationMs": 74664,
+        "mode": "slides",
+        "durationMs": 71390,
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 13376,
-            "text": "Continuar uma conversa também envolve lidar com uma dificuldade. Você ouviu ou leu a mensagem, mas não compreendeu. Em vez de adivinhar o lugar, pode avisar o problema.",
+            "endMs": 12750,
+            "text": "Continuar uma conversa também envolve lidar com uma dificuldade. Você ouviu ou leu a mensagem, mas não compreendeu. Em vez de adivinhar o lugar, pode avisar o problema. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 13376,
-            "endMs": 15796,
+            "startMs": 13400,
+            "endMs": 14800,
             "text": "No entiendo.",
             "textPresentation": {
               "language": "es",
@@ -1260,8 +1150,8 @@
             }
           },
           {
-            "startMs": 15796,
-            "endMs": 26896,
+            "startMs": 15450,
+            "endMs": 26700,
             "text": "Essa frase comunica que você não compreendeu. Ela não pede um lugar nem informa onde você está. Seu papel é permitir que a outra pessoa perceba a dificuldade.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1269,8 +1159,8 @@
             }
           },
           {
-            "startMs": 27536,
-            "endMs": 28976,
+            "startMs": 27350,
+            "endMs": 29490,
             "text": "¿Puedes repetir, por favor?",
             "textPresentation": {
               "language": "es",
@@ -1278,8 +1168,8 @@
             }
           },
           {
-            "startMs": 30016,
-            "endMs": 43976,
+            "startMs": 30140,
+            "endMs": 41110,
             "text": "Agora temos um pedido concreto: ouvir a informação novamente. A expressão final torna o pedido cortês. Entre pessoas conhecidas, essa é uma possibilidade para continuar o contato.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1287,8 +1177,8 @@
             }
           },
           {
-            "startMs": 44776,
-            "endMs": 47456,
+            "startMs": 41760,
+            "endMs": 44970,
             "text": "No entiendo. ¿Puedes repetir, por favor?",
             "textPresentation": {
               "language": "es",
@@ -1296,8 +1186,8 @@
             }
           },
           {
-            "startMs": 48616,
-            "endMs": 62456,
+            "startMs": 45620,
+            "endMs": 58930,
             "text": "As duas partes podem aparecer na mesma mensagem. A primeira explica a dificuldade; a segunda indica como a outra pessoa pode ajudar. Não é necessário abandonar a conversa por causa de uma palavra.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1305,8 +1195,8 @@
             }
           },
           {
-            "startMs": 63256,
-            "endMs": 74456,
+            "startMs": 59580,
+            "endMs": 70940,
             "text": "Se sua dúvida for justamente sobre essa diferença, interrompa aqui e pergunte. A explicação será ligada a este trecho da aula, sem mandar você para uma tela separada.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1317,102 +1207,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-04-01-0",
+          "id": "atp-live-04-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-04-01-1",
+          "id": "atp-live-04-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-01",
               "kind": "text",
-              "label": "Quando a mensagem não fica clara",
-              "text": "Não ficou claro? Avise a dificuldade.",
+              "id": "atp-live-04-visual-0-topic",
+              "text": "Quando a mensagem não fica clara",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-04-02-0",
-          "atMs": 13376,
+          "id": "atp-live-04-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-04-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Informar a dificuldade",
+              "right": "Pedir uma nova escuta",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-04-visual-1-00",
+          "atMs": 13400,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-04-02-1",
-          "atMs": 13376,
+          "id": "atp-live-04-visual-1-01",
+          "atMs": 13400,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-02",
+              "kind": "text",
+              "id": "atp-live-04-visual-1-topic",
+              "text": "Quando a mensagem não fica clara",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-04-visual-1-02",
+          "atMs": 13400,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-04-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "No entiendo.",
               "translation": "Não entendo.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-04-02-3",
-          "atMs": 13576,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-04-02"
-          }
-        },
-        {
-          "id": "atp-live-04-03-0",
-          "atMs": 15796,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-04-03-1",
-          "atMs": 15796,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-04-03",
-              "kind": "text",
-              "label": "Quando a mensagem não fica clara",
-              "text": "Primeiro, mostre o que aconteceu.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
-            }
-          }
-        },
-        {
-          "id": "atp-live-04-03-2",
-          "atMs": 15796,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-04-03-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo.",
-              "translation": "Não entendo.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1421,76 +1300,43 @@
           }
         },
         {
-          "id": "atp-live-04-04-0",
-          "atMs": 27536,
+          "id": "atp-live-04-visual-2-00",
+          "atMs": 27350,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-04-04-1",
-          "atMs": 27536,
+          "id": "atp-live-04-visual-2-01",
+          "atMs": 27350,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-04",
+              "kind": "text",
+              "id": "atp-live-04-visual-2-topic",
+              "text": "Quando a mensagem não fica clara",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-04-visual-2-02",
+          "atMs": 27350,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-04-visual-2-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "¿Puedes repetir, por favor?",
               "translation": "Você pode repetir, por favor?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-04-04-3",
-          "atMs": 27736,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-04-04"
-          }
-        },
-        {
-          "id": "atp-live-04-05-0",
-          "atMs": 30016,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-04-05-1",
-          "atMs": 30016,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-04-05",
-              "kind": "text",
-              "label": "Quando a mensagem não fica clara",
-              "text": "Depois, peça para ouvir de novo.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
-            }
-          }
-        },
-        {
-          "id": "atp-live-04-05-2",
-          "atMs": 30016,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-04-05-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "¿Puedes repetir, por favor?",
-              "translation": "Você pode repetir, por favor?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1499,76 +1345,65 @@
           }
         },
         {
-          "id": "atp-live-04-06-0",
-          "atMs": 44776,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-04-06-1",
-          "atMs": 44776,
+          "id": "atp-live-04-visual-2-03",
+          "atMs": 27350,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-06",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
-              "textPresentation": {
+              "id": "atp-live-04-visual-2-item-1",
+              "kind": "comparison",
+              "left": "No entiendo.",
+              "right": "¿Puedes repetir, por favor?",
+              "label": "Dificuldade e pedido",
+              "leftPresentation": {
                 "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "message"
+              "rightPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
             }
           }
         },
         {
-          "id": "atp-live-04-06-3",
-          "atMs": 44976,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-04-06"
-          }
-        },
-        {
-          "id": "atp-live-04-07-0",
-          "atMs": 48616,
+          "id": "atp-live-04-visual-3-00",
+          "atMs": 41760,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-04-07-1",
-          "atMs": 48616,
+          "id": "atp-live-04-visual-3-01",
+          "atMs": 41760,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-07",
               "kind": "text",
-              "label": "Quando a mensagem não fica clara",
-              "text": "Dificuldade + pedido de ajuda.",
+              "id": "atp-live-04-visual-3-topic",
+              "text": "Quando a mensagem não fica clara",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-04-07-2",
-          "atMs": 48616,
+          "id": "atp-live-04-visual-3-02",
+          "atMs": 41760,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-07-model",
+              "id": "atp-live-04-visual-3-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "No entiendo. ¿Puedes repetir, por favor?",
               "translation": "Não entendo. Você pode repetir, por favor?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1577,44 +1412,62 @@
           }
         },
         {
-          "id": "atp-live-04-08-0",
-          "atMs": 63256,
+          "id": "atp-live-04-visual-4-00",
+          "atMs": 59580,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-04-08-1",
-          "atMs": 63256,
+          "id": "atp-live-04-visual-4-01",
+          "atMs": 59580,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-08",
               "kind": "text",
-              "label": "Quando a mensagem não fica clara",
-              "text": "Sua dúvida pode entrar nesta conversa.",
+              "id": "atp-live-04-visual-4-topic",
+              "text": "Quando a mensagem não fica clara",
+              "label": "SITUAÇÃO",
+              "icon": "quote",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-04-08-2",
-          "atMs": 63256,
+          "id": "atp-live-04-visual-4-02",
+          "atMs": 59580,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-04-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
+              "id": "atp-live-04-visual-4-item-0",
+              "kind": "text",
+              "text": "Explique a dificuldade",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "quote",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-04-visual-4-03",
+          "atMs": 59580,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-04-visual-4-item-1",
+              "kind": "text",
+              "text": "Diga como a pessoa pode ajudar",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -1638,32 +1491,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        15892,
-        18372,
-        35512,
-        37732,
-        49432,
-        66852,
-        71012
+        13790,
+        16580,
+        31430,
+        34220,
+        47680,
+        60080,
+        63940
       ],
       "explanation": "Qual ajuda resolve a sua dificuldade? Mais devagar: a velocidade atrapalhou. Repetir: você quer ouvir outra vez. Escolha o pedido pela situação. A intenção vem antes da escolha.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-05-narration",
-        "durationMs": 84864,
+        "mode": "slides",
+        "durationMs": 76530,
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 14812,
-            "text": "Às vezes você quer ouvir de novo. Em outras situações, até reconhece as palavras, mas a velocidade atrapalha. É útil escolher um pedido que comunique melhor o que precisa.",
+            "endMs": 13140,
+            "text": "Às vezes você quer ouvir de novo. Em outras situações, até reconhece as palavras, mas a velocidade atrapalha. É útil escolher um pedido que comunique melhor o que precisa. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 15892,
-            "endMs": 17472,
+            "startMs": 13790,
+            "endMs": 15930,
             "text": "Más despacio, por favor.",
             "textPresentation": {
               "language": "es",
@@ -1671,8 +1523,8 @@
             }
           },
           {
-            "startMs": 18372,
-            "endMs": 34452,
+            "startMs": 16580,
+            "endMs": 30780,
             "text": "Esse pedido trata da velocidade. Ele pode ajudar quando a pessoa fala rápido. Pedir repetição trata de ouvir a informação outra vez. Os dois pedidos podem fazer sentido, mas não dizem exatamente a mesma coisa.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1680,8 +1532,8 @@
             }
           },
           {
-            "startMs": 35512,
-            "endMs": 36752,
+            "startMs": 31430,
+            "endMs": 33570,
             "text": "¿Puedes repetir, por favor?",
             "textPresentation": {
               "language": "es",
@@ -1689,8 +1541,8 @@
             }
           },
           {
-            "startMs": 37732,
-            "endMs": 49432,
+            "startMs": 34220,
+            "endMs": 47030,
             "text": "Aqui você pede outra apresentação da informação. Não estamos dizendo que uma frase é sempre melhor que a outra. A escolha depende do que aconteceu e da ajuda que você quer receber.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1698,8 +1550,8 @@
             }
           },
           {
-            "startMs": 49432,
-            "endMs": 65992,
+            "startMs": 47680,
+            "endMs": 59430,
             "text": "Imagine que uma mensagem chegou cortada. Pedir para repetir pode resolver. Agora imagine uma fala completa, mas rápida demais: pedir menos velocidade comunica essa dificuldade de forma mais direta.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1707,8 +1559,8 @@
             }
           },
           {
-            "startMs": 66852,
-            "endMs": 69892,
+            "startMs": 60080,
+            "endMs": 63290,
             "text": "No entiendo. Más despacio, por favor.",
             "textPresentation": {
               "language": "es",
@@ -1716,8 +1568,8 @@
             }
           },
           {
-            "startMs": 71012,
-            "endMs": 84532,
+            "startMs": 63940,
+            "endMs": 76080,
             "text": "Essa combinação também é possível. Na próxima prática, observe a situação antes de escolher. Não tente acertar apenas reconhecendo uma palavra: pense no que sua mensagem pede à outra pessoa.",
             "textPresentation": {
               "language": "pt-BR",
@@ -1728,102 +1580,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-05-01-0",
+          "id": "atp-live-05-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-05-01-1",
+          "id": "atp-live-05-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-01",
               "kind": "text",
-              "label": "Repetir e falar mais devagar são pedidos diferentes",
-              "text": "Qual ajuda resolve a sua dificuldade?",
+              "id": "atp-live-05-visual-0-topic",
+              "text": "Escolher o pedido pela dificuldade",
+              "label": "SITUAÇÃO",
+              "icon": "clock",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-05-02-0",
-          "atMs": 15892,
+          "id": "atp-live-05-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-05-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Velocidade atrapalhou",
+              "right": "Ouvir outra vez",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-05-visual-1-00",
+          "atMs": 13790,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-05-02-1",
-          "atMs": 15892,
+          "id": "atp-live-05-visual-1-01",
+          "atMs": 13790,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-02",
+              "kind": "text",
+              "id": "atp-live-05-visual-1-topic",
+              "text": "Escolher o pedido pela dificuldade",
+              "label": "SITUAÇÃO",
+              "icon": "clock",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-05-visual-1-02",
+          "atMs": 13790,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-05-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Más despacio, por favor.",
               "translation": "Mais devagar, por favor.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-05-02-3",
-          "atMs": 16092,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-05-02"
-          }
-        },
-        {
-          "id": "atp-live-05-03-0",
-          "atMs": 18372,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-05-03-1",
-          "atMs": 18372,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-05-03",
-              "kind": "text",
-              "label": "Repetir e falar mais devagar são pedidos diferentes",
-              "text": "Mais devagar: a velocidade atrapalhou.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
-            }
-          }
-        },
-        {
-          "id": "atp-live-05-03-2",
-          "atMs": 18372,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-05-03-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Más despacio, por favor.",
-              "translation": "Mais devagar, por favor.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1832,76 +1673,43 @@
           }
         },
         {
-          "id": "atp-live-05-04-0",
-          "atMs": 35512,
+          "id": "atp-live-05-visual-2-00",
+          "atMs": 31430,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-05-04-1",
-          "atMs": 35512,
+          "id": "atp-live-05-visual-2-01",
+          "atMs": 31430,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-04",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "¿Puedes repetir, por favor?",
-              "translation": "Você pode repetir, por favor?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "message"
-            }
-          }
-        },
-        {
-          "id": "atp-live-05-04-3",
-          "atMs": 35712,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-05-04"
-          }
-        },
-        {
-          "id": "atp-live-05-05-0",
-          "atMs": 37732,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-05-05-1",
-          "atMs": 37732,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-05-05",
               "kind": "text",
-              "label": "Repetir e falar mais devagar são pedidos diferentes",
-              "text": "Repetir: você quer ouvir outra vez.",
+              "id": "atp-live-05-visual-2-topic",
+              "text": "Escolher o pedido pela dificuldade",
+              "label": "SITUAÇÃO",
+              "icon": "clock",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-05-05-2",
-          "atMs": 37732,
+          "id": "atp-live-05-visual-2-02",
+          "atMs": 31430,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-05-model",
+              "id": "atp-live-05-visual-2-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "¿Puedes repetir, por favor?",
               "translation": "Você pode repetir, por favor?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -1910,43 +1718,21 @@
           }
         },
         {
-          "id": "atp-live-05-06-0",
-          "atMs": 49432,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-05-06-1",
-          "atMs": 49432,
+          "id": "atp-live-05-visual-2-03",
+          "atMs": 31430,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-06",
-              "kind": "text",
-              "label": "Repetir e falar mais devagar são pedidos diferentes",
-              "text": "Escolha o pedido pela situação.",
-              "textPresentation": {
-                "language": "pt-BR",
+              "id": "atp-live-05-visual-2-item-1",
+              "kind": "comparison",
+              "left": "Más despacio, por favor.",
+              "right": "¿Puedes repetir, por favor?",
+              "label": "Dois pedidos com intenções diferentes",
+              "leftPresentation": {
+                "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "message",
-              "icon": "quote"
-            }
-          }
-        },
-        {
-          "id": "atp-live-05-06-2",
-          "atMs": 49432,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-05-06-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "¿Puedes repetir, por favor?",
-              "translation": "Você pode repetir, por favor?",
-              "textPresentation": {
+              "rightPresentation": {
                 "language": "es",
                 "direction": "ltr"
               }
@@ -1954,78 +1740,107 @@
           }
         },
         {
-          "id": "atp-live-05-07-0",
-          "atMs": 66852,
+          "id": "atp-live-05-visual-3-00",
+          "atMs": 60080,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-05-07-1",
-          "atMs": 66852,
+          "id": "atp-live-05-visual-3-01",
+          "atMs": 60080,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-07",
+              "kind": "text",
+              "id": "atp-live-05-visual-3-topic",
+              "text": "Escolher o pedido pela dificuldade",
+              "label": "SITUAÇÃO",
+              "icon": "clock",
+              "illustration": "message",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-05-visual-3-02",
+          "atMs": 60080,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-05-visual-3-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "No entiendo. Más despacio, por favor.",
               "translation": "Não entendo. Mais devagar, por favor.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
-              },
-              "illustration": "message"
+              }
             }
           }
         },
         {
-          "id": "atp-live-05-07-3",
-          "atMs": 67052,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-05-07"
-          }
-        },
-        {
-          "id": "atp-live-05-08-0",
-          "atMs": 71012,
+          "id": "atp-live-05-visual-4-00",
+          "atMs": 63940,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-05-08-1",
-          "atMs": 71012,
+          "id": "atp-live-05-visual-4-01",
+          "atMs": 63940,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-08",
               "kind": "text",
-              "label": "Repetir e falar mais devagar são pedidos diferentes",
-              "text": "A intenção vem antes da escolha.",
+              "id": "atp-live-05-visual-4-topic",
+              "text": "Escolher o pedido pela dificuldade",
+              "label": "SITUAÇÃO",
+              "icon": "clock",
+              "illustration": "message",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "message",
-              "icon": "quote"
+              }
             }
           }
         },
         {
-          "id": "atp-live-05-08-2",
-          "atMs": 71012,
+          "id": "atp-live-05-visual-4-02",
+          "atMs": 63940,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-05-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. Más despacio, por favor.",
-              "translation": "Não entendo. Mais devagar, por favor.",
+              "id": "atp-live-05-visual-4-item-0",
+              "kind": "text",
+              "text": "Mais devagar: ajustar a velocidade",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "clock",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-05-visual-4-03",
+          "atMs": 63940,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-05-visual-4-item-1",
+              "kind": "text",
+              "text": "Repetir: ouvir novamente",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -2049,33 +1864,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        568,
-        16488,
-        18508,
-        20428,
-        35848,
-        38608,
-        51668,
-        66828
+        14960,
+        17010,
+        19690,
+        33370,
+        37120,
+        49410,
+        64150
       ],
       "explanation": "A conversa precisa avançar. Ouvir novamente ajuda a tomar uma decisão. Duas informações organizam o encontro. Ensaie → compare a intenção → ajuste. Aplique a diferença entre os pedidos.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-06-narration",
-        "durationMs": 77448,
+        "mode": "slides",
+        "durationMs": 76240,
         "transcript": [
           {
-            "startMs": 568,
-            "endMs": 15488,
-            "text": "Vamos voltar ao encontro. Você perguntou pelo lugar e recebeu uma informação que não ficou clara. Primeiro pede repetição. Depois precisa usar a resposta, em vez de continuar repetindo o mesmo pedido.",
+            "startMs": 0,
+            "endMs": 14310,
+            "text": "Vamos voltar ao encontro. Você perguntou pelo lugar e recebeu uma informação que não ficou clara. Primeiro pede repetição. Depois precisa usar a resposta, em vez de continuar repetindo o mesmo pedido. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 16488,
-            "endMs": 17448,
+            "startMs": 14960,
+            "endMs": 16360,
             "text": "¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -2083,8 +1896,8 @@
             }
           },
           {
-            "startMs": 18508,
-            "endMs": 19688,
+            "startMs": 17010,
+            "endMs": 19040,
             "text": "Estoy en la biblioteca.",
             "textPresentation": {
               "language": "es",
@@ -2092,8 +1905,8 @@
             }
           },
           {
-            "startMs": 20428,
-            "endMs": 34748,
+            "startMs": 19690,
+            "endMs": 32720,
             "text": "Se a informação não ficou clara, peça para ouvi-la novamente. Quando entender que a pessoa está na biblioteca, você já pode decidir onde procurá-la. A repetição tem um propósito: recuperar a informação.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2101,8 +1914,8 @@
             }
           },
           {
-            "startMs": 35848,
-            "endMs": 37688,
+            "startMs": 33370,
+            "endMs": 36470,
             "text": "Estoy en la plaza. ¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -2110,8 +1923,8 @@
             }
           },
           {
-            "startMs": 38608,
-            "endMs": 50568,
+            "startMs": 37120,
+            "endMs": 48760,
             "text": "Nesse outro contato, você informa seu lugar antes da pergunta. A ordem faz sentido porque você quer encontrar alguém e também oferecer uma informação útil sobre sua própria posição.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2119,8 +1932,8 @@
             }
           },
           {
-            "startMs": 51668,
-            "endMs": 65928,
+            "startMs": 49410,
+            "endMs": 63500,
             "text": "Você pode ensaiar em voz baixa antes de consultar o modelo. Depois compare a intenção: sua frase informou um lugar? Fez a pergunta que você queria? Esse ensaio não recebe uma nota automática de pronúncia.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2128,8 +1941,8 @@
             }
           },
           {
-            "startMs": 66828,
-            "endMs": 77308,
+            "startMs": 64150,
+            "endMs": 75790,
             "text": "Agora vamos escolher um pedido de ajuda em uma situação nova. Você já ouviu os modelos e a diferença entre eles. Use essa diferença para decidir o que dizer.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2140,136 +1953,136 @@
       },
       "cues": [
         {
-          "id": "atp-live-06-01-0",
+          "id": "atp-live-06-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-06-01-1",
+          "id": "atp-live-06-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-01",
               "kind": "text",
-              "label": "Use a resposta para decidir o próximo passo",
-              "text": "A conversa precisa avançar.",
+              "id": "atp-live-06-visual-0-topic",
+              "text": "A resposta muda o próximo passo",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-06-02-0",
-          "atMs": 16488,
+          "id": "atp-live-06-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-06-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Perguntar e ouvir",
+              "right": "Usar o lugar recebido",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-06-visual-1-00",
+          "atMs": 14960,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-06-02-1",
-          "atMs": 16488,
+          "id": "atp-live-06-visual-1-01",
+          "atMs": 14960,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-02",
+              "kind": "text",
+              "id": "atp-live-06-visual-1-topic",
+              "text": "A resposta muda o próximo passo",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-06-visual-1-02",
+          "atMs": 14960,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-06-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "¿Dónde estás?",
               "translation": "Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
-              },
-              "illustration": "meeting"
+              }
             }
           }
         },
         {
-          "id": "atp-live-06-02-3",
-          "atMs": 16688,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-06-02"
-          }
-        },
-        {
-          "id": "atp-live-06-03-0",
-          "atMs": 18508,
+          "id": "atp-live-06-visual-2-00",
+          "atMs": 17010,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-06-03-1",
-          "atMs": 18508,
+          "id": "atp-live-06-visual-2-01",
+          "atMs": 17010,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-03",
+              "kind": "text",
+              "id": "atp-live-06-visual-2-topic",
+              "text": "A resposta muda o próximo passo",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-06-visual-2-02",
+          "atMs": 17010,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-06-visual-2-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la biblioteca.",
               "translation": "Estou na biblioteca.",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-06-03-3",
-          "atMs": 18708,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-06-03"
-          }
-        },
-        {
-          "id": "atp-live-06-04-0",
-          "atMs": 20428,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-06-04-1",
-          "atMs": 20428,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-06-04",
-              "kind": "text",
-              "label": "Use a resposta para decidir o próximo passo",
-              "text": "Ouvir novamente ajuda a tomar uma decisão.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-06-04-2",
-          "atMs": 20428,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-06-04-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la biblioteca.",
-              "translation": "Estou na biblioteca.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -2278,76 +2091,65 @@
           }
         },
         {
-          "id": "atp-live-06-05-0",
-          "atMs": 35848,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-06-05-1",
-          "atMs": 35848,
+          "id": "atp-live-06-visual-2-03",
+          "atMs": 17010,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-05",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "Estoy en la plaza. ¿Dónde estás?",
-              "translation": "Estou na praça. Onde você está?",
-              "textPresentation": {
+              "id": "atp-live-06-visual-2-item-1",
+              "kind": "comparison",
+              "left": "¿Dónde estás?",
+              "right": "Estoy en la biblioteca.",
+              "label": "Uma troca entre duas pessoas",
+              "leftPresentation": {
                 "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "meeting"
+              "rightPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
             }
           }
         },
         {
-          "id": "atp-live-06-05-3",
-          "atMs": 36048,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-06-05"
-          }
-        },
-        {
-          "id": "atp-live-06-06-0",
-          "atMs": 38608,
+          "id": "atp-live-06-visual-3-00",
+          "atMs": 33370,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-06-06-1",
-          "atMs": 38608,
+          "id": "atp-live-06-visual-3-01",
+          "atMs": 33370,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-06",
               "kind": "text",
-              "label": "Use a resposta para decidir o próximo passo",
-              "text": "Duas informações organizam o encontro.",
+              "id": "atp-live-06-visual-3-topic",
+              "text": "A resposta muda o próximo passo",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-06-06-2",
-          "atMs": 38608,
+          "id": "atp-live-06-visual-3-02",
+          "atMs": 33370,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-06-model",
+              "id": "atp-live-06-visual-3-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "Estoy en la plaza. ¿Dónde estás?",
               "translation": "Estou na praça. Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -2356,88 +2158,62 @@
           }
         },
         {
-          "id": "atp-live-06-07-0",
-          "atMs": 51668,
+          "id": "atp-live-06-visual-4-00",
+          "atMs": 64150,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-06-07-1",
-          "atMs": 51668,
+          "id": "atp-live-06-visual-4-01",
+          "atMs": 64150,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-07",
               "kind": "text",
-              "label": "Use a resposta para decidir o próximo passo",
-              "text": "Ensaie → compare a intenção → ajuste.",
+              "id": "atp-live-06-visual-4-topic",
+              "text": "A resposta muda o próximo passo",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-06-07-2",
-          "atMs": 51668,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-06-07-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza. ¿Dónde estás?",
-              "translation": "Estou na praça. Onde você está?",
-              "textPresentation": {
-                "language": "es",
                 "direction": "ltr"
               }
             }
           }
         },
         {
-          "id": "atp-live-06-08-0",
-          "atMs": 66828,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-06-08-1",
-          "atMs": 66828,
+          "id": "atp-live-06-visual-4-02",
+          "atMs": 64150,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-08",
+              "id": "atp-live-06-visual-4-item-0",
               "kind": "text",
-              "label": "Use a resposta para decidir o próximo passo",
-              "text": "Aplique a diferença entre os pedidos.",
+              "text": "Recupere a informação",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "people",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-06-08-2",
-          "atMs": 66828,
+          "id": "atp-live-06-visual-4-03",
+          "atMs": 64150,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-06-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza. ¿Dónde estás?",
-              "translation": "Estou na praça. Onde você está?",
+              "id": "atp-live-06-visual-4-item-1",
+              "kind": "text",
+              "text": "Decida onde procurar a pessoa",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -2479,32 +2255,30 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        300,
-        15720,
-        18400,
-        33040,
-        46280,
-        48920,
-        62260
+        15240,
+        18990,
+        31390,
+        45850,
+        48530,
+        62490
       ],
       "explanation": "Outro encontro, outra decisão. Mude a informação, preserve a intenção. Tente lembrar antes de abrir o apoio. Frase bem formada e tarefa atendida são coisas diferentes. Retome em outro momento.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-07-narration",
-        "durationMs": 75120,
+        "mode": "slides",
+        "durationMs": 76530,
         "transcript": [
           {
-            "startMs": 300,
-            "endMs": 14600,
-            "text": "Reconhecer um exemplo conhecido é um começo. Para ampliar sua prática, precisamos mudar a situação. Imagine que o encontro mudou de lugar e você precisa avisar isso antes de procurar a outra pessoa.",
+            "startMs": 0,
+            "endMs": 14590,
+            "text": "Reconhecer um exemplo conhecido é um começo. Para ampliar sua prática, precisamos mudar a situação. Imagine que o encontro mudou de lugar e você precisa avisar isso antes de procurar a outra pessoa. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 15720,
-            "endMs": 18400,
+            "startMs": 15240,
+            "endMs": 18340,
             "text": "Estoy en la biblioteca. ¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -2512,8 +2286,8 @@
             }
           },
           {
-            "startMs": 18400,
-            "endMs": 32020,
+            "startMs": 18990,
+            "endMs": 30740,
             "text": "A estrutura continua disponível, mas a informação agora é outra. Você não precisa copiar o lugar do primeiro exemplo. Escolha o lugar que corresponde à situação que quer comunicar.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2521,8 +2295,8 @@
             }
           },
           {
-            "startMs": 33040,
-            "endMs": 46280,
+            "startMs": 31390,
+            "endMs": 45200,
             "text": "Faça uma pequena tentativa de memória: como avisaria que está na praça? Se não lembrar, consulte o exemplo e tente novamente depois. Usar apoio é parte do estudo, não um motivo para perder pontos.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2530,8 +2304,8 @@
             }
           },
           {
-            "startMs": 46280,
-            "endMs": 48920,
+            "startMs": 45850,
+            "endMs": 47880,
             "text": "Estoy en la plaza.",
             "textPresentation": {
               "language": "es",
@@ -2539,8 +2313,8 @@
             }
           },
           {
-            "startMs": 48920,
-            "endMs": 61620,
+            "startMs": 48530,
+            "endMs": 61840,
             "text": "Compare sua tentativa com esse modelo. Observe o começo da mensagem e o lugar informado. Uma resposta sobre a biblioteca poderia estar bem formada, mas não atenderia a uma tarefa que pede praça.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2548,8 +2322,8 @@
             }
           },
           {
-            "startMs": 62260,
-            "endMs": 74480,
+            "startMs": 62490,
+            "endMs": 76080,
             "text": "Quando voltar a estudar em outra sessão, tente recuperar a pergunta antes de ver o cartão. Essa retomada em outro momento ajuda a observar o que você consegue produzir sem o modelo à frente.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2560,102 +2334,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-07-01-0",
+          "id": "atp-live-07-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-07-01-1",
+          "id": "atp-live-07-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-01",
               "kind": "text",
-              "label": "Troque a situação e mantenha a intenção",
-              "text": "Outro encontro, outra decisão.",
+              "id": "atp-live-07-visual-0-topic",
+              "text": "Outro lugar, mesma intenção",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "neighborhood",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "neighborhood",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-07-02-0",
-          "atMs": 15720,
+          "id": "atp-live-07-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-07-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Mudar a informação",
+              "right": "Preservar o sentido da mensagem",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-07-visual-1-00",
+          "atMs": 15240,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-07-02-1",
-          "atMs": 15720,
+          "id": "atp-live-07-visual-1-01",
+          "atMs": 15240,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-02",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "Estoy en la biblioteca. ¿Dónde estás?",
-              "translation": "Estou na biblioteca. Onde você está?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "neighborhood"
-            }
-          }
-        },
-        {
-          "id": "atp-live-07-02-3",
-          "atMs": 15920,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-07-02"
-          }
-        },
-        {
-          "id": "atp-live-07-03-0",
-          "atMs": 18400,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-07-03-1",
-          "atMs": 18400,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-07-03",
               "kind": "text",
-              "label": "Troque a situação e mantenha a intenção",
-              "text": "Mude a informação, preserve a intenção.",
+              "id": "atp-live-07-visual-1-topic",
+              "text": "Outro lugar, mesma intenção",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "neighborhood",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "neighborhood",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-07-03-2",
-          "atMs": 18400,
+          "id": "atp-live-07-visual-1-02",
+          "atMs": 15240,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-03-model",
+              "id": "atp-live-07-visual-1-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "Estoy en la biblioteca. ¿Dónde estás?",
               "translation": "Estou na biblioteca. Onde você está?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -2664,42 +2427,43 @@
           }
         },
         {
-          "id": "atp-live-07-04-0",
-          "atMs": 33040,
+          "id": "atp-live-07-visual-2-00",
+          "atMs": 45850,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-07-04-1",
-          "atMs": 33040,
+          "id": "atp-live-07-visual-2-01",
+          "atMs": 45850,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-04",
               "kind": "text",
-              "label": "Troque a situação e mantenha a intenção",
-              "text": "Tente lembrar antes de abrir o apoio.",
+              "id": "atp-live-07-visual-2-topic",
+              "text": "Outro lugar, mesma intenção",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "neighborhood",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "neighborhood",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-07-04-2",
-          "atMs": 33040,
+          "id": "atp-live-07-visual-2-02",
+          "atMs": 45850,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-04-model",
+              "id": "atp-live-07-visual-2-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la biblioteca. ¿Dónde estás?",
-              "translation": "Estou na biblioteca. Onde você está?",
+              "text": "Estoy en la plaza.",
+              "translation": "Estou na praça.",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -2708,77 +2472,21 @@
           }
         },
         {
-          "id": "atp-live-07-05-0",
-          "atMs": 46280,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-07-05-1",
-          "atMs": 46280,
+          "id": "atp-live-07-visual-2-03",
+          "atMs": 45850,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-05",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "Estoy en la plaza.",
-              "translation": "Estou na praça.",
-              "textPresentation": {
+              "id": "atp-live-07-visual-2-item-1",
+              "kind": "comparison",
+              "left": "Estoy en la biblioteca. ¿Dónde estás?",
+              "right": "Estoy en la plaza.",
+              "label": "Uma estrutura, outros lugares",
+              "leftPresentation": {
                 "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "neighborhood"
-            }
-          }
-        },
-        {
-          "id": "atp-live-07-05-3",
-          "atMs": 46480,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-07-05"
-          }
-        },
-        {
-          "id": "atp-live-07-06-0",
-          "atMs": 48920,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-07-06-1",
-          "atMs": 48920,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-07-06",
-              "kind": "text",
-              "label": "Troque a situação e mantenha a intenção",
-              "text": "Frase bem formada e tarefa atendida são coisas diferentes.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "neighborhood",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-07-06-2",
-          "atMs": 48920,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-07-06-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza.",
-              "translation": "Estou na praça.",
-              "textPresentation": {
+              "rightPresentation": {
                 "language": "es",
                 "direction": "ltr"
               }
@@ -2786,44 +2494,62 @@
           }
         },
         {
-          "id": "atp-live-07-07-0",
-          "atMs": 62260,
+          "id": "atp-live-07-visual-3-00",
+          "atMs": 62490,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-07-07-1",
-          "atMs": 62260,
+          "id": "atp-live-07-visual-3-01",
+          "atMs": 62490,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-07",
               "kind": "text",
-              "label": "Troque a situação e mantenha a intenção",
-              "text": "Retome em outro momento.",
+              "id": "atp-live-07-visual-3-topic",
+              "text": "Outro lugar, mesma intenção",
+              "label": "SITUAÇÃO",
+              "icon": "pin",
+              "illustration": "neighborhood",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "neighborhood",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-07-07-2",
-          "atMs": 62260,
+          "id": "atp-live-07-visual-3-02",
+          "atMs": 62490,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-07-07-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "Estoy en la plaza.",
-              "translation": "Estou na praça.",
+              "id": "atp-live-07-visual-3-item-0",
+              "kind": "text",
+              "text": "Tente lembrar antes de consultar",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "pin",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-07-visual-3-03",
+          "atMs": 62490,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-07-visual-3-item-1",
+              "kind": "text",
+              "text": "Compare a frase com a situação",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
+              "textPresentation": {
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }
@@ -2847,33 +2573,31 @@
       "allowInterruption": true,
       "resumeAnchorsMs": [
         0,
-        360,
-        14780,
-        17780,
-        21520,
-        37500,
-        52640,
-        66680,
-        80540
+        14350,
+        18100,
+        21960,
+        37090,
+        52220,
+        61390,
+        74680
       ],
       "explanation": "Você tem três ações disponíveis. Escute e use a informação recebida. Volte ao ponto que precisa de atenção. Pergunte sem sair do quadro. Leve uma pequena tarefa para a próxima sessão. Continue praticando nas situações da unidade.",
       "presentation": {
-        "mode": "audio",
-        "mediaId": "atp-live-08-narration",
-        "durationMs": 97152,
+        "mode": "slides",
+        "durationMs": 88830,
         "transcript": [
           {
-            "startMs": 360,
-            "endMs": 13660,
-            "text": "Vamos juntar as peças sem acrescentar uma lista enorme de regras. Você pode avisar seu lugar, perguntar pelo lugar da outra pessoa e pedir ajuda quando a informação não fica clara.",
+            "startMs": 0,
+            "endMs": 13700,
+            "text": "Vamos juntar as peças sem acrescentar uma lista enorme de regras. Você pode avisar seu lugar, perguntar pelo lugar da outra pessoa e pedir ajuda quando a informação não fica clara. Veja este exemplo.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 14780,
-            "endMs": 17140,
+            "startMs": 14350,
+            "endMs": 17450,
             "text": "Estoy en la plaza. ¿Dónde estás?",
             "textPresentation": {
               "language": "es",
@@ -2881,8 +2605,8 @@
             }
           },
           {
-            "startMs": 17780,
-            "endMs": 20500,
+            "startMs": 18100,
+            "endMs": 21310,
             "text": "No entiendo. ¿Puedes repetir, por favor?",
             "textPresentation": {
               "language": "es",
@@ -2890,8 +2614,8 @@
             }
           },
           {
-            "startMs": 21520,
-            "endMs": 36480,
+            "startMs": 21960,
+            "endMs": 36440,
             "text": "Esses modelos são um ponto de partida. Na prática, escute a resposta da pessoa e use a informação recebida. Uma conversa não é apenas uma sequência de frases decoradas: cada fala muda o que vem depois.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2899,8 +2623,8 @@
             }
           },
           {
-            "startMs": 37500,
-            "endMs": 51820,
+            "startMs": 37090,
+            "endMs": 51570,
             "text": "Se ainda confunde a pergunta com a localização, volte ao trecho correspondente e observe a troca entre as duas pessoas. Se a dificuldade é escolher o pedido de ajuda, compare a situação com os dois pedidos.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2908,17 +2632,17 @@
             }
           },
           {
-            "startMs": 52640,
-            "endMs": 65640,
-            "text": "Você também pode escrever uma dúvida agora. O professor considera esta aula e o momento em que você interrompeu. Depois da resposta, retome a explicação pelo ponto indicado no controle.",
+            "startMs": 52220,
+            "endMs": 60740,
+            "text": "Você também pode interromper a aula para consultar o apoio desta etapa. Depois, retome a explicação pelo ponto indicado no controle.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           },
           {
-            "startMs": 66680,
-            "endMs": 80540,
+            "startMs": 61390,
+            "endMs": 74030,
             "text": "Quando terminar, experimente uma mensagem curta com um lugar diferente do primeiro exemplo. Em uma próxima sessão, recupere a pergunta sem olhar. Essas tentativas mostram melhor o que já consegue usar.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2926,8 +2650,8 @@
             }
           },
           {
-            "startMs": 80540,
-            "endMs": 96840,
+            "startMs": 74680,
+            "endMs": 88380,
             "text": "Você concluiu uma prática inicial de encontro e compreensão. Continue com as atividades da unidade para ampliar essas ações. Terminar esta aula registra a participação; não significa que você já domina todo o espanhol.",
             "textPresentation": {
               "language": "pt-BR",
@@ -2938,136 +2662,91 @@
       },
       "cues": [
         {
-          "id": "atp-live-08-01-0",
+          "id": "atp-live-08-visual-0-00",
           "atMs": 0,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-08-01-1",
+          "id": "atp-live-08-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-01",
               "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Você tem três ações disponíveis.",
+              "id": "atp-live-08-visual-0-topic",
+              "text": "Três ações para continuar",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-08-02-0",
-          "atMs": 14780,
+          "id": "atp-live-08-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-08-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Avisar e perguntar",
+              "right": "Pedir ajuda quando precisar",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-08-visual-1-00",
+          "atMs": 14350,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-08-02-1",
-          "atMs": 14780,
+          "id": "atp-live-08-visual-1-01",
+          "atMs": 14350,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-02",
+              "kind": "text",
+              "id": "atp-live-08-visual-1-topic",
+              "text": "Três ações para continuar",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-live-08-visual-1-02",
+          "atMs": 14350,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-live-08-visual-1-item-0",
               "kind": "example",
-              "label": "Na conversa",
               "text": "Estoy en la plaza. ¿Dónde estás?",
               "translation": "Estou na praça. Onde você está?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-08-02-3",
-          "atMs": 14980,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-08-02"
-          }
-        },
-        {
-          "id": "atp-live-08-03-0",
-          "atMs": 17780,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-08-03-1",
-          "atMs": 17780,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-08-03",
-              "kind": "example",
-              "label": "Na conversa",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
-              "textPresentation": {
-                "language": "es",
-                "direction": "ltr"
-              },
-              "illustration": "meeting"
-            }
-          }
-        },
-        {
-          "id": "atp-live-08-03-3",
-          "atMs": 17980,
-          "action": {
-            "type": "board.highlight",
-            "targetId": "atp-live-08-03"
-          }
-        },
-        {
-          "id": "atp-live-08-04-0",
-          "atMs": 21520,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-08-04-1",
-          "atMs": 21520,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-08-04",
-              "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Escute e use a informação recebida.",
-              "textPresentation": {
-                "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-08-04-2",
-          "atMs": 21520,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-08-04-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -3076,42 +2755,43 @@
           }
         },
         {
-          "id": "atp-live-08-05-0",
-          "atMs": 37500,
+          "id": "atp-live-08-visual-2-00",
+          "atMs": 18100,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-08-05-1",
-          "atMs": 37500,
+          "id": "atp-live-08-visual-2-01",
+          "atMs": 18100,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-05",
               "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Volte ao ponto que precisa de atenção.",
+              "id": "atp-live-08-visual-2-topic",
+              "text": "Três ações para continuar",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-08-05-2",
-          "atMs": 37500,
+          "id": "atp-live-08-visual-2-02",
+          "atMs": 18100,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-05-model",
+              "id": "atp-live-08-visual-2-item-0",
               "kind": "example",
-              "label": "O exemplo que estamos entendendo",
               "text": "No entiendo. ¿Puedes repetir, por favor?",
               "translation": "Não entendo. Você pode repetir, por favor?",
+              "label": "NA CONVERSA",
+              "icon": "quote",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -3120,43 +2800,21 @@
           }
         },
         {
-          "id": "atp-live-08-06-0",
-          "atMs": 52640,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-08-06-1",
-          "atMs": 52640,
+          "id": "atp-live-08-visual-2-03",
+          "atMs": 18100,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-06",
-              "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Pergunte sem sair do quadro.",
-              "textPresentation": {
-                "language": "pt-BR",
+              "id": "atp-live-08-visual-2-item-1",
+              "kind": "comparison",
+              "left": "Estoy en la plaza. ¿Dónde estás?",
+              "right": "No entiendo. ¿Puedes repetir, por favor?",
+              "label": "Pequenas mensagens que se conectam",
+              "leftPresentation": {
+                "language": "es",
                 "direction": "ltr"
               },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-08-06-2",
-          "atMs": 52640,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-08-06-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
-              "textPresentation": {
+              "rightPresentation": {
                 "language": "es",
                 "direction": "ltr"
               }
@@ -3164,88 +2822,62 @@
           }
         },
         {
-          "id": "atp-live-08-07-0",
-          "atMs": 66680,
+          "id": "atp-live-08-visual-3-00",
+          "atMs": 74680,
           "action": {
             "type": "board.clear"
           }
         },
         {
-          "id": "atp-live-08-07-1",
-          "atMs": 66680,
+          "id": "atp-live-08-visual-3-01",
+          "atMs": 74680,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-07",
               "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Leve uma pequena tarefa para a próxima sessão.",
+              "id": "atp-live-08-visual-3-topic",
+              "text": "Três ações para continuar",
+              "label": "SITUAÇÃO",
+              "icon": "people",
+              "illustration": "meeting",
               "textPresentation": {
                 "language": "pt-BR",
-                "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
-            }
-          }
-        },
-        {
-          "id": "atp-live-08-07-2",
-          "atMs": 66680,
-          "action": {
-            "type": "board.show",
-            "element": {
-              "id": "atp-live-08-07-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
-              "textPresentation": {
-                "language": "es",
                 "direction": "ltr"
               }
             }
           }
         },
         {
-          "id": "atp-live-08-08-0",
-          "atMs": 80540,
-          "action": {
-            "type": "board.clear"
-          }
-        },
-        {
-          "id": "atp-live-08-08-1",
-          "atMs": 80540,
+          "id": "atp-live-08-visual-3-02",
+          "atMs": 74680,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-08",
+              "id": "atp-live-08-visual-3-item-0",
               "kind": "text",
-              "label": "Uma conversa pequena que você pode continuar",
-              "text": "Continue praticando nas situações da unidade.",
+              "text": "Escute e use a resposta",
+              "label": "GUARDE ESTA IDEIA",
+              "icon": "people",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
-              },
-              "illustration": "meeting",
-              "icon": "people"
+              }
             }
           }
         },
         {
-          "id": "atp-live-08-08-2",
-          "atMs": 80540,
+          "id": "atp-live-08-visual-3-03",
+          "atMs": 74680,
           "action": {
             "type": "board.show",
             "element": {
-              "id": "atp-live-08-08-model",
-              "kind": "example",
-              "label": "O exemplo que estamos entendendo",
-              "text": "No entiendo. ¿Puedes repetir, por favor?",
-              "translation": "Não entendo. Você pode repetir, por favor?",
+              "id": "atp-live-08-visual-3-item-1",
+              "kind": "text",
+              "text": "Retome a pergunta em outro momento",
+              "label": "PRÓXIMA AÇÃO",
+              "icon": "clock",
               "textPresentation": {
-                "language": "es",
+                "language": "pt-BR",
                 "direction": "ltr"
               }
             }

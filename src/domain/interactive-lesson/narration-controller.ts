@@ -75,6 +75,9 @@ export class NarrationController {
   private lines: NarrationLine[] = [];
   private index = 0;
   private disposed = false;
+  private timer: ReturnType<typeof setTimeout> | null = null;
+  private gapRemainingMs: number | null = null;
+  private gapStartedAt: number | null = null;
   constructor(private readonly speak: NarrationSpeaker,
     private readonly change: (snapshot: NarrationSnapshot) => void) {}
   start(lines: NarrationLine[]) {
@@ -97,10 +100,13 @@ export class NarrationController {
     const handle = this.speak(line, {
       end: () => {
         if (!current()) return;
+        ++this.generation;
         this.handle = null;
-        if (++this.index < this.lines.length) this.play();
-        else {
-          ++this.generation;
+        if (this.index + 1 < this.lines.length) {
+          this.gapRemainingMs = 650;
+          this.wait();
+        } else {
+          ++this.index;
           this.change({ status: "completed", line, message: "Narração concluída. A aula continua pausada." });
         }
       },
@@ -114,19 +120,52 @@ export class NarrationController {
     });
     if (!current()) { handle?.cancel(); return; }
     this.handle = handle;
-    if (!handle) this.change({ status: "text", line, message: textNotice });
+    if (!handle) {
+      ++this.generation;
+      this.change({ status: "text", line, message: textNotice });
+    }
+  }
+  private wait() {
+    if (this.disposed || this.gapRemainingMs === null || this.timer !== null) return;
+    const own = ++this.generation;
+    this.gapStartedAt = Date.now();
+    this.change({ status: "speaking", line: this.lines[this.index], message: "Uma pausa para acompanhar o exemplo." });
+    if (this.disposed || own !== this.generation) return;
+    this.timer = setTimeout(() => {
+      if (this.disposed || own !== this.generation) return;
+      this.timer = null;
+      this.gapRemainingMs = null;
+      this.gapStartedAt = null;
+      ++this.index;
+      this.play();
+    }, this.gapRemainingMs);
+  }
+  private clearTimer() {
+    if (this.timer !== null) clearTimeout(this.timer);
+    this.timer = null;
   }
   pause() {
     ++this.generation;
+    if (this.gapRemainingMs !== null && this.gapStartedAt !== null)
+      this.gapRemainingMs = Math.max(0, this.gapRemainingMs - (Date.now() - this.gapStartedAt));
+    this.clearTimer();
+    this.gapStartedAt = null;
     const previous = this.handle;
     this.handle = null;
     previous?.cancel();
     if (this.lines[this.index] && !this.disposed)
-      this.change({ status: "paused", line: this.lines[this.index], message: "Narração pausada. Retome do início desta frase." });
+      this.change({ status: "paused", line: this.lines[this.index], message: this.gapRemainingMs !== null ? "Narração pausada. Retome para continuar." : "Narração pausada. Retome do início desta frase." });
   }
-  resume() { if (!this.disposed && !this.handle) this.play(); }
+  resume() {
+    if (this.disposed || this.handle || this.timer !== null) return;
+    if (this.gapRemainingMs !== null) this.wait();
+    else this.play();
+  }
   cancel() {
     ++this.generation;
+    this.clearTimer();
+    this.gapRemainingMs = null;
+    this.gapStartedAt = null;
     const previous = this.handle;
     this.handle = null;
     this.lines = [];

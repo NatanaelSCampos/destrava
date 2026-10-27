@@ -26,7 +26,7 @@
   "segments": [
     {
       "id": "atp-u2-guided-intro",
-      "title": "Uma informação de cada vez",
+      "title": "Entre na situação",
       "type": "explanation",
       "objectives": [],
       "concepts": [
@@ -34,11 +34,10 @@
       ],
       "presentation": {
         "mode": "slides",
-        "durationMs": 16000,
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 8000,
+            "endMs": 6960,
             "text": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo.",
             "textPresentation": {
               "language": "pt-BR",
@@ -46,26 +45,37 @@
             }
           },
           {
-            "startMs": 8000,
-            "endMs": 16000,
-            "text": "Use o apoio da etapa para ouvir as falas e consultar as traduções.",
+            "startMs": 7610,
+            "endMs": 14960,
+            "text": "São três informações para manter: o que beber, como preparar e onde consumir. Veja como elas aparecem juntas.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
           }
-        ]
+        ],
+        "durationMs": 15410
       },
       "cues": [
         {
-          "id": "atp-u2-guided-cue-1",
+          "id": "atp-u2-guided-intro-visual-0-00",
+          "atMs": 0,
+          "action": {
+            "type": "board.clear"
+          }
+        },
+        {
+          "id": "atp-u2-guided-intro-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
               "kind": "text",
-              "id": "atp-u2-guided-board-help",
-              "text": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo.",
+              "id": "atp-u2-guided-intro-visual-0-topic",
+              "text": "Um pedido com escolhas claras",
+              "label": "SITUAÇÃO",
+              "icon": "cup",
+              "illustration": "cafe",
               "textPresentation": {
                 "language": "pt-BR",
                 "direction": "ltr"
@@ -74,14 +84,24 @@
           }
         },
         {
-          "id": "atp-u2-guided-cue-2",
-          "atMs": 8000,
+          "id": "atp-u2-guided-intro-visual-0-02",
+          "atMs": 0,
           "action": {
-            "type": "caption.show",
-            "text": "Confira se a confirmação mantém as escolhas do pedido.",
-            "textPresentation": {
-              "language": "pt-BR",
-              "direction": "ltr"
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-intro-visual-0-item-0",
+              "kind": "comparison",
+              "left": "Escolher bebida e condição",
+              "right": "Conferir a confirmação",
+              "label": "O CAMINHO DA CONVERSA",
+              "leftPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              },
+              "rightPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
             }
           }
         }
@@ -90,7 +110,8 @@
       "required": true,
       "allowInterruption": true,
       "resumeAnchorsMs": [
-        0
+        0,
+        7610
       ],
       "explanation": "Acompanhe as escolhas do pedido e a confirmação da atendente. Confira bebida, condição e lugar de consumo."
     },
@@ -104,11 +125,19 @@
       ],
       "presentation": {
         "mode": "slides",
-        "durationMs": 20000,
         "transcript": [
           {
             "startMs": 0,
-            "endMs": 10000,
+            "endMs": 1670,
+            "text": "Ouça o pedido completo.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
+          },
+          {
+            "startMs": 2320,
+            "endMs": 6490,
             "text": "Un café sin azúcar, para aquí, por favor.",
             "textPresentation": {
               "language": "es",
@@ -116,27 +145,210 @@
             }
           },
           {
-            "startMs": 10000,
-            "endMs": 20000,
+            "startMs": 7140,
+            "endMs": 10980,
             "text": "Um café sem açúcar, para consumir aqui, por favor.",
             "textPresentation": {
               "language": "pt-BR",
               "direction": "ltr"
             }
+          },
+          {
+            "startMs": 11630,
+            "endMs": 17420,
+            "text": "Ao conferir a resposta, mantenha as escolhas: café, sem açúcar e para consumir aqui.",
+            "textPresentation": {
+              "language": "pt-BR",
+              "direction": "ltr"
+            }
           }
-        ]
+        ],
+        "durationMs": 17870
       },
       "cues": [
         {
-          "id": "atp-u2-guided-cue-3",
+          "id": "atp-u2-guided-model-visual-0-00",
+          "atMs": 0,
+          "action": {
+            "type": "board.clear"
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-0-01",
           "atMs": 0,
           "action": {
             "type": "board.show",
             "element": {
+              "kind": "text",
+              "id": "atp-u2-guided-model-visual-0-topic",
+              "text": "Um pedido com escolhas claras",
+              "label": "SITUAÇÃO",
+              "icon": "cup",
+              "illustration": "cafe",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-0-02",
+          "atMs": 0,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-0-item-0",
+              "kind": "text",
+              "text": "Bebida, condição e consumo",
+              "label": "O QUE OBSERVAR",
+              "icon": "cup",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-1-00",
+          "atMs": 2320,
+          "action": {
+            "type": "board.clear"
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-1-01",
+          "atMs": 2320,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "atp-u2-guided-model-visual-1-topic",
+              "text": "Bebida, condição e consumo",
+              "label": "SITUAÇÃO",
+              "icon": "cup",
+              "illustration": "cafe",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-1-02",
+          "atMs": 2320,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-1-item-0",
               "kind": "example",
-              "id": "atp-u2-guided-board-model",
               "text": "Un café sin azúcar, para aquí, por favor.",
               "translation": "Um café sem açúcar, para consumir aqui, por favor.",
+              "textPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              },
+              "label": "EXEMPLO",
+              "icon": "cup"
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-1-03",
+          "atMs": 2320,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-1-item-1",
+              "kind": "text",
+              "text": "Confira as três escolhas",
+              "label": "A INTENÇÃO",
+              "icon": "quote",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-2-00",
+          "atMs": 11630,
+          "action": {
+            "type": "board.clear"
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-2-01",
+          "atMs": 11630,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "kind": "text",
+              "id": "atp-u2-guided-model-visual-2-topic",
+              "text": "As escolhas do pedido",
+              "label": "SITUAÇÃO",
+              "icon": "cup",
+              "illustration": "cafe",
+              "textPresentation": {
+                "language": "pt-BR",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-2-02",
+          "atMs": 11630,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-2-item-0",
+              "kind": "example",
+              "text": "Un café",
+              "translation": "Um café",
+              "label": "BEBIDA",
+              "icon": "cup",
+              "textPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-2-03",
+          "atMs": 11630,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-2-item-1",
+              "kind": "example",
+              "text": "sin azúcar",
+              "translation": "sem açúcar",
+              "label": "CONDIÇÃO",
+              "icon": "quote",
+              "textPresentation": {
+                "language": "es",
+                "direction": "ltr"
+              }
+            }
+          }
+        },
+        {
+          "id": "atp-u2-guided-model-visual-2-04",
+          "atMs": 11630,
+          "action": {
+            "type": "board.show",
+            "element": {
+              "id": "atp-u2-guided-model-visual-2-item-2",
+              "kind": "example",
+              "text": "para aquí",
+              "translation": "para consumir aqui",
+              "label": "CONSUMO",
+              "icon": "pin",
               "textPresentation": {
                 "language": "es",
                 "direction": "ltr"
@@ -148,7 +360,10 @@
       "required": false,
       "allowInterruption": true,
       "resumeAnchorsMs": [
-        0
+        0,
+        2320,
+        7140,
+        11630
       ]
     },
     {
@@ -223,5 +438,6 @@
         0
       ]
     }
-  ]
+  ],
+  "autoAdvancePresentations": true
 }
