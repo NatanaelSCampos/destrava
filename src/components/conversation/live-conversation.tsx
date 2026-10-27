@@ -40,6 +40,7 @@ import {
   type LiveTopic,
   type LiveTurn,
 } from "@/domain/conversation/live-client";
+import { LiveFreeSetup } from "./live-free-setup";
 import { LiveTopicPicker } from "./live-topic-picker";
 import "./live-conversation.css";
 
@@ -249,6 +250,8 @@ function LiveConversationPanel({
     preferencesHeading = useRef<HTMLHeadingElement>(null);
   const preferencesHeadingId = useId();
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [mode, setMode] = useState<"free" | "studied">("free");
+  const [openingTopic, setOpeningTopic] = useState("");
   const [languageLabel, setLanguageLabel] = useState(languageName);
   const [level, setLevel] = useState<LiveLevel>("beginner"),
     [correction, setCorrection] = useState<LiveCorrection>("immediate");
@@ -293,6 +296,7 @@ function LiveConversationPanel({
   useEffect(() => {
     if (!enabled) return;
     const abort = new AbortController();
+    if (mode === "free") return;
     void loadLiveTopics(courseId, abort.signal)
       .then((result) => {
         if (abort.signal.aborted) return;
@@ -311,7 +315,7 @@ function LiveConversationPanel({
         }
       });
     return () => abort.abort();
-  }, [courseId, enabled, reload]);
+  }, [courseId, enabled, reload, mode]);
   const historyRevision = snapshot.phase === "completed" ? snapshot.session?.id : "";
   useEffect(() => {
     if (!enabled) return;
@@ -451,13 +455,16 @@ function LiveConversationPanel({
     setReload((value) => value + 1);
   }
   function begin() {
-    if (!enabled || !selectedTopics.length || !client.current || active) return;
+    if (!enabled || (mode === "studied" && !selectedTopics.length) || !client.current || active)
+      return;
     setView("call");
     selectHistory(null);
     setDraft("");
     void client.current.start({
       courseId,
-      topicIds: selectedTopics.map((topic) => topic.id),
+      ...(mode === "free"
+        ? { mode, ...(openingTopic.trim() ? { openingTopic: openingTopic.trim() } : {}) }
+        : { mode, topicIds: selectedTopics.map((topic) => topic.id) }),
       level,
       correction,
       voice: voice === "preference" ? readVoicePreference(locale) : voice,
@@ -490,7 +497,7 @@ function LiveConversationPanel({
             Uma conversa.
             <br className="live-voice-mobile-break" /> A sua voz.
           </h1>
-          <p>Retome o que você estudou e ganhe espaço para falar em {languageLabel}.</p>
+          <p>Ganhe espaço para conversar em {languageLabel}, do seu jeito e no seu ritmo.</p>
         </div>
         {!active && (
           <div className="live-voice-heading-art">
@@ -548,14 +555,18 @@ function LiveConversationPanel({
         </section>
       ) : showingCall ? (
         <section className="live-voice-call">
-          <div className="live-voice-call-heading">
+          <div className="live-voice-call-heading" data-report-private>
             <div>
               <span className="live-voice-kicker">
                 {snapshot.session?.languageLabel ?? languageLabel}
               </span>
               <h2>
                 {snapshot.session?.topic.title ??
-                  (selectedTopics.length ? selectionTitle : "Sua conversa")}
+                  (mode === "free"
+                    ? "Conversa livre"
+                    : selectedTopics.length
+                      ? selectionTitle
+                      : "Sua conversa")}
               </h2>
             </div>
             {active && (
@@ -709,7 +720,7 @@ function LiveConversationPanel({
                   </button>
                 )}
                 <button type="button" className="live-voice-secondary" onClick={back}>
-                  <ArrowLeft size={17} /> Voltar aos assuntos
+                  <ArrowLeft size={17} /> Preparar outra conversa
                 </button>
                 <button
                   type="button"
@@ -735,7 +746,7 @@ function LiveConversationPanel({
           <Transcript turns={snapshot.turns} />
         </section>
       ) : tab === "history" ? (
-        <section className="live-voice-history">
+        <section className="live-voice-history" data-report-private>
           {selectedHistory ? (
             <>
               <button type="button" className="live-voice-back" onClick={() => selectHistory(null)}>
@@ -844,43 +855,78 @@ function LiveConversationPanel({
       ) : (
         <div className="live-voice-setup">
           <section className="live-voice-topics">
-            <div className="live-voice-section-heading">
-              <div>
-                <span className="live-voice-kicker">1 · ASSUNTOS QUE SE CONECTAM</span>
-                <h2>Sobre o que vamos conversar?</h2>
-                <p>
-                  Combine etapas e unidades do que você já estudou. Você escolhe o caminho da
-                  conversa.
-                </p>
-              </div>
-              <BookOpen size={22} aria-hidden="true" />
+            <div className="live-voice-path-picker" role="group" aria-label="Caminho da conversa">
+              <button type="button" aria-pressed={mode === "free"} onClick={() => setMode("free")}>
+                <Sparkles size={20} aria-hidden="true" />
+                <span>
+                  <strong>Conversa livre</strong>
+                  <small>Qualquer assunto, no seu ritmo</small>
+                </span>
+                <span className="live-voice-radio">{mode === "free" && <span />}</span>
+              </button>
+              <button
+                type="button"
+                aria-pressed={mode === "studied"}
+                onClick={() => {
+                  if (!topics.length) setTopicsLoading(true);
+                  setMode("studied");
+                }}
+              >
+                <BookOpen size={20} aria-hidden="true" />
+                <span>
+                  <strong>Revisar o curso</strong>
+                  <small>Escolha unidades e etapas</small>
+                </span>
+                <span className="live-voice-radio">{mode === "studied" && <span />}</span>
+              </button>
             </div>
-            {topicsLoading ? (
-              <p role="status" className="live-voice-loading">
-                Encontrando seus assuntos…
-              </p>
-            ) : topicError ? (
-              <div className="live-voice-empty">
-                <p className="live-voice-error" role="alert">
-                  {topicError}
-                </p>
-                <button type="button" className="live-voice-secondary" onClick={refresh}>
-                  Tentar novamente
-                </button>
-              </div>
-            ) : topics.length ? (
-              <LiveTopicPicker
-                topics={topics}
-                selectedIds={selectedTopicIds}
-                onChange={setSelectedTopicIds}
+            {mode === "free" ? (
+              <LiveFreeSetup
+                topic={openingTopic}
+                onChange={setOpeningTopic}
                 onContinue={goToPreferences}
               />
             ) : (
-              <div className="live-voice-empty">
-                <BookOpen size={30} aria-hidden="true" />
-                <h3>Estude um pouco e volte para conversar</h3>
-                <p>Seus assuntos aparecem aqui conforme você pratica as atividades do curso.</p>
-              </div>
+              <>
+                <div className="live-voice-section-heading">
+                  <div>
+                    <span className="live-voice-kicker">1 · ASSUNTOS QUE SE CONECTAM</span>
+                    <h2>Sobre o que vamos conversar?</h2>
+                    <p>
+                      Combine etapas e unidades do que você já estudou. Você escolhe o caminho da
+                      conversa.
+                    </p>
+                  </div>
+                  <BookOpen size={22} aria-hidden="true" />
+                </div>
+                {topicsLoading ? (
+                  <p role="status" className="live-voice-loading">
+                    Encontrando seus assuntos…
+                  </p>
+                ) : topicError ? (
+                  <div className="live-voice-empty">
+                    <p className="live-voice-error" role="alert">
+                      {topicError}
+                    </p>
+                    <button type="button" className="live-voice-secondary" onClick={refresh}>
+                      Tentar novamente
+                    </button>
+                  </div>
+                ) : topics.length ? (
+                  <LiveTopicPicker
+                    topics={topics}
+                    selectedIds={selectedTopicIds}
+                    onChange={setSelectedTopicIds}
+                    onContinue={goToPreferences}
+                  />
+                ) : (
+                  <div className="live-voice-empty">
+                    <BookOpen size={30} aria-hidden="true" />
+                    <h3>Estude um pouco e volte para conversar</h3>
+                    <p>Seus assuntos aparecem aqui conforme você pratica as atividades do curso.</p>
+                  </div>
+                )}
+              </>
             )}
           </section>
           <aside
@@ -892,19 +938,27 @@ function LiveConversationPanel({
             <h2 id={preferencesHeadingId} ref={preferencesHeading} tabIndex={-1}>
               Encontre seu ritmo
             </h2>
-            {selectedTopics.length > 0 && (
-              <div className="live-voice-selected-topic" aria-live="polite" aria-atomic="true">
-                <span>SUA SELEÇÃO</span>
-                <strong>{selectionTitle}</strong>
-                <ul>
-                  {selectedTopics.slice(0, 3).map((topic) => (
-                    <li key={topic.id}>{topic.title}</li>
-                  ))}
-                </ul>
-                {selectedTopics.length > 3 && (
-                  <small>+ {selectedTopics.length - 3} etapas selecionadas</small>
-                )}
+            {mode === "free" ? (
+              <div className="live-voice-selected-topic" data-report-private>
+                <span>CONVERSA LIVRE</span>
+                <strong>{openingTopic.trim() || "Vamos descobrir um assunto juntos"}</strong>
+                <small>Você pode mudar o rumo do papo a qualquer momento.</small>
               </div>
+            ) : (
+              selectedTopics.length > 0 && (
+                <div className="live-voice-selected-topic" aria-live="polite" aria-atomic="true">
+                  <span>SUA SELEÇÃO</span>
+                  <strong>{selectionTitle}</strong>
+                  <ul>
+                    {selectedTopics.slice(0, 3).map((topic) => (
+                      <li key={topic.id}>{topic.title}</li>
+                    ))}
+                  </ul>
+                  {selectedTopics.length > 3 && (
+                    <small>+ {selectedTopics.length - 3} etapas selecionadas</small>
+                  )}
+                </div>
+              )
             )}
 
             <fieldset>
@@ -970,7 +1024,7 @@ function LiveConversationPanel({
               type="button"
               className="live-voice-primary live-voice-begin"
               disabled={
-                !selectedTopics.length ||
+                (mode === "studied" && !selectedTopics.length) ||
                 !enabled ||
                 active ||
                 (snapshot.phase === "error" && Boolean(snapshot.session))
@@ -980,7 +1034,7 @@ function LiveConversationPanel({
               <Mic size={19} aria-hidden="true" /> Começar conversa{" "}
               <ArrowRight size={17} aria-hidden="true" />
             </button>
-            {!selectedTopics.length && topics.length > 0 && (
+            {mode === "studied" && !selectedTopics.length && topics.length > 0 && (
               <p className="live-voice-select-hint">Escolha uma ou mais etapas para começar.</p>
             )}
             <p className="live-voice-ai-note">Você conversa com uma IA, não com uma pessoa.</p>

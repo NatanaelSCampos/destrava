@@ -23,3 +23,7 @@ Cada Issue contém UUID marcador e link da execução. Baixar artifact report-ev
 Fly: frecuencias-a1-natanael, https://frecuencias-a1-natanael.fly.dev, Supabase hyhycwmuogezdrhzlyog. Usar scripts/fly-ipv4.ps1 para todos os comandos Fly. Publicação exige autorização explícita, perfil absoluto e SHA conferido via scripts/deploy-fly.ps1. Não usar env de loopback em produção; não imprimir segredos.
 
 Testar correção local, desktop e celular, incluindo teclado, áudio, persistência e retorno. QA independente deriva testes; Revisor lê candidato congelado. Registrar alteração, regressão e evidência por hash. Não declarar ausência de bugs ou avaliação humana de áudio sem observação.
+
+## Conversa por voz: livre e revis?o
+
+O caminho Por voz come?a em Conversa livre: assunto opcional, idioma e edi??o do curso ativo, n?vel/corre??o/voz configur?veis. N?o requer recibo de atividade; n?o libera unidades nem altera progresso. Revisar o curso mant?m sele??o m?ltipla por unidade/etapa e valida??o dos recibos. O modo livre ? contexto de pr?tica gerada em runtime, separado do curr?culo can?nico do Foundry. Ambos usam as mesmas cotas, encerramento confirmado, hist?rico e resumo privados. Assuntos livres digitados, t?tulos de chamadas e hist?rico s?o ocultados na captura de reporte.

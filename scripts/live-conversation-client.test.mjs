@@ -952,3 +952,19 @@ test("multi-topic request keeps the complete selection and uses the existing sin
   assert.equal(f.tracks[0].enabled, true);
   f.controller.dispose();
 });
+
+test("free conversation sends no stage ID and permits an omitted opening topic", async () => {
+  for (const openingTopic of [undefined, "esportes"]) {
+    const f = fixture();
+    const { topicId: _old, ...rest } = settings;
+    void _old;
+    const free = { ...rest, mode: "free", ...(openingTopic ? { openingTopic } : {}) };
+    await f.controller.start(free);
+    assert.deepEqual(f.calls[0].body, { ...free, sdp: "local-offer", operationId: f.env.uuid() });
+    assert.equal(f.calls[0].body.topicId, undefined);
+    assert.equal(f.calls[0].body.topicIds, undefined);
+    f.started();
+    assert.equal(f.controller.current.phase, "listening");
+    f.controller.dispose();
+  }
+});

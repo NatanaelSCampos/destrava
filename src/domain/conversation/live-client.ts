@@ -57,6 +57,8 @@ export type LiveHistory = {
 };
 export type LiveSettings = {
   courseId: string;
+  mode?: "studied" | "free";
+  openingTopic?: string;
   topicId?: string;
   topicIds?: string[];
   level: LiveLevel;

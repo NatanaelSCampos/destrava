@@ -19,6 +19,14 @@ export const liveSettingsSchema = z
 export const liveStartSchema = liveSettingsSchema
   .extend({
     courseId: z.string().min(1).max(100),
+    mode: z.enum(["studied", "free"]).default("studied"),
+    openingTopic: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .regex(/^[^\u0000-\u001f\u007f]*$/u)
+      .optional(),
     topicId: z.string().min(1).max(140).optional(),
     topicIds: z
       .array(z.string().min(1).max(140))
@@ -35,7 +43,11 @@ export const liveStartSchema = liveSettingsSchema
   })
   .strict()
   .refine(
-    (value) => (value.topicId !== undefined) !== (value.topicIds !== undefined),
+    (value) =>
+      value.mode === "free"
+        ? value.topicId === undefined && value.topicIds === undefined
+        : value.openingTopic === undefined &&
+          (value.topicId !== undefined) !== (value.topicIds !== undefined),
     "Choose a topic selection",
   );
 export const liveIdSchema = z.object({ id: z.uuid() }).strict();
@@ -80,6 +92,9 @@ export type LiveTopic = {
   studiedActivities: number;
 };
 export type LiveTopicContext = LiveTopic & {
+  mode?: "free";
+  openingTopic?: string;
+  courseTitle?: string;
   examples: Array<{ text: string; translation: string }>;
   objectives: string[];
   selectedTopics?: Array<Pick<LiveTopic, "id" | "title" | "unitId" | "unitTitle" | "unitNumber">>;
