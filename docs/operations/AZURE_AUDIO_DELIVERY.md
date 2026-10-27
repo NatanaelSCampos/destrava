@@ -56,3 +56,11 @@ Artefatos locais ignorados em .tmp/azure-course-audio-20261026:
 Falhas de preparação mantidas: execução de testes sem loader TS; rejeição de arquitetura de strings linguísticas em camada genérica (movidas para JSON de conteúdo); OOM em teste local com heap 256 MiB (o candidato final usa 512 MiB, como o limite efetivo da máquina Fly de 1 GiB); dois seletores de harness de browser incorretos. Os comprovantes parciais são identificados como parciais, não reclassificados como uma execução integral verde.
 
 A publicação e a prova real GitHub Issue/Actions serão registradas no recibo final da entrega. Build local e fila local, isoladamente, não comprovam esse caminho externo.
+
+## Correção de dependências na publicação
+
+O primeiro build Fly deste candidato emitiu alertas de produção já presentes na baseline: Next 16.3.8 e Zod anterior a 4.6.6. Antes de liberar tráfego, foram fixados Next 16.4.1, eslint-config-next 16.4.1 e Zod 4.6.6. O audit de produção posterior retorna zero alertas. A alteração não muda conteúdo, hashes de aula nem contratos; exige e recebeu nova compilação/regressões e conferência do caminho publicado.
+
+Referências: [aviso do Next](https://github.com/vercel/next.js/security/advisories/GHSA-2464-fhr4-w9xw), [correção Zod](https://github.com/colinhacks/zod/commit/a0ebf97). Os 131 controles selecionados de acesso, contratos, etapas, mídia e narração passaram com essas versões. Os recibos do build anterior permanecem históricos, identificados pelo seu buildId.
+
+A transição remota CAS foi aplicada com manutenção: três sessões e um recibo arquivado, exit 0. O ensaio anterior usou ROLLBACK. Não houve migração de evidências antigas para hashes novos.
