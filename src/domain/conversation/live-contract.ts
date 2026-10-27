@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { verbalTranscriptText } from "./transcript-text";
 export const LIVE_MAX_SECONDS = 480;
 export const LIVE_MODEL = "gpt-live-1";
 export const LIVE_REVIEW_MODEL = "gpt-6.1-sol";
@@ -34,8 +35,8 @@ export type LiveTopic = { id: string; title: string; description: string; unitId
 export type LiveTopicContext = LiveTopic & { examples: Array<{ text: string; translation: string }>; objectives: string[] };
 export const REVIEW_LIMITS = "Este retorno considera as falas registradas nesta conversa. Não é uma certificação de nível nem uma nota de pronúncia; uma transcrição pode interpretar sua fala de outra forma.";
 export function groundedReport(report: LiveReport, turns: LiveTurn[]): LiveReport {
-  const evidence = turns.filter(t => t.role === "student").map(t => t.text.toLocaleLowerCase().replace(/\s+/g, " ").trim());
-  return { ...report, improvements: report.improvements.filter(item => {
+  const evidence = turns.filter(t => t.role === "student").map(t => verbalTranscriptText(t.text).toLocaleLowerCase().replace(/\s+/g, " ").trim());
+  return { ...report, improvements: report.improvements.map(item=>({...item,heard:verbalTranscriptText(item.heard)})).filter(item => {
     const quoted = item.heard.toLocaleLowerCase().replace(/\s+/g, " ").trim();
     return quoted.length >= 3 && evidence.some(text => text.includes(quoted));
   }), limits: REVIEW_LIMITS };

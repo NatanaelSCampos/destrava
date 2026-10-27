@@ -819,3 +819,68 @@ test('client history retry: pre-abort does no fetch and abort before late reply 
  await assert.rejects(pending,error=>error.name==='AbortError');
  assert.equal(h.timers.size,0);
 });
+
+
+test('C4 verbal evidence: remove only known nonverbal tags, never arbitrary bracketed vocabulary',()=>{
+ const {verbalTranscriptText}=domainLoader.load('@/domain/conversation/transcript-text');
+ for(const tag of ['lip smack','lip smacking','laugh','laughter','laughing','cough','coughing','sigh','sighing','breath','breathing','background noise']){
+  assert.equal(verbalTranscriptText('['+tag+']'),'');
+  assert.equal(verbalTranscriptText('[ '+tag.toUpperCase()+' ]'),'');
+ }
+ assert.equal(verbalTranscriptText('I [lip smack] work [coughing] today.'),'I work today.');
+ assert.equal(verbalTranscriptText('[unknown tag] [usted] [laughs] lip smack'),'[unknown tag] [usted] [laughs] lip smack');
+});
+test('C4 grounding: tag-only is no evidence; tagged quote keeps actual words and refuses invented speech',()=>{
+ const tags=[{id:'t1',role:'student',text:'[lip smack] [laughter]'}];
+ const tagged={...report,improvements:[{heard:'[lip smack]',suggestion:'a',explanation:'b'}]};
+ assert.equal(contract.groundedReport(tagged,tags).improvements.length,0);
+ const turns=[{id:'s',role:'student',text:'[lip smack] I work today. [laughing]'},
+  {id:'p',role:'partner',text:'Partner only'}];
+ const input={...report,improvements:[
+  {heard:'[lip smack] I work',suggestion:'a',explanation:'b'},
+  {heard:'I dance today',suggestion:'a',explanation:'b'},
+  {heard:'[laughter]',suggestion:'a',explanation:'b'},
+  {heard:'Partner only',suggestion:'a',explanation:'b'},
+ ]};
+ const rawBefore=copy(turns),reportBefore=copy(input),result=contract.groundedReport(input,turns);
+ assert.deepEqual(canonical(result.improvements).map(item=>item.heard),['I work']);
+ assert.deepEqual(turns,rawBefore);assert.deepEqual(input,reportBefore);
+});
+test('C4 review: nonverbal-only transcript persists raw and never calls/reserves review LLM',async()=>{
+ const h=serverHarness();await h.start();const raw='[lip smack] [laughter]';
+ h.calls.sidebands[0].emit({type:'session.input_transcript.delta',event_id:'nonverbal-only',delta:raw});
+ const result=await h.api.finishLiveConversation(OWNER,ID,h.client);
+ assert.equal(h.calls.parse.length,0);
+ assert.equal(h.calls.rpc.filter(call=>call.name==='reserve_ai_request'&&call.args.p_feature==='live_conversation_review').length,0);
+ assert.equal(h.rows.get(ID).transcript[0].text,raw);
+ assert.equal(result.transcript[0].text,raw);
+ assert.equal(result.report.strengths.length,0);assert.equal(result.report.improvements.length,0);
+ assert.equal(result.report.limits,contract.REVIEW_LIMITS);
+});
+test('C4 server: LLM gets verbal copy, raw history stays intact and topic language metadata is canonical',async()=>{
+ const response={...report,improvements:[
+  {heard:'[lip smack] I work',suggestion:'I work today.',explanation:'A short suggestion.'},
+  {heard:'I dance today',suggestion:'Invented.',explanation:'Not observed.'},
+ ]};
+ const h=serverHarness({report:response});
+ h.input.topic={...topic,targetLanguage:'FORGED_TARGET',sourceLanguage:'FORGED_SOURCE',variant:'FORGED_VARIANT'};
+ await h.start();
+ const reserved=h.calls.rpc.find(call=>call.name==='reserve_live_conversation').args.p_topic;
+ assert.equal(reserved.targetLanguage,h.input.language);assert.equal(reserved.sourceLanguage,h.input.sourceLanguage);assert.equal(reserved.variant,h.input.variant);
+ for(const field of ['targetLanguage','sourceLanguage','variant'])assert.equal(contract.liveStartSchema.safeParse({...offer,[field]:'forged'}).success,false);
+ const rawStudent='[lip smack] I work today. [coughing]',rawPartner='[sighing] Tell me about your day.';
+ const sideband=h.calls.sidebands[0];
+ sideband.emit({type:'session.input_transcript.delta',event_id:'verbal-student',delta:rawStudent});
+ sideband.emit({type:'session.output_transcript.delta',event_id:'verbal-partner',delta:rawPartner});
+ await h.api.controlLiveConversation(OWNER,ID,'heartbeat');
+ const rawBefore=copy(h.rows.get(ID).transcript);
+ sideband.emit({type:'session.delegation.created',delegation:{id:'delegation-1'}});await h.flush();
+ const help=JSON.parse(h.calls.delegation[0].input);
+ assert.equal(help.transcript[0].text,'I work today.');assert.equal(help.transcript[1].text,'Tell me about your day.');
+ const result=await h.api.finishLiveConversation(OWNER,ID,h.client);
+ const review=JSON.parse(h.calls.parse[0].input);
+ assert.equal(review.transcript[0].text,'I work today.');assert.equal(review.transcript[1].text,'Tell me about your day.');
+ assert.equal(review.topic.targetLanguage,h.input.language);assert.equal(review.topic.sourceLanguage,h.input.sourceLanguage);assert.equal(review.topic.variant,h.input.variant);
+ assert.deepEqual(h.rows.get(ID).transcript,rawBefore);assert.deepEqual(canonical(result.transcript),rawBefore);
+ assert.deepEqual(canonical(result.report.improvements).map(item=>item.heard),['I work']);
+});

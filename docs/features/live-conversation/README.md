@@ -5,7 +5,7 @@ Atualização: 27/10/2026. Destino: https://frecuencias-a1-natanael.fly.dev/conv
 ## Usar
 
 1. Escolha espanhol ou inglês e abra **Conversar → Por voz**.
-2. Escolha um assunto liberado pela prática do curso. Só a conclusão visual de uma exposição não libera um assunto: é necessária participação com recibo válido do servidor.
+2. Escolha um assunto liberado pela prática do curso. Use a busca e o filtro por unidade; os assuntos aparecem em grupos de seis. No celular, escolher um card leva aos ajustes da conversa. Só a conclusão visual de uma exposição não libera um assunto: é necessária participação com recibo válido do servidor.
 3. Escolha nível, correção durante a conversa ou ao final e voz. Avançado sugere correção ao final; a escolha explícita prevalece.
 4. Toque em **Começar conversa**, autorize o microfone e diga olá. No iniciante, o professor usa português, oferece um exemplo curto e pede uma tentativa. No avançado, conduz no idioma estudado.
 5. Fale no seu ritmo, inclusive para interromper. **Pausar** desliga microfone e reprodução locais; **Retomar** espera confirmação do servidor. Há pedido por escrito e botão **Um instante**.
@@ -19,6 +19,7 @@ Atualização: 27/10/2026. Destino: https://frecuencias-a1-natanael.fly.dev/conv
 - Voz feminina Marin e masculina Cedar. A preferência de gênero dos ajustes pode ser usada. As vozes Azure dos áudios gravados continuam disponíveis nas lições; a conversa ao vivo usa o transporte nativo de voz para reduzir etapas entre escuta e resposta.
 - Tema, exemplos públicos e objetivos vêm do pacote compilado. A elegibilidade combina recibos assinados de participação, identidade da edição e acesso às unidades. Provas e unidades bloqueadas ficam fora do contexto.
 - Recurso genérico para cursos compilados: nenhuma expressão espanhola ou inglesa foi codificada no fluxo. Não exige extensão do CoursePackage. O caminho de cursos instalados ainda é recusado explicitamente.
+- Anotações não verbais conhecidas da transcrição ficam fora da análise e das citações de melhoria; o registro original continua privado no histórico. Frase-modelo e explicação ocupam campos separados.
 - Não atribui nota de pronúncia, certificado, nível demonstrado, aprovação de prova ou progresso de atividade. O resumo usa as falas registradas; sugestões sem citação correspondente do estudante são descartadas.
 
 ## Dados e operação

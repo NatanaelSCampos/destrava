@@ -973,3 +973,118 @@
 .live-voice-ended.is-interrupted {
   color: #a65060;
 }
+
+.live-voice-topic > p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-height: 3.2em;
+  overflow: hidden;
+}
+.live-voice-topic-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(140px, 190px);
+  gap: 12px;
+  margin: 2px 0 10px;
+}
+.live-voice-topic-filters > label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #69515d;
+}
+.live-voice-topic-filters select {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #e0d5da;
+  border-radius: 10px;
+  background: #fff;
+  color: #65545e;
+  font-size: 12px;
+}
+.live-voice-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  min-width: 0;
+  border: 1px solid #e0d5da;
+  border-radius: 10px;
+  background: #fff;
+}
+.live-voice-search > svg {
+  flex-shrink: 0;
+  color: #9b6d80;
+}
+.live-voice-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 400;
+}
+.live-voice-topic-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-height: 44px;
+  margin-bottom: 10px;
+}
+.live-voice-topic-results > p {
+  margin: 0;
+  font-size: 11px;
+  color: #796774;
+}
+.live-voice-topic-results > button {
+  padding: 7px 2px;
+  border: 0;
+  background: transparent;
+  color: #98354e;
+  font-size: 11px;
+}
+.live-voice-topic-more {
+  width: 100%;
+  margin-top: 14px;
+}
+.live-voice-preferences {
+  scroll-margin-top: 88px;
+}
+.live-voice-selected-topic {
+  display: grid;
+  gap: 6px;
+  margin: -7px 0 23px;
+  padding: 13px;
+  border: 1px solid #ebd7df;
+  border-radius: 10px;
+  background: #fff7fa;
+  overflow-wrap: anywhere;
+}
+.live-voice-selected-topic > span {
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  color: #947181;
+}
+.live-voice-selected-topic > strong {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #75394e;
+}
+.live-voice-selected-topic > small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #796774;
+}
+@media (max-width: 480px) {
+  .live-voice-topic-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
