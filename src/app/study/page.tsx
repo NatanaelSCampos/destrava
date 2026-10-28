@@ -1,7 +1,11 @@
 "use client";
-import { learningActionAvailability, unavailableLearningRequirements } from "@/domain/study/learning-action-availability";
+import {
+  learningActionAvailability,
+  unavailableLearningRequirements,
+} from "@/domain/study/learning-action-availability";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { TrailReturn } from "@/components/trail/trail-return";
 import Link from "@/components/navigation-link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -63,8 +67,11 @@ function StudyContent() {
     progressLoadStatus,
     syncError,
   } = useStudy();
-  const actionSource = runtime ? "installed" as const : "compiled" as const;
-  const actionContext = useMemo(() => ({ source: actionSource, permitted: ready }), [actionSource, ready]);
+  const actionSource = runtime ? ("installed" as const) : ("compiled" as const);
+  const actionContext = useMemo(
+    () => ({ source: actionSource, permitted: ready }),
+    [actionSource, ready],
+  );
   const microAction = learningActionAvailability(course, { kind: "micro_lesson" }, actionContext);
   const blockedRequirements = unavailableLearningRequirements(course, state, actionContext);
   const mode: SessionMode = searchParams.get("mode") === "difficulties" ? "difficulties" : "guided";
@@ -78,7 +85,16 @@ function StudyContent() {
   const unit = currentUnit(course, state)!;
   const planned = useMemo(
     () =>
-      buildStudyPlan(course, state, targetMinutes, vocabularyItems, resources, new Date(), mode, actionContext),
+      buildStudyPlan(
+        course,
+        state,
+        targetMinutes,
+        vocabularyItems,
+        resources,
+        new Date(),
+        mode,
+        actionContext,
+      ),
     [course, state, targetMinutes, vocabularyItems, resources, mode, actionContext],
   );
   const focusedMistakeId = planned.find(
@@ -114,9 +130,16 @@ function StudyContent() {
     setControlError("");
     try {
       if (finish) await finishSession(elapsedRef.current);
-      else await checkpointStudySession(activeSession.id, { seconds: elapsedRef.current, ...input });
-    } catch (error) { setControlError(error instanceof Error ? error.message : "Não foi possível confirmar a sessão."); }
-    finally { controlLock.current = false; setControlling(false); }
+      else
+        await checkpointStudySession(activeSession.id, { seconds: elapsedRef.current, ...input });
+    } catch (error) {
+      setControlError(
+        error instanceof Error ? error.message : "Não foi possível confirmar a sessão.",
+      );
+    } finally {
+      controlLock.current = false;
+      setControlling(false);
+    }
   }
   const setIndex = (next: number | ((value: number) => number)) => {
     void control({ cursor: typeof next === "function" ? next(index) : next });
@@ -126,12 +149,18 @@ function StudyContent() {
   const [activitySuspended, setActivitySuspended] = useState(false);
   const activityRegion = useRef<HTMLDivElement | null>(null);
   const playback = useRef<PlaybackHandle | null>(null);
-  const registerPlayback = useCallback((handle: PlaybackHandle) => { playback.current = handle; }, []);
+  const registerPlayback = useCallback((handle: PlaybackHandle) => {
+    playback.current = handle;
+  }, []);
   const stopPlayback = useCallback(() => {
     playback.current?.cancel();
-    activityRegion.current?.querySelectorAll<HTMLMediaElement>("audio,video").forEach((element) => element.pause());
+    activityRegion.current
+      ?.querySelectorAll<HTMLMediaElement>("audio,video")
+      .forEach((element) => element.pause());
   }, []);
-  useEffect(() => { if (paused) stopPlayback(); }, [paused, stopPlayback]);
+  useEffect(() => {
+    if (paused) stopPlayback();
+  }, [paused, stopPlayback]);
   const activeSessionId = activeSession?.id;
   const savedSeconds = activeSession?.durationSeconds ?? 0;
   useEffect(() => {
@@ -152,7 +181,8 @@ function StudyContent() {
       }
     };
     const tick = () => {
-      const now = performance.now(), elapsedMs = clock.takeElapsedMs(now);
+      const now = performance.now(),
+        elapsedMs = clock.takeElapsedMs(now);
       const suspended = !clock.isActive(now);
       setActivitySuspended(suspended);
       if (suspended) stopPlayback();
@@ -176,7 +206,9 @@ function StudyContent() {
       if (!visible) {
         stopPlayback();
         checkpoint();
-        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(() => undefined);
+        void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(
+          () => undefined,
+        );
       }
     };
     const pageHidden = () => {
@@ -184,7 +216,9 @@ function StudyContent() {
       setActivitySuspended(true);
       stopPlayback();
       checkpoint();
-      void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(() => undefined);
+      void checkpointStudySession(activeSessionId, { seconds: Math.floor(seconds) }).catch(
+        () => undefined,
+      );
     };
     const interval = window.setInterval(tick, 1000);
     document.addEventListener("pointerdown", markActivity);
@@ -194,7 +228,8 @@ function StudyContent() {
     window.addEventListener("pagehide", pageHidden);
     window.addEventListener("pageshow", visibilityChanged);
     return () => {
-      window.clearTimeout(initial); window.clearInterval(interval);
+      window.clearTimeout(initial);
+      window.clearInterval(interval);
       document.removeEventListener("pointerdown", markActivity);
       document.removeEventListener("keydown", markActivity);
       document.removeEventListener("wheel", markActivity);
@@ -205,7 +240,14 @@ function StudyContent() {
     };
     // Persisted duration starts this session; checkpoints must not restart its clock.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeSessionId, paused, progressLoadStatus, updateActiveSessionDuration, checkpointStudySession, stopPlayback]);
+  }, [
+    activeSessionId,
+    paused,
+    progressLoadStatus,
+    updateActiveSessionDuration,
+    checkpointStudySession,
+    stopPlayback,
+  ]);
   const item = plan[index];
   const activity =
     item?.kind === "activity"
@@ -213,7 +255,13 @@ function StudyContent() {
           .flatMap((entry) => entry.lessons.flatMap((lesson) => lesson.activities))
           .find((entry) => entry.id === item.id)
       : undefined;
-  const itemAction = item ? learningActionAvailability(course, item.kind === "activity" ? { kind: "activity", activityId: item.id } : { kind: item.kind }, actionContext) : undefined;
+  const itemAction = item
+    ? learningActionAvailability(
+        course,
+        item.kind === "activity" ? { kind: "activity", activityId: item.id } : { kind: item.kind },
+        actionContext,
+      )
+    : undefined;
   const lastSession = state.sessions.find((session) => session.finishedAt);
   const lastFocusedMistakeId =
     lastSession?.mode === "difficulties"
@@ -232,15 +280,30 @@ function StudyContent() {
   if (!activeSession)
     return (
       <div className="study-page">
+        <TrailReturn />
         {syncError && <p role="alert">{syncError}</p>}
-        {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
+        {blockedRequirements.length > 0 && (
+          <section className="panel" role="status">
+            <strong>Requisitos do curso indisponíveis</strong>
+            <ul>
+              {blockedRequirements.map((entry) => (
+                <li key={entry.id}>
+                  {entry.label}: {entry.reasons.join(" ")}
+                </li>
+              ))}
+            </ul>
+            <Link href={`/course/${course.slug}`} className="text-link">
+              Consultar requisitos e conteúdo do curso
+            </Link>
+          </section>
+        )}
         <div className="page-heading">
           <div>
             <span className="eyebrow">
               <Sparkles size={13} /> SEU PLANO DE ESTUDO
             </span>
             <h1 className="page-title">
-              {mode === "difficulties" ? "Treinar minhas dificuldades" : "Aula de hoje"}
+              {mode === "difficulties" ? "Treinar minhas dificuldades" : "Prática de hoje"}
             </h1>
             <p className="page-subtitle">
               {mode === "difficulties"
@@ -351,7 +414,10 @@ function StudyContent() {
                 href={`/micro-lesson?activity=${encodeURIComponent(focusedMistakeId)}`}
                 className="text-link"
               >
-                {microAction.operation === "unknown" ? "Tentar apoio para este erro (condicional)" : "Entender um erro antes do treino"} <ArrowRight size={15} />
+                {microAction.operation === "unknown"
+                  ? "Tentar apoio para este erro (condicional)"
+                  : "Entender um erro antes do treino"}{" "}
+                <ArrowRight size={15} />
               </Link>
             )}
           </section>
@@ -439,7 +505,10 @@ function StudyContent() {
                       href={`/micro-lesson?activity=${encodeURIComponent(lastFocusedMistakeId)}`}
                       className="text-link"
                     >
-                      {microAction.operation === "unknown" ? "Tentar microlição (condicional)" : "Reforçar uma dificuldade com microlição"} <ArrowRight size={15} />
+                      {microAction.operation === "unknown"
+                        ? "Tentar microlição (condicional)"
+                        : "Reforçar uma dificuldade com microlição"}{" "}
+                      <ArrowRight size={15} />
                     </Link>
                   )}
                 </>
@@ -459,123 +528,174 @@ function StudyContent() {
 
   return (
     <SpeechPlaybackScope.Provider value={registerPlayback}>
-    <div className="study-page" ref={activityRegion}>
-      {syncError && <p role="alert">{syncError}</p>}
-        {blockedRequirements.length > 0 && <section className="panel" role="status"><strong>Requisitos do curso indisponíveis</strong><ul>{blockedRequirements.map(entry => <li key={entry.id}>{entry.label}: {entry.reasons.join(" ")}</li>)}</ul><Link href={`/course/${course.slug}`} className="text-link">Consultar requisitos e conteúdo do curso</Link></section>}
-      <div className="study-running-head">
-        <div>
-          <span className="eyebrow">AULA EM ANDAMENTO</span>
-          <h1>{item?.title ?? "Sessão concluída"}</h1>
-          <p>
-            {activeSession.mode === "difficulties"
-              ? "Treino de dificuldades"
-              : `Unidade ${sessionUnit.number} · ${sessionUnit.title}`}{" "}
-            · meta de{" "}
-            {activeSession.targetMinutes ??
-              state.profile.learningPreferences.preferredSessionMinutes}{" "}
-            min
-          </p>
-        </div>
-        <div className="study-session-meta">
-          <div className="study-timer">
-            <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
-            {String(elapsed % 60).padStart(2, "0")}
+      <div className="study-page" ref={activityRegion}>
+        {syncError && <p role="alert">{syncError}</p>}
+        {blockedRequirements.length > 0 && (
+          <section className="panel" role="status">
+            <strong>Requisitos do curso indisponíveis</strong>
+            <ul>
+              {blockedRequirements.map((entry) => (
+                <li key={entry.id}>
+                  {entry.label}: {entry.reasons.join(" ")}
+                </li>
+              ))}
+            </ul>
+            <Link href={`/course/${course.slug}`} className="text-link">
+              Consultar requisitos e conteúdo do curso
+            </Link>
+          </section>
+        )}
+        <div className="study-running-head">
+          <div>
+            <span className="eyebrow">AULA EM ANDAMENTO</span>
+            <h1>{item?.title ?? "Sessão concluída"}</h1>
+            <p>
+              {activeSession.mode === "difficulties"
+                ? "Treino de dificuldades"
+                : `Unidade ${sessionUnit.number} · ${sessionUnit.title}`}{" "}
+              · meta de{" "}
+              {activeSession.targetMinutes ??
+                state.profile.learningPreferences.preferredSessionMinutes}{" "}
+              min
+            </p>
           </div>
-          <small>{paused ? "Sessão pausada. O tempo está congelado." : "O tempo conta apenas com a aba visível e até 5 min sem interação. Sua etapa fica preservada."}</small>
-          <button type="button" className="secondary-button" disabled={controlling}
-            onClick={() => void control({ paused: !paused })}>{paused ? "Retomar sessão" : "Pausar sessão"}</button>
-          {controlError && <p role="alert">{controlError}</p>}
-          {controlling && <p role="status">Confirmando sessão…</p>}
-          <button
-            type="button"
-            className="text-link"
-            disabled={controlling}
-            onClick={() => void control({}, true)}
-          >
-            Encerrar sessão agora
-          </button>
-        </div>
-      </div>
-      <div className="study-running-grid">
-        <div>
-          <div className="study-step-line">
-            <span>
-              ETAPA {Math.min(index + 1, plan.length)} DE {plan.length}
-            </span>
-            <strong>{Math.round((100 * index) / Math.max(1, plan.length))}%</strong>
-          </div>
-          <div className="progress-track">
-            <span style={{ width: `${Math.round((100 * index) / Math.max(1, plan.length))}%` }} />
-          </div>
-          {paused && <section className="panel" role="status">Retome a sessão para continuar a etapa confirmada.</section>}
-          <div hidden={paused} inert={paused}>
-          {itemAction && !itemAction.eligible ? <div className="panel" role="status"><strong>Esta etapa está indisponível</strong><p>{itemAction.reasons.join(" ")}</p><p>Esta etapa não foi concluída nem avaliada.</p><Link href={`/course/${course.slug}`} className="secondary-button">Consultar meu curso</Link></div> : item?.kind === "review" ? (
-            <ReviewQueue
-              key={item.id}
-              plannedItems={item.reviewItems}
-              onComplete={() => setIndex((current) => Math.min(current + 1, plan.length))}
-            />
-          ) : item?.kind === "conversation" ? (
-            <><p className="helper-note">Tentativa condicional: a disponibilidade da conversa será verificada ao enviar sua resposta.</p><FocusedConversation key={item.id} scenarioId={item.id} /></>
-          ) : activity ? (
-            <ActivityRenderer key={activity.id} activity={activity} suspended={paused || activitySuspended} />
-          ) : (
-            <div className="review-finished panel">
-              <span className="review-finished-icon">
-                <Check size={26} />
-              </span>
-              <h2>Você chegou ao final da aula.</h2>
-              <p>Feche a sessão para registrar seu tempo e desempenho.</p>
+          <div className="study-session-meta">
+            <div className="study-timer">
+              <Clock3 size={16} /> {String(Math.floor(elapsed / 60)).padStart(2, "0")}:
+              {String(elapsed % 60).padStart(2, "0")}
             </div>
-          )}
-          </div>
-          <div className="lesson-controls">
+            <small>
+              {paused
+                ? "Sessão pausada. O tempo está congelado."
+                : "O tempo conta apenas com a aba visível e até 5 min sem interação. Sua etapa fica preservada."}
+            </small>
             <button
-              className="ghost-button"
-              disabled={index === 0 || paused || controlling}
-              onClick={() => setIndex((current) => current - 1)}
+              type="button"
+              className="secondary-button"
+              disabled={controlling}
+              onClick={() => void control({ paused: !paused })}
             >
-              <ChevronLeft size={17} /> Voltar
+              {paused ? "Retomar sessão" : "Pausar sessão"}
             </button>
-            {index < plan.length - 1 ? (
-              <button className="primary-button" disabled={paused || controlling} onClick={() => setIndex((current) => current + 1)}>
-                Próxima etapa <ChevronRight size={17} />
-              </button>
-            ) : (
-              <button
-                className="primary-button"
-                disabled={controlling}
-                onClick={() => void control({}, true)}
-              >
-                Encerrar aula <Check size={17} />
-              </button>
-            )}
+            {controlError && <p role="alert">{controlError}</p>}
+            {controlling && <p role="status">Confirmando sessão…</p>}
+            <button
+              type="button"
+              className="text-link"
+              disabled={controlling}
+              onClick={() => void control({}, true)}
+            >
+              Encerrar sessão agora
+            </button>
           </div>
         </div>
-        <aside className="study-agenda panel">
-          <span className="eyebrow">ROTEIRO DA AULA</span>
-          {plan.map((entry, itemIndex) => (
-            <button
-              key={`${entry.kind}-${entry.id}`}
-              disabled={paused || controlling}
-              onClick={() => setIndex(itemIndex)}
-              className={`study-agenda-item ${itemIndex === index ? "active" : ""}`}
-            >
-              <span className="study-agenda-step">
-                {itemIndex < index ? <Check size={14} /> : String(itemIndex + 1).padStart(2, "0")}
-              </span>
+        <div className="study-running-grid">
+          <div>
+            <div className="study-step-line">
               <span>
-                {entry.title}
-                <small>{entry.minutes} min</small>
+                ETAPA {Math.min(index + 1, plan.length)} DE {plan.length}
               </span>
-            </button>
-          ))}
-          <div className="study-agenda-foot">
-            <RotateCcw size={15} /> Você pode rever qualquer etapa.
+              <strong>{Math.round((100 * index) / Math.max(1, plan.length))}%</strong>
+            </div>
+            <div className="progress-track">
+              <span style={{ width: `${Math.round((100 * index) / Math.max(1, plan.length))}%` }} />
+            </div>
+            {paused && (
+              <section className="panel" role="status">
+                Retome a sessão para continuar a etapa confirmada.
+              </section>
+            )}
+            <div hidden={paused} inert={paused}>
+              {itemAction && !itemAction.eligible ? (
+                <div className="panel" role="status">
+                  <strong>Esta etapa está indisponível</strong>
+                  <p>{itemAction.reasons.join(" ")}</p>
+                  <p>Esta etapa não foi concluída nem avaliada.</p>
+                  <Link href={`/course/${course.slug}`} className="secondary-button">
+                    Consultar meu curso
+                  </Link>
+                </div>
+              ) : item?.kind === "review" ? (
+                <ReviewQueue
+                  key={item.id}
+                  plannedItems={item.reviewItems}
+                  onComplete={() => setIndex((current) => Math.min(current + 1, plan.length))}
+                />
+              ) : item?.kind === "conversation" ? (
+                <>
+                  <p className="helper-note">
+                    Tentativa condicional: a disponibilidade da conversa será verificada ao enviar
+                    sua resposta.
+                  </p>
+                  <FocusedConversation key={item.id} scenarioId={item.id} />
+                </>
+              ) : activity ? (
+                <ActivityRenderer
+                  key={activity.id}
+                  activity={activity}
+                  suspended={paused || activitySuspended}
+                />
+              ) : (
+                <div className="review-finished panel">
+                  <span className="review-finished-icon">
+                    <Check size={26} />
+                  </span>
+                  <h2>Você chegou ao final da aula.</h2>
+                  <p>Feche a sessão para registrar seu tempo e desempenho.</p>
+                </div>
+              )}
+            </div>
+            <div className="lesson-controls">
+              <button
+                className="ghost-button"
+                disabled={index === 0 || paused || controlling}
+                onClick={() => setIndex((current) => current - 1)}
+              >
+                <ChevronLeft size={17} /> Voltar
+              </button>
+              {index < plan.length - 1 ? (
+                <button
+                  className="primary-button"
+                  disabled={paused || controlling}
+                  onClick={() => setIndex((current) => current + 1)}
+                >
+                  Próxima etapa <ChevronRight size={17} />
+                </button>
+              ) : (
+                <button
+                  className="primary-button"
+                  disabled={controlling}
+                  onClick={() => void control({}, true)}
+                >
+                  Encerrar aula <Check size={17} />
+                </button>
+              )}
+            </div>
           </div>
-        </aside>
+          <aside className="study-agenda panel">
+            <span className="eyebrow">ROTEIRO DA AULA</span>
+            {plan.map((entry, itemIndex) => (
+              <button
+                key={`${entry.kind}-${entry.id}`}
+                disabled={paused || controlling}
+                onClick={() => setIndex(itemIndex)}
+                className={`study-agenda-item ${itemIndex === index ? "active" : ""}`}
+              >
+                <span className="study-agenda-step">
+                  {itemIndex < index ? <Check size={14} /> : String(itemIndex + 1).padStart(2, "0")}
+                </span>
+                <span>
+                  {entry.title}
+                  <small>{entry.minutes} min</small>
+                </span>
+              </button>
+            ))}
+            <div className="study-agenda-foot">
+              <RotateCcw size={15} /> Você pode rever qualquer etapa.
+            </div>
+          </aside>
+        </div>
       </div>
-    </div>
     </SpeechPlaybackScope.Provider>
   );
 }

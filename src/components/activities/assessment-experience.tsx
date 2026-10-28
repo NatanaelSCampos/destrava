@@ -14,6 +14,7 @@ import {
   Sparkles,
   Target,
 } from "lucide-react";
+import { journeyText } from "@/lib/journey-text";
 import type { AssessmentDefinition } from "@/content/contracts";
 import "./assessment-experience.css";
 
@@ -162,7 +163,7 @@ export function AssessmentHeader({ assessment }: { assessment: AssessmentDefinit
         <span className="eyebrow">
           <Icon size={15} aria-hidden="true" /> {label}
         </span>
-        <h1 className="page-title">{assessment.title}</h1>
+        <h1 className="page-title">{journeyText(assessment.title)}</h1>
         <p className="page-subtitle">
           Um momento para perceber o que você aprendeu e escolher o próximo passo.
         </p>

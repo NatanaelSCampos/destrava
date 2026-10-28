@@ -135,3 +135,7 @@ A edição 1.1.0 acrescenta rotina e horários, comida e compras, encontros e pl
 ## Conversa por voz — 27/10/2026
 
 A nova experiência usa os temas praticados dos pacotes compilados, com níveis, correção configurável, voz simultânea e histórico privado. Veja o [guia e limites operacionais](../live-conversation/README.md). O recurso preserva a conversa por mensagens e não altera o conteúdo nem atribui aprovação de atividade.
+
+## Trilha Viva — 28/10/2026
+
+[Caminho contínuo, aulas em cards e contrato de apresentação](../living-trail/README.md). Mantém o currículo e o progresso; unidades continuam internas.

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { TrailReturn } from "@/components/trail/trail-return";
 import Link from "@/components/navigation-link";
 import { ArrowRight, BookOpen, RotateCcw, Sparkles } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
@@ -35,12 +36,15 @@ export default function ReviewPage() {
     return <div className="empty-state">A revisão espaçada está temporariamente indisponível.</div>;
   return (
     <div className="review-page">
+      <Suspense fallback={null}>
+        <TrailReturn />
+      </Suspense>
       <div className="page-heading">
         <div>
           <span className="eyebrow">
             <RotateCcw size={13} /> REVISÃO ESPAÇADA
           </span>
-          <h1 className="page-title">Revisar fortalece a memória.</h1>
+          <h1 className="page-title">Um novo encontro com o que aprendeu.</h1>
           <p className="page-subtitle">
             O sistema traz de volta palavras, estruturas, correções de escrita e frases de fala no
             momento certo para você lembrar por mais tempo.

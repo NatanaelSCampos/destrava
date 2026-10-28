@@ -25,6 +25,7 @@ import {
   NotebookPen,
   Play,
   RotateCcw,
+  Route,
   Settings2,
   Sparkles,
   X,
@@ -45,13 +46,15 @@ import { PedagogicalOnboarding } from "@/components/onboarding/pedagogical-onboa
 import { StudySyncNotice } from "@/components/study-sync-notice";
 import type { RuntimeCourseOption } from "@/lib/installed-runtime-types";
 import { CourseTransitionNotice } from "./course-transition-notice";
+import { TrailLocationTracker } from "@/components/trail/use-living-trail";
+import { TrailExperienceFrame } from "@/components/trail/trail-experience-frame";
 import { ResponsiveSidebar } from "./responsive-sidebar";
 
 const navigation = (courseSlug: string) => [
   { href: "/dashboard", label: "Visão geral", icon: House },
-  { href: `/course/${courseSlug}`, label: "Meu curso", icon: BookOpen },
+  { href: `/course/${courseSlug}`, label: "Minha trilha", icon: BookOpen },
   { href: "/basics", label: "Fundamentos", icon: CaseUpper },
-  { href: "/study", label: "Aula de hoje", icon: Play },
+  { href: "/study", label: "Prática de hoje", icon: Play },
   { href: "/live-classes", label: "Aula guiada", icon: Sparkles },
   { href: "/review", label: "Revisar", icon: RotateCcw },
   { href: "/speaking", label: "Praticar fala", icon: Mic2 },
@@ -419,11 +422,16 @@ export function AppShell({
         </nav>
         <div className="sidebar-bottom">
           {tutorAction.eligible && (
-            <button className="sidebar-tutor" onClick={() => {
+            <button
+              className="sidebar-tutor"
+              onClick={() => {
                 setMenuOpen(false);
                 setTutorOpen(true);
-                window.requestAnimationFrame(() => document.getElementById("tutor-question")?.focus());
-              }}>
+                window.requestAnimationFrame(() =>
+                  document.getElementById("tutor-question")?.focus(),
+                );
+              }}
+            >
               <span className="sidebar-tutor-icon">
                 <Sparkles size={18} />
               </span>
@@ -449,8 +457,8 @@ export function AppShell({
             <button
               className="icon-button menu-toggle"
               aria-label="Abrir menu"
-          aria-expanded={menuOpen}
-          aria-controls="study-navigation"
+              aria-expanded={menuOpen}
+              aria-controls="study-navigation"
               onClick={() => setMenuOpen(true)}
             >
               <Menu size={21} />
@@ -480,11 +488,17 @@ export function AppShell({
               </button>
             )}
             {tutorAction.eligible && (
-              <button aria-label="Tirar dúvida com IA" className="topbar-tutor" onClick={() => {
-                setMenuOpen(false);
-                setTutorOpen(true);
-                window.requestAnimationFrame(() => document.getElementById("tutor-question")?.focus());
-              }}>
+              <button
+                aria-label="Tirar dúvida com IA"
+                className="topbar-tutor"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setTutorOpen(true);
+                  window.requestAnimationFrame(() =>
+                    document.getElementById("tutor-question")?.focus(),
+                  );
+                }}
+              >
                 <Sparkles size={16} />{" "}
                 {tutorAction.operation === "unknown"
                   ? "Perguntar ao professor"
@@ -497,37 +511,47 @@ export function AppShell({
           </div>
         </header>
         <main className="main-content">
-          <LearningAccessGate>
-            <StudySyncNotice />
-            {installedBlockedPath ? (
-              <section className="panel" role="status">
-                <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
-                <h1>Este recurso ainda não está disponível neste curso</h1>
-                <p>
-                  {pathAvailability?.reasons.join(" ") ??
-                    "Este caminho não está integrado ao curso atual."}{" "}
-                  Nenhuma nota ou progresso será alterado por isso.
-                </p>
-                <Link className="secondary-button" href={`/course/${course.slug}`}>
-                  Continuar meu curso
-                </Link>
-              </section>
-            ) : pathname === "/assessment" ? (
-              <Suspense fallback={<div className="page-loading">Verificando avaliação…</div>}>
-                <AssessmentAvailabilityGate>{children}</AssessmentAvailabilityGate>
-              </Suspense>
-            ) : (
-              children
-            )}
-          </LearningAccessGate>
+          <Suspense fallback={<div className="page-loading">Abrindo seu caminho…</div>}>
+            <TrailExperienceFrame>
+              <LearningAccessGate>
+                <StudySyncNotice />
+                <Suspense fallback={null}>
+                  <TrailLocationTracker />
+                </Suspense>
+                {installedBlockedPath ? (
+                  <section className="panel" role="status">
+                    <span className="eyebrow">RECURSO EM PREPARAÇÃO</span>
+                    <h1>Este recurso ainda não está disponível neste curso</h1>
+                    <p>
+                      {pathAvailability?.reasons.join(" ") ??
+                        "Este caminho não está integrado ao curso atual."}{" "}
+                      Nenhuma nota ou progresso será alterado por isso.
+                    </p>
+                    <Link className="secondary-button" href={`/course/${course.slug}`}>
+                      Continuar meu curso
+                    </Link>
+                  </section>
+                ) : pathname === "/assessment" ? (
+                  <Suspense fallback={<div className="page-loading">Verificando avaliação…</div>}>
+                    <AssessmentAvailabilityGate>{children}</AssessmentAvailabilityGate>
+                  </Suspense>
+                ) : (
+                  children
+                )}
+              </LearningAccessGate>
+            </TrailExperienceFrame>
+          </Suspense>
         </main>
       </div>
       <nav className="mobile-primary-nav" aria-label="Atalhos de estudo">
         <Link href="/dashboard" aria-current={pathname === "/dashboard" ? "page" : undefined}>
           <House size={20} /> <span>Hoje</span>
         </Link>
-        <Link href="/study" aria-current={pathname === "/study" ? "page" : undefined}>
-          <Play size={20} /> <span>Aula</span>
+        <Link
+          href={`/course/${course.slug}`}
+          aria-current={pathname.startsWith("/course/") ? "page" : undefined}
+        >
+          <Route size={20} /> <span>Trilha</span>
         </Link>
         <Link
           href={reviewAction.eligible ? "/review" : "/history"}
@@ -543,9 +567,7 @@ export function AppShell({
             aria-current={pathname === "/conversation" ? "page" : undefined}
           >
             <MessageCircle size={20} />{" "}
-            <span>
-              {conversationAction.operation === "unknown" ? "Conversar" : "Conversar"}
-            </span>
+            <span>{conversationAction.operation === "unknown" ? "Conversar" : "Conversar"}</span>
           </Link>
         ) : (
           <Link

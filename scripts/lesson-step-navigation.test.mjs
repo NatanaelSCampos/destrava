@@ -10,10 +10,12 @@ function fixture() {
  const context={course:{id:"sample",slug:"sample",contentVersion:"1.1.0",units:[unit],assessments:[]},state:{completedActivityIds:[]},authUserId:"synthetic-owner",runtime:null,completeActivity(){writes.push("complete")},assessActivity(){writes.push("grade")}};
  const params={courseSlug:"sample",unitSlug:"1",lessonSlug:"short"};
  const {default:Page}=h.load("src/app/course/[courseSlug]/unit/[unitSlug]/lesson/[lessonSlug]/page.tsx",{
-  "next/link":{default:empty},"next/navigation":{useParams:()=>params,useRouter:()=>({replace(){throw Error("Unexpected route replacement")}}),useSearchParams:()=>new URL(env.window.location.href).searchParams},
+  "next/link":{default:empty},"@/components/navigation-link":{default:empty},
+  "@/components/trail/trail-return":{TrailReturn:empty},"@/components/trail/use-living-trail":{useLivingTrail:()=>({trail:{chapters:[{moments:[{id:"moment",lessonId:"lesson",activityIds:["first","second"]}]}]}})},
+  "@/lib/course-lesson-navigation":{courseLessonPath:(course,unit,lesson)=>"/course/"+course.slug+"/unit/"+unit.number+"/lesson/"+lesson.slug},"next/navigation":{useParams:()=>params,useRouter:()=>({replace(){throw Error("Unexpected route replacement")}}),useSearchParams:()=>new URL(env.window.location.href).searchParams},
   "lucide-react":icons,"@/components/study-provider":{useStudy:()=>context},
   "@/components/activities/activity-renderer":{ActivityRenderer:empty},"@/components/activities/lesson-experience":{LessonExperience:empty},
-  "@/components/activities/lesson-support":{LessonSupport:empty},"@/components/activities/assessment-result":{AssessmentResult:empty},
+  "@/components/activities/lesson-support":{LessonSupport:empty},"@/components/activities/assessment-result":{AssessmentResult:empty},"@/components/activities/assessment-session":{AssessmentSession:empty},
   "@/lib/lesson-writing-scope":{lessonWritingScopeKey:()=> "scope"},
   "@/content/assessment-references":{assessmentLink:()=>"",resolveAssessment:()=>undefined},"@/lib/assessment-lesson":{assessmentsForLesson:()=>[]},
  });
@@ -23,7 +25,7 @@ function fixture() {
 test("active lesson step survives reload while unrelated URL context is preserved",()=>{
  const f=fixture();assert.equal(f.mount.tree.props.index,0);
  f.mount.tree.props.onSelect(1);f.mount.flush();assert.equal(f.mount.tree.props.index,1);
- const url=new URL(f.env.window.location.href);assert.equal(url.searchParams.get("activity"),"second");assert.equal(url.searchParams.get("from"),"trial");assert.equal(url.hash,"#draft");
+ const url=new URL(f.env.window.location.href);assert.equal(url.searchParams.get("activity"),"second");assert.equal(url.searchParams.get("moment"),"moment");assert.equal(url.searchParams.get("from"),"trial");assert.equal(url.hash,"#draft");
  f.mount.unmount();const reloaded=f.h.mount(f.Component);assert.equal(reloaded.tree.props.index,1);
  assert.deepEqual(f.writes,[]);
 });

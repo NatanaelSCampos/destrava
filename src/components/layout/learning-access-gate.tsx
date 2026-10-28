@@ -11,12 +11,13 @@ export function LearningAccessGate({ children }: { children: ReactNode }) {
     ? pathname.slice(prefix.length).split("/")[0]
     : undefined;
   const unit = course.units.find((u) => u.slug === slug || String(u.number) === slug);
-  if (unit?.access && !learningAccess?.units[unit.id]?.allowed)
+  // A chapter overview explains its lock; actual lesson routes remain guarded.
+  const isLearningRoute =
+    pathname.startsWith(prefix) &&
+    pathname.slice(prefix.length).split("/").filter(Boolean).length > 1;
+  if (isLearningRoute && unit?.access && !learningAccess?.units[unit.id]?.allowed)
     return (
-      <LearningAccessCard
-        decision={learningAccess?.units[unit.id]}
-        title="Uma unidade de cada vez"
-      />
+      <LearningAccessCard decision={learningAccess?.units[unit.id]} title="Um passo de cada vez" />
     );
   return <>{children}</>;
 }

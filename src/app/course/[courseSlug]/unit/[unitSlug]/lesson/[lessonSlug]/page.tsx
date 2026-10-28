@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "@/components/navigation-link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, Circle } from "lucide-react";
+import { ArrowRight, Check, ChevronLeft, ChevronRight, Circle } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
 import { ActivityRenderer } from "@/components/activities/activity-renderer";
 import { LessonExperience } from "@/components/activities/lesson-experience";
@@ -13,20 +13,27 @@ import { lessonWritingScopeKey } from "@/lib/lesson-writing-scope";
 import { resolveAssessment } from "@/content/assessment-references";
 import { assessmentsForLesson } from "@/lib/assessment-lesson";
 import { AssessmentSession } from "@/components/activities/assessment-session";
+import { TrailReturn } from "@/components/trail/trail-return";
+import { useLivingTrail } from "@/components/trail/use-living-trail";
 import { courseLessonPath } from "@/lib/course-lesson-navigation";
 
 function LessonContent() {
   const { course, authUserId, runtime } = useStudy();
   const { unitSlug, lessonSlug } = useParams<{ unitSlug: string; lessonSlug: string }>();
-  const unit = course.units.find(item => item.slug === unitSlug || String(item.number) === unitSlug);
-  const lesson = unit?.lessons.find(item => item.slug === lessonSlug);
+  const unit = course.units.find(
+    (item) => item.slug === unitSlug || String(item.number) === unitSlug,
+  );
+  const lesson = unit?.lessons.find((item) => item.slug === lessonSlug);
   const scopeKey = lessonWritingScopeKey({
-    userId: authUserId, courseId: course.id, contentVersion: course.contentVersion,
+    userId: authUserId,
+    courseId: course.id,
+    contentVersion: course.contentVersion,
     source: runtime ? "installed" : "compiled",
     installationId: runtime?.reference.installationId,
     artifactHash: runtime?.reference.artifactHash,
     versionSessionId: runtime?.versionSessionId,
-    unitId: unit?.id ?? unitSlug, lessonId: lesson?.id ?? lessonSlug,
+    unitId: unit?.id ?? unitSlug,
+    lessonId: lesson?.id ?? lessonSlug,
   });
   return <LessonWithDrafts key={scopeKey} />;
 }
@@ -38,6 +45,7 @@ function LessonWithDrafts() {
     lessonSlug: string;
   }>();
   const { course, state } = useStudy();
+  const { trail } = useLivingTrail();
   const [writingDrafts, setWritingDrafts] = useState<Map<string, string>>(() => new Map());
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -46,11 +54,30 @@ function LessonWithDrafts() {
   );
   const lesson = unit?.lessons.find((item) => item.slug === lessonSlug);
   const lessonAssessments = unit && lesson ? assessmentsForLesson(course, unit, lesson) : [];
-  const guidedHref = unit && lesson ? courseLessonPath(course, unit, lesson) + "/guided" : undefined;
+  const guidedHref =
+    unit && lesson ? courseLessonPath(course, unit, lesson) + "/guided" : undefined;
   useEffect(() => {
-    if (!lessonAssessments.length && lesson?.interactiveLessonRef && guidedHref && courseSlug === course.slug)
-      router.replace(guidedHref);
-  }, [lessonAssessments.length, lesson?.interactiveLessonRef, guidedHref, courseSlug, course.slug, router]);
+    if (
+      !lessonAssessments.length &&
+      lesson?.interactiveLessonRef &&
+      guidedHref &&
+      courseSlug === course.slug
+    )
+      router.replace(
+        guidedHref +
+          (searchParams.get("moment")
+            ? "?moment=" + encodeURIComponent(searchParams.get("moment")!)
+            : ""),
+      );
+  }, [
+    lessonAssessments.length,
+    lesson?.interactiveLessonRef,
+    guidedHref,
+    courseSlug,
+    course.slug,
+    router,
+    searchParams,
+  ]);
   const requestedActivity = searchParams.get("activity");
   const requestedIndex =
     lesson?.activities.findIndex((activity) => activity.id === requestedActivity) ?? -1;
@@ -64,46 +91,104 @@ function LessonWithDrafts() {
     setSelection({ routeKey, index: selected });
     const url = new URL(window.location.href);
     url.searchParams.set("activity", activity.id);
+    const targetMoment = trail.chapters
+      .flatMap((c) => c.moments)
+      .find((m) => m.lessonId === lesson?.id && m.activityIds.includes(activity.id));
+    if (targetMoment) url.searchParams.set("moment", targetMoment.id);
     window.history.replaceState(null, "", url.pathname + url.search + url.hash);
   };
   if (courseSlug !== course.slug || !unit || !lesson)
     return <div className="empty-state">Lição não encontrada.</div>;
-  if (!lesson.activities.length) return <div className="empty-state">As atividades desta lição estão indisponíveis. Os requisitos da unidade permanecem pendentes.</div>;
-  const lessonIndex = unit.lessons.findIndex(item => item.id === lesson.id);
+  if (!lesson.activities.length)
+    return (
+      <div className="empty-state">
+        As atividades desta lição estão indisponíveis. Os requisitos da unidade permanecem
+        pendentes.
+      </div>
+    );
+  const lessonIndex = unit.lessons.findIndex((item) => item.id === lesson.id);
   const nextLesson = unit.lessons[lessonIndex + 1];
   const previousLesson = unit.lessons[lessonIndex - 1];
   if (lessonAssessments.length) {
     const requestedAssessment = searchParams.get("assessmentId");
     const assessment = requestedAssessment
-      ? lessonAssessments.find(item => item.id === requestedAssessment)
+      ? lessonAssessments.find((item) => item.id === requestedAssessment)
       : lessonAssessments[0];
-    return <div className="lesson-page">
-      <Link href={`/course/${course.slug}/unit/${unit.number}`} className="back-link"><ArrowLeft size={16} /> Voltar à unidade</Link>
-      {lessonAssessments.length > 1 && <nav aria-label="Avaliações desta lição" className="lesson-neighbors">
-        {lessonAssessments.map(item => <Link key={item.id} href={courseLessonPath(course, unit, lesson) + "?assessmentId=" + encodeURIComponent(item.id)}>{item.title}</Link>)}
-      </nav>}
-      {!unit.active || !lesson.active || course.availability?.unavailableUnitIds?.includes(unit.id)
-        ? <section className="panel" role="status">Esta lição está indisponível. Nenhuma nota será registrada.</section>
-        : assessment ? <AssessmentSession key={assessment.id} assessmentId={assessment.id} />
-        : <section className="panel" role="alert">A avaliação solicitada não pertence a esta lição.</section>}
-      <nav className="lesson-neighbors" aria-label="Continuar unidade">
-        {previousLesson && <Link href={courseLessonPath(course, unit, previousLesson)}><ChevronLeft size={15} /> Lição anterior</Link>}
-        {nextLesson && <Link href={courseLessonPath(course, unit, nextLesson)}>Próxima lição <ChevronRight size={15} /></Link>}
-      </nav>
-    </div>;
+    return (
+      <div className="lesson-page">
+        <TrailReturn lessonId={lesson.id} unitId={unit.id} />
+        {lessonAssessments.length > 1 && (
+          <nav aria-label="Avaliações desta lição" className="lesson-neighbors">
+            {lessonAssessments.map((item) => (
+              <Link
+                key={item.id}
+                href={
+                  courseLessonPath(course, unit, lesson) +
+                  "?assessmentId=" +
+                  encodeURIComponent(item.id)
+                }
+              >
+                {item.title}
+              </Link>
+            ))}
+          </nav>
+        )}
+        {!unit.active ||
+        !lesson.active ||
+        course.availability?.unavailableUnitIds?.includes(unit.id) ? (
+          <section className="panel" role="status">
+            Esta lição está indisponível. Nenhuma nota será registrada.
+          </section>
+        ) : assessment ? (
+          <AssessmentSession key={assessment.id} assessmentId={assessment.id} />
+        ) : (
+          <section className="panel" role="alert">
+            A avaliação solicitada não pertence a esta lição.
+          </section>
+        )}
+        <nav className="lesson-neighbors" aria-label="Continuar unidade">
+          {previousLesson && (
+            <Link href={courseLessonPath(course, unit, previousLesson)}>
+              <ChevronLeft size={15} /> Lição anterior
+            </Link>
+          )}
+          {nextLesson && (
+            <Link href={courseLessonPath(course, unit, nextLesson)}>
+              Próxima lição <ChevronRight size={15} />
+            </Link>
+          )}
+        </nav>
+      </div>
+    );
   }
-  if (lesson.interactiveLessonRef) return <div className="page-loading">Abrindo a prática desta lição…</div>;
+  if (lesson.interactiveLessonRef)
+    return <div className="page-loading">Abrindo a prática desta lição…</div>;
   const active = lesson.activities[index] ?? lesson.activities[0];
-  const finalAssessment = resolveAssessment(course.assessments, unit.assessmentRefs.final, "summative");
+  const finalAssessment = resolveAssessment(
+    course.assessments,
+    unit.assessmentRefs.final,
+    "summative",
+  );
   const complete = lesson.activities.filter((activity) =>
     state.completedActivityIds.includes(activity.id),
   ).length;
-  if (lesson.objectiveLabels || lesson.stages) return <LessonExperience lesson={lesson} unit={unit} index={index} onSelect={next => setIndex(next)} nextLesson={nextLesson} previousLesson={previousLesson} />;
+  if (lesson.objectiveLabels || lesson.stages)
+    return (
+      <LessonExperience
+        lesson={lesson}
+        unit={unit}
+        index={index}
+        onSelect={(next) => setIndex(next)}
+        nextLesson={nextLesson}
+        previousLesson={previousLesson}
+        trailMoment={trail.chapters
+          .flatMap((c) => c.moments)
+          .find((m) => m.lessonId === lesson.id && m.activityIds.includes(active.id))}
+      />
+    );
   return (
     <div className="lesson-page">
-      <Link href={`/course/${course.slug}/unit/${unit.number}`} className="back-link">
-        <ArrowLeft size={16} /> Voltar à unidade
-      </Link>
+      <TrailReturn lessonId={lesson.id} unitId={unit.id} />
       <div className="lesson-header">
         <div>
           <span className="eyebrow">
@@ -125,7 +210,9 @@ function LessonWithDrafts() {
                 style={{ width: `${Math.round((100 * complete) / lesson.activities.length)}%` }}
               />
             </div>
-            <small>{Math.round((100 * complete) / lesson.activities.length)}% das atividades realizadas</small>
+            <small>
+              {Math.round((100 * complete) / lesson.activities.length)}% das atividades realizadas
+            </small>
           </div>
           <nav aria-label="Atividades da lição">
             {lesson.activities.map((activity, activityIndex) => (
@@ -161,11 +248,18 @@ function LessonWithDrafts() {
           <ActivityRenderer
             key={active.id}
             activity={active}
-            writingDraft={active.type === "writing" ? {
-              text: writingDrafts.get(active.id) ??
-                state.writing.find(item => item.activityId === active.id)?.text ?? "",
-              onChange: text => setWritingDrafts(current => new Map(current).set(active.id, text)),
-            } : undefined}
+            writingDraft={
+              active.type === "writing"
+                ? {
+                    text:
+                      writingDrafts.get(active.id) ??
+                      state.writing.find((item) => item.activityId === active.id)?.text ??
+                      "",
+                    onChange: (text) =>
+                      setWritingDrafts((current) => new Map(current).set(active.id, text)),
+                  }
+                : undefined
+            }
           />
           {finalAssessment?.lessonId === lesson.id && (
             <AssessmentResult assessmentId={finalAssessment.id} />

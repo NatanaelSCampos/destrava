@@ -1,5 +1,6 @@
 "use client";
 
+import { journeyText } from "@/lib/journey-text";
 import Link from "@/components/navigation-link";
 import { ArrowRight, CheckCircle2, Lightbulb } from "lucide-react";
 import { useStudy } from "@/components/study-provider";
@@ -72,7 +73,7 @@ export function AssessmentResult({
                 ? "Um passo a mais no seu caminho"
                 : result
                   ? "Veja o que vale retomar"
-                  : definition.title}
+                  : journeyText(definition.title)}
           </h2>
           <p>
             {!result

@@ -15,100 +15,102 @@ const tours: Record<string, PageTour> = {
     id: "live-classes",
     name: "Aula particular",
     steps: [
-      { title: "Uma aula guiada", description: "O roteiro apresenta um tema, você pratica e pode retomar de onde parou.", target: ".live-heading" },
-      { title: "Apresentação e quadro", description: "A apresentação e os exemplos do quadro avançam juntos. Use o controle para pausar ou voltar um trecho.", target: ".live-stage" },
-      { title: "Interrompa quando precisar", description: "Consulte outra explicação, leia os exemplos e pratique sem perder seu lugar.", target: ".live-teacher-card" },
-      { title: "Acompanhe as etapas", description: "O roteiro mostra explicação, exercício e fala. Acertar e praticar são etapas separadas de apenas assistir.", target: ".live-timeline" },
+      {
+        title: "Uma aula guiada",
+        description: "O roteiro apresenta um tema, você pratica e pode retomar de onde parou.",
+        target: ".live-heading",
+      },
+      {
+        title: "Apresentação e quadro",
+        description:
+          "A apresentação e os exemplos do quadro avançam juntos. Use o controle para pausar ou voltar um trecho.",
+        target: ".live-stage",
+      },
+      {
+        title: "Interrompa quando precisar",
+        description: "Consulte outra explicação, leia os exemplos e pratique sem perder seu lugar.",
+        target: ".live-teacher-card",
+      },
+      {
+        title: "Acompanhe as etapas",
+        description:
+          "O roteiro mostra explicação, exercício e fala. Acertar e praticar são etapas separadas de apenas assistir.",
+        target: ".live-timeline",
+      },
     ],
   },
   dashboard: {
     id: "dashboard",
-    name: "Visão geral",
+    name: "Seu próximo momento",
     steps: [
       {
-        title: "Seu ponto de partida",
-        description: "Aqui você vê o que estudar hoje e acompanha seu ritmo no curso.",
-        target: ".dashboard-page .page-heading",
+        title: "Continue de onde está",
+        description: "A ação principal retoma seu próximo momento ou a prática que já começou.",
+        target: ".tv-home-hero",
       },
       {
-        title: "Encontre as outras telas",
+        title: "Seu lugar no caminho",
         description:
-          "O menu lateral leva ao curso, à prática e ao seu progresso. No celular, abra o menu pelo ícone no topo.",
-        target: ".sidebar-nav",
+          "O capítulo mostra o que você já estudou. Abra a trilha para explorar as situações.",
+        target: ".tv-home-chapter",
       },
       {
-        title: "Abra o menu no celular",
-        description: "Este botão abre as telas de estudo, revisão e acompanhamento.",
-        target: ".menu-toggle",
-      },
-      {
-        title: "Ajuste seu ritmo",
+        title: "Retome da memória",
         description:
-          "Em Configurações → Meu aprendizado, ajuste objetivo, habilidades e tempo de sessão sem perder progresso.",
-        target: ".onboarding-panel",
+          "As revisões disponíveis vêm da sua prática. Elas acompanham o percurso sem bloquear novas descobertas.",
+        target: ".tv-memory",
       },
       {
-        title: "Comece a aula",
-        description: "Este botão abre sua sessão de estudo. A trilha segue de onde você parou.",
-        target: ".course-hero .hero-actions",
-      },
-      {
-        title: "Escolha o tempo",
+        title: "Outras formas de praticar",
         description:
-          "Tem poucos minutos? Escolha uma sessão curta; o roteiro se adapta ao tempo disponível.",
-        target: ".quick-session-panel",
-      },
-      {
-        title: "Seu foco agora",
-        description:
-          "Esta sugestão usa seu progresso e suas dificuldades para indicar a próxima prática.",
-        target: ".rail-focus",
+          "Escolha uma sessão com tempo definido, uma aula guiada ou uma conversa quando quiser variar.",
+        target: ".tv-home-secondary",
       },
     ],
   },
   course: {
     id: "course",
-    name: "Meu curso",
+    name: "Minha trilha",
     steps: [
       {
-        title: "Sua trilha de estudo",
+        title: "Um caminho, vários capítulos",
         description:
-          "O curso organiza o conteúdo em unidades. Você pode abrir qualquer etapa disponível.",
-        target: ".course-page .page-heading",
+          "Escolha um capítulo ou veja o percurso completo. Seu progresso permanece o mesmo.",
+        target: ".tv-chapter-rail",
       },
       {
-        title: "Continue de onde parou",
-        description: "Aqui você vê o avanço geral e pode abrir a aula do dia.",
-        target: ".course-overview",
+        title: "Seu próximo momento",
+        description:
+          "O cartão em destaque leva à sequência real de exemplos e práticas. Você também pode revisitar os momentos disponíveis.",
+        target: ".tv-path",
       },
       {
-        title: "Escolha uma unidade",
+        title: "Volte ao seu lugar",
         description:
-          "Cada linha mostra uma unidade e seu progresso. Toque nela para ver as lições.",
-        target: ".unit-list",
+          "Onde parei encontra seu momento atual. As provas mostram os requisitos no próprio cartão.",
+        target: ".tv-path-toolbar",
       },
     ],
   },
   unit: {
     id: "unit",
-    name: "Unidade do curso",
+    name: "Seu capítulo",
     steps: [
       {
-        title: "Uma unidade de cada vez",
-        description: "Aqui estão o tema, os objetivos e o progresso desta unidade.",
-        target: ".unit-hero",
+        title: "Uma situação para viver",
+        description: "O capítulo reúne conversas, descobertas e desafios com um propósito.",
+        target: ".tv-chapter-hero",
       },
       {
-        title: "Siga as lições",
+        title: "Entre em um momento",
         description:
-          "Abra uma lição da lista. Você pode voltar às anteriores quando quiser revisar.",
-        target: ".lesson-list",
+          "Cada cartão reúne uma sequência curta. Expanda para escolher uma etapa disponível.",
+        target: ".tv-path",
       },
       {
-        title: "O que você vai aprender",
-        description:
-          "Estes objetivos mostram o que você deverá conseguir fazer ao concluir a unidade.",
-        target: ".objectives-panel",
+        title: "Encontre seu lugar",
+        description: "Use Onde parei para voltar rapidamente ao momento atual.",
+        target: ".tv-path-toolbar",
       },
     ],
   },
@@ -388,7 +390,8 @@ const tours: Record<string, PageTour> = {
     steps: [
       {
         title: "Descreva uma cena",
-        description: "Observe a imagem e descreva o que está vendo no idioma que você está aprendendo.",
+        description:
+          "Observe a imagem e descreva o que está vendo no idioma que você está aprendendo.",
         target: ".describe-page .page-heading",
       },
       {
@@ -587,7 +590,8 @@ const tours: Record<string, PageTour> = {
       },
       {
         title: "Entenda e pratique",
-        description: "Compare as respostas, leia a explicação e avance por três exercícios, uma fala e a checagem final.",
+        description:
+          "Compare as respostas, leia a explicação e avance por três exercícios, uma fala e a checagem final.",
         target: ".micro-lesson-main",
       },
       {
