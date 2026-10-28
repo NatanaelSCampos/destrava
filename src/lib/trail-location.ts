@@ -17,7 +17,7 @@ export function trailLocationKey(scope: TrailScope) {
   return "destrava:trail-location:v1:" + encodeURIComponent(JSON.stringify(scope));
 }
 export function parseTrailLocation(raw: string | null): TrailLocation | null {
-  if (!raw || raw.length > 4096) return null;
+  if (!raw || raw.length > 16384) return null;
   try {
     const v = JSON.parse(raw);
     return v &&
@@ -29,7 +29,7 @@ export function parseTrailLocation(raw: string | null): TrailLocation | null {
       v.version === 1 &&
       typeof v.momentId === "string" &&
       v.momentId.trim().length > 0 &&
-      v.momentId.length <= 180 &&
+      v.momentId.length <= 8192 &&
       (v.activityId === undefined ||
         (typeof v.activityId === "string" &&
           v.activityId.trim().length > 0 &&
@@ -69,11 +69,14 @@ export function trailContinuation(
   completedIds: readonly string[],
 ) {
   const moments = trail.chapters.flatMap((chapter) => chapter.moments);
+  const exact = location && moments.find((moment) => moment.id === location.momentId);
+  const savedCandidates = exact
+    ? [exact]
+    : moments.filter((moment) => moment.originMomentId === location?.momentId);
   const saved =
     location &&
-    moments.find(
+    savedCandidates.find(
       (moment) =>
-        moment.id === location.momentId &&
         canContinue(moment) &&
         (!location.activityId || moment.activityIds.includes(location.activityId)),
     );
@@ -120,6 +123,7 @@ export function trailRouteMoment(
   return (
     candidates.find(({ moment }) => activity && moment.activityIds.includes(activity)) ??
     candidates.find(({ moment }) => moment.id === search.get("moment")) ??
+    candidates.find(({ moment }) => moment.originMomentId === search.get("moment")) ??
     candidates[0]
   );
 }

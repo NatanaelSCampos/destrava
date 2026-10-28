@@ -34,6 +34,7 @@ export function TrailReturn({
         search.get("activity") && moment.activityIds.includes(search.get("activity")!),
     ) ??
     candidates.find(({ moment }) => moment.id === search.get("moment")) ??
+    candidates.find(({ moment }) => moment.originMomentId === search.get("moment")) ??
     candidates.find(({ moment }) => moment.id === trail.currentMomentId) ??
     candidates[0];
   return (

@@ -100,6 +100,7 @@ export function TrailLocationTracker() {
   const moment =
     candidates.find((item) => activityId && item.activityIds.includes(activityId)) ??
     candidates.find((item) => item.id === requestedMoment) ??
+    candidates.find((item) => item.originMomentId === requestedMoment) ??
     candidates[0];
   const validActivity =
     moment && activityId && moment.activityIds.includes(activityId) ? activityId : undefined;

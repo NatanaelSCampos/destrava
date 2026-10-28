@@ -46,7 +46,7 @@ export function TrailExperienceFrame({ children }: { children: ReactNode }) {
   return (
     <>
       <div aria-hidden="true">
-        <LivingTrailView />
+        <LivingTrailView background />
       </div>
       <dialog
         ref={dialog}
@@ -73,7 +73,7 @@ export function TrailExperienceFrame({ children }: { children: ReactNode }) {
         <header className="tv-lesson-dialog-head">
           <div>
             <span className="tv-kicker">
-              <Route size={14} /> NO SEU CAMINHO
+              <Route size={14} /> NA SUA TRILHA
             </span>
             <h2 id="tv-lesson-title">{journeyText(location.moment.title)}</h2>
           </div>

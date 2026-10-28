@@ -1,4 +1,56 @@
-# Trilha Viva — validação da entrega
+# Validação da Trilha Viva
+
+## Revisão atual — etapas visíveis e aula em tela cheia (28/10/2026)
+
+Baseline: `8ce285251bbc3e8109d27ab2bdac3a94d0e4691d`. Candidato final `VISIBLE-STAGES-C3`, digest `75fa7d6375ca48376afc441f27bbe02ee33613b3b93a931c79a2b5b40ed8f672`, 18 arquivos congelados. O parecer do Revisor é favorável, sem achados abertos, e o QA independente aprovou seu escopo. Perfis V1 foram reaplicados explicitamente; worktrees separaram escritas. O Lead integrou e operou serviços/navegador. O modo read-only do Revisor foi procedimental, sem alegar sandbox técnico.
+
+### O que mudou
+
+- Cada etapa ordinária aparece como um ponto consecutivo. O espanhol mostra 114 pontos, preservando os 24 agrupamentos editoriais apenas como contexto; inglês usa a mesma regra genérica. Guiadas e avaliações continuam atômicas.
+- Uma lista e uma curva atravessam todo o percurso; divisórias narrativas menores substituem grupos de dois pontos, cartões repetidos e contagens de atividades/momentos. Ilustrações nativas aparecem junto ao caminho.
+- A entrada posiciona a continuação; âncoras explícitas têm prioridade. Setas flutuantes funcionam nos dois sentidos e respeitam redução de movimento. O refinamento inicial não interrompe exploração após wheel, toque, teclado ou pointer.
+- O executor real ocupa 100vw × 100dvh, sem abas de etapas ou card Parte X de X. A barra interna acompanha as atividades do ponto. Anterior não sai da etapa; concluir volta à âncora correta.
+- Identidades por namespace curricular impedem colisão entre etapas, guiadas e avaliações. Aliases antigos mantêm navegação, mas nunca prevalecem sobre uma identidade canônica existente.
+
+### Evidências finais
+
+| Verificação | Resultado |
+| --- | --- |
+| Regressão focada final | 171 PASS, zero falhas/skips |
+| QA independente de etapas/SSR + lifecycle do hook | 56 + 7 = 63 PASS, zero falhas/skips |
+| Lint dos arquivos alterados | exit 0, sem erros/warnings |
+| Build local de produção, incluindo TypeScript | exit 0; `es8JP6T2SfY0C36xEwHj5` |
+| Navegador local ES no C3 | 21 checks PASS |
+| Navegador local EN no C2 (mesma UI/hook; C3 ajusta só precedência de alias) | 20 checks PASS |
+| Regressões reais de áudio/histórico/guardas no C2 | 6 checks PASS |
+| Preservação curricular, políticas, mídias e sidecar contra baseline | diff vazio |
+
+As verificações de navegador incluem entrada sem hash, lista/curva únicas, pontos separados, tela cheia real e ausência de overflow em 320/390/768, Escape da ajuda sem fechar a aula, foco exato ao retornar, reload em uma etapa pendente, seta para baixo ao explorar acima e seta para cima ao explorar abaixo. Áudio gravado reproduziu e parou ao fechar; teclado permaneceu no modal; Back/Forward, executor guiado e guarda real de rota bloqueada foram exercitados. Não houve chamada paga de IA.
+
+O Revisor encontrou e o Lead corrigiu: âncora ignorada em curso sem continuação; colisões de identidades arbitrárias; e alias legado que capturava checkpoint canônico. O QA adicionou regressões independentes para esses casos e carregamento tardio/gesto de exploração. C1/C2 e seus pareceres não aprovados permanecem preservados.
+
+Nos roteiros iniciais houve erros de serialização de elementos DOM e uma fixture que revisitou etapa concluída, mas exigia retomada como pendente. Foram corrigidos apenas os roteiros/seleção da fixture e preservados os registros. Os testes antigos do núcleo que exigiam grupos/24 pontos foram atualizados ao requisito vigente, mantendo verificações oficiais de provas, progresso e acesso. O antigo verificador winding-v1 continua preservado; `trail:qa` agora executa os verificadores de etapas visíveis e lifecycle.
+
+### Reproduzir
+
+`npm.cmd run trail:verify` executa núcleo, expansão e SSR. `npm.cmd run trail:qa` executa QA independente e lifecycle simulado. O build local usa a identidade release-clean e loopback; o modo dev continua com o ciclo de Fast Refresh já documentado na entrega anterior. Preview local: http://127.0.0.1:3100/course/espanol-a-tu-paso-a1.
+
+Evidências operacionais sanitizadas: `.tmp/trilha-visible-stages-20261028/`. O run Foundry `runs/trilha-visible-stages-20261028` registra o padrão reutilizável e o schema, sem produção curricular, reaproveitamento de credenciais ou nova aprovação linguística.
+
+A publicação autorizada usa o wrapper IPv4, um perfil de produção público pinado ao commit, e validações autenticadas ES/EN após o deploy. SHA, imagem, saúde e comparação da evidência da própria conta sintética ficam no recibo final operacional. Não há migração nem reset.
+
+### Capturas atuais
+
+[Trilha no desktop](images/trilha-desktop.png) · [Trilha no celular](images/trilha-celular.png) · [Aula em tela cheia no desktop](images/aula-desktop.png) · [Aula em tela cheia no celular](images/aula-celular.png) · [Seta para voltar acima](images/voltar-acima.png) · [Seta para voltar abaixo](images/voltar-abaixo.png) · [Inglês](images/ingles.png).
+
+### Limites
+
+Sem teste em dispositivo físico ou certificação completa de acessibilidade. Cursos instalados mantêm fallback genérico, mas transporte de sidecars e uma jornada instalada no navegador não foram homologados. As falhas amplas preexistentes, explicitadas abaixo, não foram mascaradas ou apresentadas como verdes. O currículo e o histórico de aprendizagem permaneceram intactos; o checkpoint guarda somente navegação.
+
+---
+
+## Histórico da entrega anterior
+
 
 Data: 28/10/2026. Baseline: `731045e47a96fc1231baacd4deda675a569b987b`. Candidato: **TRILHA-VIVA-C4-WINDING**, 42 arquivos de código, contrato, testes e desenho. Digest: `0314af4269afecf93ef124388b007e53941be91c299a81440666f17b12926526`. Capturas e este relatório são evidências complementares, externas ao conjunto de fontes congelado.
 

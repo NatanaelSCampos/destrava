@@ -81,13 +81,13 @@ const tours: Record<string, PageTour> = {
       {
         title: "Seu próximo momento",
         description:
-          "O cartão em destaque leva à sequência real de exemplos e práticas. Você também pode revisitar os momentos disponíveis.",
+          "Cada ponto abre sua etapa em tela cheia. O destaque indica onde continuar; os pontos estudados continuam disponíveis.",
         target: ".tv-winding-path",
       },
       {
         title: "Volte ao seu lugar",
         description:
-          "Onde parei encontra seu momento atual. As provas mostram os requisitos no próprio cartão.",
+          "Onde parei encontra seu ponto atual. Ao rolar para longe, uma seta também ajuda você a voltar.",
         target: ".tv-path-toolbar",
       },
     ],
@@ -104,7 +104,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Entre em um momento",
         description:
-          "Cada ponto abre uma sequência curta em um card sobre a trilha. Feche o card para voltar ao mesmo lugar.",
+          "Cada ponto abre uma etapa em tela cheia. Feche a aula para voltar ao mesmo lugar na trilha.",
         target: ".tv-winding-path",
       },
       {

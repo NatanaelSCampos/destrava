@@ -1,14 +1,15 @@
 "use client";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUp,
+  ArrowDown,
   Check,
   LocateFixed,
   LockKeyhole,
-  MapPin,
   Play,
   Route,
   Trophy,
@@ -16,28 +17,33 @@ import {
 } from "lucide-react";
 import Link from "@/components/navigation-link";
 import { useStudy } from "@/components/study-provider";
-import type { LivingTrailMoment } from "@/domain/study/living-trail";
+import type { LivingTrailChapter, LivingTrailMoment } from "@/domain/study/living-trail";
 import { journeyText } from "@/lib/journey-text";
-import { trailReturnHref } from "@/lib/trail-location";
+import { useTrailPosition } from "./use-trail-position";
 import { useLivingTrail } from "./use-living-trail";
 import { TrailIcon } from "./trail-icon";
 import { TrailArtwork } from "./trail-artwork";
 import { TrailMemory } from "./trail-memory";
+import { SceneIllustration } from "@/components/activities/lesson-illustrations";
 import "./living-trail.css";
 import "./living-trail-path.css";
+
+/** A single measured connector follows every teaching stop, including story transitions. */
 function WindingPath({
-  moments,
+  chapters,
   nextId,
   nextHref,
   onBlocked,
 }: {
-  moments: LivingTrailMoment[];
+  chapters: LivingTrailChapter[];
   nextId?: string;
   nextHref?: string;
   onBlocked: (moment: LivingTrailMoment) => void;
 }) {
+  const { course } = useStudy();
   const list = useRef<HTMLOListElement>(null);
   const [route, setRoute] = useState({ width: 1, height: 1, d: "" });
+  const moments = chapters.flatMap((chapter) => chapter.moments);
   useLayoutEffect(() => {
     const element = list.current;
     if (!element) return;
@@ -73,9 +79,9 @@ function WindingPath({
     const observer = new ResizeObserver(draw);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [moments]);
+  }, [chapters]);
   return (
-    <ol ref={list} className="tv-winding-path">
+    <ol ref={list} className="tv-winding-path" aria-label="Etapas do seu caminho">
       <li className="tv-route-layer" aria-hidden="true">
         <svg
           className="tv-route-svg"
@@ -86,26 +92,33 @@ function WindingPath({
             d={route.d}
             fill="none"
             stroke="currentColor"
-            strokeWidth="7"
+            strokeWidth="6"
             strokeDasharray="1 13"
             strokeLinecap="round"
           />
         </svg>
       </li>
       {moments.map((moment, index) => {
+        const chapter = chapters.find((item) => item.moments[0]?.id === moment.id);
+        const lesson = course.units
+          .flatMap((unit) => unit.lessons)
+          .find((item) => item.id === moment.lessonId);
+        const startsStory = moment.lessonId !== moments[index - 1]?.lessonId;
         const locked = ["locked", "unavailable"].includes(moment.status),
           current = nextId === moment.id;
+        const x = [44, 65, 70, 58, 37, 26, 31][index % 7];
         const content = (
           <>
             <span className="tv-stop-icon" aria-hidden="true">
               {moment.status === "completed" && !moment.isExam ? (
-                <Check size={27} />
+                <Check size={28} />
               ) : locked ? (
-                <LockKeyhole size={28} />
+                <LockKeyhole size={26} />
               ) : (
                 <TrailIcon name={moment.icon} size={28} />
               )}
             </span>
+            {current && <span className="tv-start-label">Continuar</span>}
             {current && (
               <span className="tv-node-play" aria-hidden="true">
                 <Play size={11} fill="currentColor" />
@@ -113,14 +126,6 @@ function WindingPath({
             )}
             <span className="tv-stop-caption">
               <strong>{journeyText(moment.title)}</strong>
-              <small>
-                {moment.kind === "guided"
-                  ? "Áudio e quadro"
-                  : moment.isExam
-                    ? "Desafio final"
-                    : moment.total + " atividades"}
-              </small>
-              {current && <em>Você está aqui</em>}
               {moment.result && (
                 <small>
                   {typeof moment.result.objectiveScore === "number"
@@ -133,77 +138,129 @@ function WindingPath({
           </>
         );
         return (
-          <li
-            key={moment.id}
-            id={"moment-" + moment.id}
-            className={
-              "tv-path-node tv-moment tv-tone-" +
-              moment.tone +
-              (current ? " is-current" : "") +
-              (locked ? " is-locked" : "") +
-              (moment.status === "completed" ? " is-completed" : "")
-            }
-            style={{ "--tv-node-x": [30, 66, 48, 25, 59, 73][index % 6] + "%" } as CSSProperties}
-            aria-current={current ? "step" : undefined}
-          >
-            {locked ? (
-              <button
-                type="button"
-                className="tv-path-stop"
-                aria-label={journeyText(moment.title) + ": " + moment.label + ". Entender o acesso"}
-                aria-haspopup="dialog"
-                onClick={() => onBlocked(moment)}
+          <Fragment key={moment.id}>
+            {chapter && (
+              <li
+                className={"tv-chapter tv-chapter-hero tv-tone-" + chapter.tone}
+                id={"chapter-" + chapter.id}
               >
-                {content}
-              </button>
-            ) : (
-              <Link
-                className="tv-path-stop"
-                href={current && nextHref ? nextHref : moment.href}
-                scroll={false}
-                aria-haspopup="dialog"
-                aria-label={moment.title + ": " + moment.label}
-              >
-                {content}
-              </Link>
+                <div>
+                  <h2>{journeyText(chapter.title)}</h2>
+                  <div
+                    className="tv-progress"
+                    role="progressbar"
+                    aria-label={"Progresso: " + journeyText(chapter.title)}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={chapter.progress.participationPercentage}
+                  >
+                    <span style={{ width: chapter.progress.participationPercentage + "%" }} />
+                  </div>
+                </div>
+                <div className="tv-story-art" aria-hidden="true">
+                  {chapter.illustration ? (
+                    <Image src={chapter.illustration.src} alt="" width={140} height={100} />
+                  ) : (
+                    <TrailArtwork compact />
+                  )}
+                </div>
+              </li>
             )}
-          </li>
+            {startsStory && !chapter && (
+              <li className="tv-story-divider">
+                <span>{journeyText(lesson?.title ?? moment.title)}</span>
+              </li>
+            )}
+            <li
+              id={"moment-" + moment.id}
+              className={
+                "tv-path-node tv-moment tv-tone-" +
+                moment.tone +
+                (current ? " is-current" : "") +
+                (locked ? " is-locked" : "") +
+                (moment.status === "completed" ? " is-completed" : "")
+              }
+              style={
+                {
+                  "--tv-node-x": x + "%",
+                  "--tv-node-progress": moment.percentage + "%",
+                } as CSSProperties
+              }
+              aria-current={current ? "step" : undefined}
+            >
+              {index % 7 === 3 && (
+                <div
+                  className={"tv-path-decoration " + (x < 50 ? "on-right" : "on-left")}
+                  aria-hidden="true"
+                >
+                  <SceneIllustration
+                    kind={
+                      moment.icon === "coffee" || moment.icon === "shopping-bag"
+                        ? "cafe"
+                        : moment.icon === "map-pin"
+                          ? "neighborhood"
+                          : "message"
+                    }
+                    label=""
+                  />
+                </div>
+              )}
+              {locked ? (
+                <button
+                  type="button"
+                  className="tv-path-stop"
+                  aria-label={
+                    journeyText(moment.title) + ": " + moment.label + ". Entender o acesso"
+                  }
+                  aria-haspopup="dialog"
+                  onClick={() => onBlocked(moment)}
+                >
+                  {content}
+                </button>
+              ) : (
+                <Link
+                  className="tv-path-stop"
+                  href={current && nextHref ? nextHref : moment.href}
+                  scroll={false}
+                  aria-haspopup="dialog"
+                  aria-label={journeyText(moment.title) + ": " + moment.label}
+                >
+                  {content}
+                </Link>
+              )}
+            </li>
+          </Fragment>
         );
       })}
     </ol>
   );
 }
-export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
+export function LivingTrailView({
+  unitSlug,
+  background = false,
+}: {
+  unitSlug?: string;
+  background?: boolean;
+}) {
   const { course } = useStudy();
   const { trail, continuation, ready } = useLivingTrail();
   const requestedUnit =
-    unitSlug && course.units.find((u) => u.slug === unitSlug || String(u.number) === unitSlug);
+    unitSlug &&
+    course.units.find((unit) => unit.slug === unitSlug || String(unit.number) === unitSlug);
   const selected =
     trail.chapters.find(
-      (c) => c.unitId === (requestedUnit ? requestedUnit.id : continuation?.chapter.unitId),
+      (chapter) =>
+        chapter.unitId === (requestedUnit ? requestedUnit.id : continuation?.chapter.unitId),
     ) ??
-    trail.chapters.find((c) => c.id === trail.currentChapterId) ??
+    trail.chapters.find((chapter) => chapter.id === trail.currentChapterId) ??
     trail.chapters[0];
-  const chapters = trail.chapters;
-  useEffect(() => {
-    if (!ready || !window.location.hash.startsWith("#moment-")) return;
-    let frame = window.requestAnimationFrame(() => {
-      frame = window.requestAnimationFrame(() => {
-        let id: string;
-        try {
-          id = decodeURIComponent(window.location.hash.slice(1));
-        } catch {
-          return;
-        }
-        const target = document.getElementById(id);
-        if (!target || !target.closest(".tv-page")) return;
-        target.querySelector<HTMLElement>(".tv-path-stop")?.focus({ preventScroll: true });
-        target.scrollIntoView({ block: "center", behavior: "instant" });
-      });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [ready]);
-
+  const next = continuation?.moment;
+  const position = useTrailPosition(
+    trail,
+    next?.id,
+    ready && !background,
+    course.id + ":" + course.contentVersion,
+  );
   const [blocked, setBlocked] = useState<LivingTrailMoment | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -219,9 +276,7 @@ export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
         </Link>
       </section>
     );
-  const next = continuation?.moment;
-  const nextHref = continuation?.href;
-  const milestone = selected.moments.find((m) => m.isExam) ?? selected.moments.at(-1);
+  const milestone = selected.moments.find((moment) => moment.isExam) ?? selected.moments.at(-1);
   return (
     <div className="tv-page" data-trail-version={trail.presentationVersion ?? "default"}>
       <header className="tv-page-heading">
@@ -229,8 +284,7 @@ export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
           <span className="tv-kicker">
             <Route size={15} /> {course.title}
           </span>
-          <h1>Seu caminho ganha vida.</h1>
-          <p>Conversas, descobertas e pequenos desafios. Um momento de cada vez.</p>
+          <h1>Minha trilha</h1>
         </div>
         <Link className="tv-quiet-link" href="/dashboard">
           <ArrowLeft size={15} /> Visão geral
@@ -238,163 +292,33 @@ export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
       </header>
       <div className="tv-layout">
         <section className="tv-path-area" aria-label="Percurso de aprendizagem">
-          {continuation && (
-            <Link className="tv-mobile-continue" href={continuation.href}>
-              <span>
-                <small>Seu próximo momento</small>
-                {journeyText(continuation.moment.title)}
-              </span>
-              <ArrowRight size={19} />
-            </Link>
-          )}
           <nav className="tv-path-toolbar" aria-label="Navegar na trilha">
             <span>
-              <Route size={16} /> Seu caminho, um momento de cada vez
+              <Route size={16} /> Siga seu caminho
             </span>
-            {continuation && (
-              <Link
-                href={trailReturnHref(
-                  course.slug,
-                  continuation.chapter.number,
-                  continuation.moment.id,
-                )}
-              >
+            {next && (
+              <button type="button" onClick={position.returnToCurrent}>
                 <LocateFixed size={16} /> Onde parei
-              </Link>
+              </button>
             )}
           </nav>
-          {chapters.map((chapter) => (
-            <section
-              key={chapter.id}
-              className="tv-chapter"
-              id={"chapter-" + chapter.id}
-              aria-labelledby={"heading-" + chapter.id}
-            >
-              <header className={"tv-chapter-hero tv-tone-" + chapter.tone}>
-                <div>
-                  <span className="tv-kicker">SUA HISTÓRIA CONTINUA</span>
-                  <h2 id={"heading-" + chapter.id}>{journeyText(chapter.title)}</h2>
-                  <p>
-                    {journeyText(
-                      chapter.description ||
-                        course.units.find((u) => u.id === chapter.unitId)?.description ||
-                        "",
-                    )}
-                  </p>
-                  {chapter.setting && (
-                    <span className="tv-setting">
-                      <MapPin size={14} />
-                      {chapter.setting}
-                    </span>
-                  )}
-                  <div className="tv-chapter-progress">
-                    <div className="tv-progress">
-                      <span style={{ width: chapter.progress.participationPercentage + "%" }} />
-                    </div>
-                    <small>
-                      {chapter.progress.participationPercentage.toLocaleString("pt-BR")}% do
-                      conteúdo estudado
-                    </small>
-                  </div>
-                </div>
-                {chapter.illustration ? (
-                  <Image
-                    src={chapter.illustration.src}
-                    alt={chapter.illustration.alt}
-                    width={300}
-                    height={220}
-                  />
-                ) : (
-                  <TrailArtwork compact />
-                )}
-              </header>
-              {!chapter.access.allowed && (
-                <div className="tv-chapter-lock" role="status">
-                  <LockKeyhole size={21} />
-                  <div>
-                    <strong>Esta parte do caminho abre após o desafio anterior</strong>
-                    <p>{chapter.access.message}</p>
-                  </div>
-                </div>
-              )}
-              {chapter.moments
-                .reduce<
-                  Array<{
-                    key: string;
-                    title: string;
-                    description: string;
-                    moments: LivingTrailMoment[];
-                  }>
-                >((groups, moment) => {
-                  const previous = groups.at(-1),
-                    lesson = course.units
-                      .flatMap((u) => u.lessons)
-                      .find((l) => l.id === moment.lessonId),
-                    key = moment.lessonId ?? moment.id;
-                  if (previous?.key === key) previous.moments.push(moment);
-                  else
-                    groups.push({
-                      key,
-                      title: lesson?.title ?? moment.title,
-                      description: lesson?.description ?? moment.description,
-                      moments: [moment],
-                    });
-                  return groups;
-                }, [])
-                .map((group) => (
-                  <section
-                    className="tv-part-group"
-                    key={group.key}
-                    aria-label={journeyText(group.title)}
-                  >
-                    <header className="tv-part-header">
-                      <span className="tv-part-icon" aria-hidden="true">
-                        <TrailIcon name={group.moments[0].icon} size={24} />
-                      </span>
-                      <div>
-                        <h3>{journeyText(group.title)}</h3>
-                        <p>{journeyText(group.description)}</p>
-                      </div>
-                      <small>
-                        {group.moments.length} {group.moments.length === 1 ? "momento" : "momentos"}
-                        <br />
-                        {group.moments.reduce((total, moment) => total + moment.total, 0)}{" "}
-                        atividades
-                      </small>
-                    </header>
-                    <WindingPath
-                      moments={group.moments}
-                      nextId={next?.id}
-                      nextHref={nextHref}
-                      onBlocked={setBlocked}
-                    />
-                  </section>
-                ))}
-              <footer className="tv-chapter-finish">
-                <FlagMark />
-                <div>
-                  <strong>Uma conversa abre caminho para a próxima.</strong>
-                  <p>Você pode voltar e explorar o que já estudou.</p>
-                </div>
-              </footer>
-            </section>
-          ))}
+          <WindingPath
+            chapters={trail.chapters}
+            nextId={next?.id}
+            nextHref={continuation?.href}
+            onBlocked={setBlocked}
+          />
         </section>
         <aside className="tv-context-rail">
           <section className="tv-next-card">
-            <span className="tv-kicker">SEU PRÓXIMO MOMENTO</span>
+            <span className="tv-kicker">VAMOS CONTINUAR?</span>
             <div className="tv-next-icon">
               <TrailIcon name={next?.icon ?? "compass"} size={25} />
             </div>
-            <h2>{journeyText(next?.title ?? "Seu percurso continua aberto")}</h2>
-            <p>
-              {next?.objective ??
-                next?.description ??
-                "Revisite as conversas e os desafios que já estudou."}
-            </p>
+            <h2>{journeyText(next?.title ?? "Seu caminho continua aberto")}</h2>
             {continuation ? (
-              <Link href={continuation.href} className="primary-button">
-                Continuar aprendendo <ArrowRight size={16} />
+              <Link href={continuation.href} className="primary-button" scroll={false}>
+                Continuar <ArrowRight size={16} />
               </Link>
             ) : (
               <Link className="secondary-button" href="/history">
@@ -408,22 +332,22 @@ export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
               <Trophy size={22} />
               <span className="tv-kicker">MAIS ADIANTE</span>
               <h2>{journeyText(milestone.title)}</h2>
-              <p>
-                {milestone.result?.passed
-                  ? "Você já conquistou este marco. O resultado e as tentativas continuam guardados."
-                  : milestone.isExam
-                    ? "A prova reúne o que você praticou nesta parte do caminho."
-                    : (milestone.objective ?? milestone.description)}
-              </p>
               <span>{milestone.label}</span>
             </section>
           )}
-          <p className="tv-context-note">
-            Você pode explorar o caminho e revisitar o que já estudou. Os requisitos aparecem no
-            próprio momento.
-          </p>
         </aside>
       </div>
+      {position.direction && !background && (
+        <button
+          type="button"
+          className={"tv-return-current points-" + position.direction}
+          aria-label="Voltar ao ponto para continuar"
+          onClick={position.returnToCurrent}
+        >
+          {position.direction === "up" ? <ArrowUp size={21} /> : <ArrowDown size={21} />}
+          <span>Voltar ao meu ponto</span>
+        </button>
+      )}
       <dialog
         ref={dialog}
         className="tv-access-dialog"
@@ -458,12 +382,5 @@ export function LivingTrailView({ unitSlug }: { unitSlug?: string }) {
         </button>
       </dialog>
     </div>
-  );
-}
-function FlagMark() {
-  return (
-    <span className="tv-finish-icon">
-      <Check size={22} aria-hidden="true" />
-    </span>
   );
 }

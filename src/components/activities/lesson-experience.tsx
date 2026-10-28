@@ -268,51 +268,53 @@ export function LessonExperience({
         </div>
       )}
       <div className="le-layout">
-        <aside className="le-path">
-          <div className="le-path-heading">
-            <span className="le-eyebrow">SEU PERCURSO</span>
-            <h2>{lesson.title}</h2>
-            <small>{total} etapas curtas</small>
-          </div>
-          <nav aria-label="Etapas desta lição">
-            {stages.map((item, position) => {
-              const itemStage = activityStage(lesson.activities[item.startIndex]);
-              return (
-                <button
-                  type="button"
-                  key={item.id}
-                  onClick={() => select(item.startIndex)}
-                  aria-current={stageIndex === position ? "step" : undefined}
-                  className={stageIndex === position ? "current" : ""}
-                >
-                  <span
-                    className={
-                      lessonStageComplete(item, done) ? "le-number completed" : "le-number"
-                    }
+        {!trailMoment && (
+          <aside className="le-path">
+            <div className="le-path-heading">
+              <span className="le-eyebrow">SEU PERCURSO</span>
+              <h2>{lesson.title}</h2>
+              <small>{total} etapas curtas</small>
+            </div>
+            <nav aria-label="Etapas desta lição">
+              {stages.map((item, position) => {
+                const itemStage = activityStage(lesson.activities[item.startIndex]);
+                return (
+                  <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => select(item.startIndex)}
+                    aria-current={stageIndex === position ? "step" : undefined}
+                    className={stageIndex === position ? "current" : ""}
                   >
-                    {lessonStageComplete(item, done) ? (
-                      <Check size={15} />
-                    ) : (
-                      String(position + 1).padStart(2, "0")
-                    )}
-                  </span>
-                  <span>
-                    <b>{itemStage.label}</b>
-                    <small>
-                      {item.title}
-                      {item.activityIds.length > 1 && (
-                        <span className="le-stage-part-count">
-                          {item.activityIds.length} partes
-                        </span>
+                    <span
+                      className={
+                        lessonStageComplete(item, done) ? "le-number completed" : "le-number"
+                      }
+                    >
+                      {lessonStageComplete(item, done) ? (
+                        <Check size={15} />
+                      ) : (
+                        String(position + 1).padStart(2, "0")
                       )}
-                    </small>
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
-          <p className="le-path-note">Volte às etapas quando quiser.</p>
-        </aside>
+                    </span>
+                    <span>
+                      <b>{itemStage.label}</b>
+                      <small>
+                        {item.title}
+                        {item.activityIds.length > 1 && (
+                          <span className="le-stage-part-count">
+                            {item.activityIds.length} partes
+                          </span>
+                        )}
+                      </small>
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+            <p className="le-path-note">Volte às etapas quando quiser.</p>
+          </aside>
+        )}
         <section className="le-paper" aria-label="Atividade atual">
           <div className="le-top">
             <span className="le-eyebrow">
@@ -325,18 +327,27 @@ export function LessonExperience({
           <div
             className="le-progress"
             role="progressbar"
-            aria-label="Etapa do percurso"
+            aria-label={trailMoment ? "Progresso desta atividade" : "Etapa do percurso"}
             aria-valuemin={1}
-            aria-valuemax={total}
-            aria-valuenow={stageIndex + 1}
+            aria-valuemax={trailMoment ? stage.activityIds.length : total}
+            aria-valuenow={trailMoment ? partIndex + 1 : stageIndex + 1}
           >
-            <span style={{ width: ((stageIndex + 1) / total) * 100 + "%" }} />
+            <span
+              style={{
+                width:
+                  (trailMoment
+                    ? (partIndex + 1) / stage.activityIds.length
+                    : (stageIndex + 1) / total) *
+                    100 +
+                  "%",
+              }}
+            />
           </div>
           <div className="le-body">
             <span className="le-tag">
               {String(stageIndex + 1).padStart(2, "0")} · {label}
             </span>
-            {stage.activityIds.length > 1 && (
+            {!trailMoment && stage.activityIds.length > 1 && (
               <section className="le-stage-parts" aria-label="Partes desta etapa">
                 <header>
                   <div>
@@ -397,7 +408,7 @@ export function LessonExperience({
               }
               onClick={() => select(activityIndex - 1)}
             >
-              <ChevronLeft size={16} /> {partIndex > 0 ? "Parte anterior" : "Anterior"}
+              <ChevronLeft size={16} /> {"Anterior"}
             </button>
             {momentEndsHere ? (
               <Link
@@ -419,7 +430,7 @@ export function LessonExperience({
                 }}
               >
                 {hasMoreParts
-                  ? "Próxima parte"
+                  ? "Continuar"
                   : stage.activityIds.length > 1
                     ? "Continuar percurso"
                     : stageIndex === 0

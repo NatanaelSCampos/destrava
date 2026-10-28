@@ -196,19 +196,19 @@ function official(course: PublicCourse, passed: boolean): ServerAssessmentResult
   };
 }
 
-test("synthetic metadata partitions multiple real stages into compact moments", () => {
+test("synthetic metadata expands grouped stages into separate curricular stops", () => {
   const c = fixture(),
-    s = state(c, ["a1"]),
+    s = state(c),
     p = editorial(c);
   const before = structuredClone({ c, s, p });
   const t = buildLivingTrail(c, s, { presentation: p });
   assert.equal(t.presentationVersion, "p1");
-  assert.deepEqual(t.chapters[0].moments[0].activityIds, ["a1", "a2"]);
-  assert.equal(t.chapters[0].moments[0].completed, 1);
-  assert.equal(t.currentMomentId, "observe");
+  assert.deepEqual(t.chapters[0].moments[0].activityIds, ["a1"]);
+  assert.equal(t.chapters[0].moments[0].completed, 0);
+  assert.equal(t.currentMomentId, "stage:learn:s1");
   assert.equal(
     new URL(t.chapters[0].moments[0].href, "http://localhost").searchParams.get("activity"),
-    "a2",
+    "a1",
   );
   assert.deepEqual({ c, s, p }, before);
   assert.deepEqual(t, buildLivingTrail(c, s, { presentation: p }));
@@ -218,16 +218,19 @@ test("completed moment revisits its own first activity and cannot complete a new
     t = buildLivingTrail(c, state(c, ["a1", "a2"]), { presentation: editorial(c) });
   assert.equal(t.chapters[0].moments[0].status, "completed");
   assert.equal(t.chapters[0].moments[0].entryActivityId, "a1");
-  assert.deepEqual(t.chapters[0].moments[0].availableActivityIds, ["a1", "a2"]);
-  assert.equal(t.chapters[0].moments[1].completed, 0);
-  assert.equal(t.currentMomentId, "apply");
+  assert.deepEqual(t.chapters[0].moments[0].availableActivityIds, ["a1"]);
+  assert.equal(t.chapters[0].moments[2].completed, 0);
+  assert.equal(t.currentMomentId, "stage:learn:s3");
 });
-test("fallback groups whole lessons and routes banks through official assessment entry", () => {
+test("fallback exposes stages and routes banks through official assessment entry", () => {
   const c = fixture(),
     t = buildLivingTrail(c, state(c));
-  assert.equal(t.chapters[0].moments.length, 2);
-  assert.equal(t.chapters[0].moments[1].kind, "assessment");
-  assert.match(t.chapters[0].moments[1].href, /^\/assessment\?assessmentId=exam&moment=/);
+  assert.equal(t.chapters[0].moments.length, 5);
+  assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.kind, "assessment");
+  assert.match(
+    t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.href,
+    /^\/assessment\?assessmentId=exam&moment=/,
+  );
 });
 test("official chapter and course progress are reused exactly", () => {
   const c = fixture(),
@@ -239,8 +242,8 @@ test("official chapter and course progress are reused exactly", () => {
 test("no access snapshot fails closed even when every exercise was completed locally", () => {
   const c = fixture(),
     t = buildLivingTrail(c, state(c, ["a1", "a2", "a3", "a4", "q1", "q2"]));
-  assert.equal(t.chapters[0].moments[1].status, "locked");
-  assert.equal(t.chapters[0].moments[1].result, null);
+  assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.status, "locked");
+  assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.result, null);
   assert.equal(t.chapters[1].access.allowed, false);
 });
 test("stale access version fails closed", () => {
@@ -252,7 +255,9 @@ test("stale access version fails closed", () => {
   });
   snapshot.contentVersion = "old";
   assert.equal(
-    buildLivingTrail(c, s, { learningAccess: snapshot }).chapters[0].moments[1].status,
+    buildLivingTrail(c, s, { learningAccess: snapshot }).chapters[0].moments.find(
+      (m) => m.assessmentId === "exam",
+    )!.status,
     "locked",
   );
 });
@@ -263,7 +268,9 @@ test("official threshold unlocks the exam and exposes exact participation counts
       completedActivityIds: s.completedActivityIds,
       assessmentResults: [],
     });
-  const exam = buildLivingTrail(c, s, { learningAccess: access }).chapters[0].moments[1];
+  const exam = buildLivingTrail(c, s, { learningAccess: access }).chapters[0].moments.find(
+    (m) => m.assessmentId === "exam",
+  )!;
   assert.equal(exam.access.allowed, true);
   assert.equal(exam.status, "available");
   assert.equal(exam.access.completed, 3);
@@ -279,10 +286,13 @@ test("failed canonical exam preserves failure and never opens the next chapter",
     assessmentResults: [r],
   });
   const t = buildLivingTrail(c, s, { learningAccess: access });
-  assert.equal(t.chapters[0].moments[1].result?.passed, false);
-  assert.equal(t.chapters[0].moments[1].label, "Tente a prova novamente");
+  assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.result?.passed, false);
+  assert.equal(
+    t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.label,
+    "Tente a prova novamente",
+  );
   assert.equal(t.chapters[1].access.allowed, false);
-  assert.equal(t.currentMomentId, t.chapters[0].moments[1].id);
+  assert.equal(t.currentMomentId, t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.id);
 });
 test("passed canonical exam opens chapter two only via the access snapshot", () => {
   const c = fixture(),
@@ -294,7 +304,7 @@ test("passed canonical exam opens chapter two only via the access snapshot", () 
     assessmentResults: [r],
   });
   const t = buildLivingTrail(c, s, { learningAccess: access });
-  assert.equal(t.chapters[0].moments[1].historyCount, 1);
+  assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.historyCount, 1);
   assert.equal(t.chapters[1].access.allowed, true);
   assert.equal(t.currentChapterId, t.chapters[1].id);
 });
@@ -308,8 +318,8 @@ test("wrong version, historical and foreign course results are never presented a
       s = state(c);
     s.assessmentAttempts = [{ ...official(c, true), ...change }];
     const t = buildLivingTrail(c, s);
-    assert.equal(t.chapters[0].moments[1].result, null);
-    assert.equal(t.chapters[0].moments[1].historyCount, 0);
+    assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.result, null);
+    assert.equal(t.chapters[0].moments.find((m) => m.assessmentId === "exam")!.historyCount, 0);
   }
 });
 test("foreign course study evidence does not leak through matching activity IDs", () => {
@@ -330,10 +340,10 @@ test("unavailable parts remain pending while other real parts stay navigable", (
   assert.equal(t.chapters[0].moments[0].entryActivityId, "a1");
   assert.deepEqual(t.chapters[0].moments[0].availableActivityIds, ["a1"]);
   const pending = buildLivingTrail(c, state(c, ["a1"]), { presentation: editorial(c) }).chapters[0]
-    .moments[0];
+    .moments[1];
   assert.equal(pending.status, "unavailable");
-  assert.equal(pending.completed, 1);
-  assert.equal(pending.total, 2);
+  assert.equal(pending.completed, 0);
+  assert.equal(pending.total, 1);
   assert.equal(pending.blockedReason, "Capability offline");
 });
 test("specific guided availability is checked even if another guided lesson is operational", () => {
@@ -392,7 +402,7 @@ for (const change of [
     if (change !== "new-activity") {
       const t = buildLivingTrail(c, state(c), { presentation: p });
       assert.equal(t.presentationVersion, null);
-      assert.equal(t.chapters[0].moments.length, 2);
+      assert.equal(t.chapters[0].moments.length, 5);
       assert(t.presentationIssues.length);
     }
   });
@@ -440,7 +450,7 @@ test("real ES sidecar covers every current lesson and keeps curricular identitie
   assert.deepEqual(t.presentationIssues, []);
   assert.deepEqual(
     t.chapters.map((ch) => ch.moments.length),
-    [13, 11],
+    [58, 56],
   );
   const expected = c.units.flatMap((u) => u.lessons.filter((l) => l.active).map((l) => l.id));
   assert.deepEqual(

@@ -1,799 +1,74 @@
-/* Winding-path presentation. Import after living-trail.css and lesson-experience.css.
-   All lesson overrides are scoped to the native trail dialog. */
+﻿/* A single continuous route: teaching stages are stops, not hidden tab groups. */
 .tv-page .tv-layout {
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
-  gap: clamp(16px, 2.4vw, 30px);
+  grid-template-columns: minmax(0, 760px) minmax(210px, 260px);
+  justify-content: center;
+  gap: 28px;
 }
-
-.tv-page .tv-chapter-rail {
-  display: none;
+.tv-page .tv-page-heading {
+  align-items: center;
+  margin-bottom: 16px;
 }
-
+.tv-page .tv-page-heading h1 {
+  margin: 5px 0 0;
+  font-size: 28px;
+}
 .tv-page .tv-path-area {
   min-width: 0;
+  padding: 0 24px 20px;
   overflow: clip;
-  padding: 0 clamp(14px, 2.6vw, 30px) 26px;
-  border: 1px solid var(--tv-border, #dfe7df);
-  border-radius: 26px;
-  background: #fff;
-  box-shadow: 0 12px 40px #253b3705;
+  border: 1px solid #e4e9df;
+  border-radius: 24px;
+  background: #fdfefb;
 }
-
-.tv-page .tv-chapter-hero {
+.tv-page .tv-path-toolbar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  min-height: 0;
-  margin: 0;
-  padding: 24px 0 20px;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 56px;
+  padding: 5px 0;
   border: 0;
-  border-bottom: 1px solid #e9ede7;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.tv-page .tv-chapter-hero > * {
-  min-width: 0;
-}
-
-.tv-page .tv-chapter-hero h2 {
-  margin: 5px 0 8px;
-  color: var(--tv-ink, #203a36);
-  font-size: clamp(21px, 2.5vw, 28px);
-  line-height: 1.2;
-  letter-spacing: -0.7px;
-  overflow-wrap: anywhere;
-}
-
-.tv-page .tv-chapter-hero p {
-  max-width: 62ch;
-  margin: 0;
-  color: #5f716a;
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-.tv-part-group {
-  min-width: 0;
-  margin: 0;
-  padding-block: 22px 2px;
-}
-
-.tv-part-group + .tv-part-group {
-  border-top: 1px solid #eef0ea;
-}
-
-.tv-part-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  margin: 0 0 14px;
-  padding: 12px 14px;
-  border: 1px solid #ebece5;
-  border-radius: 16px;
-  background: #fafaf6;
-}
-
-.tv-part-header > svg,
-.tv-part-header > .tv-part-icon {
-  display: grid;
-  flex: 0 0 40px;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  padding: 10px;
-  border-radius: 13px;
-  background: #e9f2e9;
-  color: #3b7460;
-}
-
-.tv-part-header > .tv-part-icon > svg {
-  width: 20px;
-  height: 20px;
-}
-
-.tv-part-header > div:not(.tv-part-icon) {
-  min-width: 0;
-  flex: 1;
-}
-
-.tv-part-header h3,
-.tv-part-header strong {
-  display: block;
-  margin: 0;
-  color: var(--tv-ink, #203a36);
-  font-size: 15px;
-  font-weight: 750;
-  line-height: 1.35;
-  letter-spacing: -0.25px;
-  overflow-wrap: anywhere;
-}
-
-.tv-part-header p {
-  max-width: 58ch;
-  margin: 4px 0 0;
-  color: #61736a;
   font-size: 12px;
-  line-height: 1.55;
+  color: #5e7467;
 }
-
-.tv-part-header > small,
-.tv-part-count {
-  flex: 0 0 auto;
-  max-width: 9ch;
-  color: #607069;
-  font-size: 11px;
+.tv-path-toolbar > span,
+.tv-path-toolbar > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.tv-path-toolbar > button {
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #dce6dc;
+  border-radius: 12px;
+  background: #fff;
+  color: #305d48;
   font-weight: 700;
-  line-height: 1.5;
-  text-align: end;
-  font-variant-numeric: tabular-nums;
+  cursor: pointer;
 }
-
+.tv-page .tv-context-rail {
+  position: sticky;
+  top: 88px;
+}
+.tv-page .tv-next-card {
+  padding: 22px;
+}
+.tv-page .tv-next-card h2 {
+  margin-block: 10px 18px;
+  font-size: 20px;
+}
+.tv-page .tv-milestone {
+  padding: 20px;
+}
 .tv-winding-path {
   position: relative;
   isolation: isolate;
   width: 100%;
   margin: 0;
-  padding: 6px 0 4px;
+  padding: 0;
   list-style: none;
 }
-
-.tv-route-svg {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.tv-route-svg path {
-  fill: none;
-  stroke: #dbe4d8;
-  stroke-width: 7px;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 1 14;
-  vector-effect: non-scaling-stroke;
-}
-
-.tv-winding-path > .tv-path-node {
-  --tv-stop-size: 72px;
-  --tv-caption-width: 180px;
-  --tv-node-center: clamp(
-    calc(var(--tv-caption-width) / 2),
-    var(--tv-node-x, 50%),
-    calc(100% - var(--tv-caption-width) / 2)
-  );
-  position: relative;
-  display: flow-root;
-  min-width: 0;
-  min-height: 174px;
-  margin: 0;
-  padding: 8px 0 88px;
-  scroll-margin-block: 120px 100px;
-}
-
-.tv-path-stop {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: var(--tv-stop-size, 72px);
-  height: var(--tv-stop-size, 72px);
-  min-width: 44px;
-  min-height: 44px;
-  margin: 0 0 0 calc(var(--tv-node-center, 50%) - var(--tv-stop-size, 72px) / 2);
-  padding: 0;
-  border: 1px solid #cddfd3;
-  border-radius: 25px;
-  background: #f0f7ee;
-  color: #42745f;
-  box-shadow:
-    0 6px 0 #d7e5d5,
-    0 12px 20px #315e4110;
-  cursor: pointer;
-  overflow: visible;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-  transition:
-    transform 160ms ease,
-    box-shadow 160ms ease,
-    background-color 160ms ease;
-}
-
-.tv-path-stop > svg,
-.tv-path-stop > .tv-stop-icon > svg {
-  width: 29px;
-  height: 29px;
-  stroke-width: 1.8;
-}
-
-.tv-path-stop:focus-visible {
-  outline: 3px solid #8f203b;
-  outline-offset: 7px;
-}
-
-.tv-path-stop:active:not(:disabled):not([aria-disabled="true"]) {
-  transform: translateY(3px);
-  box-shadow:
-    0 3px 0 #d7e5d5,
-    0 7px 12px #315e4110;
-}
-
-.tv-stop-caption {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  display: block;
-  width: var(--tv-caption-width, 180px);
-  max-width: none;
-  margin: 0;
-  padding: 2px 3px;
-  border-radius: 7px;
-  background: #fff;
-  color: #2d493e;
-  line-height: 1.4;
-  text-align: center;
-  text-transform: none;
-  overflow-wrap: anywhere;
-  transform: translateX(-50%);
-}
-
-.tv-stop-caption strong {
-  display: block;
-  font-size: 13px;
-  font-weight: 750;
-  line-height: 1.4;
-  letter-spacing: -0.1px;
-}
-
-.tv-stop-caption small {
-  display: block;
-  margin-top: 4px;
-  color: #63756b;
-  font-size: 11px;
-  line-height: 1.5;
-  font-variant-numeric: tabular-nums;
-}
-
-.tv-path-node.is-current:not(.is-locked) .tv-path-stop,
-.tv-path-stop.is-current {
-  border-color: #b82c47;
-  background: #be2946;
-  color: #fff;
-  box-shadow:
-    0 6px 0 #8f203b,
-    0 13px 24px #ae244525;
-}
-
-.tv-path-node.is-current .tv-path-stop::after,
-.tv-path-stop.is-current::after {
-  position: absolute;
-  inset: -7px;
-  border: 2px solid #be294638;
-  border-radius: 31px;
-  content: "";
-  pointer-events: none;
-  animation: tv-path-current-pulse 2.8s ease-in-out infinite;
-}
-
-.tv-path-node.is-current .tv-stop-caption strong {
-  color: #a32440;
-}
-
-.tv-path-node.is-completed .tv-path-stop,
-.tv-path-stop.is-completed {
-  border-color: #adceb8;
-  background: #e0f1e5;
-  color: #286a50;
-  box-shadow:
-    0 6px 0 #b7d4bd,
-    0 12px 18px #315e410d;
-}
-
-.tv-path-node.is-locked .tv-path-stop,
-.tv-path-stop.is-locked,
-.tv-path-stop[aria-disabled="true"],
-.tv-path-stop:disabled {
-  border-color: #dedfd9;
-  background: #f2f3ef;
-  color: #778279;
-  box-shadow: 0 5px 0 #dfe2da;
-  cursor: help;
-}
-
-.tv-path-stop:disabled {
-  cursor: not-allowed;
-}
-
-.tv-path-node.is-locked .tv-stop-caption strong {
-  color: #68736a;
-}
-
-.tv-stop-badge {
-  position: absolute;
-  right: -8px;
-  bottom: -6px;
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border: 1px solid #cfddce;
-  border-radius: 50%;
-  background: #fff;
-  color: #327357;
-  box-shadow: 0 3px 7px #203a3610;
-}
-
-.tv-stop-badge svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* Native dialog stays closed until showModal(); no display override on a closed dialog. */
-.tv-lesson-dialog {
-  width: min(1180px, calc(100vw - 40px));
-  max-width: calc(100vw - 40px);
-  height: 90dvh;
-  max-height: 90dvh;
-  margin: auto;
-  padding: 0;
-  overflow: hidden;
-  border: 1px solid #e1e6dd;
-  border-radius: 25px;
-  background: #f8f9f5;
-  color: #233d35;
-  box-shadow: 0 30px 100px #14241e4a;
-}
-
-.tv-lesson-dialog[open] {
-  display: flex;
-  flex-direction: column;
-}
-
-.tv-lesson-dialog::backdrop {
-  background: #16241fc2;
-  backdrop-filter: blur(5px);
-}
-
-.tv-lesson-dialog > header,
-.tv-lesson-dialog-head {
-  position: sticky;
-  z-index: 5;
-  top: 0;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  min-width: 0;
-  padding: 18px 22px;
-  border-bottom: 1px solid #e1e6dd;
-  background: #fff;
-}
-
-.tv-lesson-dialog > header > div,
-.tv-lesson-dialog-head > div {
-  min-width: 0;
-}
-
-.tv-lesson-dialog > header h2,
-.tv-lesson-dialog-head h2 {
-  margin: 4px 0 0;
-  color: #203a36;
-  font-size: clamp(18px, 2.3vw, 25px);
-  font-weight: 780;
-  line-height: 1.25;
-  letter-spacing: -0.6px;
-  overflow-wrap: anywhere;
-}
-
-.tv-lesson-dialog > header p,
-.tv-lesson-dialog-head p {
-  margin: 5px 0 0;
-  color: #5e7167;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.tv-lesson-dialog > header > button,
-.tv-lesson-dialog-head > button,
-.tv-lesson-dialog .tv-dialog-close {
-  display: grid;
-  flex: 0 0 44px;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid #dce4da;
-  border-radius: 13px;
-  background: #fff;
-  color: #4d6255;
-}
-
-.tv-lesson-dialog :is(button, a, summary, input, select, textarea):focus-visible {
-  outline: 3px solid #a92744;
-  outline-offset: 3px;
-}
-
-.tv-lesson-dialog-body {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 0;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-  padding: 18px 22px max(22px, env(safe-area-inset-bottom));
-  scroll-padding-block: 20px;
-}
-
-.tv-lesson-dialog-body > * {
-  min-width: 0;
-  max-width: 100%;
-}
-
-.tv-lesson-dialog .lesson-experience {
-  padding: 0;
-  background: transparent;
-}
-
-/* The real renderer keeps teaching, support, feedback and internal progression.
-   Duplicate page navigation yields to the dialog and trail; context remains in details. */
-.tv-lesson-dialog .lesson-experience > .back-link,
-.tv-lesson-dialog .le-crumb,
-.tv-lesson-dialog .le-neighbors,
-.tv-lesson-dialog .le-path-heading,
-.tv-lesson-dialog .le-path-note,
-.tv-lesson-dialog .le-context {
-  display: none;
-}
-
-.tv-lesson-dialog .le-intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 10px 18px;
-  padding: 4px 0 15px;
-}
-
-.tv-lesson-dialog .le-intro h1 {
-  margin: 0 0 6px;
-  font-size: 22px;
-  line-height: 1.25;
-}
-
-.tv-lesson-dialog .le-intro p {
-  max-width: 76ch;
-  font-size: 13px;
-}
-
-.tv-lesson-dialog .le-duration {
-  margin: 0;
-  padding: 8px 10px;
-  font-size: 11px;
-}
-
-.tv-lesson-dialog .le-layout {
-  display: block;
-}
-
-.tv-lesson-dialog .le-path {
-  position: static;
-  margin-bottom: 12px;
-  padding: 0;
-  overflow: visible;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-}
-
-.tv-lesson-dialog .le-path nav {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 4px 4px 10px;
-  scrollbar-width: thin;
-  overscroll-behavior-inline: contain;
-}
-
-.tv-lesson-dialog .le-path nav button {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 8px;
-  width: auto;
-  min-width: 44px;
-  min-height: 48px;
-  max-width: 240px;
-  padding: 9px 12px;
-  border: 1px solid #dce4da;
-  border-radius: 13px;
-  background: #fff;
-  text-align: start;
-}
-
-.tv-lesson-dialog .le-path nav button.current {
-  border-color: #e6b5c1;
-  background: #fff0f3;
-}
-
-.tv-lesson-dialog .le-path nav small {
-  display: block;
-  max-width: 24ch;
-  margin-top: 2px;
-  font-size: 11px;
-  line-height: 1.4;
-  white-space: normal;
-}
-
-.tv-lesson-dialog .le-path .le-number {
-  flex: 0 0 26px;
-  width: 26px;
-  height: 26px;
-  border-radius: 9px;
-}
-
-.tv-lesson-dialog .le-mobile-context {
-  display: block;
-  margin-bottom: 12px;
-}
-
-.tv-lesson-dialog .le-mobile-context > summary {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 10px 14px;
-  border: 1px solid #dce4da;
-  border-radius: 12px;
-  background: #fff;
-  color: #4c6656;
-  font-size: 12px;
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.tv-lesson-dialog .le-mobile-context > summary::before {
-  margin-inline-end: 9px;
-  color: #7b4660;
-  content: "+";
-  font-size: 18px;
-}
-
-.tv-lesson-dialog .le-mobile-context[open] > summary::before {
-  content: "−";
-}
-
-.tv-lesson-dialog .le-mobile-context > section {
-  margin-top: 10px;
-}
-
-.tv-lesson-dialog .le-paper {
-  min-height: 0;
-  box-shadow: none;
-}
-
-.tv-lesson-dialog .le-body {
-  width: 100%;
-  max-width: 920px;
-  margin-inline: auto;
-  padding: 22px;
-}
-
-.tv-lesson-dialog .le-top {
-  padding: 18px 22px 12px;
-}
-
-.tv-lesson-dialog .le-progress {
-  margin-inline: 22px;
-}
-
-.tv-lesson-dialog .le-controls {
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 15px 22px;
-  background: #fff;
-}
-
-.tv-lesson-dialog .le-controls > button,
-.tv-lesson-dialog .le-controls > a,
-.tv-lesson-dialog .le-controls > span > button {
-  min-width: 44px;
-  min-height: 44px;
-}
-
-@keyframes tv-path-current-pulse {
-  0%,
-  100% {
-    opacity: 0.45;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    transform: scale(1.04);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .tv-path-stop:hover:not(:disabled):not([aria-disabled="true"]) {
-    transform: translateY(-3px);
-    filter: brightness(1.025);
-  }
-}
-
-@media (max-width: 1050px) {
-  .tv-page .tv-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .tv-page .tv-path-area {
-    padding: 0 12px 18px;
-    border-radius: 20px;
-  }
-
-  .tv-page .tv-chapter-hero {
-    gap: 10px;
-    padding-block: 18px 16px;
-  }
-
-  .tv-page .tv-chapter-hero h2 {
-    font-size: 22px;
-  }
-
-  .tv-part-group {
-    padding-top: 16px;
-  }
-
-  .tv-part-header {
-    flex-wrap: wrap;
-    gap: 9px;
-    padding: 11px;
-    border-radius: 14px;
-  }
-
-  .tv-part-header > svg,
-  .tv-part-header > .tv-part-icon {
-    flex-basis: 34px;
-    width: 34px;
-    height: 34px;
-    padding: 8px;
-    border-radius: 11px;
-  }
-
-  .tv-part-header h3,
-  .tv-part-header strong {
-    font-size: 14px;
-  }
-
-  .tv-part-header p {
-    font-size: 11px;
-  }
-
-  .tv-part-header > small,
-  .tv-part-count {
-    max-width: none;
-    margin-inline-start: auto;
-    font-size: 10px;
-  }
-
-  .tv-winding-path > .tv-path-node {
-    --tv-stop-size: 64px;
-    --tv-caption-width: 154px;
-    min-height: 158px;
-    padding-block: 7px 87px;
-    scroll-margin-block: 100px 80px;
-  }
-
-  .tv-path-stop {
-    border-radius: 22px;
-  }
-
-  .tv-path-stop > svg,
-  .tv-path-stop > .tv-stop-icon > svg {
-    width: 26px;
-    height: 26px;
-  }
-
-  .tv-stop-caption {
-    top: calc(100% + 8px);
-  }
-
-  .tv-stop-caption strong {
-    font-size: 12px;
-  }
-
-  .tv-path-node.is-current .tv-path-stop::after,
-  .tv-path-stop.is-current::after {
-    border-radius: 28px;
-  }
-
-  .tv-lesson-dialog {
-    width: calc(100vw - 12px);
-    max-width: calc(100vw - 12px);
-    border-radius: 19px;
-  }
-
-  .tv-lesson-dialog > header,
-  .tv-lesson-dialog-head {
-    gap: 10px;
-    padding: 13px 14px;
-  }
-
-  .tv-lesson-dialog > header h2,
-  .tv-lesson-dialog-head h2 {
-    font-size: 19px;
-  }
-
-  .tv-lesson-dialog-body {
-    padding: 12px 10px max(14px, env(safe-area-inset-bottom));
-    scrollbar-gutter: auto;
-  }
-
-  .tv-lesson-dialog .le-intro h1 {
-    font-size: 19px;
-  }
-
-  .tv-lesson-dialog .le-intro p {
-    font-size: 12px;
-  }
-
-  .tv-lesson-dialog .le-body {
-    padding: 18px 13px;
-  }
-
-  .tv-lesson-dialog .le-top,
-  .tv-lesson-dialog .le-controls {
-    padding: 13px;
-  }
-
-  .tv-lesson-dialog .le-progress {
-    margin-inline: 13px;
-  }
-
-  .tv-lesson-dialog .le-controls > .primary-button {
-    flex: 1 1 auto;
-    justify-content: center;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tv-path-stop,
-  .tv-path-stop::after,
-  .tv-lesson-dialog,
-  .tv-lesson-dialog * {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-@media (forced-colors: active) {
-  .tv-route-svg path {
-    stroke: GrayText;
-  }
-
-  .tv-path-stop,
-  .tv-stop-badge {
-    border: 2px solid ButtonText;
-    background: ButtonFace;
-    color: ButtonText;
-    box-shadow: none;
-  }
-
-  .tv-path-node.is-current .tv-path-stop {
-    outline: 3px solid Highlight;
-    outline-offset: 5px;
-  }
-}
-
-/* JSX places captions inside the fixed-size button, and SVG in a decorative li.
-   Keep the decorative layer out of list flow and centers stable for ResizeObserver. */
 .tv-winding-path > .tv-route-layer {
   position: absolute;
   z-index: 0;
@@ -801,24 +76,139 @@
   margin: 0;
   padding: 0;
   border: 0;
-  list-style: none;
   pointer-events: none;
 }
-
-.tv-route-layer > .tv-route-svg {
-  z-index: 0;
+.tv-route-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
-
-.tv-winding-path > .tv-path-node {
+.tv-route-svg path {
+  fill: none;
+  stroke: #d9e4d5;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 13;
+  vector-effect: non-scaling-stroke;
+}
+.tv-page .tv-chapter-hero {
+  position: relative;
   z-index: 1;
-  grid-template-columns: none;
-  gap: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 100px;
+  margin: 12px 0 18px;
+  padding: 14px 18px;
+  border: 1px solid #e1e8dc;
+  border-radius: 20px;
+  background: #eff5eb;
+  box-shadow: none;
+}
+.tv-page .tv-chapter-hero > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.tv-page .tv-chapter-hero h2 {
+  margin: 0 0 12px;
+  font-size: clamp(17px, 2.2vw, 23px);
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  color: #234b38;
+  overflow-wrap: anywhere;
+}
+.tv-page .tv-chapter-hero .tv-progress {
+  max-width: 260px;
+  height: 6px;
+  background: #d5e3d1;
+}
+.tv-story-art {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 82px;
+}
+.tv-story-art > svg,
+.tv-story-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.tv-story-divider {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0 30px;
+  padding: 12px 0;
+  color: #506c58;
+  font-size: 12px;
+  font-weight: 750;
+  text-align: center;
+  background: #fdfefb;
+}
+.tv-story-divider::before,
+.tv-story-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #dce6d7;
+}
+.tv-story-divider > span {
+  max-width: 70%;
+}
+.tv-winding-path > .tv-path-node {
+  --tv-stop-size: 70px;
+  --tv-caption-width: 172px;
+  --tv-node-center: clamp(
+    calc(var(--tv-caption-width) / 2),
+    var(--tv-node-x, 50%),
+    calc(100% - var(--tv-caption-width) / 2)
+  );
+  position: relative;
+  z-index: 1;
+  display: flow-root;
+  min-width: 0;
+  min-height: 145px;
+  margin: 0;
+  padding: 13px 0 62px;
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+  scroll-margin-block: 100px;
 }
-
+.tv-winding-path > .tv-path-node.is-current {
+  padding-top: 28px;
+  min-height: 162px;
+}
+.tv-path-stop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--tv-stop-size);
+  height: var(--tv-stop-size);
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0 0 0 calc(var(--tv-node-center) - var(--tv-stop-size) / 2);
+  padding: 0;
+  border: 1px solid #ccdccc;
+  border-radius: 50%;
+  background: #ecf4e7;
+  color: #427354;
+  box-shadow: 0 6px 0 #cfdcc8;
+  cursor: pointer;
+  overflow: visible;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
 .tv-path-stop > .tv-stop-icon {
   display: grid;
   place-items: center;
@@ -827,69 +217,281 @@
   border-radius: inherit;
   pointer-events: none;
 }
-
-.tv-path-stop > .tv-node-play {
-  right: -7px;
-  bottom: -5px;
-  width: 25px;
-  height: 25px;
+.tv-path-stop svg {
+  stroke-width: 2;
 }
-
-.tv-stop-caption em {
-  display: inline-flex;
-  align-items: center;
-  min-height: 21px;
-  margin-top: 6px;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: #fff0f3;
-  color: #a32440;
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 750;
+.tv-path-stop:focus-visible {
+  outline: 3px solid #8f203b;
+  outline-offset: 8px;
 }
-
-.tv-winding-path > .tv-path-node.is-current,
-.tv-winding-path > .tv-path-node:has(.tv-stop-caption small + small) {
-  padding-bottom: 112px;
+.tv-path-stop:active {
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #cfdcc8;
 }
-
-.tv-winding-path > .tv-path-node.is-current:has(.tv-stop-caption small + small) {
-  padding-bottom: 136px;
-}
-
-.tv-page .tv-chapter-hero .tv-art,
-.tv-page .tv-chapter-hero > img {
-  flex: 0 0 110px;
-  width: 110px;
-  max-width: 28%;
-  height: 100px;
-  max-height: 100px;
+.tv-stop-caption {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  display: block;
+  width: var(--tv-caption-width);
   margin: 0;
-  object-fit: contain;
+  padding: 2px 3px;
+  background: #fdfefb;
+  color: #2f4e39;
+  line-height: 1.4;
+  text-align: center;
+  text-transform: none;
+  overflow-wrap: anywhere;
+  transform: translateX(-50%);
+  border-radius: 6px;
 }
-
-.tv-page .tv-layout:not(:has(> .tv-context-rail)) {
-  grid-template-columns: minmax(0, 1fr);
+.tv-stop-caption strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.4;
+  letter-spacing: -0.1px;
 }
-
-@media (max-width: 600px) {
-  .tv-page .tv-chapter-hero .tv-art,
-  .tv-page .tv-chapter-hero > img {
-    flex-basis: 70px;
-    width: 70px;
-    height: 76px;
-    max-height: 76px;
-  }
+.tv-stop-caption small {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #5d7161;
 }
-
-/* Lead integration: keep teaching above the fold and reuse the existing context in a focused card. */
+.tv-path-node.is-current .tv-path-stop {
+  border-color: #b82c47;
+  background: #be2946;
+  color: #fff;
+  box-shadow: 0 6px 0 #8f203b;
+}
+.tv-path-node.is-current .tv-path-stop::after {
+  position: absolute;
+  inset: -9px;
+  border: 3px solid #f0d5dd;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  animation: tv-path-current-pulse 2.8s ease-in-out infinite;
+}
+.tv-start-label {
+  position: absolute;
+  z-index: 2;
+  bottom: calc(100% + 16px);
+  left: 50%;
+  padding: 6px 11px;
+  border: 1px solid #e3b7c2;
+  border-radius: 9px;
+  background: #fff;
+  color: #a32440;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.tv-start-label::after {
+  position: absolute;
+  top: 100%;
+  left: calc(50% - 5px);
+  width: 9px;
+  height: 9px;
+  border-right: 1px solid #e3b7c2;
+  border-bottom: 1px solid #e3b7c2;
+  background: #fff;
+  content: "";
+  transform: translateY(-4px) rotate(45deg);
+}
+.tv-path-stop > .tv-node-play {
+  right: -6px;
+  bottom: -3px;
+  width: 24px;
+  height: 24px;
+}
+.tv-path-node.is-completed .tv-path-stop {
+  border-color: #9ec8ad;
+  background: #d5eedc;
+  color: #286a45;
+  box-shadow: 0 6px 0 #afcfb7;
+}
+.tv-path-node.is-locked .tv-path-stop {
+  border-color: #dedfd9;
+  background: #eef1eb;
+  color: #788778;
+  box-shadow: 0 5px 0 #dce2d6;
+  cursor: help;
+}
+.tv-path-node.is-locked .tv-stop-caption strong {
+  color: #657461;
+}
+.tv-path-decoration {
+  position: absolute;
+  z-index: -1;
+  top: 7px;
+  width: clamp(80px, 23%, 155px);
+  opacity: 0.92;
+  pointer-events: none;
+}
+.tv-path-decoration.on-left {
+  left: 2%;
+}
+.tv-path-decoration.on-right {
+  right: 2%;
+}
+.tv-path-decoration > svg {
+  width: 100%;
+  height: 105px;
+}
+.tv-return-current {
+  position: fixed;
+  z-index: 35;
+  bottom: max(26px, calc(env(safe-area-inset-bottom) + 18px));
+  left: calc(50% + 90px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 1px solid #a92743;
+  border-radius: 30px;
+  background: #be2946;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 750;
+  box-shadow: 0 6px 22px #5d173d30;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+.tv-return-current:focus-visible {
+  outline: 3px solid #7a2138;
+  outline-offset: 4px;
+}
+/* The existing routed executor occupies the entire viewport; nested help remains native. */
+.tv-lesson-dialog {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #f7f9f4;
+  color: #233d35;
+  box-shadow: none;
+}
+.tv-lesson-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.tv-lesson-dialog::backdrop {
+  background: #f7f9f4;
+}
+.tv-lesson-dialog-head {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 78px;
+  padding: 14px max(24px, calc((100vw - 1120px) / 2));
+  border-bottom: 1px solid #e1e6dd;
+  background: #fff;
+}
+.tv-lesson-dialog-head > div {
+  min-width: 0;
+}
+.tv-lesson-dialog-head h2 {
+  margin: 4px 0 0;
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 780;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+.tv-lesson-dialog .tv-dialog-close {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #dce4da;
+  border-radius: 50%;
+  background: #fff;
+  color: #4d6255;
+}
+.tv-lesson-dialog :is(button, a, summary, input, select, textarea):focus-visible {
+  outline: 3px solid #a92744;
+  outline-offset: 3px;
+}
+.tv-lesson-dialog-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 20px max(24px, calc((100vw - 1120px) / 2)) max(24px, env(safe-area-inset-bottom));
+  scroll-padding-block: 20px;
+}
+.tv-lesson-dialog-body > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.tv-lesson-dialog .lesson-experience {
+  padding: 0;
+  background: transparent;
+}
+.tv-lesson-dialog .lesson-experience > .back-link,
+.tv-lesson-dialog .le-crumb,
+.tv-lesson-dialog .le-neighbors,
+.tv-lesson-dialog .le-context,
+.tv-lesson-dialog .le-path,
+.tv-lesson-dialog .le-top,
+.tv-lesson-dialog .le-tag {
+  display: none;
+}
+.tv-lesson-dialog .le-layout {
+  display: block;
+}
+.tv-lesson-dialog .le-paper {
+  min-height: 0;
+  box-shadow: none;
+  border-radius: 20px;
+}
+.tv-lesson-dialog .le-body {
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+  padding: 24px;
+}
+.tv-lesson-dialog .le-progress {
+  height: 6px;
+  margin: 0;
+  border-radius: 0;
+}
+.tv-lesson-dialog .le-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px 24px;
+  background: #fff;
+}
+.tv-lesson-dialog .le-controls > button,
+.tv-lesson-dialog .le-controls > a,
+.tv-lesson-dialog .le-controls > span > button {
+  min-width: 44px;
+  min-height: 44px;
+}
 .tv-lesson-dialog .le-moment-purpose {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: #405e50;
   font-size: 12px;
   line-height: 1.5;
@@ -904,76 +506,155 @@
 }
 .le-moment-purpose > button {
   flex: 0 0 auto;
+  min-height: 44px;
+  padding: 9px 12px;
   border: 1px solid #d7e3da;
   border-radius: 11px;
   background: #fff;
-  min-height: 44px;
-  padding: 9px 12px;
+  color: #305747;
   font-size: 11px;
   font-weight: 700;
-  color: #305747;
-}
-.tv-lesson-dialog .le-path nav {
-  padding-top: 0;
-  padding-bottom: 8px;
-  gap: 6px;
-}
-.tv-lesson-dialog .le-path nav button {
-  min-height: 44px;
-  max-width: 260px;
-  padding: 7px 10px;
-}
-.tv-lesson-dialog .le-path nav button small {
-  font-size: 11px;
-  margin-top: 0;
-}
-.tv-lesson-dialog .le-path .le-stage-part-count,
-.tv-lesson-dialog .le-path nav b {
-  display: none;
-}
-.tv-lesson-dialog .le-top,
-.tv-lesson-dialog .le-tag {
-  display: none;
-}
-.tv-lesson-dialog .le-progress {
-  margin: 0;
-  border-radius: 0;
-}
-.tv-lesson-dialog .le-body {
-  padding-top: 18px;
-}
-.tv-lesson-dialog .le-stage-parts {
-  padding: 12px;
-  margin-bottom: 18px;
-}
-.tv-lesson-dialog .le-stage-parts header {
-  margin-bottom: 10px;
-}
-.tv-lesson-dialog .le-stage-parts header h2 {
-  font-size: 13px;
-}
-.tv-lesson-dialog .le-stage-parts header .le-eyebrow {
-  display: none;
 }
 .tv-lesson-dialog .le-context-dialog {
   padding: 20px;
   max-width: min(580px, calc(100vw - 26px));
 }
-@media (max-width: 600px) {
-  .tv-lesson-dialog .le-moment-purpose {
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 6px;
+@keyframes tv-path-current-pulse {
+  0%,
+  100% {
+    opacity: 0.7;
   }
-  .tv-lesson-dialog .le-moment-purpose > button {
-    min-height: 38px;
-    padding: 7px 10px;
+  50% {
+    opacity: 1;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .tv-path-stop:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.025);
+  }
+}
+@media (max-width: 1050px) {
+  .tv-page .tv-layout {
+    grid-template-columns: minmax(0, 760px);
+  }
+  .tv-return-current {
+    left: 50%;
+  }
+}
+@media (max-width: 600px) {
+  .tv-page .tv-path-area {
+    padding: 0 10px 12px;
+    border-radius: 20px;
+  }
+  .tv-page .tv-page-heading h1 {
+    font-size: 24px;
+  }
+  .tv-page .tv-page-heading {
+    gap: 10px;
+  }
+  .tv-page .tv-quiet-link {
+    font-size: 11px;
+  }
+  .tv-page .tv-kicker {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+  .tv-page .tv-chapter-hero {
+    min-height: 88px;
+    padding: 12px;
+    margin-bottom: 22px;
+  }
+  .tv-story-art {
+    flex-basis: 74px;
+    width: 74px;
+    height: 66px;
+  }
+  .tv-story-divider {
+    font-size: 11px;
+    margin-block: 12px 28px;
+  }
+  .tv-winding-path > .tv-path-node {
+    --tv-stop-size: 62px;
+    --tv-caption-width: 142px;
+    min-height: 136px;
+    padding-block: 12px 60px;
+  }
+  .tv-winding-path > .tv-path-node.is-current {
+    min-height: 153px;
+    padding-top: 29px;
+  }
+  .tv-stop-caption strong {
+    font-size: 11px;
+  }
+  .tv-path-decoration {
+    width: 26%;
+  }
+  .tv-path-decoration > svg {
+    height: 80px;
+  }
+  .tv-return-current {
+    bottom: max(80px, calc(env(safe-area-inset-bottom) + 72px));
+    padding: 11px 16px;
+  }
+  .tv-lesson-dialog-head {
+    gap: 10px;
+    min-height: 68px;
+    padding: 12px max(14px, env(safe-area-inset-left)) 12px max(14px, env(safe-area-inset-right));
+  }
+  .tv-lesson-dialog-head h2 {
+    font-size: 18px;
+  }
+  .tv-lesson-dialog-head .tv-kicker {
+    font-size: 9px;
+  }
+  .tv-lesson-dialog-body {
+    padding: 12px 8px max(16px, env(safe-area-inset-bottom));
+    scrollbar-gutter: auto;
   }
   .tv-lesson-dialog .le-body {
-    padding-top: 14px;
+    padding: 18px 12px;
   }
-  .tv-part-header > small {
-    max-width: none;
-    min-width: 78px;
+  .tv-lesson-dialog .le-controls {
+    padding: 14px 12px;
+  }
+  .tv-lesson-dialog .le-controls > .primary-button {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+  .tv-lesson-dialog .le-moment-purpose {
+    margin-inline: 5px;
+  }
+  .le-moment-purpose > span {
+    display: none;
+  }
+  .le-moment-purpose > button {
+    margin-inline-start: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tv-path-stop,
+  .tv-path-stop::after,
+  .tv-return-current,
+  .tv-lesson-dialog,
+  .tv-lesson-dialog * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (forced-colors: active) {
+  .tv-route-svg path {
+    stroke: GrayText;
+  }
+  .tv-path-stop {
+    border: 2px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+    box-shadow: none;
+  }
+  .tv-path-node.is-current .tv-path-stop {
+    outline: 3px solid Highlight;
+    outline-offset: 5px;
   }
 }

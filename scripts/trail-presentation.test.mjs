@@ -29,7 +29,7 @@ const built = await esbuild.build({
             "export const useLivingTrail=()=>globalThis.__destravaTrailTestContext.journey;",
           "next/navigation": "export const useSearchParams=()=>new URLSearchParams();",
           "@/components/navigation-link":
-            'import React from "react";export default function Link({children,prefetch,...props}){return React.createElement("a",props,children)}',
+            'import React from "react";export default function Link({children,prefetch,scroll,...props}){return React.createElement("a",props,children)}',
           "next/image":
             'import React from "react";export default function Image(props){return React.createElement("img",props)}',
         };
@@ -89,10 +89,13 @@ test("an editorial brain icon never creates a retrieval recommendation", () => {
   assert(!html.includes("Abrir uma retomada"));
   assert(!html.includes("revisões disponíveis agora"));
 });
-test("an official exam milestone retains its exam explanation", () => {
-  context(false);
+test("an official exam retains its entry and access explanation", () => {
+  const { trail } = context(false);
   const html = renderToStaticMarkup(React.createElement(LivingTrailView));
-  assert(html.includes("A prova reúne"));
+  const exam = trail.chapters[0].moments.find((moment) => moment.isExam);
+  assert(exam);
+  assert(html.includes(exam.title));
+  assert(html.includes("MAIS ADIANTE"));
   assert(html.includes("Entender o acesso"));
 });
 test("a failed official exam remains the next attempt without declaring a pass", () => {

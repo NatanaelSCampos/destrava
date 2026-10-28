@@ -1,4 +1,4 @@
-# Trilha Viva — caminho contínuo e aulas sobre a trilha
+# Trilha Viva — todas as etapas no caminho, aulas em tela cheia
 
 Atualização: 28/10/2026. Baseline preservada: `731045e47a96fc1231baacd4deda675a569b987b`. Esta evolução mantém o currículo e o progresso. O HTML enviado foi inspecionado e suas interações exercitadas; seus resultados simulados não foram transportados.
 
@@ -6,9 +6,11 @@ Atualização: 28/10/2026. Baseline preservada: `731045e47a96fc1231baacd4deda675
 
 A entrada apresenta um próximo passo real, revisão quando existe evidência e um marco adiante. A trilha reúne todo o curso em um caminho vertical sinuoso: nós com ícones, cores, estados acessíveis, cenários e agrupamentos narrativos. O aluno não precisa escolher unidades. Seus nomes e pré-requisitos continuam internos ao currículo.
 
-Cada ponto abre a página real correspondente num card modal sobre a trilha. Não existe iframe, cópia de atividade, segundo provider ou progresso paralelo. URL, recarregar e histórico continuam funcionando. Fechar ou usar Escape retorna ao nó correto; o leitor pode revisitar atividades concluídas. As aulas guiadas e avaliações conservam seus executores e guardas originais.
+Cada etapa de uma lição ordinária aparece como um ponto externo consecutivo. Não há etapas escondidas em abas de um agrupamento. Cada ponto abre a página real correspondente em um modal de tela cheia. Não existe iframe, cópia de atividade, segundo provider ou progresso paralelo. URL, recarregar e histórico continuam funcionando. Fechar ou usar Escape retorna ao nó correto; o leitor pode revisitar atividades concluídas. As aulas guiadas e avaliações conservam seus executores e guardas originais.
 
-Dentro de um momento, a microprogressão usa somente suas etapas e suas atividades. A conclusão volta à trilha; o botão anterior respeita seu início. A navegação local guarda apenas localização, separada por usuário, curso, versão, origem e instalação. Não guarda respostas ou notas nesse checkpoint.
+Dentro de um ponto, a microprogressão usa somente as atividades da própria etapa, com uma barra leve, sem card “Parte X de X” ou seletor de etapas. A conclusão volta à trilha; o botão anterior respeita seu início. A navegação local guarda apenas localização, separada por usuário, curso, versão, origem e instalação. Não guarda respostas ou notas nesse checkpoint.
+
+Ao entrar, a trilha encontra a continuação real. Uma âncora de retorno explícita tem prioridade, inclusive após concluir todo o curso. Quando o ponto atual fica longe da tela, uma seta flutuante indica a direção e volta a ele. Atualizações de carregamento refinam a posição inicial; após um gesto de exploração, a tela não é puxada de volta.
 
 ## Regras e preservação
 
@@ -20,19 +22,19 @@ Não houve reset, migração de banco ou modificação dos pacotes curriculares,
 
 O [contrato de apresentação 1.0.0](FOUNDRY_CONTRACT.md) e seu [schema público](../../contracts/journey-presentation-1.0.0.schema.json) permitem declarar títulos, objetivos, personagens, cenários, ícones, tons, ilustrações e referências a etapas reais. São capacidades reutilizáveis; nenhuma condição de interface depende do idioma ou de um ID específico de curso.
 
-A composição ES contém 24 momentos, preservando todas as referências curriculares. Sem composição válida, o Motor gera apresentação padrão a partir do currículo — inclusive inglês. Cursos instalados usam esse fallback; transporte e fixação de sidecars instalados não foram implementados neste incremento. A aprovação editorial dos metadados não reaprova nem altera o conteúdo do curso.
+O sidecar ES preserva seus 24 agrupamentos editoriais como metadados. O Motor os expande em 114 pontos de etapas e executores atômicos; o inglês usa a mesma expansão genérica. Os agrupamentos não limitam a quantidade de pontos visíveis. Ver [identidade e regras de projeção](STAGE_NODES.md). Sem composição válida, o Motor gera apresentação padrão a partir do currículo — inclusive inglês. Cursos instalados usam esse fallback; transporte e fixação de sidecars instalados não foram implementados neste incremento. A aprovação editorial dos metadados não reaprova nem altera o conteúdo do curso.
 
-O novo run local do Foundry é `runs/trilha-viva-20261027`. O Foundry não possui Git inicializado; o Motor contém os arquivos necessários à execução, sem dependência operacional dessa pasta.
+O run anterior do Foundry é `runs/trilha-viva-20261027`; o padrão de etapas visíveis foi registrado em `runs/trilha-visible-stages-20261028`. O Foundry não possui Git inicializado; o Motor contém os arquivos necessários à execução, sem dependência operacional dessa pasta.
 
 ## Decisões de desenho
 
-O caminho sinuoso atende à direção visual mais recente do proprietário. O conteúdo abre em uma experiência curta sobre o mapa, preservando a identidade visual construída anteriormente. Animação discreta identifica a continuação e respeita redução de movimento. A informação secundária permanece acessível sem competir com a ação principal.
+O caminho sinuoso atende à direção visual mais recente do proprietário. O conteúdo abre em tela cheia, preservando a identidade visual construída anteriormente. Animação discreta identifica a continuação e respeita redução de movimento. A informação secundária permanece acessível sem competir com a ação principal.
 
 As referências consultadas orientam escolhas, sem provar eficácia do Destrava: [organização da trilha Duolingo](https://blog.duolingo.com/new-duolingo-home-screen-design/), [divulgação progressiva NN/g](https://www.nngroup.com/articles/progressive-disclosure/), [revisão Busuu](https://help.busuu.com/hc/en-us/articles/16941990776593-How-can-I-review-my-vocabulary) e [revisão Babbel](https://support.babbel.com/hc/en-us/articles/360037496932-Memorizing-vocabulary). Revisão disponível depende da fila real, não do ícone escolhido pelo autor.
 
 ## Validação e limites
 
-As evidências desta execução ficam em `.tmp/trilha-viva-20261027/`; os pareceres independentes ficam no run QA correspondente. Consultar [validação](VALIDACAO.md) para comandos, resultados, revisão e capturas do candidato final.
+As evidências da evolução de pontos visíveis ficam em `.tmp/trilha-visible-stages-20261028/`; a execução anterior foi preservada em `.tmp/trilha-viva-20261027/`; os pareceres independentes ficam no run QA correspondente. Consultar [validação](VALIDACAO.md) para comandos, resultados, revisão e capturas do candidato final.
 
 A aplicação foi executada com `npm.cmd run dev`; ocorreu um ciclo de Fast Refresh que impediu homologação nesse modo. O caminho de homologação usa compilação de produção local na porta 3100. Não se apresenta o problema de desenvolvimento como falha da aplicação publicada.
 

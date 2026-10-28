@@ -1,4 +1,4 @@
-import type { PublicCourse } from "@/content/public";
+import type { PublicActivity, PublicCourse } from "@/content/public";
 import { assessmentActivityIds, assessmentLink } from "@/content/assessment-references";
 import {
   parseJourneyPresentation,
@@ -26,6 +26,9 @@ export type LivingTrailOptions = {
 };
 export type LivingTrailMoment = {
   id: string;
+  /** Previous editorial/fallback grouping, retained for navigation migration only. */
+  originMomentId?: string;
+  originMomentTitle?: string;
   title: string;
   description: string;
   objective?: string;
@@ -94,6 +97,28 @@ const labels = {
   unavailable: "Indisponível",
 };
 
+/** Stable across sidecar regrouping and renaming; encoded components cannot collide at the delimiter. */
+export function livingTrailStageId(lessonId: string, stageId: string): string {
+  return "stage:" + encodeURIComponent(lessonId) + ":" + encodeURIComponent(stageId);
+}
+
+/** Generic presentation semantics of the stage's first real activity; no UI dependency. */
+function stageIcon(activity: PublicActivity): JourneyIcon {
+  if (activity.type === "lesson_content")
+    return activity.teaching?.diagram || (activity.scene && activity.teaching?.kind !== "dialogue")
+      ? "map-pin"
+      : activity.teaching?.kind === "dialogue"
+        ? "message-circle"
+        : "book-open";
+  if (activity.type === "listening") return "headphones";
+  if (activity.type === "flashcard" || activity.type === "review") return "brain";
+  if (activity.type === "writing" || activity.type === "speaking") return "message-circle";
+  return "target";
+}
+
+type TrailSourceMoment = JourneyMoment &
+  Pick<LivingTrailMoment, "originMomentId" | "originMomentTitle">;
+
 /**
  * Read-only presentation of official course and evidence projections.
  * The provider must supply state already scoped to the user and immutable installed version.
@@ -139,7 +164,45 @@ export function buildLivingTrail(
                 },
               ];
         });
-      const moments = (editorial?.moments ?? fallback).map<LivingTrailMoment>((moment) => {
+      const sources = (editorial?.moments ?? fallback).flatMap<TrailSourceMoment>((moment) => {
+        const target = moment.target;
+        if (target.kind !== "lesson")
+          return [
+            {
+              ...moment,
+              id: "assessment:" + encodeURIComponent(target.assessmentId),
+              originMomentId: moment.id,
+              originMomentTitle: moment.title,
+            },
+          ];
+        const lesson = unit.lessons.find((item) => item.id === target.lessonId);
+        if (!lesson) throw new Error("A trail moment has no curricular lesson owner: " + moment.id);
+        // Guided experiences and all assessment banks retain their own execution surface.
+        if (lesson.interactiveLessonRef)
+          return [
+            {
+              ...moment,
+              id: "guided:" + encodeURIComponent(lesson.id),
+              originMomentId: moment.id,
+              originMomentTitle: moment.title,
+            },
+          ];
+        return resolveLessonStages(lesson)
+          .filter((stage) => !target.stageIds || target.stageIds.includes(stage.id))
+          .map((stage) => ({
+            ...moment,
+            id: livingTrailStageId(lesson.id, stage.id),
+            originMomentId: moment.id,
+            originMomentTitle: moment.title,
+            title: stage.title,
+            icon: stageIcon(lesson.activities[stage.startIndex]),
+            audioActivityIds: moment.audioActivityIds?.filter((id) =>
+              stage.activityIds.includes(id),
+            ),
+            target: { kind: "lesson" as const, lessonId: lesson.id, stageIds: [stage.id] },
+          }));
+      });
+      const moments = sources.map<LivingTrailMoment>((moment) => {
         const target = moment.target;
         const assessment =
           target.kind === "assessment"
@@ -261,6 +324,8 @@ export function buildLivingTrail(
             : labels[status];
         return {
           id: moment.id,
+          originMomentId: moment.originMomentId,
+          originMomentTitle: moment.originMomentTitle,
           title: moment.title,
           description: moment.description ?? lesson.description,
           objective: moment.objective,
