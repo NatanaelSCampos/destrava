@@ -9,6 +9,7 @@ export type LiveTurn = {
   startMs?: number;
   endMs?: number;
   interrupted?: boolean;
+  inputMode?: "speech" | "text";
 };
 export type LiveReport = {
   summary: string;
@@ -57,6 +58,7 @@ export type LiveHistory = {
 };
 export type LiveSettings = {
   courseId: string;
+  recordAudio?: boolean;
   mode?: "studied" | "free";
   openingTopic?: string;
   topicId?: string;
@@ -78,9 +80,11 @@ export type LiveSnapshot = {
   report: LiveReport | null;
   reportError: string;
   resultStatus: LiveFinished["status"] | null;
+  audioNotice?: string;
 };
 export const initialLiveSnapshot: LiveSnapshot = {
   phase: "idle",
+  audioNotice: "",
   session: null,
   turns: [],
   remaining: 480,
@@ -296,6 +300,8 @@ export type LiveEnvironment = {
   uuid(): string;
   post<T>(path: string, body: unknown): Promise<T>;
   getMicrophone(): Promise<MediaStream>;
+  capture?(stream: MediaStream): Promise<import("./live-audio-capture").ConversationCapture>;
+  uploadAudio?(id: string, blob: Blob): Promise<void>;
   createPeer(): RTCPeerConnection;
   audio: Pick<HTMLAudioElement, "srcObject" | "muted" | "play" | "pause">;
   unlockAudio(): Promise<void>;
@@ -317,6 +323,18 @@ export function browserLiveEnvironment(audio: HTMLAudioElement): LiveEnvironment
         audio: { echoCancellation: true, noiseSuppression: true },
         video: false,
       }),
+    capture: async (stream) =>
+      (await import("./live-audio-capture")).captureConversationMicrophone(stream),
+    uploadAudio: async (id, blob) => {
+      const r = await fetch(base + "/audio?id=" + encodeURIComponent(id), {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "audio/wav" },
+        body: blob,
+        signal: AbortSignal.timeout(45000),
+      });
+      if (!r.ok) throw new Error("Upload failed");
+    },
     createPeer: () => new RTCPeerConnection(),
     audio,
     unlockAudio: async () => {
@@ -384,6 +402,7 @@ export class LiveConversationClient {
   private peer: RTCPeerConnection | null = null;
   private channel: RTCDataChannel | null = null;
   private microphone: MediaStream | null = null;
+  private recording: import("./live-audio-capture").ConversationCapture | null = null;
   private remote: MediaStream | null = null;
   private stopMeter: (() => void) | null = null;
   private connectionTimer: Timer | null = null;
@@ -454,6 +473,21 @@ export class LiveConversationClient {
         return;
       }
       this.microphone = media;
+      if (settings.recordAudio && this.env.capture) {
+        try {
+          const capture = await this.env.capture(media);
+          if (!current()) {
+            capture.abort();
+            return;
+          }
+          this.recording = capture;
+        } catch {
+          this.publish({
+            audioNotice:
+              "A conversa pode continuar, mas não foi possível preparar a gravação neste navegador.",
+          });
+        }
+      }
       media.getAudioTracks().forEach((track) => {
         track.enabled = false;
         track.onended = () => {
@@ -701,6 +735,7 @@ export class LiveConversationClient {
     this.microphone?.getAudioTracks().forEach((track) => {
       track.enabled = !muted;
     });
+    this.recording?.pause(muted);
     this.env.audio.muted = muted;
     if (muted) this.energy(0);
   }
@@ -713,6 +748,9 @@ export class LiveConversationClient {
     const id = this.snapshot.session?.id;
     ++this.generation;
     this.send("session.close");
+    const recording = this.recording;
+    this.recording = null;
+    const recorded = recording?.finish().catch(() => null);
     this.cleanup();
     if (!id) {
       this.publish({ phase: interrupted ? "error" : "idle", pending: false, message });
@@ -722,9 +760,27 @@ export class LiveConversationClient {
     this.publish({ phase: "ending", pending: false, message });
     this.finishing = this.env
       .post<LiveFinished>("/finish", { id })
-      .then((result) => {
+      .then(async (result) => {
         if (this.disposed || own !== this.generation) return;
         if (!confirmedFinish(result, id)) throw new Error();
+        if (recorded) {
+          const blob = await recorded;
+          if (this.disposed || own !== this.generation) return;
+          try {
+            if (!blob || !this.env.uploadAudio) throw Error("Recording unavailable");
+            await this.env.uploadAudio(id, blob);
+            if (this.disposed || own !== this.generation) return;
+            this.publish({
+              audioNotice: "Sua gravação foi guardada em área privada para análise oral futura.",
+            });
+          } catch {
+            if (!this.disposed && own === this.generation)
+              this.publish({
+                audioNotice:
+                  "A conversa ficou salva, mas não foi possível guardar o áudio. Ela não estará disponível para análise oral.",
+              });
+          }
+        }
         this.publish({
           phase: "completed",
           resultStatus: result.status,
@@ -748,6 +804,8 @@ export class LiveConversationClient {
     return this.finishing;
   }
   private cleanup() {
+    this.recording?.abort();
+    this.recording = null;
     for (const timer of [
       this.connectionTimer,
       this.heartbeatTimer,

@@ -43,6 +43,7 @@ import {
 import { LiveFreeSetup } from "./live-free-setup";
 import { LiveTopicPicker } from "./live-topic-picker";
 import "./live-conversation.css";
+import { ConversationProgress, ConversationOral } from "./conversation-coach";
 
 const levels: Array<{ id: LiveLevel; label: string; detail: string }> = [
   { id: "beginner", label: "Iniciante", detail: "Mais apoio e frases curtas" },
@@ -257,7 +258,8 @@ function LiveConversationPanel({
     [correction, setCorrection] = useState<LiveCorrection>("immediate");
   const correctionChosen = useRef(false);
   const [voice, setVoice] = useState<"preference" | "female" | "male">("preference");
-  const [tab, setTab] = useState<"setup" | "history">("setup"),
+  const [recordAudio, setRecordAudio] = useState(false);
+  const [tab, setTab] = useState<"setup" | "history" | "progress" | "oral">("setup"),
     [view, setView] = useState<"setup" | "call">("setup");
   const [history, setHistory] = useState<LiveHistory[]>([]),
     [historyError, setHistoryError] = useState(""),
@@ -462,6 +464,7 @@ function LiveConversationPanel({
     setDraft("");
     void client.current.start({
       courseId,
+      recordAudio,
       ...(mode === "free"
         ? { mode, ...(openingTopic.trim() ? { openingTopic: openingTopic.trim() } : {}) }
         : { mode, topicIds: selectedTopics.map((topic) => topic.id) }),
@@ -505,6 +508,11 @@ function LiveConversationPanel({
           </div>
         )}
       </header>
+      {snapshot.audioNotice && (
+        <p className="coach-audio-notice" role="status">
+          {snapshot.audioNotice}
+        </p>
+      )}
       {!showingCall && (
         <nav className="live-voice-tabs" aria-label="Conversas">
           <button
@@ -527,6 +535,26 @@ function LiveConversationPanel({
           >
             <History size={17} aria-hidden="true" /> Minhas conversas
             {history.length > 0 && <span>{history.length}</span>}
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === "progress"}
+            onClick={() => {
+              setTab("progress");
+              selectHistory(null);
+            }}
+          >
+            <Sparkles size={17} aria-hidden="true" /> Minha evolução
+          </button>
+          <button
+            type="button"
+            aria-pressed={tab === "oral"}
+            onClick={() => {
+              setTab("oral");
+              selectHistory(null);
+            }}
+          >
+            <AudioLines size={17} aria-hidden="true" /> Análise oral
           </button>
         </nav>
       )}
@@ -745,6 +773,10 @@ function LiveConversationPanel({
           )}
           <Transcript turns={snapshot.turns} />
         </section>
+      ) : tab === "progress" ? (
+        <ConversationProgress key={courseId} courseId={courseId} history={history} />
+      ) : tab === "oral" ? (
+        <ConversationOral key={courseId} courseId={courseId} />
       ) : tab === "history" ? (
         <section className="live-voice-history" data-report-private>
           {selectedHistory ? (
@@ -1015,6 +1047,20 @@ function LiveConversationPanel({
                 <option value="female">Feminina nesta conversa</option>
                 <option value="male">Masculina nesta conversa</option>
               </select>
+            </label>
+            <label className="coach-record-consent">
+              <input
+                type="checkbox"
+                checked={recordAudio}
+                onChange={(event) => setRecordAudio(event.target.checked)}
+              />
+              <span>
+                <strong>Guardar minha voz para análise oral</strong>
+                <small>
+                  Opcional. Apenas o seu microfone, em área privada. Você poderá excluir a gravação.
+                  A análise usa créditos e ainda não está liberada.
+                </small>
+              </span>
             </label>
             <div className="live-voice-start-note">
               <Clock3 size={16} aria-hidden="true" />

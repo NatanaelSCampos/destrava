@@ -968,3 +968,90 @@ test("free conversation sends no stage ID and permits an omitted opening topic",
     f.controller.dispose();
   }
 });
+
+test("consented capture is finalized once and uploaded only after confirmed finish", async () => {
+  const gate = deferred(),
+    f = fixture({ finishDeferred: gate });
+  const blob = new Blob(["synthetic PCM"]);
+  let finalized = 0,
+    aborted = 0,
+    uploads = 0;
+  f.env.capture = async () => ({
+    pause() {},
+    finish: async () => {
+      finalized++;
+      return blob;
+    },
+    abort() {
+      aborted++;
+    },
+  });
+  f.env.uploadAudio = async (id, value) => {
+    assert.equal(id, f.controller.current.session.id);
+    assert.equal(value, blob);
+    uploads++;
+  };
+  await f.controller.start({ ...settings, recordAudio: true });
+  f.started();
+  const first = f.controller.finish();
+  const second = f.controller.finish();
+  assert.equal(first, second);
+  assert.equal(finalized, 1);
+  assert.equal(aborted, 0);
+  assert.equal(uploads, 0);
+  assert.ok(f.tracks.every((t) => t.stopped > 0));
+  gate.resolve({
+    id: f.controller.current.session.id,
+    status: "completed",
+    report,
+    transcript: [turn],
+  });
+  await first;
+  assert.equal(uploads, 1);
+  assert.equal(f.controller.current.phase, "completed");
+  assert.match(f.controller.current.audioNotice, /guardada/);
+  f.controller.dispose();
+  assert.equal(aborted, 0);
+});
+test("failed optional upload preserves conversation and report; no consent never captures", async () => {
+  for (const consent of [false, true]) {
+    const f = fixture();
+    let captures = 0;
+    f.env.capture = async () => {
+      captures++;
+      return { pause() {}, finish: async () => new Blob(["synthetic"]), abort() {} };
+    };
+    f.env.uploadAudio = async () => {
+      throw Error("synthetic failure");
+    };
+    await f.controller.start({ ...settings, recordAudio: consent });
+    f.started();
+    await f.controller.finish();
+    assert.equal(captures, consent ? 1 : 0);
+    assert.equal(f.controller.current.phase, "completed");
+    assert.deepEqual(f.controller.current.report, report);
+    if (consent) assert.match(f.controller.current.audioNotice, /não foi possível guardar/);
+    f.controller.dispose();
+  }
+});
+test("dispose during finish never uploads a late recording", async () => {
+  const d = deferred(),
+    f = fixture({ finishDeferred: d });
+  let uploads = 0;
+  f.env.capture = async () => ({
+    pause() {},
+    finish: async () => new Blob(["synthetic"]),
+    abort() {},
+  });
+  f.env.uploadAudio = async () => {
+    uploads++;
+  };
+  await f.controller.start({ ...settings, recordAudio: true });
+  f.started();
+  const pending = f.controller.finish(),
+    id = f.controller.current.session.id;
+  f.controller.dispose();
+  d.resolve({ id, status: "completed", report, transcript: [turn] });
+  await pending;
+  assert.equal(uploads, 0);
+});

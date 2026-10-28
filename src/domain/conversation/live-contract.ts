@@ -34,6 +34,7 @@ export const liveStartSchema = liveSettingsSchema
       .max(LIVE_MAX_TOPICS)
       .refine((ids) => new Set(ids).size === ids.length)
       .optional(),
+    recordAudio: z.boolean().default(false),
     operationId: z.uuid(),
     sdp: z
       .string()

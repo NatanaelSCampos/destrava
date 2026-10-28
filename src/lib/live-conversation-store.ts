@@ -62,6 +62,7 @@ export type LiveRow = {
   report_error: string | null;
   seconds_used: number;
   closure_confirmed: boolean;
+  memory_enabled?: boolean;
   reservation_id: string;
 };
 export async function liveRow(owner: string, id: string): Promise<LiveRow> {

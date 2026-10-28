@@ -35,6 +35,8 @@ export async function POST(request: Request) {
         topic,
         settings: { level: input.level, correction: input.correction, voice: input.voice },
         language: context.language,
+        languageCode: context.bundle.course.languageCode,
+        recordAudio: input.recordAudio,
         sourceLanguage: context.sourceLanguage,
         variant: context.variant,
         sdp: input.sdp,

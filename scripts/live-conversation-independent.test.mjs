@@ -30,6 +30,8 @@ function loader(overrides = {}, globals = {}) {
   function load(name, parent = path.join(root, 'index.ts')) {
     if (Object.hasOwn(overrides, name)) return overrides[name];
     if (name === 'server-only') return {};
+    // Legacy live lifecycle fixtures isolate the new persistence service. Its real implementation has separate coach QA.
+    if(name==='./conversation-memory-server'||name==='@/lib/conversation-memory-server')return {assessmentInstructions:'synthetic rubric',teachingMemory:async()=>'',rowLanguage:()=> 'en',storeConversationAssessment:async()=>false};
     if (name === 'zod') return req('zod');
     if (name === 'node:crypto') return crypto;
     let file = name.startsWith('@/') ? path.join(root,'src',name.slice(2)) :
