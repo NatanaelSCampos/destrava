@@ -1,0 +1,451 @@
+{
+  "schemaVersion": "1.0.0",
+  "presentationVersion": "1.1.0",
+  "courseId": "espanol-a-tu-paso-a1",
+  "contentVersion": "1.7.0",
+  "structureFingerprint": "structure-v1-85b526759d34e705",
+  "chapters": [
+    {
+      "id": "journey-atp-u1",
+      "unitId": "atp-u1",
+      "title": "Um encontro no bairro",
+      "description": "Receba uma mensagem, encontre a outra pessoa e combine lugar e horário.",
+      "objective": "Informar onde está, pedir ajuda para compreender e confirmar um encontro.",
+      "icon": "map-pin",
+      "tone": "forest",
+      "setting": "Um encontro no bairro",
+      "moments": [
+        {
+          "id": "journey-atp-u1-l1-1",
+          "title": "Avise onde você está",
+          "description": "Observe a mensagem e encontre o lugar.",
+          "objective": "Observe a mensagem e encontre o lugar.",
+          "icon": "message-circle",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l1",
+            "stageIds": [
+              "atp-u1-l1-scene-stage",
+              "atp-u1-l1-listen-location-stage",
+              "atp-u1-l1-order-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l1-2",
+          "title": "Encontre a outra pessoa",
+          "description": "Pergunte, responda e continue a conversa.",
+          "objective": "Pergunte, responda e continue a conversa.",
+          "icon": "map-pin",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l1",
+            "stageIds": [
+              "atp-u1-l1-ask-scene-stage",
+              "atp-u1-l1-ask-check-stage",
+              "atp-u1-l1-card-stage",
+              "atp-u1-l1-locate-stage",
+              "atp-u1-l1-translate-stage",
+              "atp-u1-l1-build-conversation-stage",
+              "atp-u1-l1-voice-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l2-1",
+          "title": "Uma mensagem passou rápido",
+          "description": "Retome o que aprendeu e perceba quando precisa de ajuda.",
+          "objective": "Retome o que aprendeu e perceba quando precisa de ajuda.",
+          "icon": "brain",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l2",
+            "stageIds": [
+              "atp-u1-l2-reactivate-stage",
+              "atp-u1-l2-location-help-stage",
+              "atp-u1-l2-scene-stage",
+              "atp-u1-l2-understand-listen-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l2-2",
+          "title": "Peça para repetir",
+          "description": "Experimente pedidos para conseguir continuar a conversa.",
+          "objective": "Experimente pedidos para conseguir continuar a conversa.",
+          "icon": "message-circle",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l2",
+            "stageIds": [
+              "atp-u1-l2-repeat-scene-stage",
+              "atp-u1-l2-choose-stage",
+              "atp-u1-l2-order-repeat-stage",
+              "atp-u1-l2-slower-stage",
+              "atp-u1-l2-choose-slower-stage",
+              "atp-u1-l2-translate-stage",
+              "atp-u1-l2-card-stage",
+              "atp-u1-l2-clarification-stage",
+              "atp-u1-l2-usted-stage",
+              "atp-u1-l2-own-stage",
+              "atp-u1-l2-retrieve-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l3-1",
+          "title": "Encontre o horário",
+          "description": "Diferencie a hora atual e o horário do encontro.",
+          "objective": "Diferencie a hora atual e o horário do encontro.",
+          "icon": "clock",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l3",
+            "stageIds": [
+              "atp-u1-l3-scene-stage",
+              "atp-u1-l3-half-stage",
+              "atp-u1-l3-events-stage",
+              "atp-u1-l3-choose-stage",
+              "atp-u1-l3-fill-stage",
+              "atp-u1-l3-order-stage",
+              "atp-u1-l3-now-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l3-2",
+          "title": "Combine a hora de encontrar",
+          "description": "Ouça, ajuste e tente recuperar a informação em outra situação.",
+          "objective": "Ouça, ajuste e tente recuperar a informação em outra situação.",
+          "icon": "handshake",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l3",
+            "stageIds": [
+              "atp-u1-l3-listen-meeting-stage",
+              "atp-u1-l3-correct-stage",
+              "atp-u1-l3-card-stage",
+              "atp-u1-l3-translate-stage",
+              "atp-u1-l3-own-stage",
+              "atp-u1-l3-listen-number-stage",
+              "atp-u1-l3-voice-stage",
+              "atp-u1-l3-review-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l4-1",
+          "title": "Lugar e horário juntos",
+          "description": "Acompanhe diferentes formas de combinar um encontro.",
+          "objective": "Acompanhe diferentes formas de combinar um encontro.",
+          "icon": "map-pin",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l4",
+            "stageIds": [
+              "atp-u1-l4-scene-stage",
+              "atp-u1-l4-confirmations-stage",
+              "atp-u1-l4-places-stage",
+              "atp-u1-l4-choose-stage",
+              "atp-u1-l4-fill-stage",
+              "atp-u1-l4-order-stage",
+              "atp-u1-l4-correct-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-l4-2",
+          "title": "O encontro está combinado",
+          "description": "Confirme a combinação e experimente responder com suas palavras.",
+          "objective": "Confirme a combinação e experimente responder com suas palavras.",
+          "icon": "handshake",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-l4",
+            "stageIds": [
+              "atp-u1-l4-card-stage",
+              "atp-u1-l4-translate-stage",
+              "atp-u1-l4-own-stage",
+              "atp-u1-l4-voice-stage",
+              "atp-u1-l4-review-stage",
+              "atp-u1-l4-reflect-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u1-guided",
+          "title": "Uma conversa que continua",
+          "description": "Acompanhe uma explicação, pratique em outra situação e escolha quando consultar o apoio.",
+          "icon": "headphones",
+          "tone": "sky",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-guided"
+          }
+        },
+        {
+          "id": "journey-atp-diagnostic",
+          "title": "Seu ponto de partida",
+          "description": "Diagnóstico inicial: tente o que souber. Não precisa conhecer as expressões antes. O resultado orienta o estudo e não prova domínio.",
+          "icon": "compass",
+          "tone": "sage",
+          "target": {
+            "kind": "assessment",
+            "assessmentId": "atp-diagnostic"
+          }
+        },
+        {
+          "id": "journey-atp-u1-recovery",
+          "title": "Revisão antes da prova",
+          "description": "Retome exemplos curtos e faça novas tentativas. Consultar o apoio é parte da prática; não conta como lembrança sem ajuda.",
+          "icon": "brain",
+          "tone": "sage",
+          "target": {
+            "kind": "assessment",
+            "assessmentId": "atp-u1-recovery"
+          }
+        },
+        {
+          "id": "journey-atp-u1-final",
+          "title": "Desafio: encontrar e combinar",
+          "description": "Aplique o que aprendeu em novas situações. A prova usa os requisitos e resultados oficiais.",
+          "icon": "trophy",
+          "tone": "amber",
+          "target": {
+            "kind": "assessment",
+            "assessmentId": "atp-u1-final"
+          }
+        },
+        {
+          "id": "journey-atp-u1-live-demo",
+          "title": "Um encontro sem desencontro",
+          "description": "Uma conversa para encontrar alguém, entender a resposta e pedir ajuda.",
+          "icon": "headphones",
+          "tone": "sky",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u1-live-demo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "journey-atp-u2",
+      "unitId": "atp-u2",
+      "title": "Uma pausa no bairro",
+      "description": "Escolha o que pedir, confira quantidade e preço e ajuste as condições do atendimento.",
+      "objective": "Fazer um pedido, conferir o que será pago e resolver uma compra simples.",
+      "icon": "coffee",
+      "tone": "amber",
+      "setting": "Uma pausa para pedir e conferir",
+      "moments": [
+        {
+          "id": "journey-atp-u2-l1-1",
+          "title": "Escolha sua bebida",
+          "description": "Leia a oferta e perceba as condições do pedido.",
+          "objective": "Leia a oferta e perceba as condições do pedido.",
+          "icon": "coffee",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l1",
+            "stageIds": [
+              "atp-u2-l1-scene-stage",
+              "atp-u2-l1-conditions-stage",
+              "atp-u2-l1-dialogue-stage",
+              "atp-u2-l1-choose-stage",
+              "atp-u2-l1-fill-stage",
+              "atp-u2-l1-order-stage",
+              "atp-u2-l1-correct-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l1-2",
+          "title": "Faça seu pedido",
+          "description": "Escolha, confira e tente formular seu pedido.",
+          "objective": "Escolha, confira e tente formular seu pedido.",
+          "icon": "message-circle",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l1",
+            "stageIds": [
+              "atp-u2-l1-card-stage",
+              "atp-u2-l1-translate-stage",
+              "atp-u2-l1-spelling-stage",
+              "atp-u2-l1-own-stage",
+              "atp-u2-l1-listen-drink-stage",
+              "atp-u2-l1-voice-stage",
+              "atp-u2-l1-review-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l2-1",
+          "title": "Uma ou duas unidades?",
+          "description": "Entenda a quantidade e o total do pedido.",
+          "objective": "Entenda a quantidade e o total do pedido.",
+          "icon": "shopping-bag",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l2",
+            "stageIds": [
+              "atp-u2-l2-scene-stage",
+              "atp-u2-l2-prices-stage",
+              "atp-u2-l2-dialogue-stage",
+              "atp-u2-l2-choose-stage",
+              "atp-u2-l2-fill-stage",
+              "atp-u2-l2-order-stage",
+              "atp-u2-l2-numbers-stage",
+              "atp-u2-l2-listen-total-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l2-2",
+          "title": "Confira quanto vai pagar",
+          "description": "Ouça os valores e confira o que será pago.",
+          "objective": "Ouça os valores e confira o que será pago.",
+          "icon": "target",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l2",
+            "stageIds": [
+              "atp-u2-l2-correct-stage",
+              "atp-u2-l2-card-stage",
+              "atp-u2-l2-translate-stage",
+              "atp-u2-l2-own-stage",
+              "atp-u2-l2-listen-number-stage",
+              "atp-u2-l2-voice-stage",
+              "atp-u2-l2-review-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l3-1",
+          "title": "Aqui ou para levar?",
+          "description": "Observe a condição do pedido e aprenda a ajustá-la.",
+          "objective": "Observe a condição do pedido e aprenda a ajustá-la.",
+          "icon": "coffee",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l3",
+            "stageIds": [
+              "atp-u2-l3-scene-stage",
+              "atp-u2-l3-adjust-stage",
+              "atp-u2-l3-choose-stage",
+              "atp-u2-l3-fill-stage",
+              "atp-u2-l3-order-stage",
+              "atp-u2-l3-verify-condition-stage",
+              "atp-u2-l3-correct-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l3-2",
+          "title": "Confirme do seu jeito",
+          "description": "Use o que aprendeu para levar o pedido certo.",
+          "objective": "Use o que aprendeu para levar o pedido certo.",
+          "icon": "message-circle",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l3",
+            "stageIds": [
+              "atp-u2-l3-card-stage",
+              "atp-u2-l3-translate-stage",
+              "atp-u2-l3-own-stage",
+              "atp-u2-l3-voice-stage",
+              "atp-u2-l3-review-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l4-1",
+          "title": "Há o que você quer?",
+          "description": "Descubra o que está disponível e acompanhe o atendimento.",
+          "objective": "Descubra o que está disponível e acompanhe o atendimento.",
+          "icon": "shopping-bag",
+          "tone": "forest",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l4",
+            "stageIds": [
+              "atp-u2-l4-scene-stage",
+              "atp-u2-l4-complete-stage",
+              "atp-u2-l4-choose-stage",
+              "atp-u2-l4-fill-stage",
+              "atp-u2-l4-order-stage",
+              "atp-u2-l4-correct-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-l4-2",
+          "title": "Resolva sua compra",
+          "description": "Pratique uma compra completa e retome o que consegue lembrar.",
+          "objective": "Pratique uma compra completa e retome o que consegue lembrar.",
+          "icon": "handshake",
+          "tone": "sage",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-l4",
+            "stageIds": [
+              "atp-u2-l4-card-stage",
+              "atp-u2-l4-translate-stage",
+              "atp-u2-l4-own-stage",
+              "atp-u2-l4-voice-stage",
+              "atp-u2-l4-review-stage",
+              "atp-u2-l4-reflect-stage"
+            ]
+          }
+        },
+        {
+          "id": "journey-atp-u2-guided",
+          "title": "Um pedido confirmado",
+          "description": "Acompanhe uma explicação, pratique em outra situação e escolha quando consultar o apoio.",
+          "icon": "headphones",
+          "tone": "sky",
+          "target": {
+            "kind": "lesson",
+            "lessonId": "atp-u2-guided"
+          }
+        },
+        {
+          "id": "journey-atp-u2-recovery",
+          "title": "Revisão antes da prova",
+          "description": "Retome exemplos curtos e faça novas tentativas. Consultar o apoio é parte da prática; não conta como lembrança sem ajuda.",
+          "icon": "brain",
+          "tone": "sage",
+          "target": {
+            "kind": "assessment",
+            "assessmentId": "atp-u2-recovery"
+          }
+        },
+        {
+          "id": "journey-atp-u2-final",
+          "title": "Desafio: uma pausa no bairro",
+          "description": "Aplique o que aprendeu em novas situações. A prova usa os requisitos e resultados oficiais.",
+          "icon": "trophy",
+          "tone": "amber",
+          "target": {
+            "kind": "assessment",
+            "assessmentId": "atp-u2-final"
+          }
+        }
+      ]
+    }
+  ]
+}

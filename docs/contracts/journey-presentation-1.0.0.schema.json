@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "presentationVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[^<>\\u0000-\\u001f]+$"
+    },
+    "courseId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[^<>\\u0000-\\u001f]+$"
+    },
+    "contentVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[^<>\\u0000-\\u001f]+$"
+    },
+    "structureFingerprint": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[^<>\\u0000-\\u001f]+$"
+    },
+    "chapters": {
+      "minItems": 1,
+      "maxItems": 200,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "pattern": "^[^<>\\u0000-\\u001f]+$"
+          },
+          "unitId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180,
+            "pattern": "^[^<>\\u0000-\\u001f]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[^<>\\u0000-\\u0008]+$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[^<>\\u0000-\\u0008]+$"
+          },
+          "objective": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[^<>\\u0000-\\u0008]+$"
+          },
+          "character": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[^<>\\u0000-\\u0008]+$"
+          },
+          "setting": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[^<>\\u0000-\\u0008]+$"
+          },
+          "icon": {
+            "type": "string",
+            "enum": [
+              "book-open",
+              "message-circle",
+              "map-pin",
+              "headphones",
+              "brain",
+              "clock",
+              "handshake",
+              "coffee",
+              "shopping-bag",
+              "target",
+              "flag",
+              "trophy",
+              "sparkles",
+              "compass",
+              "play",
+              "lightbulb"
+            ]
+          },
+          "tone": {
+            "type": "string",
+            "enum": ["forest", "sage", "amber", "sky", "rose"]
+          },
+          "illustration": {
+            "type": "object",
+            "properties": {
+              "src": {
+                "type": "string",
+                "pattern": "^\\/journeys\\/[a-zA-Z0-9_/-]+\\.(?:png|webp|jpg|jpeg|avif)$"
+              },
+              "alt": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 600,
+                "pattern": "^[^<>\\u0000-\\u0008]+$"
+              }
+            },
+            "required": ["src", "alt"],
+            "additionalProperties": false
+          },
+          "audioActivityIds": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 180,
+              "pattern": "^[^<>\\u0000-\\u001f]+$"
+            }
+          },
+          "moments": {
+            "minItems": 1,
+            "maxItems": 300,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 180,
+                  "pattern": "^[^<>\\u0000-\\u001f]+$"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600,
+                  "pattern": "^[^<>\\u0000-\\u0008]+$"
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600,
+                  "pattern": "^[^<>\\u0000-\\u0008]+$"
+                },
+                "objective": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600,
+                  "pattern": "^[^<>\\u0000-\\u0008]+$"
+                },
+                "character": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600,
+                  "pattern": "^[^<>\\u0000-\\u0008]+$"
+                },
+                "setting": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600,
+                  "pattern": "^[^<>\\u0000-\\u0008]+$"
+                },
+                "icon": {
+                  "type": "string",
+                  "enum": [
+                    "book-open",
+                    "message-circle",
+                    "map-pin",
+                    "headphones",
+                    "brain",
+                    "clock",
+                    "handshake",
+                    "coffee",
+                    "shopping-bag",
+                    "target",
+                    "flag",
+                    "trophy",
+                    "sparkles",
+                    "compass",
+                    "play",
+                    "lightbulb"
+                  ]
+                },
+                "tone": {
+                  "type": "string",
+                  "enum": ["forest", "sage", "amber", "sky", "rose"]
+                },
+                "illustration": {
+                  "type": "object",
+                  "properties": {
+                    "src": {
+                      "type": "string",
+                      "pattern": "^\\/journeys\\/[a-zA-Z0-9_/-]+\\.(?:png|webp|jpg|jpeg|avif)$"
+                    },
+                    "alt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 600,
+                      "pattern": "^[^<>\\u0000-\\u0008]+$"
+                    }
+                  },
+                  "required": ["src", "alt"],
+                  "additionalProperties": false
+                },
+                "audioActivityIds": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 180,
+                    "pattern": "^[^<>\\u0000-\\u001f]+$"
+                  }
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "lesson"
+                        },
+                        "lessonId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 180,
+                          "pattern": "^[^<>\\u0000-\\u001f]+$"
+                        },
+                        "stageIds": {
+                          "minItems": 1,
+                          "maxItems": 100,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 180,
+                            "pattern": "^[^<>\\u0000-\\u001f]+$"
+                          }
+                        }
+                      },
+                      "required": ["kind", "lessonId"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "assessment"
+                        },
+                        "assessmentId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 180,
+                          "pattern": "^[^<>\\u0000-\\u001f]+$"
+                        }
+                      },
+                      "required": ["kind", "assessmentId"],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": ["id", "title", "target"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["id", "unitId", "title", "moments"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["schemaVersion", "presentationVersion", "courseId", "contentVersion", "chapters"],
+  "additionalProperties": false,
+  "$id": "urn:destrava:journey-presentation:1.0.0",
+  "title": "Destrava JourneyPresentation 1.0.0",
+  "description": "Optional independent visual sidecar. Semantic references and complete stage partitioning require Motor CLI validation."
+}
