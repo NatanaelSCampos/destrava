@@ -102,7 +102,7 @@ function LessonWithDrafts() {
   if (!lesson.activities.length)
     return (
       <div className="empty-state">
-        As atividades desta lição estão indisponíveis. Os requisitos da unidade permanecem
+        As atividades desta lição estão indisponíveis. Os requisitos do percurso permanecem
         pendentes.
       </div>
     );
@@ -146,7 +146,7 @@ function LessonWithDrafts() {
             A avaliação solicitada não pertence a esta lição.
           </section>
         )}
-        <nav className="lesson-neighbors" aria-label="Continuar unidade">
+        <nav className="lesson-neighbors" aria-label="Continuar aprendendo">
           {previousLesson && (
             <Link href={courseLessonPath(course, unit, previousLesson)}>
               <ChevronLeft size={15} /> Lição anterior
@@ -192,7 +192,7 @@ function LessonWithDrafts() {
       <div className="lesson-header">
         <div>
           <span className="eyebrow">
-            UNIDADE {unit.number} <ChevronRight size={13} /> {lesson.eyebrow}
+            {course.title} <ChevronRight size={13} /> {lesson.eyebrow}
           </span>
           <h1>{lesson.title}</h1>
           <p>{lesson.description}</p>
@@ -285,7 +285,7 @@ function LessonWithDrafts() {
               </Link>
             ) : (
               <Link className="primary-button" href={`/course/${course.slug}/unit/${unit.number}`}>
-                Voltar à unidade <ArrowRight size={17} />
+                Voltar à trilha <ArrowRight size={17} />
               </Link>
             )}
           </div>

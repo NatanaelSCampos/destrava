@@ -118,7 +118,7 @@ export default function ReviewPage() {
             href={unit ? `/course/${course.slug}/unit/${unit.number}` : `/course/${course.slug}`}
             className="text-link"
           >
-            Voltar à unidade <ArrowRight size={14} />
+            Voltar à trilha <ArrowRight size={14} />
           </Link>
         </aside>
       </div>

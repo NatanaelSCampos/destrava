@@ -66,7 +66,7 @@ export async function InteractiveLessonEntry({
     return (
       <section className="live-empty panel" role="status">
         <h1>Prática não encontrada nesta lição</h1>
-        <p>Confira a unidade no curso atual para continuar.</p>
+        <p>Encontre essa aula na sua trilha para continuar.</p>
         <Link
           className="secondary-button"
           href={"/course/" + encodeURIComponent(bundle.course.slug)}
@@ -162,7 +162,7 @@ export async function InteractiveLessonEntry({
         <TrailReturn lessonId={target.lesson.id} unitId={target.unit.id} />
       </Suspense>
       {classroom}
-      <nav className="lesson-neighbors" aria-label="Continuar unidade">
+      <nav className="lesson-neighbors" aria-label="Continuar aprendendo">
         {previous && (
           <Link href={courseLessonPath(bundle.course, target.unit, previous)}>
             <ChevronLeft size={15} /> Lição anterior

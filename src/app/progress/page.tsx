@@ -114,7 +114,7 @@ export default function ProgressPage() {
           </div>
           <div>
             <span>
-              Unidade {unit.number} · {unit.title}
+              {unit.title}
             </span>
             <strong>
               {progress.completed} de {progress.total} atividades realizadas
@@ -123,10 +123,10 @@ export default function ProgressPage() {
         </section>
         <section className="panel mastery-status">
           <span className="eyebrow">
-            <Target size={13} /> DOMÍNIO DA UNIDADE
+            <Target size={13} /> DOMÍNIO DESTE TRECHO
           </span>
-          <h3>{progress.isMastered ? "Dominada" : policyStatusLabels[progress.mastery.status]}</h3>
-          <p>Realizar atividades, concluir a unidade e demonstrar domínio são marcos distintos.</p>
+          <h3>{progress.isMastered ? "Demonstrado" : policyStatusLabels[progress.mastery.status]}</h3>
+          <p>Realizar atividades, concluir um trecho e demonstrar domínio são marcos distintos.</p>
           <PolicyChecklist title="Conclusão" result={progress.completion} />
           <PolicyChecklist title="Domínio estimado" result={progress.mastery} />
         </section>

@@ -162,7 +162,7 @@ export default function VocabularyPage() {
             <article className="vocab-card panel" key={item.id}>
               <div className="vocab-card-top">
                 <span className="pill gray">
-                  {unit ? `UNIDADE ${String(unit.number).padStart(2, "0")}` : course.level}
+                  {unit ? "NO SEU CAMINHO" : course.level}
                 </span>
                 <SpeakButton
                   text={item.term}

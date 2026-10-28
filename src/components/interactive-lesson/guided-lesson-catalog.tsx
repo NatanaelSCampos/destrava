@@ -19,7 +19,7 @@ export function GuidedLessonCatalog({ definitions }: { definitions: GuidedCatalo
         <svg viewBox="0 0 180 88" focusable="false"><path d="M24 44h38m12 0h34m12 0h36" />
           <rect x="8" y="24" width="44" height="40" rx="10" /><rect x="68" y="14" width="44" height="60" rx="10" /><rect x="128" y="24" width="44" height="40" rx="10" />
           <path d="m24 43 5 5 9-11m44 4h16m-16 8h12m54-5h12" /></svg></div>
-      <div className="guided-catalog-card-body"><span className="eyebrow">UNIDADE {entry.unitNumber} · {entry.unitTitle}</span>
+      <div className="guided-catalog-card-body"><span className="eyebrow">{entry.unitTitle}</span>
         <h2>{entry.title}</h2><p>{entry.description}</p>
         <div className="guided-catalog-meta"><span><Clock3 size={14} /> Cerca de {entry.estimatedMinutes} min</span><span>Áudio e quadro</span></div>
         {entry.available ? <Link className="guided-catalog-open" href={entry.href}><Play size={15} /> Abrir aula <ArrowRight size={16} /></Link>

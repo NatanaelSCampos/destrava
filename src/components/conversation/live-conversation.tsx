@@ -875,7 +875,7 @@ function LiveConversationPanel({
                 <BookOpen size={20} aria-hidden="true" />
                 <span>
                   <strong>Revisar o curso</strong>
-                  <small>Escolha unidades e etapas</small>
+                  <small>Escolha situações e etapas</small>
                 </span>
                 <span className="live-voice-radio">{mode === "studied" && <span />}</span>
               </button>
@@ -893,7 +893,7 @@ function LiveConversationPanel({
                     <span className="live-voice-kicker">1 · ASSUNTOS QUE SE CONECTAM</span>
                     <h2>Sobre o que vamos conversar?</h2>
                     <p>
-                      Combine etapas e unidades do que você já estudou. Você escolhe o caminho da
+                      Combine situações e etapas do que você já estudou. Você escolhe o caminho da
                       conversa.
                     </p>
                   </div>

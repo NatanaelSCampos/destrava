@@ -67,3 +67,15 @@ Evidências operacionais sanitizadas ficam em `.tmp/trilha-viva-20261027/`. Arqu
 ### Conferência adicional do Lead
 
 Reprodução de arquivo de áudio gravado, parada ao fechar pelo fundo do popup e retorno do foco:3/3 PASS. Auditoria computada de contraste dos textos visíveis da trilha:zero ocorrências abaixo dos limiares verificados; não é certificação de acessibilidade.
+
+## Acabamento final C6 — ferramentas auxiliares e guia
+
+Candidato TRILHA-VIVA-C6-COPY-TOUR,47 arquivos; digest `d403e856020285244aed50ad77530296cd985fa8d24cfa0f6e10198e006e593d`. Ajustes somente de linguagem em10 arquivos, com referências narrativas no vocabulário, conversa, revisão, prática, estatísticas e catálogo de aulas. Filtros, IDs, valores, cálculos e handlers preservados. O domínio exibido nas estatísticas diz deste trecho, respeitando seu escopo real. IDs dos tours foram mantidos, e seus alvos agora existem na trilha contínua.
+
+158/158 regressões pertinentes e61/61 QA independente:PASS. TypeScript e build local exit0 (MltPUX-XpwU8bynE-CR5A). QA e Revisor favoráveis ao C6,47/47 hashes íntegros. O Lead verificou9 casos no navegador: dois passos reais do guia, cinco páginas auxiliares, agrupamento de temas da conversa e ausência de overflow móvel. Nenhuma conversa com modelo foi iniciada.
+
+Na verificação adicional de catálogo,2/4 testes passaram e2 falharam exatamente como na baseline731045e: expectativa de versão0.1 contra1.1 atual e contagem36 contra193 atual. QA repetiu na baseline e conferiu63 inputs curriculares/gerados idênticos. Os testes não foram alterados; essa suíte adicional não é declarada aprovada.
+
+[Guia da trilha](images/guia-da-trilha.png) · [Conversa no celular](images/conversa-celular.png) · [Catálogo de aulas](images/catalogo-aulas.png) · [Progresso](images/progresso.png).
+
+A primeira publicação C4 foi verificada no Fly release68, com14 checks públicos e evidências próprias da conta sintética preservadas. O recibo final desta execução identifica a revisão publicada após este acabamento; não houve alteração de banco por essa revisão.

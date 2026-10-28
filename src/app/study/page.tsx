@@ -552,7 +552,7 @@ function StudyContent() {
             <p>
               {activeSession.mode === "difficulties"
                 ? "Treino de dificuldades"
-                : `Unidade ${sessionUnit.number} · ${sessionUnit.title}`}{" "}
+                : sessionUnit.title}{" "}
               · meta de{" "}
               {activeSession.targetMinutes ??
                 state.profile.learningPreferences.preferredSessionMinutes}{" "}

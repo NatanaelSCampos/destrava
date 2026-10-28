@@ -99,7 +99,7 @@ export function LiveTopicPicker({
           </div>
         </label>
         <label htmlFor={filterId}>
-          <span>Unidade</span>
+          <span>Seu caminho</span>
           <select
             id={filterId}
             value={unitFilter}
@@ -111,10 +111,10 @@ export function LiveTopicPicker({
             }}
             aria-controls={resultId}
           >
-            <option value="">Todas as unidades</option>
+            <option value="">Todas as histórias</option>
             {allUnits.map((unit) => (
               <option key={unit.id} value={unit.id}>
-                Unidade {unit.number} · {unit.title}
+                {unit.title}
               </option>
             ))}
           </select>
@@ -133,8 +133,8 @@ export function LiveTopicPicker({
             </strong>
             <small>
               {count
-                ? "Você pode combinar etapas de várias unidades."
-                : "Marque uma ou mais etapas, ou escolha uma unidade."}
+                ? "Você pode combinar etapas de várias histórias."
+                : "Marque uma ou mais etapas, ou escolha uma história inteira."}
             </small>
           </div>
         </div>
@@ -189,14 +189,14 @@ export function LiveTopicPicker({
             <section
               className={"live-topic-unit " + (state.count ? "has-selection" : "")}
               key={unit.id}
-              aria-label={"Unidade " + unit.number + " · " + unit.title}
+              aria-label={unit.title}
             >
               <div className="live-topic-unit-heading">
                 <span className="live-topic-unit-icon">
                   <BookOpen size={22} aria-hidden="true" />
                 </span>
                 <div>
-                  <span className="live-voice-kicker">UNIDADE {unit.number}</span>
+                  <span className="live-voice-kicker">NO SEU CAMINHO</span>
                   <h3>{unit.title}</h3>
                   <p>
                     {unit.topics.length} etapas disponíveis{" "}
@@ -206,7 +206,7 @@ export function LiveTopicPicker({
               </div>
               <div className="live-topic-unit-actions">
                 <SelectionBox
-                  label={"Selecionar unidade " + unit.number + " inteira"}
+                  label={"Selecionar todas as etapas de " + unit.title}
                   checked={state.all}
                   partial={state.partial}
                   onChange={() => toggle(ids)}
@@ -314,7 +314,7 @@ export function LiveTopicPicker({
                 aria-label={"Remover etapa: " + topic.title}
               >
                 <span>
-                  <small>Unidade {topic.unitNumber}</small>
+                  <small>Do seu percurso</small>
                   {topic.title}
                 </span>
                 <X size={15} aria-hidden="true" />

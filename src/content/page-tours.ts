@@ -51,7 +51,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Seu lugar no caminho",
         description:
-          "O capítulo mostra o que você já estudou. Abra a trilha para explorar as situações.",
+          "Este trecho mostra o que você já estudou. Abra a trilha para explorar as situações.",
         target: ".tv-home-chapter",
       },
       {
@@ -73,16 +73,16 @@ const tours: Record<string, PageTour> = {
     name: "Minha trilha",
     steps: [
       {
-        title: "Um caminho, vários capítulos",
+        title: "Um caminho, muitos momentos",
         description:
-          "Escolha um capítulo ou veja o percurso completo. Seu progresso permanece o mesmo.",
-        target: ".tv-chapter-rail",
+          "Percorra as histórias, abra um ponto ou use Onde parei para continuar. Seu progresso permanece o mesmo.",
+        target: ".tv-path-area",
       },
       {
         title: "Seu próximo momento",
         description:
           "O cartão em destaque leva à sequência real de exemplos e práticas. Você também pode revisitar os momentos disponíveis.",
-        target: ".tv-path",
+        target: ".tv-winding-path",
       },
       {
         title: "Volte ao seu lugar",
@@ -94,18 +94,18 @@ const tours: Record<string, PageTour> = {
   },
   unit: {
     id: "unit",
-    name: "Seu capítulo",
+    name: "Seu caminho",
     steps: [
       {
         title: "Uma situação para viver",
-        description: "O capítulo reúne conversas, descobertas e desafios com um propósito.",
+        description: "As histórias reúnem conversas, descobertas e desafios com um propósito.",
         target: ".tv-chapter-hero",
       },
       {
         title: "Entre em um momento",
         description:
-          "Cada cartão reúne uma sequência curta. Expanda para escolher uma etapa disponível.",
-        target: ".tv-path",
+          "Cada ponto abre uma sequência curta em um card sobre a trilha. Feche o card para voltar ao mesmo lugar.",
+        target: ".tv-winding-path",
       },
       {
         title: "Encontre seu lugar",
@@ -419,7 +419,7 @@ const tours: Record<string, PageTour> = {
       {
         title: "Descubra seu próximo passo",
         description:
-          "O diagnóstico usa questões da unidade para mostrar o que você já domina e o que precisa praticar.",
+          "O diagnóstico usa questões do seu percurso para identificar o que você reconhece e o que vale praticar.",
         target: ".adaptive-page .page-heading",
       },
       {
